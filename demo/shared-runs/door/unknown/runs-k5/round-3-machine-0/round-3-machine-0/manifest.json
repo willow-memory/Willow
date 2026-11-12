@@ -1,0 +1,37 @@
+{
+ "acts": 58,
+ "files": {
+  "acts.jsonl": "6c7e5b39df4663cd9a7fe350985cb366bba65464cae2bb01bcf868f5377a2e50",
+  "log.jsonl": "baf51b8235cd0e45534ee9a535786556ae058ed748183de7642e52136ccdae0b",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "5f79bd960a8276b4088f2639136093b222510ea4d29d9f0688a23f6fb6b89858"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 13,
+ "log_tip": "42e1043bfe0ff34c0ea40f9d8b0af748e8830b9dea2b930c165ba839c3ad974f",
+ "machine": 0,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 3,
+ "sig": "266eda7c6bf6fecb239cb2ca82f3fd9f2ab7b6369e47f09680adc7633752801ebb1dfbb2fd96630ac1f250689f6de63c0c0f8867ca17cdcc3d7b216569a7d805",
+ "signer": "f7c55f0a879df9df39ec460b5e52c77c5f749ada3c6151a3834ef8a94037d2b6",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-0": {
+   "how": "held",
+   "seal": "709f1ab03f5426d53541b0a2ce0205033e8aee7ef865f6e56b2d328345fae300",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-2-machine-0": {
+   "how": "held",
+   "seal": "437b8c029533e662cab13b3587e87a9cd4b374997b75b8206d9709ed7ce8427e",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  }
+ },
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "acts": 18026,
+ "checked": {
+  "round-1-machine-1": {
+   "all_the_same": true,
+   "halts": 4,
+   "halts_that_halt": 4,
+   "of": 1785,
+   "same": 1785,
+   "seal": "d282eb1a2a1a43d4d3a9ceaf20a2b4bda32caf4cd763ca005a7f28cd488ed5de",
+   "states": 1785
+  },
+  "round-10-machine-1": {
+   "all_the_same": true,
+   "halts": 4,
+   "halts_that_halt": 4,
+   "of": 2262,
+   "same": 2262,
+   "seal": "ab2f62150836ffa951eede3836060b63f9300be6ee9f3e4c668d2d4632e7206b",
+   "states": 2262
+  },
+  "round-2-machine-1": {
+   "all_the_same": true,
+   "halts": 3,
+   "halts_that_halt": 3,
+   "of": 1429,
+   "same": 1429,
+   "seal": "8241130a11254bfd88d943809d4317b9ca83bb0f69401728d0fb91471e13b9d5",
+   "states": 1429
+  },
+  "round-3-machine-1": {
+   "all_the_same": true,
+   "halts": 3,
+   "halts_that_halt": 3,
+   "of": 2038,
+   "same": 2038,
+   "seal": "46ed4c43db003ce6aca84fae302214eba6479144c08b477126792ad83c679252",
+   "states": 2038
+  },
+  "round-4-machine-1": {
+   "all_the_same": true,
+   "halts": 2,
+   "halts_that_halt": 2,
+   "of": 1640,
+   "same": 1640,
+   "seal": "1daac7b636df7dcb6d264b9588f7aaaef74999c8f093912bcdfa490021b4c266",
+   "states": 1640
+  },
+  "round-5-machine-1": {
+   "all_the_same": true,
+   "halts": 2,
+   "halts_that_halt": 2,
+   "of": 1784,
+   "same": 1784,
+   "seal": "72ab89f352fb8187b142625a459a5661f2d4781bab82dcbb1bf9b5555ffd1379",
+   "states": 1784
+  },
+  "round-6-machine-1": {
+   "all_the_same": true,
+   "halts": 3,
+   "halts_that_halt": 3,
+   "of": 1902,
+   "same": 1902,
+   "seal": "d1d83629971b8acf47446c102c89b395390f287df630b0dd1d844c5acc46dc0c",
+   "states": 1902
+  },
+  "round-7-machine-1": {
+   "all_the_same": true,
+   "halts": 3,
+   "halts_that_halt": 3,
+   "of": 1610,
+   "same": 1610,
+   "seal": "050caa7e0f23c9393f044f71354e161d1cd167b4d0194867c3a319f9473bc581",
+   "states": 1610
+  },
+  "round-8-machine-1": {
+   "all_the_same": true,
+   "halts": 4,
+   "halts_that_halt": 4,
+   "of": 1627,
+   "same": 1627,
+   "seal": "d0fdfd91e973716ff6fb7d297255978d32e62f6ae334851847968864377f0e55",
+   "states": 1627
+  },
+  "round-9-machine-1": {
+   "all_the_same": true,
+   "halts": 3,
+   "halts_that_halt": 3,
+   "of": 1918,
+   "same": 1918,
+   "seal": "622ad5bb97448f85be2493f71f25ae320e31c539171766091c8102420ce17cea",
+   "states": 1918
+  }
+ },
+ "files": {
+  "acts.jsonl": "107bec57f2413852d0d230d0633f68bbaef8f76e5bed2c9b9a8304ecdaa564d5",
+  "log.jsonl": "f1d8fd973ac35e8350593b1480b4977feecc42600321b028710a613b4ebe9a9f",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 26,
+ "log_tip": "90aea0f0db09aeaaeda2d2193bcbd7f6fd9fd7761f60d67550818e007875a2c7",
+ "machine": null,
+ "mode": "check",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": null,
+ "sig": "e47bb8d55a7c82f146d72ff775cf8d69acfccb8de8e5b2ae9d5b43464999ead41a9973cf3d4afa10eb4947f733fbe37290d1c78c8d59ac05a40c1dcea12d1a04",
+ "signer": "090b375003a16093ac519b50d4769a11ac6c92586550f6c4003f95debcdea07f",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {},
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

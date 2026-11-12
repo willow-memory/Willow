@@ -1,0 +1,52 @@
+{
+ "acts": 55,
+ "files": {
+  "acts.jsonl": "693e4a9483ca004c0a07cb4037bc7ac20cd5b4c29437d1d7076f6f7f6ff82125",
+  "log.jsonl": "0295d0543cb697692c36484fcec892365a4a047e15dddb34b4a0249953f5d42d",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "7e225815652794849e9ff404b5c8f5d511369e0217c3dd3cbd99e03cd9adde52"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 16,
+ "log_tip": "c866dae0f94b3591d6b11a319223565b979e7b030fc8ba0cf2c87d3e4c5265f1",
+ "machine": 2,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 6,
+ "sig": "0db945a213527901cc989ae7d938e3b721600d337a1c72e363cb7bac3c3c0bfb4aaa2c7215dcbf1c8e86d1808bfbf2808c722afd8954d714e38e7a6d630c0008",
+ "signer": "da404499ea75760746ff661921dbd60524b50770cfdf4617d5f4c7a2f5220d9b",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-2": {
+   "how": "held",
+   "seal": "afbe0ed2116ecfafc5678c7accaa7030a56d1ae82ed36422fd42cc40ce5c1a6b",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-2-machine-2": {
+   "how": "held",
+   "seal": "f24afc629ebddec74cc7457030e2321ada6be562eb7c13f9ea7fae81e6c2d149",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-3-machine-2": {
+   "how": "held",
+   "seal": "3bd79f62937ab5768189741319be3034ebbb033e5fdc54a3921df1a7ffc243a7",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-4-machine-2": {
+   "how": "held",
+   "seal": "e7f236797a892ff5104a7412fa650a7b1b8d4c5873dfa2351d5b954d14c373e0",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-5-machine-2": {
+   "how": "held",
+   "seal": "25c87481395294898e8c5800cd5690cb6c60191982cb3960a6679e5a9915d99e",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  }
+ },
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

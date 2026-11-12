@@ -1,0 +1,72 @@
+{
+ "acts": 40,
+ "files": {
+  "acts.jsonl": "7bc0d897eea2b0f2bb965a39f4a4c38ac065fce2034a1ffccd08bc0a1157d9d5",
+  "log.jsonl": "98a137ed4d43e0e0db5bad32d9ba9bc04a7d3ee3d61aa3ca6f1bb6d5da72080e",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "cf870ebf02a3932c544561e5b3c37866db822abf79baf13bc56255d3fae89600"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 18,
+ "log_tip": "f81f01e2e4f20cf9e755ffd08f02d1d1c1f0f5ed888640ebc8556293310a93ed",
+ "machine": 2,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 10,
+ "sig": "914a8d64b590f174ab228d353759ba6f63ab8d1a9eb499b0430593854fedd60b013cc3e9acfe22bb77b66a5030d295c194132627cb2928dbf0c5694f7f04870b",
+ "signer": "f91d4cd57526c76c1da1bbfb4fcf9a38bfd69fcf13086557c8ae149d3ea4680a",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-2": {
+   "how": "held",
+   "seal": "afbe0ed2116ecfafc5678c7accaa7030a56d1ae82ed36422fd42cc40ce5c1a6b",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-2-machine-2": {
+   "how": "held",
+   "seal": "f24afc629ebddec74cc7457030e2321ada6be562eb7c13f9ea7fae81e6c2d149",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-3-machine-2": {
+   "how": "held",
+   "seal": "3bd79f62937ab5768189741319be3034ebbb033e5fdc54a3921df1a7ffc243a7",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-4-machine-2": {
+   "how": "held",
+   "seal": "e7f236797a892ff5104a7412fa650a7b1b8d4c5873dfa2351d5b954d14c373e0",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-5-machine-2": {
+   "how": "held",
+   "seal": "25c87481395294898e8c5800cd5690cb6c60191982cb3960a6679e5a9915d99e",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-6-machine-2": {
+   "how": "held",
+   "seal": "60fa8b7f8f192ca33a0a42f40f564abd2fbe25354de55672b11a09a37945eae0",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-7-machine-2": {
+   "how": "held",
+   "seal": "25e15211bc118c812824991d00190de9ac8a3ee4e0042ca4f32b69aeb4cac362",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-8-machine-2": {
+   "how": "held",
+   "seal": "fbd8f8cc7f22a3d89b80cb1267fb715515de04b19955fd1b89a88a48dc1bede6",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-9-machine-2": {
+   "how": "held",
+   "seal": "55b1533357e6c46288a6a8a3f447c69ff304546efb75148bbca5967a8e6b7944",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  }
+ },
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

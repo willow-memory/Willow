@@ -1,0 +1,47 @@
+{
+ "acts": 41,
+ "files": {
+  "acts.jsonl": "99251dfc3c493a6de4e3f2548700f18459ed607b2cba7f05e3ff9c83b9977652",
+  "log.jsonl": "e197cfedfefc1795ce08179e86b3273ded36fc141c30e9755656bf06e62d7704",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "d3b8f6f257693e8a1cf0df9a13b4fcc5b1a5e0e32c77101d290836aa48e6fa36"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 13,
+ "log_tip": "f2a1ff686ef6f608ae1df6f5c0323521557634339d9db77d2285a1124f5da4e7",
+ "machine": 2,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 5,
+ "sig": "59b4304d28bf8683afca53ab23fe293a4437b338b5f1a74016eed08fb3a57655dc21856529140906c9a2055d8a2b68e31f105dc9e0319f506db7c3245ab34901",
+ "signer": "52d7fb7023c5e4a51e4b77ff3de2b5bf71d50a2f94b0cbb0baba9cab91168c24",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-2": {
+   "how": "held",
+   "seal": "afbe0ed2116ecfafc5678c7accaa7030a56d1ae82ed36422fd42cc40ce5c1a6b",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-2-machine-2": {
+   "how": "held",
+   "seal": "f24afc629ebddec74cc7457030e2321ada6be562eb7c13f9ea7fae81e6c2d149",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-3-machine-2": {
+   "how": "held",
+   "seal": "3bd79f62937ab5768189741319be3034ebbb033e5fdc54a3921df1a7ffc243a7",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-4-machine-2": {
+   "how": "held",
+   "seal": "e7f236797a892ff5104a7412fa650a7b1b8d4c5873dfa2351d5b954d14c373e0",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  }
+ },
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

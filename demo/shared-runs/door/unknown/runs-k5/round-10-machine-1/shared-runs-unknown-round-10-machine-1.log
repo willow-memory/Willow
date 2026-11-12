@@ -1,0 +1,28 @@
+[{"stream_name":"stdout","time":239.340279095,"data":"round-10-machine-1 ended 42 {\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"kind\": \"intel x86_64 avx2\", \"numpy\": \"2.1.3\", \"processor\": \"Intel(R) Xeon(R) CPU @ 2.20GHz\", \"python\": \"3.13.18\", \"stepper\": \"project\", \"system\": \"Linux\"}\n"}
+,{"stream_name":"stdout","time":239.340344614,"data":"{'at': '2026-11-12T19:39:44Z', 'check': 'python', 'holds': True, 'n': 0, 'said': '3.13.18', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":239.340352599,"data":"{'at': '2026-11-12T19:39:44Z', 'check': \"the starts are this plan's\", 'holds': True, 'n': 1, 'said': '110 starts, 110 trajectories', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":239.340362612,"data":"{'at': '2026-11-12T19:39:44Z', 'check': 'the machine and the round are in the plan', 'holds': True, 'n': 2, 'said': 'machine 1, round 10', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":239.340368519,"data":"{'at': '2026-11-12T19:39:44Z', 'check': \"the stepper is the plan's\", 'holds': True, 'n': 3, 'said': '{\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"numpy\": \"2.1.3\", \"power\": \"a product and a square root\", \"stepper\": \"project\"}', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":239.340375732,"data":"{'at': '2026-11-12T19:39:44Z', 'check': 'there is room for what would be kept', 'holds': True, 'n': 4, 'said': '20940140544 bytes free, about 42240000 wanted', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":239.340382264,"data":"{'at': '2026-11-12T19:39:45Z', 'folder': 'round-1-machine-1', 'how': 'held', 'n': 5, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340387654,"data":"{'at': '2026-11-12T19:39:45Z', 'folder': 'round-2-machine-1', 'how': 'held', 'n': 6, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340434911,"data":"{'at': '2026-11-12T19:39:45Z', 'folder': 'round-3-machine-1', 'how': 'held', 'n': 7, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340481508,"data":"{'at': '2026-11-12T19:39:45Z', 'folder': 'round-4-machine-1', 'how': 'held', 'n': 8, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340497561,"data":"{'at': '2026-11-12T19:39:45Z', 'folder': 'round-5-machine-1', 'how': 'held', 'n': 9, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340505749,"data":"{'at': '2026-11-12T19:39:45Z', 'folder': 'round-6-machine-1', 'how': 'held', 'n': 10, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340511154,"data":"{'at': '2026-11-12T19:39:46Z', 'folder': 'round-7-machine-1', 'how': 'held', 'n': 11, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340634308,"data":"{'at': '2026-11-12T19:39:46Z', 'folder': 'round-8-machine-1', 'how': 'held', 'n': 12, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340643519,"data":"{'at': '2026-11-12T19:39:46Z', 'folder': 'round-9-machine-1', 'how': 'held', 'n': 13, 'what': 'at the door', 'why': 'it is whole, and its signer is not one this door has enrolled'}\n"}
+,{"stream_name":"stdout","time":239.340648558,"data":"{'at': '2026-11-12T19:39:46Z', 'cut_off': [], 'done': 0, 'mode': 'shared', 'n': 14, 'what': 'starting'}\n"}
+,{"stream_name":"stdout","time":239.340653259,"data":"{'at': '2026-11-12T19:42:00Z', 'n': 15, 'same': True, 'step': 11250, 'trajectory': 'proxima-close', 'what': 'canary'}\n"}
+,{"stream_name":"stdout","time":239.340680199,"data":"{'at': '2026-11-12T19:42:00Z', 'done': 25, 'n': 16, 'of': 50, 'seconds': 136.1, 'what': 'so far'}\n"}
+,{"stream_name":"stdout","time":239.340695751,"data":"{'at': '2026-11-12T19:43:40Z', 'n': 17, 'same': True, 'step': 11250, 'trajectory': 'sirius-earth-jupiter~far', 'what': 'canary'}\n"}
+,{"stream_name":"stdout","time":239.340782122,"data":"{'at': '2026-11-12T19:43:40Z', 'done': 50, 'n': 18, 'of': 50, 'seconds': 235.8, 'what': 'so far'}\n"}
+,{"stream_name":"stdout","time":239.340790724,"data":"{'acts': 50, 'at': '2026-11-12T19:43:40Z', 'n': 19, 'seconds': 235.8, 'what': 'ended'}\n"}
+,{"stream_name":"stderr","time":242.994422415,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":242.994495606,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":243.505355498,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":243.505386816,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":245.678125735,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":247.331321524,"data":"[NbConvertApp] Writing 795636 bytes to __results__.html\n"}
+]

@@ -1,0 +1,32 @@
+{
+ "acts": 46,
+ "files": {
+  "acts.jsonl": "cfdf900e15e8a99a851ef614d460cf8c07f07e2f50bedd9bd3223f4b3817af66",
+  "log.jsonl": "365f3aa34259efa53e888e307c748d99e0e27b77be4f1c139cea94d4fa2b3b53",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "7d7f7819fa24c920b69fec958c19aefa1b560338efe922f679899256f4c119df"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 10,
+ "log_tip": "f78d393836829c55e169bbd7b5d2468d8ebd87fa4369d2c5a804eb72613d1119",
+ "machine": 1,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 2,
+ "sig": "c085b4922c04253a2e2792d06cb88b2cbb74cc85c71b0615fc53a95ec8f15f022a004a1a8189498544034699e094c4c4c8a7d6b2b6efc3e9c17f9394ac313d07",
+ "signer": "aab6a2fc55b21ae10872746d2ad73592f64e2f54db86d8d8236091df9e211e75",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-1": {
+   "how": "held",
+   "seal": "d282eb1a2a1a43d4d3a9ceaf20a2b4bda32caf4cd763ca005a7f28cd488ed5de",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  }
+ },
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

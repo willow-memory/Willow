@@ -1,0 +1,10 @@
+U1  passed: 50 rounds whole, each signed by a key the ring does not hold
+U2  passed: every round held every folder it was given
+U3  passed: 8683650 steps where alone would be 13319565: 34.8% saved, 34.8% foretold; 2200 of 2200 jobs
+U4  passed: all 2200 jobs end as they did where every signer was enrolled
+U5  passed: 88027 of 88027 states the same (88027 kept), 163 of 163 halts halt, over 50 folders
+measured:
+  8683650 steps, 5.03 times the 1726780 of the sweep where every signer was enrolled
+  states kept: 88027; bytes back from the rounds: 36014416
+  the checks stepped 8208050 steps
+  kinds drawn: amd x86_64 avx2 (3), intel x86_64 avx2 (52)

@@ -1,0 +1,57 @@
+{
+ "acts": 37,
+ "files": {
+  "acts.jsonl": "1bfce8edc8cf8108ddd414402601d65bb7d069c1ffe9c41e5494adbce97add36",
+  "log.jsonl": "d5d874fb83e75197cd5532adba6f1d70f31ebdaae6115c0eb9f3c09a3b9aa5c3",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "e785994c96cf58e16b4e4b5e1670a3301c2f31ebc1613ef241492e6fe8d15325"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 15,
+ "log_tip": "79aefd9a49edebf0df3cc7ea356af895cfe7cd53af8a7ebfd18fb4bcdbd5a55a",
+ "machine": 4,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 7,
+ "sig": "9af4d5281f2c9dfb849c372f1b12217aaf4368bd57eae45115b2784a3c925ffb87201d1b7a8dc275ab6a429e4a87671bb9814d88b37af61f55946ce6d05b6b05",
+ "signer": "c1bf46dd00612a48eff50a23d5a10d386155047b32168bb14de00613baa00894",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-4": {
+   "how": "held",
+   "seal": "0f994c0355934853c20de22b14590679a4e0565ea0d92747cc77a663999a69fc",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-2-machine-4": {
+   "how": "held",
+   "seal": "1400f89b79160b01bda56d4114102eac50103557563d61306bb4ec426702eb3a",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-3-machine-4": {
+   "how": "held",
+   "seal": "d26280cb1df4dfa7b699ca0ab6417ba92da3d5010a7d61587b93011a07b08028",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-4-machine-4": {
+   "how": "held",
+   "seal": "48c5056212779bb27ec395bec3fc75bb54b25c1add76bb06a88c21167854411f",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-5-machine-4": {
+   "how": "held",
+   "seal": "485fbda4b45b71576d92102ff9da580962fe77d4d16dc5e694b17879131253fc",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  },
+  "round-6-machine-4": {
+   "how": "held",
+   "seal": "0536aa71c1c35596cd09026938139119acb02383fbc6c54661eade98cf8a6c5e",
+   "why": "it is whole, and its signer is not one this door has enrolled"
+  }
+ },
+ "tools": {
+  "machine.py": "83219e91242afd4c54045aefc939aa8a948fdb3ed49db674e6eaeb1d4b09f7b5",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}
