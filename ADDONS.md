@@ -623,7 +623,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
   Uses scan. *new* `no-install` `offline` `scan` · near: scan, synonyms, latent
 - <a id="land"></a>[**land**](adapters/stdlib/land/) \
-  The files sort placed, copied (never moved) into a pile of their own per category, each copy logged with where it came from and its hash. \
+  The files sort placed, copied (never moved) into a folder per category, each copy logged with its hash. \
   Uses sort. *new* `no-install` `offline` `category` `sort` · near: sort, sort-ask, pii-audit
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \

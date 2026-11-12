@@ -1,1 +1,1 @@
-`land`: the files sort placed, copied (never moved) into a pile of their own per category, each copy logged with where it came from and its sha256; ties, unsorted files and a copy that would replace a different file wait on you, and `--dry-run` writes nothing
+`land`: the files sort placed, copied (never moved) into a folder per category, each copy logged with where it came from and its sha256; ties, unsorted files and a copy that would replace a different file wait on you, and `--dry-run` writes nothing

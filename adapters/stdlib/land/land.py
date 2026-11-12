@@ -1,5 +1,5 @@
-"""land.py: the files sort placed, copied (never moved) into a pile of their
-own per category, each copy logged with where it came from and its hash.
+"""land.py: the files sort placed, copied (never moved) into a folder per
+category, each copy logged with where it came from and its hash.
 Python 3.9+.
 
     python adapters/stdlib/land/land.py --of SORT.json --from FOLDER --to DIR [--skip PREFIX ...] [--dry-run] [--json]
@@ -7,7 +7,7 @@ Python 3.9+.
 SORT.json is sort's report as JSON (`sort.py ... --json`, or the copy a
 stack keeps, `{NN.json}`). FOLDER is the folder of originals the box's pile
 was made from; DIR is where the categories' folders go. Each file sort put
-in a category is copied from FOLDER to DIR/<category>/pile/<its path>, and
+in a category is copied from FOLDER to DIR/<category>/files/<its path>, and
 the copy is logged in DIR/<category>/landed.jsonl: its path, where it came
 from, and its sha256.
 
@@ -179,7 +179,7 @@ def land(doc: dict, src: Path, dst: Path, skip: list[str], dry: bool) -> dict:
         if len(cats) > 1:
             continue
         ((cat, why),) = cats.items()
-        target = dst / cat / "pile" / orig
+        target = dst / cat / "files" / orig
         source = src / orig
         if target.exists():
             if target.is_file() and sha(target) == sha(source):

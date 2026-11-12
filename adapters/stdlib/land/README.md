@@ -1,6 +1,6 @@
 <!-- willow-addon
 section: Finding things
-line: The files sort placed, copied (never moved) into a pile of their own per category, each copy logged with where it came from and its hash.
+line: The files sort placed, copied (never moved) into a folder per category, each copy logged with its hash.
 source: new
 added: 2026-11-12
 version: 0.1.0
@@ -12,9 +12,8 @@ output: report
 -->
 # land
 
-The files [sort](../sort/) placed, copied (never moved) into a pile of
-their own per category, each copy logged with where it came from and its
-hash. The step after a sort: a folder of everything, split into one folder
+The files [sort](../sort/) placed, copied (never moved) into a folder per
+category, each copy logged with where it came from and its hash. The step after a sort: a folder of everything, split into one folder
 per thing, each ready for a box of its own.
 
 ```
@@ -36,10 +35,11 @@ SORT.json is sort's report as JSON: `sort.py --box DIR --categories FILE
 --json`, or the copy a [stack](../stack/) keeps of its sort step, handed on
 as `{NN.json}`. FOLDER is the folder of originals the box's pile was read
 from. Each file sort put in a category is copied from FOLDER to
-`DIR/<category>/pile/<its path>`, and logged in
+`DIR/<category>/files/<its path>`, and logged in
 `DIR/<category>/landed.jsonl`, one line a copy: its path, where it came
-from, its sha256, and the hits sort placed it by. Each category's `pile` is
-then a folder to `kernel.py init` a box over.
+from, its sha256, and the hits sort placed it by. Each category's `files` is the
+originals as they were; its readers write their words beside it, into the
+pile a box of its own reads.
 
 **The original, not the words.** A pile holds what the readers wrote, so
 `<reader>/<path>.txt` is the words of `<path>`. A pile path names, in this

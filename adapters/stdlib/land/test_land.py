@@ -89,7 +89,7 @@ def test_a_placed_file_is_copied_to_its_category_and_logged_with_its_hash(tmp_pa
     of = sorted_report(tmp_path, {"bank/may.txt": "bank statement for may, invoice 7"})
     got = land(tmp_path, of, src)
     assert got.returncode == 0, got.stderr
-    copy = tmp_path / "out" / "money" / "pile" / "bank" / "may.txt"
+    copy = tmp_path / "out" / "money" / "files" / "bank" / "may.txt"
     assert copy.read_text() == "bank statement for may, invoice 7"
     assert (src / "bank" / "may.txt").is_file()  # copied, never moved
     log = [
@@ -114,7 +114,7 @@ def test_a_reader_folder_and_mirror_name_lead_back_to_the_original(tmp_path):
                                              ("text/big.txt.part2.txt", "1 hit")]})))  # fmt: skip
     got = land(tmp_path, of, src)
     assert got.returncode == 0, got.stderr
-    pile = tmp_path / "out" / "health" / "pile"
+    pile = tmp_path / "out" / "health" / "files"
     assert (pile / "letters" / "rx.pdf").read_text() == "%PDF"
     assert (pile / "big.txt").read_text() == "x"
     lines = (tmp_path / "out" / "health" / "landed.jsonl").read_text().splitlines()
@@ -171,7 +171,7 @@ def test_a_different_file_already_there_is_left_and_the_same_one_is_already_ther
     src = folder(tmp_path, {"a.txt": "new", "b.txt": "same"})
     of = tmp_path / "sort.json"
     of.write_text(json.dumps(doc({"money": [("a.txt", "1 hit"), ("b.txt", "1 hit")]})))
-    pile = tmp_path / "out" / "money" / "pile"
+    pile = tmp_path / "out" / "money" / "files"
     pile.mkdir(parents=True)
     (pile / "a.txt").write_text("old")
     (pile / "b.txt").write_text("same")
@@ -258,7 +258,7 @@ def test_a_missing_dir_is_made_on_the_first_copy_and_not_by_a_dry_run(tmp_path):
     got = run(
         str(HERE / "land.py"), "--of", str(of), "--from", str(src), "--to", str(to)
     )
-    assert got.returncode == 0 and (to / "money" / "pile" / "a.txt").read_text() == "a"
+    assert got.returncode == 0 and (to / "money" / "files" / "a.txt").read_text() == "a"
 
 
 def test_nothing_placed_is_empty(tmp_path):

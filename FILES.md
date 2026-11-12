@@ -592,7 +592,7 @@ willow/
 │   │   │   ├── test_glance.py
 │   │   │   └── README.md     its card
 │   │   ├── land/
-│   │   │   ├── land.py       The files sort placed, copied (never moved) into a pile of their own per category, each copy logged with where it came from and its hash
+│   │   │   ├── land.py       The files sort placed, copied (never moved) into a folder per category, each copy logged with its hash
 │   │   │   ├── test_land.py
 │   │   │   └── README.md     its card
 │   │   ├── look/
