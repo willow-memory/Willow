@@ -1,0 +1,1 @@
+`demo/shared-runs/door/kaggle/README.md`: the door's first run on Kaggle came back and every rule passed. Sixteen notebooks, five first-round parts cut inside a job and carried on in the next notebook, 336,379 steps, every part the first study's byte for byte on two kinds of processor it had not been tried on. The refusal across kinds was not met.
