@@ -13,6 +13,7 @@ sys.path.insert(0, str(HERE))
 import make_life  # noqa: E402
 import scene  # noqa: E402
 import adults  # noqa: E402
+import askable  # noqa: E402
 import fourteen  # noqa: E402
 import tense  # noqa: E402
 
@@ -172,3 +173,30 @@ def test_leo_at_fourteen_plays_as_told(tmp_path, capsys):
     assert "went otherwise" not in capsys.readouterr().out
     assert fourteen.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
     assert fourteen.main(["run"]) == 2
+
+
+def test_what_he_was_sent_is_askable_only_when_written_out_as_pages(tmp_path, capsys):
+    to = tmp_path / "askable"
+    assert askable.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 0
+    got = json.loads((to / "askable.json").read_text())
+    assert list(got) == ["as it is", "packages dropped", "written out"]
+    asked = list(askable.ASKED)
+    as_is = got["as it is"]
+    assert as_is[asked[1]]["where"] == "" and as_is[asked[2]]["where"] == "mine.md:6", (
+        "asked of the brown inhaler, it serves his line about the purple one"
+    )
+    assert not any(v["says_whose"] for v in as_is.values())
+    dropped = got["packages dropped"]
+    assert (
+        dropped[asked[2]]["where"].endswith(".pkg:1")
+        and not dropped[asked[2]]["readable"]
+    )
+    written = got["written out"]
+    assert [written[q]["where"] for q in asked] == [
+        "received/ravi-to-leo.md:5", "received/dana-to-leo.md:5",
+        "received/ravi-to-leo.md:5", "received/nurse-to-leo.md:5",
+    ]  # fmt: skip
+    assert all(v["readable"] and v["says_whose"] for v in written.values())
+    capsys.readouterr()
+    assert askable.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
+    assert askable.main(["run"]) == 2

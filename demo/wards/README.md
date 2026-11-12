@@ -245,6 +245,61 @@ What it found:
   it answer he has to write it down again himself, as he did with the
   nurse's plan. And it met both his parents as keys it had never seen.
 
+## The gap that came up three times: what arrives cannot be asked
+
+Kit's grandmother, after Kit's sentence came. Bryony, holding a court's
+order. Leo, with both his parents' word. Each took a package in, and
+each time the box could not answer from it. A package taken in is a row
+on the record: who signed it, and that it held. Its words are not in the
+box, and the kernel answers from files.
+
+    python demo/wards/askable.py run --life demo/wards/life --to /tmp/askable
+
+That plays Leo at fourteen and then asks his box four questions about
+what he was told, with his pile made three ways.
+
+| | his father on the brown inhaler | his mother on the review | how many puffs of the brown | the nurse's plan |
+|---|---|---|---|---|
+| as it is | his own count, which is about something else | nothing | his own line about the *purple* one | his own line |
+| the package files dropped in his pile | his own count | nothing | the package, as raw JSON | the package, as raw JSON |
+| each package written out as a page | his father's word | his mother's word | his father's word | the nurse's word |
+
+- **As it is, it is worse than silence.** Asked how many puffs of the
+  brown inhaler, his box serves his own line about the purple one. The
+  words are close enough to pass the kernel's rule and the answer is the
+  other inhaler. A box that holds half of what was said answers from the
+  half it holds.
+- **Dropping the package in is not enough.** The kernel does read it,
+  and serves a line of signatures and hashes that nobody could read.
+- **Written out, it works**, four of four, and each answer comes with
+  where it is from: a page under `received`, headed "Received from Dad,
+  not sealed by me", with the day, the key, his note, and the place in
+  his own files it came from. That page is made by hand here, from the
+  package. Nothing in willow makes it.
+
+What an add-on that made such pages would have to get right, said
+before anyone builds one:
+
+- **It must not be automatic.** If taking a package in put its words in
+  the pile, anyone could put words in your box by sending you
+  something. Dorian could send Agnes's box "my son Dorian is to decide"
+  and have it served. Keeping a package as a page has to be the owner's
+  act, on the record, package by package.
+- **The page must say whose word it is**, in its own text, so the
+  passage served carries it and not only the file's name.
+- **The page must be checkable against the package.** Made from it the
+  same way every time, naming it, so a page edited afterwards can be
+  told from one that was not.
+- **Whose key it was has to come from the owner.** "Dad" is Leo's name
+  for a key. That is the same question as how a key gets known, which
+  is being worked on elsewhere.
+- **A later package that replaces an earlier one** has to mark the
+  earlier page, or the box answers from both.
+
+It is the same shape the study of shared runs met from the other side:
+a thing received should not be gone on from until someone has looked at
+it.
+
 ## Two adults who cannot decide
 
 A child has a guardian from the start and a day the holding ends. An
