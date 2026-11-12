@@ -75,7 +75,23 @@ move:    mayflower inventory.pdf
 
 A tie, an unsorted file, or one sort put in the wrong place: a settled file
 lands where you said, "settled by you", before anything sort said of it,
-and no longer waits. A line naming no file in FOLDER is said under **no
+and no longer waits.
+
+A path with `*`, `?` or `[` in it is a pattern, and a `*` reaches across
+folders, so `evidence/*` is everything under `evidence/`:
+
+```
+custody: evidence/*
+leave:   *.svg
+```
+
+A pattern settles only what sort couldn't place (a tie, an unsorted file,
+one in two categories); what sort placed stays placed. The first pattern
+that fits a file wins, so a narrow one goes above a wide one. The folder
+`leave` keeps a file where it is, on purpose: it is said under **left where
+it is**, copied nowhere, and no longer waits. With a few patterns for a
+folder's own folders and its leftovers, what's still waiting is only what
+nothing but you can place. A line naming no file in FOLDER is said under **no
 original** and copied nowhere.
 
 It prints [a report](../ci/README.md#the-report-contract), and `--json`

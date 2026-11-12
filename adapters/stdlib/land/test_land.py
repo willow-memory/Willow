@@ -329,7 +329,69 @@ def test_what_you_settle_lands_where_you_said_before_anything_sort_said(tmp_path
     assert {x["sorted"] for x in log} == {"settled by you"}
     assert la.settles("a: b\nnot a line\n") is None
     assert la.settles("a:\n") is None and la.settles(": b\n") is None
-    assert la.settles("") == {}
+    assert la.settles("") == ({}, [])
+    assert la.settles("custody: evidence/*\nmoney: a.txt\nleave: *.svg\n") == (
+        {"a.txt": "money"},
+        [("evidence/*", "custody"), ("*.svg", "leave")],
+    )
+
+
+def test_a_pattern_settles_only_what_sort_couldnt_place_first_match_first(tmp_path):
+    src = folder(tmp_path, {
+        "evidence/a.md": "a", "evidence/deep/b.md": "b", "evidence/c.md": "c",
+        "x.svg": "<svg/>", "tie.md": "t", "twice.pdf": "p", "kept.md": "k",
+    })  # fmt: skip
+    of = tmp_path / "sort.json"
+    of.write_text(json.dumps(doc({
+        "money": [("evidence/c.md", "1 hit"), ("pdf/twice.pdf.txt", "1 hit"), ("kept.md", "1 hit")],
+        "health": [("ocr/twice.pdf.txt", "1 hit")],
+        "more than one": [("tie.md", "money 1, health 1")],
+        "unsorted": [("evidence/a.md", "none"), ("evidence/deep/b.md", "none"), ("x.svg", "none")],
+    })))  # fmt: skip
+    settle = tmp_path / "settle.txt"
+    settle.write_text(
+        "health: evidence/deep/*\ncustody: evidence/*\nleave: *.svg\n"
+        "health: *.pdf\nleave: tie.md\nleave: kept.md\nmoney: *.md\n"
+    )
+    got = land(tmp_path, of, src, "--settle", str(settle))
+    assert got.returncode == 0, got.stdout
+    out = tmp_path / "out"
+    assert (out / "custody" / "files" / "evidence" / "a.md").is_file()
+    assert (
+        out / "health" / "files" / "evidence" / "deep" / "b.md"
+    ).is_file()  # first match wins
+    assert (
+        out / "money" / "files" / "evidence" / "c.md"
+    ).is_file()  # sort placed it: stays
+    assert (
+        out / "health" / "files" / "twice.pdf"
+    ).is_file()  # two categories, settled by *.pdf
+    assert not (out / "money" / "files" / "kept.md").exists()  # left by an exact line
+    assert not (out / "money" / "files" / "tie.md").exists()
+    assert (
+        "## waiting on you" not in got.stdout
+        and "## in two categories" not in got.stdout
+    )
+    assert "## left where it is" in got.stdout
+    rows = [" ".join(line.split()) for line in got.stdout.splitlines()]
+    assert "x.svg left where it is, by your *.svg" in rows
+    assert "kept.md left where it is, by you" in rows
+    assert "3 left where they are" in got.stdout.splitlines()[0]
+    log = [
+        json.loads(x)
+        for x in (out / "custody" / "landed.jsonl").read_text().splitlines()
+    ]
+    assert log[0]["sorted"] == "settled by your evidence/*"
+
+
+def test_a_pattern_naming_no_folder_waits(tmp_path):
+    src = folder(tmp_path, {"a.md": "a"})
+    of = tmp_path / "sort.json"
+    of.write_text(json.dumps(doc({"unsorted": [("a.md", "none")]})))
+    settle = tmp_path / "settle.txt"
+    settle.write_text("../up: *.md\n")
+    got = land(tmp_path, of, src, "--settle", str(settle))
+    assert got.returncode == 42 and "a.md  '../up' isn't a folder name" in got.stdout
 
 
 def test_refusals(tmp_path):

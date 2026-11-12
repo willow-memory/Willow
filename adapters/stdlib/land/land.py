@@ -34,7 +34,12 @@ the same and writes nothing.
 a line each, `category: path` (its path in FOLDER, # for a comment): a tie,
 an unsorted file, or one sort put in the wrong place. A settled file lands
 where you said, "settled by you", before anything sort said of it, and no
-longer waits.
+longer waits. A path with * ? or [ in it is a pattern (`custody:
+evidence/*`, a * reaching across folders): the first pattern that is a
+file's path settles it, but only a file sort couldn't place (a tie, an
+unsorted file, one in two categories); what sort placed stays placed. The
+folder `leave` keeps a file where it is, on purpose: said under "left where
+it is", and no longer waiting.
 
 It prints a report (the shape every report add-on shares), and --json the
 same report as one JSON object.
@@ -49,6 +54,7 @@ inside the other). DIR is made on the first copy if it isn't there.
 
 from __future__ import annotations
 
+import fnmatch
 import hashlib
 import json
 import re
@@ -182,19 +188,39 @@ def placed(doc: dict) -> tuple[dict, list]:
     return by, waiting
 
 
-def settles(text: str) -> dict | None:
-    """{original: category} from a settle file, a line each, "category:
-    path", blank lines and # comments passed over; None if a line isn't."""
-    out: dict = {}
+LEAVE = "leave"  # a settle line's folder for "stays where it is, on purpose"
+GLOB = re.compile(r"[*?[]")
+
+
+def settles(text: str) -> tuple[dict, list] | None:
+    """({path: category}, [(pattern, category)]) from a settle file, a line
+    each, "category: path", blank lines and # comments passed over; a path
+    with * ? or [ in it is a pattern, kept in the file's order. None if a
+    line isn't "category: path"."""
+    exact: dict = {}
+    patterns: list = []
     for line in text.splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
             continue
         cat, sep, path = line.partition(":")
-        if not sep or not cat.strip() or not path.strip():
+        cat, path = cat.strip(), path.strip()
+        if not sep or not cat or not path:
             return None
-        out[path.strip()] = cat.strip()
-    return out
+        if GLOB.search(path):
+            patterns.append((path, cat))
+        else:
+            exact[path] = cat
+    return exact, patterns
+
+
+def matched(path: str, patterns: list) -> tuple[str, str] | None:
+    """The first (pattern, category) whose pattern is the path; a * there
+    reaches across folders, so `evidence/*` is everything under evidence."""
+    for pat, cat in patterns:
+        if fnmatch.fnmatchcase(path, pat):
+            return pat, cat
+    return None
 
 
 def land(
@@ -203,10 +229,11 @@ def land(
     dst: Path,
     skip: list[str],
     dry: bool,
-    settled: dict | None = None,
+    settled: tuple[dict, list] | None = None,
 ) -> dict:
     by, waiting = placed(doc)
-    settled = settled or {}
+    settled, patterns = settled or ({}, [])
+    left: list = []
     homes: dict = {}  # original -> {category: why}
     no_original: list = []
     bad_names: list = []
@@ -236,14 +263,36 @@ def land(
             no_original.append(
                 (orig, f"{cat}: settled, but no such file in the folder")
             )
+        elif cat == LEAVE:
+            homes.pop(orig, None)
+            left.append((orig, "left where it is, by you"))
         else:
             homes[orig] = {cat: "settled by you"}
-    waiting = [
-        (w, x)
-        for w, x in waiting
-        if original(src, w) not in settled
-        and not skipped_by(original(src, w) or w, skip)
-    ]
+    still: list = []
+    for w, x in waiting:
+        orig = original(src, w)
+        if orig in settled or skipped_by(orig or w, skip):
+            continue
+        hit = matched(orig, patterns) if orig is not None else None
+        if hit is None:
+            still.append((w, x))
+        elif hit[1] == LEAVE:
+            homes.pop(orig, None)
+            left.append((orig, f"left where it is, by your {hit[0]}"))
+        elif safe_name(hit[1]):
+            homes[orig] = {hit[1]: f"settled by your {hit[0]}"}
+        else:
+            bad_names.append((orig, f"{hit[1]!r} isn't a folder name"))
+    waiting = still
+    for orig, cats in sorted(homes.items()):
+        if len(cats) < 2 or orig in settled:
+            continue
+        hit = matched(orig, patterns)
+        if hit is not None and hit[1] == LEAVE:
+            del homes[orig]
+            left.append((orig, f"left where it is, by your {hit[0]}"))
+        elif hit is not None and safe_name(hit[1]):
+            homes[orig] = {hit[1]: f"settled by your {hit[0]}"}
     twice = [
         (o, "in " + ", ".join(sorted(c)))
         for o, c in sorted(homes.items())
@@ -283,13 +332,14 @@ def land(
         ("in two categories", twice),
         ("no original", no_original + bad_names),
         ("left as it was", differs),
+        ("left where it is", sorted(set(left))),
     ]
     verb = "would copy" if dry else "copied"
     said = (
         f"{verb} {copied} files into {len(landed)} categories, {there} already there, "
-        f"{len(waits)} waiting on you, {skipped} skipped"
+        f"{len(waits)} waiting on you, {len(set(left))} left where they are, {skipped} skipped"
     )
-    state = "populated" if (landed or waits) else "empty"
+    state = "populated" if (landed or waits or left) else "empty"
     return report("land", state, said, groups)
 
 
