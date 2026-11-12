@@ -40,6 +40,10 @@ The store is opened read-only and never written to. A `store.db` that is not
 a Cursor chat (not SQLite, no `meta`, no agent id, no spoken turns) is
 skipped and counted. Hidden folders and files are skipped.
 
+A chat too long for the kernel to read (over PART bytes) is written in parts,
+`store.db.txt`, `store.db.2.txt`, and so on, cut between turns; each part
+has the header and `part N of M`, and the turn numbers go on across parts.
+
     wrote 2 files to MIRROR; skipped 1
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused.
@@ -49,6 +53,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 import sys
 from datetime import datetime, timezone
@@ -62,6 +67,98 @@ ROLES = {"user": "you", "assistant": "assistant"}
 LINK_FIELDS = (1, 13)  # 1: a message, 13: a node of the same kind
 HASH = 32
 MAX_NODES = 1_000_000
+
+
+PART = 900_000  # bytes a mirror file holds before it goes on; the kernel reads 1 MB
+PART_LINE = "part 99999 of 99999\n"  # the widest the "part N of M" line gets
+
+
+def _cut(line: str, room: int) -> tuple[str, str]:
+    """`line` cut after at most `room` bytes, never inside a character."""
+    raw = line.encode("utf-8")
+    at = room
+    while at > 0 and 0x80 <= raw[at] < 0xC0:
+        at -= 1
+    return raw[:at].decode("utf-8"), raw[at:].decode("utf-8")
+
+
+def _pieces(block: str, room: int, budget: int) -> list[str]:
+    """One turn cut at line ends (inside a line only if it is too long): the
+    first piece holds at most `room` bytes, each later one at most `budget`."""
+    out, cur, used, cap = [], "", 0, room
+    for line in block.splitlines(keepends=True):
+        n = len(line.encode("utf-8"))
+        if used + n > cap and cur:
+            out.append(cur)
+            cur, used, cap = "", 0, budget
+        while used + n > cap:
+            head, line = _cut(line, cap - used)
+            out.append(cur + head)
+            cur, used, cap = "", 0, budget
+            n = len(line.encode("utf-8"))
+        cur, used = cur + line, used + n
+    return out + [cur] if cur else out
+
+
+def _parts(blocks: list[str], budget: int) -> list[list[str]]:
+    """The turns packed into parts of at most `budget` bytes, cut between
+    turns; a turn too long for a part goes on into the next."""
+    parts: list[list[str]] = [[]]
+    size = 0
+    for block in blocks:
+        n = len(block.encode("utf-8"))
+        sep = 2 if parts[-1] else 0
+        if size + sep + n > budget and n <= budget:
+            parts.append([])
+            size, sep = 0, 0
+        if size + sep + n <= budget:
+            parts[-1].append(block)
+            size += sep + n
+            continue
+        room = budget - size - sep
+        if parts[-1] and room < budget // 4:
+            parts.append([])
+            size, room = 0, budget
+        for i, piece in enumerate(_pieces(block, room, budget)):
+            if i:
+                parts.append([])
+                size = 0
+            sep = 2 if parts[-1] else 0
+            parts[-1].append(piece)
+            size += sep + len(piece.encode("utf-8"))
+    return parts
+
+
+def _written(head: list[str], lead: str, blocks: list[str]) -> list[str]:
+    """The session as one text, or as parts of under PART bytes: each part
+    has the whole header, then `part N of M`, then its turns."""
+    top = "\n".join(head) + lead
+    whole = top + "\n\n".join(blocks) + "\n"
+    if len(whole.encode("utf-8")) <= PART:
+        return [whole]
+    room = PART - len((top + PART_LINE).encode("utf-8")) - 1
+    parts = _parts(blocks, max(room, 64))
+    head_text = "\n".join(head)
+    return [
+        f"{head_text}\npart {n} of {len(parts)}{lead}" + "\n\n".join(p) + "\n"
+        for n, p in enumerate(parts, 1)
+    ]
+
+
+def _write_parts(target: Path, texts: list[str]) -> None:
+    """`X.txt`, `X.2.txt`, ... written; an `X.N.txt` left from a longer
+    session is removed, and nothing else."""
+    target.parent.mkdir(parents=True, exist_ok=True)
+    keep = {target.name}
+    target.write_bytes(texts[0].encode("utf-8"))
+    for n, text in enumerate(texts[1:], 2):
+        part = target.with_name(f"{target.stem}.{n}.txt")
+        part.write_bytes(text.encode("utf-8"))
+        keep.add(part.name)
+    stale = re.compile(re.escape(target.stem) + r"\.\d+\.txt")
+    for old in target.parent.iterdir():
+        if old.name not in keep and stale.fullmatch(old.name) and old.is_file():
+            old.unlink()
 
 
 def _varint(buf: bytes, i: int) -> tuple[int, int]:
@@ -201,8 +298,9 @@ def _line(text) -> str:
     return " ".join(str(text or "").split())
 
 
-def chat_text(path: Path) -> str | None:
-    """The chat as text, or None when this is not a Cursor chat store."""
+def chat_parts(path: Path) -> list[str] | None:
+    """The chat as one text, or as parts when one would be too long for the
+    kernel; None when this is not a Cursor chat store."""
     try:
         uri = path.resolve().as_uri() + "?mode=ro"
         con = sqlite3.connect(uri, uri=True)
@@ -251,8 +349,14 @@ def chat_text(path: Path) -> str | None:
     if not found:
         head.append("order: not found in the store")
     head.append(f"{len(turns)} turns")
-    body = "\n\n".join(f"{n}  {who}\n{text}" for n, (who, text) in enumerate(turns, 1))
-    return "\n".join(head) + "\n\n" + body + "\n"
+    blocks = [f"{n}  {who}\n{text}" for n, (who, text) in enumerate(turns, 1)]
+    return _written(head, "\n\n", blocks)
+
+
+def chat_text(path: Path) -> str | None:
+    """The chat's text, or its first part if it is long."""
+    got = chat_parts(path)
+    return None if got is None else got[0]
 
 
 def _sources(folder: Path) -> list[Path]:
@@ -274,14 +378,12 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
     wrote = skipped = 0
     for path in _sources(src):
         try:
-            text = chat_text(path)
-            if text is None:
+            texts = chat_parts(path)
+            if texts is None:
                 skipped += 1
                 continue
             rel = path.relative_to(src)
-            target = dst.joinpath(rel.parent, rel.name + ".txt")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            _write_parts(dst.joinpath(rel.parent, rel.name + ".txt"), texts)
         except OSError:
             skipped += 1
             continue

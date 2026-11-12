@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Cursor agent chats, each kept in its own SQLite database, as plain text with each turn numbered, so you can ask what the agent was told.
 source: new
 added: 2026-11-11
-version: 0.1.0
+version: 0.2.0
 writes: to
 network: none
 role: reads
@@ -42,7 +42,16 @@ guessed: the header says `order: not found in the store` and the turns are
 listed as SQLite returns them.
 
 Each chat is written to MIRROR at the same relative path with .txt added. A
-`store.db` that is not a Cursor chat (not SQLite, no `meta`, no spoken turns)
+chat whose text would pass 900,000 bytes (the kernel reads 1 MB of a file, and
+a pile leaves out a longer one) is written in parts instead: store.db.txt,
+then store.db.2.txt, store.db.3.txt, named as
+[ai-code-tracking](../ai-code-tracking/) names its parts, so a pile reads them
+in order. Parts are cut between turns; a turn longer than a part is cut at a
+line end, and a line longer than a part between characters. Every part opens
+with the chat's header and a line `part 2 of 3`, so a passage still says which
+chat it is and when it ran, and the turn numbers go on across parts. A chat
+that fits is one file with no `part` line. A rerun removes a store.db.N.txt
+left by a longer run, and nothing else. A `store.db` that is not a Cursor chat (not SQLite, no `meta`, no spoken turns)
 is skipped and counted. Point the kernel at MIRROR to ask questions of it.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused

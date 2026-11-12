@@ -4,7 +4,9 @@ reasoning left out; the original store untouched."""
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
+import re
 import sqlite3
 import subprocess
 import sys
@@ -218,3 +220,159 @@ def test_a_bad_command_line_is_refused(tmp_path):
     before = snapshot(folder)
     got = mirror(folder, folder / "out")
     assert got.returncode == 2 and snapshot(folder) == before
+
+
+# ── long chats: written in parts, under the kernel's limit ──────────────────
+def load():
+    """The module itself, so a test can lower PART instead of making 900 KB."""
+    spec = importlib.util.spec_from_file_location("cursor_chats_under_test", SCRIPT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def long_store(path: Path, turns: list[str]) -> None:
+    """A made-up chat of these turns, you and the assistant turn about."""
+    rows: dict[str, bytes] = {}
+    ids = [
+        msg(rows, "user" if i % 2 == 0 else "assistant", text)
+        for i, text in enumerate(turns)
+    ]
+    root_id = put(rows, node(*[field(1, i) for i in ids])).hex()
+    make_store(
+        path,
+        {
+            "agentId": "chat-long",
+            "latestRootBlobId": root_id,
+            "name": "Long one",
+            "createdAt": 1788174000000,
+            "lastUsedModel": "some-model",
+        },
+        rows,
+    )
+
+
+def in_order(to: Path) -> list[Path]:
+    return sorted(to.iterdir(), key=lambda p: (len(p.name), p.name))
+
+
+def numbered(text: str) -> list[int]:
+    return [int(m) for m in re.findall(r"^(\d+)  (?:you|assistant)$", text, re.M)]
+
+
+def test_a_chat_that_fits_is_one_file_with_no_part_line(tmp_path):
+    mod = load()
+    folder, to = tmp_path / "f", tmp_path / "m"
+    long_store(folder / "p" / "c" / "store.db", ["one", "two"])
+    assert mod.mirror(folder, to) == (1, 0)
+    assert [p.name for p in (to / "p" / "c").iterdir()] == ["store.db.txt"]
+    text = (to / "p" / "c" / "store.db.txt").read_text(encoding="utf-8")
+    assert "part " not in text and text.startswith("chat chat-long\n")
+
+
+def test_a_long_chat_is_three_parts_each_under_the_limit(tmp_path, monkeypatch):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 700)  # a few turns to a part, not 900 KB
+    folder, to = tmp_path / "f", tmp_path / "m"
+    long_store(
+        folder / "c" / "store.db",
+        [f"turn {i} " + "w" * 150 for i in range(1, 9)],
+    )
+    assert mod.mirror(folder, to) == (1, 0)
+    names = sorted(p.name for p in (to / "c").iterdir())
+    assert names == ["store.db.2.txt", "store.db.3.txt", "store.db.txt"]
+    texts = [
+        (to / "c" / n).read_text(encoding="utf-8")
+        for n in ("store.db.txt", "store.db.2.txt", "store.db.3.txt")
+    ]
+    header = (
+        "chat chat-long\nname: Long one\nstarted: 2026-08-31T11:00:00Z\n"
+        "model: some-model\n8 turns\n"
+    )
+    seen = []
+    for n, text in enumerate(texts, 1):
+        assert len(text.encode("utf-8")) <= 700
+        assert text.startswith(header + f"part {n} of 3\n")
+        seen += numbered(text)
+    assert seen == list(range(1, 9))  # numbers go on across parts
+    body = "".join(texts)
+    where = [body.index(f"turn {i} ") for i in range(1, 9)]
+    assert [body.count(f"turn {i} ") for i in range(1, 9)] == [1] * 8
+    assert where == sorted(where)
+
+
+def test_a_turn_longer_than_a_part_goes_on_at_a_line_end(tmp_path, monkeypatch):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 500)
+    folder, to = tmp_path / "f", tmp_path / "m"
+    big = "\n".join(f"line {i:03d} " + "x" * 20 for i in range(60))  # ~1.7 KB
+    long_store(folder / "c" / "store.db", ["first", big, "last"])
+    assert mod.mirror(folder, to) == (1, 0)
+    texts = [p.read_text(encoding="utf-8") for p in in_order(to / "c")]
+    assert len(texts) > 2
+    assert all(len(t.encode("utf-8")) <= 500 for t in texts)
+    body = "".join(texts)
+    assert numbered(body) == [1, 2, 3]
+    assert [body.count(f"line {i:03d} ") for i in range(60)] == [1] * 60
+    for t in texts:  # whole lines only: none starts or ends mid-line
+        for ln in t.splitlines():
+            assert not ln.startswith("line") or ln.endswith("x" * 20)
+    assert "last" in texts[-1] and "part 1 of" in texts[0]
+
+
+def test_a_line_longer_than_a_part_is_cut_between_characters(tmp_path, monkeypatch):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 500)
+    for lead in ("", "a", "ab", "abc"):  # moves where the cut lands in a character
+        folder, to = tmp_path / f"f{len(lead)}", tmp_path / f"m{len(lead)}"
+        long = lead + "日" * 400 + "é" * 300 + "🙂" * 50  # 2.2 KB, one line
+        long_store(folder / "c" / "store.db", ["go", long])
+        assert mod.mirror(folder, to) == (1, 0)
+        texts = []
+        for p in in_order(to / "c"):
+            raw = p.read_bytes()
+            assert len(raw) <= 500
+            texts.append(raw.decode("utf-8"))  # strict: no character was split
+        assert len(texts) > 3
+        body = "".join(texts)
+        assert body.count("日") == 400 and body.count("é") == 300
+        assert body.count("🙂") == 50 and body.count("�") == 0
+
+
+def test_a_rerun_after_the_chat_shortens_removes_only_the_stale_part(
+    tmp_path, monkeypatch
+):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 700)
+    folder, to = tmp_path / "f", tmp_path / "m"
+    store = folder / "c" / "store.db"
+    long_store(store, [f"turn {i} " + "w" * 150 for i in range(1, 9)])
+    assert mod.mirror(folder, to) == (1, 0)
+    here = to / "c"
+    assert (here / "store.db.3.txt").exists()
+    other = {  # not this chat's parts: left alone
+        "store2.db.3.txt": b"another chat's part",
+        "store.db.3.txt.bak": b"a backup",
+        "store.db.3.notes.txt": b"notes",
+        "store.db.x.txt": b"not a part number",
+    }
+    for name, data in other.items():
+        (here / name).write_bytes(data)
+    (to / "d").mkdir()
+    (to / "d" / "store.db.3.txt").write_bytes(b"same name, another folder")
+    store.unlink()
+    long_store(store, [f"turn {i} " + "w" * 150 for i in range(1, 6)])
+    assert mod.mirror(folder, to) == (1, 0)
+    assert not (here / "store.db.3.txt").exists()
+    assert (here / "store.db.2.txt").exists()
+    for name, data in other.items():
+        assert (here / name).read_bytes() == data
+    assert (to / "d" / "store.db.3.txt").read_bytes() == b"same name, another folder"
+    first = snapshot(to)
+    assert mod.mirror(folder, to) == (1, 0)
+    assert snapshot(to) == first  # the same source gives the same files
+    store.unlink()
+    long_store(store, ["one", "two"])  # now it fits: one file, no parts
+    assert mod.mirror(folder, to) == (1, 0)
+    assert not (here / "store.db.2.txt").exists()
+    assert "part " not in (here / "store.db.txt").read_text(encoding="utf-8")

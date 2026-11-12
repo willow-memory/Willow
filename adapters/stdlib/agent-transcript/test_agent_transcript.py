@@ -4,7 +4,9 @@ the same folder gives the same bytes."""
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -311,3 +313,157 @@ def test_modification_time_is_never_used(tmp_path):
     assert mirror(folder, to).returncode == 0
     text = (to / "s.jsonl.txt").read_text(encoding="utf-8")
     assert "time: not in the file" in text and "2001" not in text
+
+
+# ── long sessions: written in parts, under the kernel's limit ───────────────
+def load():
+    """The module itself, so a test can lower PART instead of making 900 KB."""
+    spec = importlib.util.spec_from_file_location("agent_transcript_under_test", SCRIPT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def session(turns: list[str], name: str = "long-1") -> str:
+    """A made-up session: you and the assistant, turn about."""
+    lines = []
+    for i, text in enumerate(turns):
+        who = "user" if i % 2 == 0 else "assistant"
+        lines.append(
+            json.dumps(
+                {
+                    "type": who,
+                    "sessionId": name,
+                    "timestamp": f"2026-10-31T09:00:{i % 60:02d}.000Z",
+                    "message": {"role": who, "content": text},
+                }
+            )
+        )
+    return "\n".join(lines) + "\n"
+
+
+def write_session(folder: Path, turns: list[str], name: str = "sess.jsonl") -> None:
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / name).write_text(session(turns), encoding="utf-8")
+
+
+def in_order(to: Path) -> list[Path]:
+    return sorted(to.iterdir(), key=lambda p: (len(p.name), p.name))
+
+
+def numbered(text: str) -> list[int]:
+    return [int(m) for m in re.findall(r"^(\d+)  (?:you|assistant)$", text, re.M)]
+
+
+def test_a_session_that_fits_is_one_file_with_no_part_line(tmp_path):
+    mod = load()
+    folder, to = tmp_path / "f", tmp_path / "m"
+    write_session(folder, ["one", "two"])
+    assert mod.mirror(folder, to) == (1, 0)
+    assert [p.name for p in to.iterdir()] == ["sess.jsonl.txt"]
+    text = (to / "sess.jsonl.txt").read_text(encoding="utf-8")
+    assert "part " not in text and text.startswith("session long-1\n")
+
+
+def test_a_long_session_is_three_parts_each_under_the_limit(tmp_path, monkeypatch):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 700)  # a few turns to a part, not 900 KB
+    folder, to = tmp_path / "f", tmp_path / "m"
+    turns = [f"turn {i} " + "w" * 150 for i in range(1, 9)]
+    write_session(folder, turns)
+    assert mod.mirror(folder, to) == (1, 0)
+    names = sorted(p.name for p in to.iterdir())
+    assert names == ["sess.jsonl.2.txt", "sess.jsonl.3.txt", "sess.jsonl.txt"]
+    texts = [
+        (to / n).read_text(encoding="utf-8")
+        for n in ("sess.jsonl.txt", "sess.jsonl.2.txt", "sess.jsonl.3.txt")
+    ]
+    header = (
+        "session long-1\nstarted: 2026-10-31T09:00:00.000Z\n"
+        "ended: 2026-10-31T09:00:07.000Z\n8 turns\n"
+    )
+    seen = []
+    for n, text in enumerate(texts, 1):
+        assert len(text.encode("utf-8")) <= 700
+        assert text.startswith(header + f"part {n} of 3\n")
+        seen += numbered(text)
+    assert seen == list(range(1, 9))  # numbers go on across parts
+    body = "".join(texts)
+    where = [body.index(f"turn {i} ") for i in range(1, 9)]
+    assert [body.count(f"turn {i} ") for i in range(1, 9)] == [1] * 8
+    assert where == sorted(where)
+
+
+def test_a_turn_longer_than_a_part_goes_on_at_a_line_end(tmp_path, monkeypatch):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 500)
+    folder, to = tmp_path / "f", tmp_path / "m"
+    big = "\n".join(f"line {i:03d} " + "x" * 20 for i in range(60))  # ~1.7 KB
+    write_session(folder, ["first", big, "last"])
+    assert mod.mirror(folder, to) == (1, 0)
+    texts = [p.read_text(encoding="utf-8") for p in in_order(to)]
+    assert len(texts) > 2
+    assert all(len(t.encode("utf-8")) <= 500 for t in texts)
+    body = "".join(texts)
+    assert numbered(body) == [1, 2, 3]
+    assert [body.count(f"line {i:03d} ") for i in range(60)] == [1] * 60
+    for t in texts:  # whole lines only: none starts or ends mid-line
+        for ln in t.splitlines():
+            assert not ln.startswith("line") or ln.endswith("x" * 20)
+    assert "last" in texts[-1] and "part 1 of" in texts[0]
+
+
+def test_a_line_longer_than_a_part_is_cut_between_characters(tmp_path, monkeypatch):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 500)
+    for lead in ("", "a", "ab", "abc"):  # moves where the cut lands in a character
+        folder, to = tmp_path / f"f{len(lead)}", tmp_path / f"m{len(lead)}"
+        long = lead + "日" * 400 + "é" * 300 + "🙂" * 50  # 2.2 KB, one line
+        write_session(folder, ["go", long])
+        assert mod.mirror(folder, to) == (1, 0)
+        texts = []
+        for p in in_order(to):
+            raw = p.read_bytes()
+            assert len(raw) <= 500
+            texts.append(raw.decode("utf-8"))  # strict: no character was split
+        assert len(texts) > 3
+        body = "".join(texts)
+        assert body.count("日") == 400 and body.count("é") == 300
+        assert body.count("🙂") == 50 and body.count("�") == 0
+
+
+def test_a_rerun_after_the_session_shortens_removes_only_the_stale_part(
+    tmp_path, monkeypatch
+):
+    mod = load()
+    monkeypatch.setattr(mod, "PART", 700)
+    folder, to = tmp_path / "f", tmp_path / "m"
+    write_session(folder, [f"turn {i} " + "w" * 150 for i in range(1, 9)])
+    assert mod.mirror(folder, to) == (1, 0)
+    assert (to / "sess.jsonl.3.txt").exists()
+    other = {  # not this session's parts: left alone
+        "sess2.jsonl.3.txt": b"another session's part",
+        "sess.jsonl.3.txt.bak": b"a backup",
+        "sess.jsonl.3.notes.txt": b"notes",
+        "sess.jsonl.x.txt": b"not a part number",
+    }
+    for name, data in other.items():
+        (to / name).write_bytes(data)
+    (to / "sub").mkdir()
+    (to / "sub" / "sess.jsonl.3.txt").write_bytes(b"same name, another folder")
+    write_session(folder, [f"turn {i} " + "w" * 150 for i in range(1, 6)])
+    assert mod.mirror(folder, to) == (1, 0)
+    assert not (to / "sess.jsonl.3.txt").exists()
+    assert (to / "sess.jsonl.2.txt").exists()
+    for name, data in other.items():
+        assert (to / name).read_bytes() == data
+    assert (
+        to / "sub" / "sess.jsonl.3.txt"
+    ).read_bytes() == b"same name, another folder"
+    first = snapshot(to)
+    assert mod.mirror(folder, to) == (1, 0)
+    assert snapshot(to) == first  # the same source gives the same files
+    write_session(folder, ["one", "two"])  # now it fits: one file, no parts
+    assert mod.mirror(folder, to) == (1, 0)
+    assert not (to / "sess.jsonl.2.txt").exists()
+    assert "part " not in (to / "sess.jsonl.txt").read_text(encoding="utf-8")
