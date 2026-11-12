@@ -270,6 +270,46 @@ def test_nothing_placed_is_empty(tmp_path):
     assert got.returncode == 0 and got.stdout.startswith("land: empty,")
 
 
+def test_what_you_settle_lands_where_you_said_before_anything_sort_said(tmp_path):
+    src = folder(
+        tmp_path, {"tie.md": "t", "lost.pdf": "l", "wrong.txt": "w", "Willow/x.md": "x"}
+    )
+    of = tmp_path / "sort.json"
+    of.write_text(
+        json.dumps(
+            doc(
+                {
+                    "money": [("wrong.txt", "1 hit")],
+                    "more than one": [("tie.md", "money 1, health 1")],
+                    "unsorted": [("pdf/lost.pdf.txt", "no phrase of yours")],
+                }
+            )
+        )
+    )
+    settle = tmp_path / "settle.txt"
+    settle.write_text(
+        "# mine\n\nhealth: tie.md\nhealth:   lost.pdf\nhealth: wrong.txt\n"
+        "code: Willow/x.md\nmoney: not-here.txt\n../up: tie.md\n"
+    )
+    got = land(tmp_path, of, src, "--settle", str(settle), "--skip", "Willow/")
+    assert got.returncode == 42  # the two lines naming nothing wait
+    pile = tmp_path / "out" / "health" / "files"
+    assert sorted(p.name for p in pile.iterdir()) == ["lost.pdf", "wrong.txt"]
+    assert not (tmp_path / "out" / "money").exists()
+    assert (tmp_path / "out" / "code" / "files" / "Willow" / "x.md").is_file()
+    assert "## waiting on you" not in got.stdout
+    assert "not-here.txt  money: settled, but no such file in the folder" in got.stdout
+    assert "tie.md        '../up' isn't a folder name" in got.stdout
+    log = [
+        json.loads(x)
+        for x in (tmp_path / "out" / "health" / "landed.jsonl").read_text().splitlines()
+    ]
+    assert {x["sorted"] for x in log} == {"settled by you"}
+    assert la.settles("a: b\nnot a line\n") is None
+    assert la.settles("a:\n") is None and la.settles(": b\n") is None
+    assert la.settles("") == {}
+
+
 def test_refusals(tmp_path):
     src = folder(tmp_path, {"a.txt": "a"})
     good = tmp_path / "sort.json"
@@ -292,6 +332,38 @@ def test_refusals(tmp_path):
         ["--of", str(good), "--from", str(tmp_path / "missing"), "--to", str(to)],
         ["--of", str(good), "--from", str(src), "--to", str(src / "inside")],
         ["--of", str(good), "--from", str(tmp_path), "--to", str(to)],
+        [
+            "--of",
+            str(good),
+            "--from",
+            str(src),
+            "--to",
+            str(to),
+            "--settle",
+            str(broken),
+        ],
+        [
+            "--of",
+            str(good),
+            "--from",
+            str(src),
+            "--to",
+            str(to),
+            "--settle",
+            str(tmp_path / "none"),
+        ],
+        [
+            "--of",
+            str(good),
+            "--from",
+            str(src),
+            "--to",
+            str(to),
+            "--settle",
+            str(good),
+            "--settle",
+            str(good),
+        ],
     ]
     (src / "inside").mkdir()
     for argv in bad:

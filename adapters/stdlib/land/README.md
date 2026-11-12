@@ -18,7 +18,7 @@ per thing, each ready for a box of its own.
 
 ```
 python adapters/stdlib/land/land.py --of SORT.json --from FOLDER --to DIR \
-    [--skip PREFIX ...] [--dry-run] [--json]
+    [--skip PREFIX ...] [--settle FILE] [--dry-run] [--json]
 
 land: populated, copied 3 files into 2 categories, 0 already there, 2 waiting on you, 41 skipped
 ## health
@@ -61,12 +61,27 @@ copies nothing twice. A path under `--skip PREFIX` (a code checkout inside
 the folder, say) is passed over and counted. `--dry-run` says all of it and
 writes nothing.
 
+**What you settle.** `--settle FILE` is your own word on where a file
+goes, one line each, `category: path`, the path as it is in FOLDER (`#`
+starts a comment):
+
+```
+custody: D-202-DM-2018-03762-MSA-Campbell.pdf
+move:    mayflower inventory.pdf
+```
+
+A tie, an unsorted file, or one sort put in the wrong place: a settled file
+lands where you said, "settled by you", before anything sort said of it,
+and no longer waits. A line naming no file in FOLDER is said under **no
+original** and copied nowhere.
+
 It prints [a report](../ci/README.md#the-report-contract), and `--json`
 gives the same report as one JSON object.
 
 Exit codes, the kernel's: 0 every placed file copied or already there
 (populated), or nothing placed (empty); 42 something waits on you; 2
-refused (a bad command line, SORT.json not sort's report, FOLDER not a
+refused (a bad command line, SORT.json not sort's report, a --settle line
+that isn't `category: path`, FOLDER not a
 folder that's there, DIR a file, one inside the other). DIR is made on the
 first copy if it isn't there.
 

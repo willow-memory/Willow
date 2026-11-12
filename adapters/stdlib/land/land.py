@@ -2,7 +2,8 @@
 category, each copy logged with where it came from and its hash.
 Python 3.9+.
 
-    python adapters/stdlib/land/land.py --of SORT.json --from FOLDER --to DIR [--skip PREFIX ...] [--dry-run] [--json]
+    python adapters/stdlib/land/land.py --of SORT.json --from FOLDER --to DIR [--skip PREFIX ...]
+        [--settle FILE] [--dry-run] [--json]
 
 SORT.json is sort's report as JSON (`sort.py ... --json`, or the copy a
 stack keeps, `{NN.json}`). FOLDER is the folder of originals the box's pile
@@ -27,6 +28,12 @@ already there are "already there". A path under a --skip PREFIX (a code
 checkout inside the folder, say) is passed over and counted. --dry-run says
 the same and writes nothing.
 
+**What you settle.** --settle FILE is your own word on where a file goes,
+a line each, `category: path` (its path in FOLDER, # for a comment): a tie,
+an unsorted file, or one sort put in the wrong place. A settled file lands
+where you said, "settled by you", before anything sort said of it, and no
+longer waits.
+
 It prints a report (the shape every report add-on shares), and --json the
 same report as one JSON object.
 
@@ -34,7 +41,7 @@ Exit codes, the kernel's: 0 every placed file landed or already there
 (populated), or nothing placed (empty); 42 something waits on you (a tie,
 an unsorted file, one in two categories, one with no original, a copy that
 would replace a different file); 2 refused (a bad command line, SORT.json
-not sort's report, FOLDER not a folder that's there, DIR a file, one
+not sort's report, a --settle line that isn't "category: path", FOLDER not a folder that's there, DIR a file, one
 inside the other). DIR is made on the first copy if it isn't there.
 """
 
@@ -52,7 +59,7 @@ import kernel  # noqa: E402
 
 USAGE = (
     "usage: land.py --of SORT.json --from FOLDER --to DIR "
-    "[--skip PREFIX ...] [--dry-run] [--json]"
+    "[--skip PREFIX ...] [--settle FILE] [--dry-run] [--json]"
 )
 WAITS = ("more than one", "unsorted")  # sort's own groups, never a category
 MIRROR = re.compile(r"(\.part\d+)?\.txt$")
@@ -145,8 +152,31 @@ def placed(doc: dict) -> tuple[dict, list]:
     return by, waiting
 
 
-def land(doc: dict, src: Path, dst: Path, skip: list[str], dry: bool) -> dict:
+def settles(text: str) -> dict | None:
+    """{original: category} from a settle file, a line each, "category:
+    path", blank lines and # comments passed over; None if a line isn't."""
+    out: dict = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        cat, sep, path = line.partition(":")
+        if not sep or not cat.strip() or not path.strip():
+            return None
+        out[path.strip()] = cat.strip()
+    return out
+
+
+def land(
+    doc: dict,
+    src: Path,
+    dst: Path,
+    skip: list[str],
+    dry: bool,
+    settled: dict | None = None,
+) -> dict:
     by, waiting = placed(doc)
+    settled = settled or {}
     homes: dict = {}  # original -> {category: why}
     no_original: list = []
     bad_names: list = []
@@ -167,6 +197,21 @@ def land(doc: dict, src: Path, dst: Path, skip: list[str], dry: bool) -> dict:
                 skipped += 1
                 continue
             homes.setdefault(orig, {}).setdefault(cat, why)
+    for orig, cat in sorted(settled.items()):
+        parts = PurePosixPath(orig).parts
+        if not safe_name(cat):
+            bad_names.append((orig, f"{cat!r} isn't a folder name"))
+        elif (
+            ".." in parts
+            or PurePosixPath(orig).is_absolute()
+            or not (src / orig).is_file()
+        ):
+            no_original.append(
+                (orig, f"{cat}: settled, but no such file in the folder")
+            )
+        else:
+            homes[orig] = {cat: "settled by you"}
+    waiting = [(w, x) for w, x in waiting if original(src, w) not in settled]
     twice = [
         (o, "in " + ", ".join(sorted(c)))
         for o, c in sorted(homes.items())
@@ -225,10 +270,22 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     pairs = list(zip(argv[::2], argv[1::2]))
     opts = {k: v for k, v in pairs if k != "--skip"}
+    settled = None
+    if "--settle" in opts:
+        try:
+            settled = settles(Path(opts.pop("--settle")).read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError):
+            settled = None
+        if settled is None:
+            print(
+                'refused: --settle FILE must be lines of "category: path"',
+                file=sys.stderr,
+            )
+            return kernel.REFUSED
     skip = [v for k, v in pairs if k == "--skip"]
-    if sorted(opts) != ["--from", "--of", "--to"] or len(opts) + len(skip) != len(
-        pairs
-    ):
+    if sorted(opts) != ["--from", "--of", "--to"] or len(opts) + len(skip) + (
+        settled is not None
+    ) != len(pairs):
         print(USAGE, file=sys.stderr)
         return kernel.REFUSED
     src, dst = Path(opts["--from"]), Path(opts["--to"])
@@ -256,7 +313,7 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return kernel.REFUSED
-    out = land(doc, src, dst, skip, dry)
+    out = land(doc, src, dst, skip, dry, settled)
     say(out, as_json)
     waits = any(g["name"] in ("waiting on you", "in two categories", "no original", "left as it was")
                 for g in out["groups"])  # fmt: skip
