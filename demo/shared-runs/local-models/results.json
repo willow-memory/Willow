@@ -1,0 +1,219 @@
+{
+ "gemma3-4b": {
+  "account": false,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 14,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 204,
+  "wrong": [
+   "afresh-same",
+   "native-same"
+  ],
+  "wrong_of_16": 2
+ },
+ "gemma4-e2b": {
+  "account": true,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 16,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 174,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "llama3.1-8b": {
+  "account": true,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 16,
+  "missing_of_5": 5,
+  "right_of_16": 0,
+  "struck": 0,
+  "unsaid_of_5": 0,
+  "words": 153,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "llama3.2-1b": {
+  "account": false,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 16,
+  "missing_of_5": 5,
+  "right_of_16": 0,
+  "struck": 0,
+  "unsaid_of_5": 0,
+  "words": 275,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "llama3.2-3b": {
+  "account": false,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 16,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 193,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "mistral-7b": {
+  "account": false,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 15,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 61,
+  "wrong": [
+   "baseline-steps"
+  ],
+  "wrong_of_16": 1
+ },
+ "nomic-embed-text-latest": {
+  "answered": false,
+  "why": "refused"
+ },
+ "phi4-mini-latest": {
+  "account": true,
+  "answered": true,
+  "guessed": [
+   "seconds"
+  ],
+  "guessed_of_5": 1,
+  "missing_of_16": 1,
+  "missing_of_5": 1,
+  "right_of_16": 13,
+  "struck": 0,
+  "unsaid_of_5": 3,
+  "words": 126,
+  "wrong": [
+   "computed",
+   "served"
+  ],
+  "wrong_of_16": 2
+ },
+ "qwen2.5-0.5b": {
+  "account": false,
+  "answered": true,
+  "guessed": [
+   "busiest",
+   "cost",
+   "graphics",
+   "seconds",
+   "vulcan"
+  ],
+  "guessed_of_5": 5,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 0,
+  "struck": 0,
+  "unsaid_of_5": 0,
+  "words": 383,
+  "wrong": [
+   "afresh",
+   "afresh-same",
+   "baseline-steps",
+   "computed",
+   "halted",
+   "jobs",
+   "kinds",
+   "measured",
+   "native-same",
+   "predicted",
+   "refused",
+   "served",
+   "shared-steps",
+   "states-checked",
+   "stepped-on",
+   "trajectories"
+  ],
+  "wrong_of_16": 16
+ },
+ "qwen2.5vl-7b": {
+  "account": true,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 16,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 246,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "qwen3-4b": {
+  "account": true,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 16,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 163,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "qwen3-4b-32k-latest": {
+  "account": true,
+  "answered": true,
+  "guessed": [],
+  "guessed_of_5": 0,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 16,
+  "struck": 0,
+  "unsaid_of_5": 5,
+  "words": 203,
+  "wrong": [],
+  "wrong_of_16": 0
+ },
+ "qwen3.5-latest": {
+  "answered": false,
+  "why": "empty"
+ },
+ "willow-lane4-3b-latest": {
+  "account": true,
+  "answered": true,
+  "guessed": [
+   "busiest",
+   "cost",
+   "graphics",
+   "seconds",
+   "vulcan"
+  ],
+  "guessed_of_5": 5,
+  "missing_of_16": 0,
+  "missing_of_5": 0,
+  "right_of_16": 15,
+  "struck": 0,
+  "unsaid_of_5": 0,
+  "words": 156,
+  "wrong": [
+   "predicted"
+  ],
+  "wrong_of_16": 1
+ }
+}

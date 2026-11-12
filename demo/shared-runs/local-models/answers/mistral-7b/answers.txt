@@ -1,0 +1,21 @@
+ jobs: 220
+trajectories: 22
+predicted: 73.3%
+seconds: The reports don't say
+baseline-steps: Not specified in the reports
+shared-steps: 336379
+measured: 73.2%
+served: 29
+vulcan: The reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: The reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: The reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: The reports don't say

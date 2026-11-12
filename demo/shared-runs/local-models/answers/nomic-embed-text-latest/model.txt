@@ -1,0 +1,1 @@
+nomic-embed-text:latest 0a109f422b47 274 MB
