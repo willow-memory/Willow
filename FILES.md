@@ -438,24 +438,19 @@ willow/
 │   │   │   ├── jira.py   a Jira export issue by issue
 │   │   │   ├── test_jira.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from json-paths/
+
+```
 │   │   ├── json-paths/
 │   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
 │   │   │   ├── test_json_paths.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from jupyter/
-
-```
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from lockfiles/
-
-```
 │   │   ├── lockfiles/
 │   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
 │   │   │   ├── test_lockfiles.py

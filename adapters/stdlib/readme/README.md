@@ -3,7 +3,7 @@ section: For maintainers
 line: Builds ADDONS.md, and the README's one feature, from the add-ons' own cards.
 source: new
 added: 2026-10-23
-version: 0.1.3
+version: 0.1.4
 writes: README.md, ADDONS.md
 network: none
 role: repo
