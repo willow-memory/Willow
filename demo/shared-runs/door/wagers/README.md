@@ -48,8 +48,8 @@ settle against, in the order of [claims.txt](claims.txt).
 | 6 | 0.90 | the largest of the ten folders is 372 KB here and on the laptop, 446 KB on Kaggle with the check's | yes |
 | 7 | 0.95 | verifying takes about a tenth of a second a folder; sealing was not timed apart from the laptop's other load | open: half measured |
 | 8 | 0.85 | no secret has been made on the account | open |
-| 9 | 0.60 | sixteen, thirteen and (so far) K3's notebooks: no part cut and carried on has come back on another kind. Five were carried on in all | open: five of ten tries, none refused |
-| 10 | 0.85 | the grown sweep is running on Kaggle as this is written | open |
+| 9 | 0.60 | five parts were cut and carried on, in the door's first run, and each came back on the kind it began on; no later run cuts a part | open: five of ten tries, none refused. By hand, off Kaggle, the refusal was met and works |
+| 10 | 0.85 | the grown sweep saved 87.0%, not between 72.2 and 74.2 | no. The session wagered that ten times the jobs would save what the first study did, and then built the grown sweep with twenty lengths a trajectory where the first study had ten; the saving follows the lengths, not the size. The wager was about size and the run changed the shape, so it lost for a reason of the session's own making |
 | 11 | 0.85 | the lies study is not run. The strangers run is not it, though there the door handed out no wrong byte | open |
 | 12 | 0.75 | all sixteen of the door's first notebooks ended clean the first time they were pushed | yes |
 
