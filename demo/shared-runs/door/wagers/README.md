@@ -30,3 +30,29 @@ better.
 Not used, and why: **predict** grades what a question to a box will
 come to (sealed, served, nothing found), which is another kind of
 guess from these.
+
+## What has come in since, and how each wager looks
+
+Written 2026-11-12, after the runs on the laptop, the cloud session and
+Kaggle. **None of this settles a wager**: a wager is settled by the
+maintainer's seal, on a box of their own. This is the evidence to
+settle against, in the order of [claims.txt](claims.txt).
+
+| | said | what came in | looks like |
+|---|---|---|---|
+| 1 | 0.97 | the laptop's cut and carried-on round: 30 of 30 acts and 891 of 891 states equal to Kaggle's | yes |
+| 2 | 0.90 | the phone has not run it | open |
+| 3 | 0.93 | 336,379 steps on the cloud session, on the laptop, and on Kaggle (the door's first run there) | yes |
+| 4 | 0.92 | every state the same and every halt a halt, in all three; but there are four halts and the claim says three, because a refusal is kept as a halt at nothing | no, as worded: the count was the session's mistake |
+| 5 | 0.70 | the check stepped 330,244 steps, in all three | yes, by 244 steps |
+| 6 | 0.90 | the largest of the ten folders is 372 KB here and on the laptop, 446 KB on Kaggle with the check's | yes |
+| 7 | 0.95 | verifying takes about a tenth of a second a folder; sealing was not timed apart from the laptop's other load | open: half measured |
+| 8 | 0.85 | no secret has been made on the account | open |
+| 9 | 0.60 | sixteen, thirteen and (so far) K3's notebooks: no part cut and carried on has come back on another kind. Five were carried on in all | open: five of ten tries, none refused |
+| 10 | 0.85 | the grown sweep is running on Kaggle as this is written | open |
+| 11 | 0.85 | the lies study is not run. The strangers run is not it, though there the door handed out no wrong byte | open |
+| 12 | 0.75 | all sixteen of the door's first notebooks ended clean the first time they were pushed | yes |
+
+The runs are written up on the branch `shared-runs/door`, in the door
+folder's pages for its first run on Kaggle and for the strangers, until
+that branch lands.

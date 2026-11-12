@@ -1,0 +1,1 @@
+`demo/shared-runs/door/wagers/README.md`: what has come in since the twelve wagers were written, and how each looks: five look like yes, one like no as worded (the session miscounted the halts), six are open. None is settled; that is by the maintainer's seal.
