@@ -2263,6 +2263,14 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
+│   ├── marisol/
+│   │   ├── CHARACTER.md      Marisol Ortiz Beltrán
+│   │   ├── make_life.py      Marisol Ortiz Beltran's folder, as the files her work leaves: python3 make_life.py [--check]
+│   │   ├── names.txt
+│   │   ├── PLANTED.md        What the author planted: the answer key (notes, written before the generator)
+│   │   ├── sources.json
+│   │   ├── sources.py        the real sources of this demo, fetched again and checked by hash
+│   │   └── README.md         Marisol's island
 │   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
 │   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
@@ -2287,17 +2295,17 @@ willow/
 │   │       ├── run-2.json    every outcome of run 2, freeze 2's desks, letter, themes and stacks added
 │   │       └── run-3.json    every outcome of run 3, after pair-drift's fix: every rule held
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
+```
+
+#### demo/, from odile/
+
+```
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
 │   │   ├── PLANTED.md        the needs hidden in her files, and the traps
 │   │   ├── STRIP.md          her questions, and what kernel.py found and missed
 │   │   └── names.txt         everyone named in her files, written by make_life.py
-```
-
-#### demo/, from ofrenda/
-
-```
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
