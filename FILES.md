@@ -2448,7 +2448,7 @@ willow/
 │   │   │   ├── every_kind.py every job of the sweep, run alone on another machine, held to the baseline
 │   │   │   ├── FROZEN.json   the addition's freeze: its judge, the first study's files it uses, the truth, the machines and the rules
 │   │   │   ├── test_every_kind.py a machine is held job by job, and a job counts only when run from its start
-│   │   │   ├── test_frozen.py the frozen files are the bytes they were, and only the named machines are added
+│   │   │   ├── test_every_kind_frozen.py the frozen files are the bytes they were, and only the named machines are added
 │   │   │   └── README.md     Every job on every kind: an addition to the first study
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
 │   │   ├── lies/             a study drafted and dry-run, not frozen: a memory that has been lied to
