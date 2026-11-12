@@ -1,0 +1,41 @@
+{
+ "about": "The freeze of the grown sweep: each file's SHA-256 as it stood before any job of it was stepped, held by test_grown_frozen.py. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-12",
+ "on_whose_word": "the maintainer's, to the cloud session: \"come up with the next few and run them\"",
+ "files": {
+  "grown_notebooks.py": "7cc1ea46c17579725f373b1d9bf810d5ec4abca7b1cbef535c3ed0025ea1ab21",
+  "grew.py": "1c5add5b0f5a9a13774c196921ef4b1dd54024a28ec5eaef991a66d7c4c86e2b",
+  "plan.json": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+  "starts.json": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+  "../machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "../kaggle/door_notebooks.py": "fcd3ca1602de233b0b869f41a14543b0f1c8c9f1b2bab8acad725df1643a8cd4",
+  "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
+  "../../../../adapters/stdlib/share/ed25519.py": "ca54a7ae5f6b7b003d6333b62db4e83704fb09088c93cab63739884212d4487e"
+ },
+ "foretold_if_nothing_halts": {
+  "alone": 15721750,
+  "each_trajectory_once": 1980000,
+  "saved": 87.4,
+  "as_dealt": 2069585
+ },
+ "against": "demo/shared-runs/study/runs, for the 220 jobs the first study also ran",
+ "rules": {
+  "G1": "passes when every folder is whole by its seal, its log holds, its seal's signature holds, and its signer is in the ring",
+  "G2": "passes when every job was done and the share of steps saved is within 2 points of the share that stepping each trajectory once, to its longest job or its halt, would save",
+  "G3": "passes when the checks stepped every kept state of all fifty folders again and found every one the same, and every halt the memory names halts",
+  "G4": "passes when each round took in its own place's earlier rounds and nothing else, each as enrolled",
+  "G5": "passes when no trajectory was stepped into its halt twice; none halting is not tested",
+  "G6": "passes when every job that is also the first study's comes to the first study's SHA-256, all 220 of them"
+ },
+ "measured": [
+  "bytes that came back, by round",
+  "states kept",
+  "seconds stepping",
+  "what the checks stepped as a share of the sweep alone",
+  "the kinds of processor drawn"
+ ],
+ "no_baseline": "what the sweep would cost alone is counted from the plan and the halts the shared run finds, each of which the check steps up to",
+ "not_tested_is_not_passed": "a folder that did not come back sealed leaves every rule not tested",
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+}

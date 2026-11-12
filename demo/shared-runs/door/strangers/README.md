@@ -1,7 +1,7 @@
 # Strangers at the door, and one who lies
 
-**Status: built and dry-run with a made-up stepper; not yet frozen,
-and nothing of it pushed or stepped.** The second of the runs the maintainer asked for
+**Status: frozen 2026-11-12, before any of it was pushed to Kaggle.
+Dry-run here only.** The second of the runs the maintainer asked for
 ("come up with the next few and run them"). The
 [first](../kaggle/README.md) had every signer enrolled and honest. This
 one is the first study's sweep again, with two places that are neither.
@@ -26,7 +26,7 @@ Place 3 then makes its seal again over the changed files and signs it
 with its own key. The seal holds. A seal says who left a folder and
 that it is as they left it; it does not say the folder is right.
 
-## The rules
+## The rules, frozen in [FROZEN.json](FROZEN.json)
 
 [told.py](told.py) holds what comes back to them, and to the first
 study's kept runs:
@@ -51,8 +51,14 @@ one that bites; and a run where the cleared stranger was not taken, or
 the check did not come back, fails or is not tested.
 
 With the project's stepper, on the cloud session, all thirteen as
-processes given only folders: running as this is written. One kind of
-processor. A dry run of the wiring, not a result.
+processes given only folders: every rule passed. Held, the takers of
+places 1 and 3 stepped 53,562 and 56,635 steps where the first study's
+second round stepped 14,765 and 4,530. The check found both changes
+(three of the liar's 891 states and halts not the same, since the state
+after a changed one is wrong too) and the other four places clean.
+After it, place 1 was taken and stepped the first study's 14,765; place
+3 stayed held. One kind of processor. A dry run of the wiring, not a
+result; the figures are kept in [FROZEN.json](FROZEN.json).
 
 ## What it cannot show
 

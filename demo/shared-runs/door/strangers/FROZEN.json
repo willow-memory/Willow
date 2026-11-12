@@ -1,0 +1,63 @@
+{
+ "about": "The freeze of the strangers run: each file's SHA-256 as it stood before anything was pushed, held by test_strangers_frozen.py. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-12",
+ "on_whose_word": "the maintainer's, to the cloud session: \"come up with the next few and run them\"",
+ "files": {
+  "strangers_notebooks.py": "464fbfbaa7c80828430710391f45acdf69ab56c3ea8640e389f53c95e2937b4c",
+  "lie.py": "bf8bb24439e44d788e30acc79078ccf51101a45568a9eec2adb5ee6d86d2fad4",
+  "told.py": "1cb9fa2644dc4baf8df1a4422a554ce3057284de5bdaf89bbb180225be36020f",
+  "../../study/plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+  "../../study/starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+  "../machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "../../study/runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "../../study/sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
+  "../../../../adapters/stdlib/share/ed25519.py": "ca54a7ae5f6b7b003d6333b62db4e83704fb09088c93cab63739884212d4487e"
+ },
+ "stranger": 1,
+ "liar": 3,
+ "against": "demo/shared-runs/study/runs, the first study's kept runs",
+ "rules": {
+  "T1": "passes when every folder is whole by its seal and its signature holds; the takers, the checker and places 0, 2 and 4 are in the ring, and the first rounds of places 1 and 3 are signed by keys that are not",
+  "T2": "passes when, before the check, the takers of places 1 and 3 held what they were given and stepped more than the first study's second round did for that place, and the others took theirs as enrolled and stepped what the first study did",
+  "T3": "passes when the check found every kept state and halt of places 0, 1, 2 and 4 the same, and of place 3 found the changed state not the same and the written halt no halt",
+  "T4": "passes when, after the check, place 1 was taken on the checker's word and its second round is the first study's byte for byte, and place 3 was still held",
+  "T5": "passes when no job of any second round, before or after, came to an end, outcome or SHA-256 the first study's did not"
+ },
+ "measured": [
+  "what being held cost each place in steps",
+  "what the check stepped",
+  "the kinds of processor drawn"
+ ],
+ "not_tested_is_not_passed": "a folder that did not come back sealed leaves every rule not tested",
+ "dry_run_with_the_projects_stepper": {
+  "where": "the cloud session, one kind of processor (intel x86_64 avx512), thirteen processes given only folders; a dry run of the wiring, not a result",
+  "the_lie": {
+   "state": [
+    "sun-giants-pluto",
+    14500
+   ],
+   "halt": [
+    "sirius-earth-jupiter",
+    14575
+   ]
+  },
+  "every_rule": "passed",
+  "held_before_the_check": {
+   "place 1": [
+    53562,
+    "the first study's 14765"
+   ],
+   "place 3": [
+    56635,
+    "the first study's 4530"
+   ]
+  },
+  "after_the_check": {
+   "place 1": "taken, 14765 steps",
+   "place 3": "held, 56635 steps"
+  },
+  "not_the_same_at_the_liar": "3 of 891 states and halts",
+  "the_check_stepped": 276269
+ },
+ "not_frozen": "the identities, which are made when the notebooks are and kept outside the repository; the Kaggle account"
+}

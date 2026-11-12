@@ -2451,11 +2451,13 @@ willow/
 │   │   ├── door/             the shared memory with a door on it, counted at larger sizes: not run, nothing frozen
 │   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
 │   │   │   ├── grown/            the sweep grown ten times, for Kaggle: 2,200 jobs, ten rounds, a check a place
+│   │   │   │   ├── FROZEN.json       the freeze: each file's SHA-256 and the six rules, before any job of it was stepped
 │   │   │   │   ├── grew.py   what came back from the grown sweep held to its rules: whole, as much saved as foretold, every state the same
 │   │   │   │   ├── grown_notebooks.py the sweep grown ten times as Kaggle notebooks: ten rounds, each place given only its own earlier rounds, a check a place
 │   │   │   │   ├── plan.json         the first study's 22 setups each at five distances, to twenty lengths, over ten rounds
 │   │   │   │   ├── starts.json       every start of the grown plan as exact numbers, made with the project's own make_system
 │   │   │   │   ├── test_grown.py     the notebooks run in order and pass; what is wrong fails; the plan is ten times the first study's
+│   │   │   │   ├── test_grown_frozen.py      every frozen file is the bytes it was; the rules frozen are the rules judged
 │   │   │   │   └── README.md The sweep grown ten times
 │   │   │   ├── kaggle/           the door's first run on Kaggle: the first study's sweep, cut, carried on and sealed
 │   │   │   │   ├── door_notebooks.py the door's machine as Kaggle notebooks, for a plan: cut and carried on, sealed, each given only its own place's earlier work
@@ -2470,10 +2472,12 @@ willow/
 │   │   │   │   └── tables.json       what door.py counted for the page: the study's own check, size, strangers, how much is checked
 │   │   │   ├── stops.json        where each trajectory stops, as the first study's baseline found it
 │   │   │   ├── strangers/        the door met by two signers nobody enrolled, one of them a liar, for Kaggle
+│   │   │   │   ├── FROZEN.json       the freeze: each file's SHA-256, the five rules and the dry run's figures, before anything was pushed
 │   │   │   │   ├── lie.py    a sealed folder made to lie, and sealed again by its own signer: one kept state changed, one halt that is no halt
 │   │   │   │   ├── strangers_notebooks.py the door met by two signers nobody enrolled, one of them a liar, as Kaggle notebooks
 │   │   │   │   ├── told.py   what came back from the strangers run held to its rules, and to the first study's kept runs
 │   │   │   │   ├── test_strangers.py the strangers are held, the honest one cleared, the lie found and never gone on from
+│   │   │   │   ├── test_strangers_frozen.py  every frozen file is the bytes it was; the rules frozen are the rules judged
 │   │   │   │   └── README.md Strangers at the door, and one who lies
 │   │   │   ├── wagers/           what was said before the runs, on a box apart from the verdict box
 │   │   │   │   ├── claims.txt        twelve claims about the runs to come, each with how likely the cloud session thought it

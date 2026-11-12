@@ -1,7 +1,6 @@
 # The sweep grown ten times
 
-**Status: built and dry-run with a made-up stepper; not yet frozen,
-and nothing of it pushed or stepped.** The
+**Status: frozen 2026-11-12, before any job of it was stepped.** The
 third of the runs the maintainer asked for. The first two were the
 first study's sweep; counting ([the door's page](../README.md)) said
 size alone would change nothing. This runs it.
@@ -29,7 +28,7 @@ to see it halt, so what alone would cost is counted from the plan and
 the halts found. Running it would be the dearest thing here and would
 show nothing the first study's baseline did not.
 
-## The rules
+## The rules, frozen in [FROZEN.json](FROZEN.json)
 
 [grew.py](grew.py) holds what comes back to them:
 
