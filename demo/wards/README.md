@@ -365,12 +365,13 @@ passed on by a signer the ward knows is not vouched for.
 **What each line says.** A *caution* makes the reader more careful: an
 allergy named. An *all-clear* makes them less careful: "none known". A
 *fact* is to be weighed: a daily medicine. A *grant* names someone to be
-called and told.
+called and told. A *stop* is a caution that blocks: "do not operate".
 
 **The rule.** A caution is honoured however the card stands. An
 all-clear and a grant are honoured only enrolled or vouched. A fact is
-shown with how it stands. **An unknown signer can make a ward more
-careful, never less.**
+shown with how it stands. A stop from an unknown signer is shown and
+weighed, not obeyed. **An unknown signer can make a ward more careful,
+never less, and cannot make it stop.**
 
 What the scene plays, on the night Marcus is brought in and after:
 
@@ -396,6 +397,13 @@ What it found:
   matters most is.** Penicillin was withheld from the first minute, on a
   card whose signer the ward had never met. Believing a false caution
   costs a little care. That is why a bracelet works.
+- **A caution that blocks is another thing.** The second card also says
+  "do not operate". Withholding one drug on a stranger's word costs
+  little; stopping an operation on a stranger's word could cost him the
+  leg. So it is shown to the team, who weigh it, and the surgery is not
+  stopped by it. Had the card stood enrolled or vouched it would have
+  been honoured. This was the line this page first set aside; the
+  proposal took it up, and the scene follows.
 - **The dangerous lie is the all-clear.** The second card says he has no
   allergy. Had it been believed, it would have undone the first. Under
   the rule it changes nothing: an unknown signer cannot lower the care
@@ -454,14 +462,13 @@ things came out that neither page had said:
   on stays unknown. That is this scene's choice; the proposal's own
   wording is the maintainer's to settle.
 - **A caution is cheap in a ward and may not be at a door.** Every
-  caution played here withholds one drug. The proposal lets an
+  caution first played here withheld one drug. The proposal let an
   unenrolled device "flag something, refuse something, hold something
   back", and a refusal is a larger thing: anyone who can reach the door
-  could make it refuse. This page sets refusals aside as needing more
-  than the rule; the proposal's phone takes them in. Where a false
-  caution costs little the rule holds as it is. Where it can stop work,
-  a caution from an unknown signer should be shown and weighed, not
-  obeyed.
+  could make it refuse. On the maintainer's word the proposal now splits
+  them (commit cc4c876): a caution that is cheap is honoured on sight,
+  and one that blocks is shown and weighed until its signer is enrolled
+  or vouched. The scene plays that too, as the line "do not operate".
 - **A card whose signature does not hold.** The scene's code honoured a
   caution even then, and nobody had decided that; it was never played,
   only asserted in a test. The rule is about cards that hold. One that
@@ -477,9 +484,10 @@ What it rests on that nothing here builds:
   grants is a table in the scene, standing in for a nurse. A card cannot
   be let to say what kind of thing it says: a grant marked as a caution
   would walk through.
-- **A refusal of treatment.** No card here says "do not". That is the
-  line where being wrong either way is gravest, and it needs more than
-  this rule.
+- **What a refusal of treatment needs beyond this.** The scene honours
+  a stop from a signer the ward knows or has had spoken for. Whether a
+  refusal binds is a matter of law and of the person's state when they
+  wrote it, and a signature settles neither.
 - **A ward that knows no one who knows him.** Vouching needs one desk in
   common. A traveller far from home has none.
 

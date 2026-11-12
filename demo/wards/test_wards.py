@@ -233,6 +233,10 @@ def test_an_unknown_signer_can_make_a_ward_more_careful_and_never_less():
     )
     assert card.done("all-clear", "vouched") == "honoured" and card.done("grant", "enrolled") == "honoured"  # fmt: skip
     assert card.done("fact", "unknown").startswith("shown, as said by") and card.done("fact", "vouched") == "shown"  # fmt: skip
+    assert card.done("stop", "unknown") == "shown and weighed", (
+        "and cannot make it stop"
+    )
+    assert card.done("stop", "vouched") == card.done("stop", "enrolled") == "honoured"
     assert card.done("caution", "broken") == card.done("grant", "broken")
     assert card.done("caution", "broken").startswith("not read"), (
         "the rule is for cards that hold"
@@ -248,11 +252,13 @@ def test_the_card_scene_plays_as_told(tmp_path, capsys):
     )
     said = doc["said"]
     assert said["from_jun"] == {"caution": "honoured", "fact": "shown, as said by a signer not known", "grant": "held"}  # fmt: skip
-    assert said["from_someone"] == {"all-clear": "held", "grant": "held"}
+    assert said["from_someone"] == {"all-clear": "held", "grant": "held", "stop": "shown and weighed"}  # fmt: skip
+    assert said["an_unknown_signer_stopped_the_surgery"] is False
     assert said["once_the_surgery_has_spoken"] == {"caution": "honoured", "fact": "shown", "grant": "honoured"}  # fmt: skip
     assert said["second_card_wrapped_by_a_known_signer"] == {
         "all-clear": "held",
         "grant": "held",
+        "stop": "shown and weighed",
     }
     rows = [json.loads(x) for x in (to / "boxes" / "hospital" / "record.jsonl").read_text().splitlines()]  # fmt: skip
     spoken = [r for r in rows if r["kind"] == "key-spoken-for"]
@@ -270,7 +276,7 @@ def test_the_card_scene_plays_as_told(tmp_path, capsys):
         said["after_he_enrols"]["grant"] == "honoured"
         and said["the_second_card_then"] == "unknown"
     )
-    assert said["lines_on_the_wards_record"] == len(doc["read"]) - 3 == 15
+    assert said["lines_on_the_wards_record"] == len(doc["read"]) - 3 == 17
     assert "went otherwise" not in capsys.readouterr().out
     assert card.main(["run", "--life", str(HERE / "life"), "--to", str(to)]) == 2
     assert card.main(["run"]) == 2

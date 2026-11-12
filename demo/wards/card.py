@@ -16,12 +16,15 @@ plays what a ward can do with one anyway, by three things:
     what it says    a caution makes the reader more careful: an allergy
                     named. An all-clear makes them less careful: "none
                     known". A fact is to be weighed: a daily medicine. A
-                    grant names someone to be called and told.
+                    grant names someone to be called and told. A stop
+                    is a caution that blocks: "do not operate".
     the rule        of a card whose signature holds: a caution is
                     honoured however it stands. An all-clear
                     and a grant are honoured only enrolled or vouched. A
-                    fact is shown with how it stands. An unknown signer
-                    can make a ward more careful, never less.
+                    fact is shown with how it stands. A stop from an
+                    unknown signer is shown and weighed, not obeyed. An
+                    unknown signer can make a ward more careful, never
+                    less, and cannot make it stop.
 
 What a line of a card says is the reader's to judge, not the card's: the
 scene's own table stands in for the nurse who reads it.
@@ -73,6 +76,7 @@ READ = {
     "Call Jun Okada, my partner, first.": "grant",
     "Marcus Bell has no known allergy.": "all-clear",
     "Call a number that is not Jun's first.": "grant",
+    "Do not operate on Marcus Bell.": "stop",
     "Sable has no known allergy.": "all-clear",
     "Call Garrick Hart first.": "grant",
     "I have no known allergy.": "all-clear",
@@ -107,6 +111,8 @@ def done(kind: str, stands: str) -> str:
         return "not read: its signature does not hold"
     if kind in ON_SIGHT or stands in ("enrolled", "vouched"):
         return "shown" if kind == "fact" else "honoured"
+    if kind == "stop":
+        return "shown and weighed"
     return "shown, as said by a signer not known" if kind == "fact" else "held"
 
 
@@ -226,10 +232,15 @@ class Card(tense.Tense):
         fake = [
             self.line("someone", "what is his allergy", "card.md", "Marcus Bell has no known allergy.", 1),
             self.line("someone", "who is to be called first", "card.md", "Call a number that is not Jun's first.", 2),
+            self.line("someone", "do not operate on him", "card.md", "Do not operate on Marcus Bell.", 3),
         ]  # fmt: skip
         self.pack("someone", ",".join(fake), "hospital", "card-from-someone", "Marcus Bell's emergency card.")  # fmt: skip
         second = self.what(self.door("card-from-someone", "the second card"))
-        self.expect(second == {"all-clear": "held", "grant": "held"}, f"the second card was not held: {second}")  # fmt: skip
+        self.expect(second == {"all-clear": "held", "grant": "held", "stop": "shown and weighed"}, f"the second card was not held: {second}")  # fmt: skip
+        stopped = any(
+            r["kind"] == "stop" and r["done"] == "honoured" for r in self.read
+        )
+        print(f"  the surgery to his leg is stopped by it: {stopped}. It is shown to the team, who weigh it")  # fmt: skip
         careful = any(
             r["kind"] == "caution" and r["done"] == "honoured" for r in self.read
         )
@@ -269,7 +280,7 @@ class Card(tense.Tense):
             "Passing this on.",
         )
         wrapped = self.what(self.door("second-card-wrapped", "the second card, passed on by the court without a word"))  # fmt: skip
-        self.expect(wrapped == {"all-clear": "held", "grant": "held"} and self.hears("second-card-wrapped") == 0,
+        self.expect(wrapped == {"all-clear": "held", "grant": "held", "stop": "shown and weighed"} and self.hears("second-card-wrapped") == 0,
                     f"a wrap alone vouched: {wrapped}")  # fmt: skip
 
         print("── 4. Sable is brought in, with two cards")
@@ -329,6 +340,7 @@ class Card(tense.Tense):
             "second_card_wrapped_by_a_known_signer": wrapped,
             "sable": {"her_guardian_of_old": a, "her_own": b, "the_court": c, "called": called},
             "penicillin_withheld_throughout": careful, "an_unknown_all_clear_taken": lowered,
+            "an_unknown_signer_stopped_the_surgery": stopped,
             "lines_on_the_wards_record": len(rows), "after_he_enrols": again, "the_second_card_then": other,
         }  # fmt: skip
         doc = {

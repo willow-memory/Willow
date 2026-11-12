@@ -388,6 +388,7 @@ signed with. We wrote it down against his name, with him standing there.
 
 Allergy: none known.
 Call first: a number that is not Jun's.
+Do not operate on him.
 """,
 }
 
