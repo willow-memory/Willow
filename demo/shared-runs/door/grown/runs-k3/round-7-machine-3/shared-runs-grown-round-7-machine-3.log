@@ -1,0 +1,23 @@
+[{"stream_name":"stdout","time":21.806267481,"data":"round-7-machine-3 ended 0 {\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"kind\": \"intel x86_64 avx2\", \"numpy\": \"2.1.3\", \"processor\": \"Intel(R) Xeon(R) CPU @ 2.20GHz\", \"python\": \"3.13.18\", \"stepper\": \"project\", \"system\": \"Linux\"}\n"}
+,{"stream_name":"stdout","time":21.806484203,"data":"{'at': '2026-11-12T18:04:55Z', 'check': 'python', 'holds': True, 'n': 0, 'said': '3.13.18', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":21.806503455,"data":"{'at': '2026-11-12T18:04:55Z', 'check': \"the starts are this plan's\", 'holds': True, 'n': 1, 'said': '110 starts, 110 trajectories', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":21.806509845,"data":"{'at': '2026-11-12T18:04:55Z', 'check': 'the machine and the round are in the plan', 'holds': True, 'n': 2, 'said': 'machine 3, round 7', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":21.806514066,"data":"{'at': '2026-11-12T18:04:55Z', 'check': \"the stepper is the plan's\", 'holds': True, 'n': 3, 'said': '{\"core_sha256\": \"84c6ecff5368af754dc799ec54561d35d123880c69eec19c14385cb559f079b3\", \"numpy\": \"2.1.3\", \"power\": \"a product and a square root\", \"stepper\": \"project\"}', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":21.806520844,"data":"{'at': '2026-11-12T18:04:55Z', 'check': 'there is room for what would be kept', 'holds': True, 'n': 4, 'said': '20940152832 bytes free, about 42240000 wanted', 'what': 'checked'}\n"}
+,{"stream_name":"stdout","time":21.806525055,"data":"{'at': '2026-11-12T18:04:56Z', 'folder': 'round-1-machine-3', 'how': 'taken', 'n': 5, 'what': 'at the door', 'why': 'its signer is enrolled: place 3'}\n"}
+,{"stream_name":"stdout","time":21.806529696,"data":"{'at': '2026-11-12T18:04:56Z', 'folder': 'round-2-machine-3', 'how': 'taken', 'n': 6, 'what': 'at the door', 'why': 'its signer is enrolled: place 3'}\n"}
+,{"stream_name":"stdout","time":21.806618643,"data":"{'at': '2026-11-12T18:04:56Z', 'folder': 'round-3-machine-3', 'how': 'taken', 'n': 7, 'what': 'at the door', 'why': 'its signer is enrolled: place 3'}\n"}
+,{"stream_name":"stdout","time":21.806630368,"data":"{'at': '2026-11-12T18:04:56Z', 'folder': 'round-4-machine-3', 'how': 'taken', 'n': 8, 'what': 'at the door', 'why': 'its signer is enrolled: place 3'}\n"}
+,{"stream_name":"stdout","time":21.806634729,"data":"{'at': '2026-11-12T18:04:56Z', 'folder': 'round-5-machine-3', 'how': 'taken', 'n': 9, 'what': 'at the door', 'why': 'its signer is enrolled: place 3'}\n"}
+,{"stream_name":"stdout","time":21.806639245,"data":"{'at': '2026-11-12T18:04:57Z', 'folder': 'round-6-machine-3', 'how': 'taken', 'n': 10, 'what': 'at the door', 'why': 'its signer is enrolled: place 3'}\n"}
+,{"stream_name":"stdout","time":21.806642835,"data":"{'at': '2026-11-12T18:04:57Z', 'cut_off': [], 'done': 0, 'mode': 'shared', 'n': 11, 'what': 'starting'}\n"}
+,{"stream_name":"stdout","time":21.806646379,"data":"{'at': '2026-11-12T18:05:11Z', 'n': 12, 'same': True, 'step': 18000, 'trajectory': 'sun-mars-ceres-jupiter~far', 'what': 'canary'}\n"}
+,{"stream_name":"stdout","time":21.806650108,"data":"{'at': '2026-11-12T18:05:11Z', 'done': 25, 'n': 13, 'of': 42, 'seconds': 15.6, 'what': 'so far'}\n"}
+,{"stream_name":"stdout","time":21.807921567,"data":"{'acts': 42, 'at': '2026-11-12T18:05:12Z', 'n': 14, 'seconds': 17.4, 'what': 'ended'}\n"}
+,{"stream_name":"stderr","time":25.689846252,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":25.68989909,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":26.36784277,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":26.367908716,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":29.26044012,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":31.243829143,"data":"[NbConvertApp] Writing 792323 bytes to __results__.html\n"}
+]

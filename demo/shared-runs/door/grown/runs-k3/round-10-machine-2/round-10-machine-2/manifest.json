@@ -1,0 +1,72 @@
+{
+ "acts": 40,
+ "files": {
+  "acts.jsonl": "9153f651c9570984524fe54cc94e8544134496af754075d7e69d2a6971b696b1",
+  "log.jsonl": "0fac160f6eb9660e69b1231d50db74ad1938ff8a99932aea414d294cb79efb61",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "2f77fe489b1e4226e69133e74a2a0313fc96496edb5023f36846df5f81f1e83f"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 18,
+ "log_tip": "b2c14f00b3de25fe4fe5bbe4c56ea5e14b0980627ccdaf0b73d84a0c6871b085",
+ "machine": 2,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 10,
+ "sig": "07b5afc5212785678d35c3c61fbd277d7f272b40358756642a4a70c1e381675d648b960716ed95ea3a8b94f5826ccd639ab3197f1e31597f121b9ec7fc9e3900",
+ "signer": "3b698e9c27367fce34bba9d75761da5b40a5907decf64b0d3103ad52f2cf855d",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-2": {
+   "how": "taken",
+   "seal": "33afdbf59ea3bf54460dd8751d75b81d64a4c9ec9a876bf5868b71cb663016b3",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-2-machine-2": {
+   "how": "taken",
+   "seal": "de5c09a6d9ad7e41e5291885263a58f8a9735639a536871cfe9cd8a31bd204ee",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-3-machine-2": {
+   "how": "taken",
+   "seal": "461888a495ebce42e35447052b2dd0811c840db9207f932f3eead9716fc37e05",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-4-machine-2": {
+   "how": "taken",
+   "seal": "785502a500506c4010748291db7304a1502c9739a3356417545e2f4538f97b74",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-5-machine-2": {
+   "how": "taken",
+   "seal": "3d52b7a8ed0e9fad5ab915bf63d56699f015bfd70ced04b2ada51feebf929c20",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-6-machine-2": {
+   "how": "taken",
+   "seal": "f31f5e71e444a1df68ce78d76bca63786bb83cac196cff59992d82fb3a6a02b4",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-7-machine-2": {
+   "how": "taken",
+   "seal": "e03b957990be216dc779c7f3c93910799d3e81d0938f41e8e5ad39fc153411cc",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-8-machine-2": {
+   "how": "taken",
+   "seal": "73127498d3aefeac0958749ff4faabc5e1887f1ca54e18dbf3b4b67980a5b61a",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-9-machine-2": {
+   "how": "taken",
+   "seal": "270f59deb35972a11c3e1467ecf2902dcd42008a912b9827793cc7b964344982",
+   "why": "its signer is enrolled: place 2"
+  }
+ },
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

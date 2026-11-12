@@ -1,0 +1,57 @@
+{
+ "acts": 66,
+ "files": {
+  "acts.jsonl": "80eb81e608c6dc31235afe78203da37f50386c58f18a975f6dc257fd2ed8a120",
+  "log.jsonl": "b647f91fe75f6574030590b1045b40cac05ca29a0e4d3a2a22b471555b8dd9a7",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "bd5fdd227fa8da52603917c424fddeee464926a2c20da6b06a05a21653e5dd81"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 17,
+ "log_tip": "faf14e56751f98e67a348d66e8c1f9d673b4aa252e7ab2121dca548bc7ccf0be",
+ "machine": 0,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 7,
+ "sig": "a0aedf6eb3a461a27a95134fbc6b8ac29fcb8eb86ead8758e30887248b877b629b5d81234101482a0bc69e1f9138fd536e5b1a9fd30a52ab95553cbca4b4ee07",
+ "signer": "ac68672f5965d098cd0082a9527769e13e21ba6a8895165a5eea541e92d849c8",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-0": {
+   "how": "taken",
+   "seal": "f21b3e8fc2d1e47abaaa00de5b50be28f79ccf570b5cda3e4642b9a169381300",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-2-machine-0": {
+   "how": "taken",
+   "seal": "7f17b88132803ffb987e7841c9d662647348d00ee87a9a6096ea6d0af92b8bad",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-3-machine-0": {
+   "how": "taken",
+   "seal": "ba56a25dc062fb95329d051ba430295f02ebdbf01feed10800234c6e0deca84e",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-4-machine-0": {
+   "how": "taken",
+   "seal": "101f89f9c2cf82286c4a3a0380a9bbef0916e42a21f0c3aece018f7938a0b88d",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-5-machine-0": {
+   "how": "taken",
+   "seal": "812d271104f6fdf21ab50830a7cf0ab5d3a69c08af773090007585e03a41b460",
+   "why": "its signer is enrolled: place 0"
+  },
+  "round-6-machine-0": {
+   "how": "taken",
+   "seal": "a12022d2c86869fc1be6542bfa26c17b30857287f9bbdfa4c51095f51099c4ae",
+   "why": "its signer is enrolled: place 0"
+  }
+ },
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

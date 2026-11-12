@@ -1,0 +1,57 @@
+{
+ "acts": 41,
+ "files": {
+  "acts.jsonl": "c569b90426dec7be0c054a5a04554d79724be961ed67a0fc4915f907b827bdfc",
+  "log.jsonl": "87162caebd2ff68b5de74e64b2967ea05ed117c498643554fa6d04e46692d34c",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "e1ce2ddc83ce4855e95ba48a00e73867bc5bbad0d0d14eb1392a8cc346b8832a"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 15,
+ "log_tip": "6a3baa0c4f39ff19a99f8c26451f78c6b2ae9f7fc8a5d8d4c95ab77f0853a2a9",
+ "machine": 2,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 7,
+ "sig": "7f7bd9c9fa2caad3082ae5b8d4e763ef7cb75c12e9d737c901a072b6662c53a05937ec7c249736301f74311148674048f9f6af385dace7b0011850a06d65ba08",
+ "signer": "3b698e9c27367fce34bba9d75761da5b40a5907decf64b0d3103ad52f2cf855d",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {
+  "round-1-machine-2": {
+   "how": "taken",
+   "seal": "33afdbf59ea3bf54460dd8751d75b81d64a4c9ec9a876bf5868b71cb663016b3",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-2-machine-2": {
+   "how": "taken",
+   "seal": "de5c09a6d9ad7e41e5291885263a58f8a9735639a536871cfe9cd8a31bd204ee",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-3-machine-2": {
+   "how": "taken",
+   "seal": "461888a495ebce42e35447052b2dd0811c840db9207f932f3eead9716fc37e05",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-4-machine-2": {
+   "how": "taken",
+   "seal": "785502a500506c4010748291db7304a1502c9739a3356417545e2f4538f97b74",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-5-machine-2": {
+   "how": "taken",
+   "seal": "3d52b7a8ed0e9fad5ab915bf63d56699f015bfd70ced04b2ada51feebf929c20",
+   "why": "its signer is enrolled: place 2"
+  },
+  "round-6-machine-2": {
+   "how": "taken",
+   "seal": "f31f5e71e444a1df68ce78d76bca63786bb83cac196cff59992d82fb3a6a02b4",
+   "why": "its signer is enrolled: place 2"
+  }
+ },
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

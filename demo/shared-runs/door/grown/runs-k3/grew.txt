@@ -1,0 +1,11 @@
+G1  passed: 55 folders whole and signed by the ring
+G2  passed: 1726780 steps where alone would be 13319565: 87.0% saved, 87.6% foretold; 2200 of 2200 jobs
+G3  passed: 18290 of 18290 states the same (18290 kept), 20 of 20 halts halt, over 50 folders
+G4  passed: each round took in its own place's earlier rounds, as enrolled
+G5  passed: 20 trajectories halt, none stepped into its halt twice
+G6  passed: 220 of the first study's 220 jobs come to its SHA-256
+measured:
+  bytes back by round: 1: 3399956, 2: 1591859, 3: 924137, 4: 726558, 5: 480208, 6: 365736, 7: 295085, 8: 241459, 9: 210685, 10: 217156
+  states kept: 18290; seconds stepping: 1592.7
+  the checks stepped 1651220 steps, 12.4% of the sweep alone
+  kinds drawn: amd x86_64 avx2 (12), intel x86_64 avx2 (43)

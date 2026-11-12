@@ -1,0 +1,118 @@
+{
+ "acts": 4727,
+ "checked": {
+  "round-1-machine-0": {
+   "all_the_same": true,
+   "halts": 3,
+   "halts_that_halt": 3,
+   "of": 1826,
+   "same": 1826,
+   "seal": "f21b3e8fc2d1e47abaaa00de5b50be28f79ccf570b5cda3e4642b9a169381300",
+   "states": 1826
+  },
+  "round-10-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 48,
+   "same": 48,
+   "seal": "959e26697d18fb4f08469654f11a1f094e9f0afdd4e6ce3a35bebbabda208204",
+   "states": 48
+  },
+  "round-2-machine-0": {
+   "all_the_same": true,
+   "halts": 2,
+   "halts_that_halt": 2,
+   "of": 1241,
+   "same": 1241,
+   "seal": "7f17b88132803ffb987e7841c9d662647348d00ee87a9a6096ea6d0af92b8bad",
+   "states": 1241
+  },
+  "round-3-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 536,
+   "same": 536,
+   "seal": "ba56a25dc062fb95329d051ba430295f02ebdbf01feed10800234c6e0deca84e",
+   "states": 536
+  },
+  "round-4-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 288,
+   "same": 288,
+   "seal": "101f89f9c2cf82286c4a3a0380a9bbef0916e42a21f0c3aece018f7938a0b88d",
+   "states": 288
+  },
+  "round-5-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 274,
+   "same": 274,
+   "seal": "812d271104f6fdf21ab50830a7cf0ab5d3a69c08af773090007585e03a41b460",
+   "states": 274
+  },
+  "round-6-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 258,
+   "same": 258,
+   "seal": "a12022d2c86869fc1be6542bfa26c17b30857287f9bbdfa4c51095f51099c4ae",
+   "states": 258
+  },
+  "round-7-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 120,
+   "same": 120,
+   "seal": "33c4a55f11c26e0fe95a9ba7ac45a8b3f562fc2d202a88b73fbce46cd6ef37a2",
+   "states": 120
+  },
+  "round-8-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 86,
+   "same": 86,
+   "seal": "7f91c9f2835c0a85fd3393f1a3d2a89589f8f1154bd162ae15cee95b7ea528e0",
+   "states": 86
+  },
+  "round-9-machine-0": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 45,
+   "same": 45,
+   "seal": "f079a442599b0020b68ab20a05c4e610eca209776956ac695ad166e48e6ee526",
+   "states": 45
+  }
+ },
+ "files": {
+  "acts.jsonl": "740f43b2a9c17d2be5e7caf40fb68c094397670e142dfc21bea6fef4d1018357",
+  "log.jsonl": "a11d35ea9a8388cbc4d31e541870b6aeb432886d38282c43d45edb9bbe012e19",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 26,
+ "log_tip": "a4ce1c2c7c1fffb7f38ac55d6f9d7c58d547d766671467ff7599a00c96b64b48",
+ "machine": null,
+ "mode": "check",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": null,
+ "sig": "5713a86150698e86396c713fa5260c164869390055c9060b8cabfe5cbb007eda2bf7d07443782a8179992ec06138408426ce03ad1c47295262e841ec2a76e005",
+ "signer": "83a30fe16569a0060ee19f8c9a0c606813ada594fc2e3bb7371808f1907782fc",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {},
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

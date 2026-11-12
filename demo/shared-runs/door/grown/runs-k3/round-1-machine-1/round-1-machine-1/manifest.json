@@ -1,0 +1,26 @@
+{
+ "acts": 40,
+ "files": {
+  "acts.jsonl": "a1f92fc2c7b62fd41a8b4b4fb81f4b6e253d96610df7fa96277289b0ce22b5bb",
+  "log.jsonl": "93b84f1bfee6cef1376bb8c1d9b81256b694a20fe247d0fd97647f2e59c6f1f4",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "fcebb4430f24583c30bcec3035232713408b9da5ace7379897546ed763dfba3f"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 9,
+ "log_tip": "d59fc6063a063babb05df17df2cb6309125aa9f1692d52b5872ef1cf37200112",
+ "machine": 1,
+ "mode": "shared",
+ "plan": "ca973186d4061603114e075c4461a04a92449304ad79065acab57c83cc069e4e",
+ "power": "a product and a square root",
+ "round": 1,
+ "sig": "fcc9c97732beef42faf7c319e02eedcdf6db6f7535d650dabbfc4303ea502e79827e0c45e574d3812c6451fafc37b29c708bf438e4018b029f2a38bccabf7f0c",
+ "signer": "849b750198993547cfb6f0b8189e08bc8ef6d2fa35bedc770a96fd45a3ce2fd5",
+ "starts": "480a72451e6a75db9b7fa20f90a5eb919c616b1d42e625d6ee9c3107f246156f",
+ "took_in": {},
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}
