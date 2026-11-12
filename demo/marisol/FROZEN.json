@@ -1,0 +1,32 @@
+{
+ "about": "demo/marisol's freeze 1: each file's SHA-256 when it was frozen, held by test_marisol.py, and the tools' as run. A change is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-12",
+ "files": {
+  "questions.json": "637aa90fcde19ffd8496e7577147bdf7c43258a7c09fbbf2447533db30f1e475",
+  "run.py": "107248de5b9777901fdb2d4a9ad218f0f4b141187efb90dc74f9bfec823d0f0b",
+  "make_life.py": "8031ab778284a06d9b8354219696f396906e2c05e8588960570edc92c9a9a7a2",
+  "sources.json": "05705c22bca92b984299ade591880db45b8bf8fe37d8d909735dea311bef0876",
+  "sources.py": "8e5af56ab5673a400bda94cf490448af4b411ec0f9dd86e9f9403c81d642716e",
+  "PLANTED.md": "4d09a67f71ff29a05336793cd3f94e2c35efccaef67035989466998da5e5e30a"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "953bb4ccc65f9fd013c31d6c9a2fa33e76acb3f37637dea0395969f0184a99da",
+  "mail.py": "167edd7227b35e7de12c6d9bc3c07bc3dcce3aca6f76247f4068c23c26819807",
+  "subtitles.py": "68c22e0558a282a7eaef8b2abbf330baf71f489831bd8f8bb7ea6ce357464bf8",
+  "csv-rows.py": "32e1d71f809aa195a604d90374b00ec24b862014073c1e41ee259025a57a0eef",
+  "web-pages.py": "ab6588b07c711ab0b141ab2e3151edc5b30803b7d58638b88f84371a5c61b122",
+  "json-paths.py": "cd2d705c35bdfdcfe0f3480d7f98989588b03b4911ad1569cea0c6aa613d20d0",
+  "words-es.py": "259a0c6c6e4b4f619f379511246e2d6df6420bbffb93e85ed345d009794ec4e5",
+  "claim-check.py": "4f0d171909eb536b6b9d9206e49db850d0b76836359711317f880146513f257a",
+  "amounts.py": "2bb06cfcc026f14e586d0cdb3e411fa5e874cb8cff4c4e3f4da9d4cd3c967f0c",
+  "quotes.py": "bca84b61427392955df9fe20ce1854b28837217effd3cde4f8e088caf662a399",
+  "contradictions.py": "95bd804b6cbfecce9ccdb6843d3f1c2cadab23d684d6d64f37acd8090f2d209e"
+ },
+ "freezes": [
+  {
+   "n": 1,
+   "date": "2026-11-12",
+   "why": "the sources (by address and hash), the questions, the hit rule and every pass rule, after one dry run with nonsense (wiring held: the readers, the pile, the box, the verdict rows and verify) and before any frozen question was asked. This is NOT a blind pre-registration: before it, the six claims were tried once by hand against the same pile, and the dry run ran amounts, quotes and contradictions, which take no question, so their answers were seen. What that changed is in README.md; PLANTED.md was corrected after the hand trial (claim C3's dateline, the language gap, the self-match)."
+  }
+ ]
+}

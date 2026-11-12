@@ -54,7 +54,7 @@ def phone(n: int) -> str:
 def put(rel: str, text: str) -> None:
     path = LIFE / rel
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8", newline="\n")
+    path.write_bytes(text.encode("utf-8"))
 
 
 # --- the outage log (Spanish) -------------------------------------------------
@@ -155,9 +155,9 @@ def make_receipts() -> None:
     buf.write("# FICCIÓN. Recibos inventados de la Escuela Superior La Ceiba.\n")
     buf.write("# Las cantidades son inventadas.\n")
     w_ = csv.writer(buf, lineterminator="\n")
-    w_.writerow(["fecha", "concepto", "comercio", "monto_usd", "categoria"])
+    w_.writerow(["fecha", "concepto", "comercio", "monto", "categoria"])
     for d, what, shop, c, cat in rows:
-        w_.writerow([d, what, shop, f"{c / 100:.2f}", cat])
+        w_.writerow([d, what, shop, f"${c / 100:,.2f}", cat])
     put("receipts/outage-costs.csv", buf.getvalue())
 
 
@@ -374,7 +374,9 @@ def check() -> list[str]:
     need(CLAIMED in draft, "C2: the draft says $40,000")
     lines = read("receipts/outage-costs.csv").splitlines()
     rows = list(csv.DictReader(x for x in lines if not x.startswith("#")))
-    cents = sum(round(float(r["monto_usd"]) * 100) for r in rows)
+    cents = sum(
+        round(float(r["monto"].lstrip("$").replace(",", "")) * 100) for r in rows
+    )
     need(
         cents == TOTAL_CENTS, f"C2: the receipts total {cents / 100:.2f}, not 14873.50"
     )
@@ -408,7 +410,7 @@ def check() -> list[str]:
     need("casi 40 mil voltios" in log, "T3: the voltage line")
     need(
         "$6,000" in read("mail/2018-02-09-tomas.eml")
-        and any(r["monto_usd"] == "6240.00" for r in rows),
+        and any(r["monto"] == "$6,240.00" for r in rows),
         "T2",
     )
     for p in sorted(LIFE.rglob("*")):

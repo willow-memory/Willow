@@ -1,0 +1,36 @@
+{
+ "about": "demo/marisol's questions, the phrases planted in her folder and the real sources, the hit rule and every pass rule, frozen before the run this file is for. One box, 'marisol': her folder (without grants/, whose claims are what is checked) read through its add-ons, with the saved real sources beside it. No model is asked: the kernel serves, the tools find where to read, and a person decides. An 'expect' of miss is a predicted gap, frozen as one.",
+ "planted": {
+  "type1": "NSF Engines - Type 1",
+  "luma": "on Tuesday took over",
+  "father": "se acabó en el noventa y seis",
+  "note": "se terminó en 2005",
+  "day76": "Día 76",
+  "transfer": "$6,000",
+  "drop": "alone"
+ },
+ "questions": [
+  {"id": "Q1", "claim": "C1", "kind": "claim", "ask": "The Trust holds a Type 2 engine award", "holds": "NSF Engines - Type 1", "expect": "hit"},
+  {"id": "Q2", "claim": "C3", "kind": "claim", "ask": "A private company took over the grid in June 2021", "holds": "on Tuesday took over", "expect": "hit"},
+  {"id": "Q3", "claim": "C5", "kind": "words-es", "ask": "¿En qué año se acabó el crédito de la 936?", "holds": "se acabó en el noventa y seis", "expect": "hit"},
+  {"id": "Q4", "claim": "C5", "kind": "words-es", "ask": "¿En qué año se acabó el crédito de la 936?", "holds": "se terminó en 2005", "expect": "hit"},
+  {"id": "Q5", "claim": "C5", "kind": "bite", "ask": "When was the Section 936 credit repealed", "holds": "repeal in 2005", "expect": "hit"},
+  {"id": "Q6", "claim": "C6", "kind": "claim", "ask": "went 76 days without grid power after Maria", "holds": "Día 76", "expect": "miss"},
+  {"id": "Q7", "claim": "C6", "kind": "claim", "ask": "76 días sin luz de la red después de María", "holds": "Día 76", "expect": "hit"},
+  {"id": "Q8", "claim": "T2", "kind": "words-es", "ask": "¿Cuánto mandó Tomás para las baterías?", "holds": "$6,000", "expect": "hit"},
+  {"id": "Q9", "claim": "none", "kind": "words-es", "ask": "¿Cuántos premios de la NASA ganó el club de robótica?", "holds": null, "expect": "silent"},
+  {"id": "Q10", "claim": "C2", "kind": "amounts", "ask": null, "holds": null, "expect": "total"},
+  {"id": "Q11", "claim": "C4", "kind": "quotes", "ask": null, "holds": null, "expect": "almost"},
+  {"id": "Q12", "claim": "C5", "kind": "contradictions", "ask": null, "holds": null, "expect": "gap"}
+ ],
+ "hit_rule": "A question that serves hits when one of its first 3 served passages (a bite) or first 3 rows (claim-check) holds its phrase, compared with case and spacing squeezed. 'hit' must hit, 'miss' must not, 'silent' must serve nothing.",
+ "totals": {"receipts_cents": 1487350, "claimed_cents": 4000000},
+ "pass_rules": {
+  "served": "Each 'hit' question hits and each 'silent' one serves nothing.",
+  "gap": "Each 'miss' question does not hit (Q6, an English claim about a Spanish log), and contradictions groups no line of her father's interview with the line of her own note, though they give different years for the same thing (Q12).",
+  "amounts": "amounts reads the receipts' sums and they total 14,873.50 and none is 40,000 (Q10).",
+  "quotes": "quotes reports the draft's one quotation as 'almost' and names the dropped word 'alone' (Q11).",
+  "unsealed": "No seal or decline row on the box: code never approves.",
+  "verify": "kernel.py verify holds on the evidence box and on the verdict box."
+ }
+}

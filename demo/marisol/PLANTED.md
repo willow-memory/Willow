@@ -15,7 +15,7 @@ text, so any of them can be fetched again and rechecked. Every number marked
 | # | Claim in the draft | What the folder and the sources say | Add-ons | A person decides |
 |---|---|---|---|---|
 | C1 | "The Trust holds a Type 2 engine award" | NSF record 2305699: program "NSF Engines - Type 1", 05/15/2023 to 04/30/2025, $999,903 | claim-check, thesis | A later award, or simply wrong |
-| C2 | "Outages have cost the school about $40,000" | No source; `life/receipts/outage-costs.csv` totals $14,873.50 (*invented*) | amounts, claim-check, thesis | Which figure goes in |
+| C2 | "Outages have cost the school about $40,000" | No source; `life/receipts/outage-costs.csv` totals $14,873.50 (*invented*; each amount is written with its `$`, as a receipts export writes it, so `amounts` can read it) | amounts, claim-check, thesis | Which figure goes in |
 | C3 | "LUMA Energy took over the grid in June 2021" | Holds, in two places the page must be read for: the saved NBC News page is dated June 2, 2021 and says a private company "on Tuesday took over" the grid (June 1, 2021); the passage with "took over" does not itself say "June 2021", so claim-check shows some parts and a person confirms with the dateline | claim-check | Nothing; it stands |
 | C4 | A quotation from the open lesson in `life/lessons/03-...` | The draft drops one word ("alone") from the lesson's sentence | quotes | Restore the original |
 | C5 | "the credit ended in 2005, after a phase-out that began in 1996" | The report: began 1996, ended around 2005 (some sources: January 2006). Her father says on tape it ended in 1996; her own note says 2005 | contradictions finds none; the gap the `year-claims` idea is for | Which year, and how to say it |
