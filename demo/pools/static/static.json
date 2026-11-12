@@ -1,0 +1,5891 @@
+{
+ "a11y-check": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".htm",
+   ".html",
+   ".md"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "abbreviations": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "accents": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "across": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "advisories": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".git"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "again": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "bite"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "against": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "similar",
+   "writes": "nothing"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "agent-transcript": {
+  "card": {
+   "output": null,
+   "reads": ".jsonl",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".jsonl",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "agents-md-check": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".git"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "aider": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "all": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "almanac": {
+  "card": {
+   "output": null,
+   "reads": "catalog.json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "almanac-keep": {
+  "card": {
+   "output": null,
+   "reads": "none",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": "snapshot",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "amounts": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "annotations": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "apple-mail": {
+  "card": {
+   "output": null,
+   "reads": ".emlx",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": "mail",
+   "writes": "to"
+  },
+  "files": [
+   ".emlx",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "asciidoc": {
+  "card": {
+   "output": "mirror",
+   "reads": ".adoc, .asc, .asciidoc",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".adoc",
+   ".asc",
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "assistant-scores": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "openai-compatible",
+   "writes": "nothing"
+  },
+  "files": [
+   ".json"
+  ],
+  "reads_record": true,
+  "takes": [
+   "proposal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "attendance": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "baby-log": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "backup": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".zip"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "badge": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "seal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "bank": {
+  "card": {
+   "output": null,
+   "reads": ".csv, .ofx, .qfx",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".2f",
+   ".csv",
+   ".ofx",
+   ".qfx",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "bench": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "bibtex": {
+  "card": {
+   "output": null,
+   "reads": ".bib",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".bib",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "bookmarks": {
+  "card": {
+   "output": null,
+   "reads": ".html, .mozlz4, .sqlite",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".part",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "books": {
+  "card": {
+   "output": null,
+   "reads": ".epub, .txt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".epub",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [
+   "Bookmark"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "bot-venv": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".git",
+   ".venv"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "box-health": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".docx",
+   ".eml",
+   ".epub",
+   ".mbox",
+   ".ods",
+   ".odt",
+   ".pdf",
+   ".pptx",
+   ".xlsx"
+  ],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "out",
+   "proposal",
+   "seal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "braille": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "browse": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".json",
+   ".py",
+   ".txt"
+  ],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "proposal"
+  ],
+  "writes": [
+   "bite"
+  ],
+  "writes_unread": 0
+ },
+ "budget": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [
+   ".2f"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "calendar": {
+  "card": {
+   "output": null,
+   "reads": ".ics, .vcf",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".ics",
+   ".txt",
+   ".vcf"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "calendar-out": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": "coming-up",
+   "writes": "to"
+  },
+  "files": [
+   ".ics"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "capture": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "car": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "catgrid": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "catgrid"
+  ],
+  "writes": [
+   "catgrid"
+  ],
+  "writes_unread": 0
+ },
+ "changed": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "changed"
+  ],
+  "writes": [
+   "changed"
+  ],
+  "writes_unread": 0
+ },
+ "chats": {
+  "card": {
+   "output": "mirror",
+   "reads": ".json, .txt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "chordpro": {
+  "card": {
+   "output": null,
+   "reads": ".cho, .chopro, .chordpro, .crd, .pro",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".cho",
+   ".chopro",
+   ".crd",
+   ".pro",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ci": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "live, readme, skim, stack, test-shards",
+   "writes": "record, BUGS.md, FILES.md, README.md, ADDONS.md, adapters/planned.json, adapters/*/*, adapters/*/*/*, demo/*/*, demo/*/*/*"
+  },
+  "files": [
+   ".git",
+   ".json",
+   ".key",
+   ".md",
+   ".places",
+   ".py",
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": true,
+  "takes": [
+   "addon",
+   "stdlib",
+   "verdict"
+  ],
+  "writes": [
+   "verdict"
+  ],
+  "writes_unread": 0
+ },
+ "ci-cache": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ci-logs": {
+  "card": {
+   "output": null,
+   "reads": ".log, .txt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".log",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ci-memo": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "ci",
+   "writes": "to"
+  },
+  "files": [
+   ".git",
+   ".py"
+  ],
+  "reads_record": true,
+  "takes": [
+   "verdict"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ci-why": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "verdict"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "claim-check": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "claude-code": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "mcp-lite",
+   "writes": "record"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [
+   "bite"
+  ],
+  "writes_unread": 0
+ },
+ "clauses": {
+  "card": {
+   "output": null,
+   "reads": ".html, .htm, .md, .txt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".htm",
+   ".html",
+   ".md",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "cloudevents": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "code-comments": {
+  "card": {
+   "output": "mirror",
+   "reads": ".c, .cc, .cpp, .cs, .go, .h, .hpp, .java, .js, .jsx, .kt, .mjs, .php, .py, .rb, .rs, .sh, .swift, .ts, .tsx",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".cc",
+   ".cpp",
+   ".cs",
+   ".go",
+   ".hpp",
+   ".java",
+   ".js",
+   ".jsx",
+   ".kt",
+   ".mjs",
+   ".php",
+   ".places",
+   ".py",
+   ".rb",
+   ".rs",
+   ".sh",
+   ".swift",
+   ".ts",
+   ".tsx",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "codebase-memory": {
+  "card": {
+   "output": null,
+   "reads": ".db",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".db",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "codeowners": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "codex-cli": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "coming-up": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "connect": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "say",
+   "writes": "nothing"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "contradictions": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "copilot": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "corpus-lens": {
+  "card": {
+   "output": null,
+   "reads": ".json, .md",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".md",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "csv-rows": {
+  "card": {
+   "output": "mirror",
+   "reads": ".csv, .tsv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".places",
+   ".tsv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "cursor": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "daily-word": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "guess"
+  ],
+  "writes": [
+   "guess"
+  ],
+  "writes_unread": 0
+ },
+ "day-one": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "debts": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "amounts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "decisions": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [
+   "chose",
+   "no",
+   "reopen"
+  ],
+  "writes_unread": 0
+ },
+ "deep-links": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".json",
+   ".places"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "dice": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "roll"
+  ],
+  "writes": [
+   "roll"
+  ],
+  "writes_unread": 0
+ },
+ "dice5e": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": "dice",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "roll5e"
+  ],
+  "writes": [
+   "roll5e"
+  ],
+  "writes_unread": 0
+ },
+ "digest": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".json",
+   ".py"
+  ],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "proposal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "discord": {
+  "card": {
+   "output": null,
+   "reads": ".zip",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".zip"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "diverge": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "dotfiles": {
+  "card": {
+   "output": "mirror",
+   "reads": ".bash, .cfg, .conf, .fish, .gitconfig, .ini, .lua, .properties, .sh, .toml, .vim, .zsh",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".bash",
+   ".cfg",
+   ".conf",
+   ".fish",
+   ".ini",
+   ".local",
+   ".lua",
+   ".places",
+   ".sh",
+   ".tmpl",
+   ".toml",
+   ".txt",
+   ".vim",
+   ".zsh"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "duplicates": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "emacs": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "equations": {
+  "card": {
+   "output": "mirror",
+   "reads": ".tex",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".places",
+   ".tex",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "evernote": {
+  "card": {
+   "output": null,
+   "reads": ".enex",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".enex",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "export": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "bite"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "fair-merge": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "scan",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "family-tree": {
+  "card": {
+   "output": null,
+   "reads": ".ged",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".ged",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "first-mention": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "fixity": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "fixity"
+  ],
+  "writes": [
+   "fixity"
+  ],
+  "writes_unread": 0
+ },
+ "flashcards": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "review"
+  ],
+  "writes": [
+   "review"
+  ],
+  "writes_unread": 0
+ },
+ "foia": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "folder-card": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Assistants",
+   "uses": "gaps",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "food-log": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits, log-kit",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "forecasts": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".1f",
+   ".3f",
+   ".json"
+  ],
+  "reads_record": true,
+  "takes": [
+   "settle",
+   "wager"
+  ],
+  "writes": [
+   "settle",
+   "wager"
+  ],
+  "writes_unread": 0
+ },
+ "format-rot": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".apk",
+   ".appx",
+   ".dmg",
+   ".doc",
+   ".iso",
+   ".pages",
+   ".ppt",
+   ".pub",
+   ".rtf",
+   ".wpd",
+   ".wps",
+   ".xls"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "fuzzy-dates": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "game-master": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": "dice, odds",
+   "writes": "record"
+  },
+  "files": [
+   ".beats",
+   ".name",
+   ".prompt",
+   ".role",
+   ".seat",
+   ".stats",
+   ".title",
+   ".txt"
+  ],
+  "reads_record": true,
+  "takes": [
+   "action",
+   "decision",
+   "proposal",
+   "roll",
+   "table-ask",
+   "table-beat",
+   "table-open"
+  ],
+  "writes": [
+   "table-ask",
+   "table-beat",
+   "table-open"
+  ],
+  "writes_unread": 0
+ },
+ "gaps": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "garden": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "gather": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "makes",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "gemini-cli": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "gh-json": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "git-history": {
+  "card": {
+   "output": null,
+   "reads": "none",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "github": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "ci, readme, ready, stack",
+   "writes": "nothing"
+  },
+  "files": [
+   ".git",
+   ".github"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "glance": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "scan",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "goodreads": {
+  "card": {
+   "output": null,
+   "reads": ".csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "google-keep": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "gradebook": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "habits": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "handover": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "projects, stack",
+   "writes": "nothing"
+  },
+  "files": [
+   ".json",
+   ".py",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "health": {
+  "card": {
+   "output": null,
+   "reads": ".xml",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".1f",
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "history": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".json"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "home-sensors": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".1f",
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "home-upkeep": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "car",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-compact": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": "digest",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-errors": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "hook-errors"
+  ],
+  "writes": [
+   "hook-errors"
+  ],
+  "writes_unread": 0
+ },
+ "hook-fail-closed": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-feedback": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": true,
+  "takes": [
+   "hook-feedback"
+  ],
+  "writes": [
+   "hook-feedback"
+  ],
+  "writes_unread": 0
+ },
+ "hook-fuzz": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-guard": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-handoff": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "hook-handoff",
+   "hook-handoff-served"
+  ],
+  "writes": [
+   "hook-handoff",
+   "hook-handoff-served"
+  ],
+  "writes_unread": 0
+ },
+ "hook-impact": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-leaks": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": "privacy",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-pin": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "hook-pin"
+  ],
+  "writes": [
+   "hook-pin"
+  ],
+  "writes_unread": 0
+ },
+ "hook-read-first": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "hook-read-first"
+  ],
+  "writes": [
+   "hook-read-first"
+  ],
+  "writes_unread": 0
+ },
+ "hook-replay": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record, to"
+  },
+  "files": [
+   ".in"
+  ],
+  "reads_record": true,
+  "takes": [
+   "hook-replay"
+  ],
+  "writes": [
+   "hook-replay"
+  ],
+  "writes_unread": 0
+ },
+ "hook-shell": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-start": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": "digest",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hook-stop": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hooks-elsewhere": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": "claude-code",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "horoscope": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hosts": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "mcp-lite, pipe",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hours": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ids": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "in-toto": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "index-cache": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Finding things",
+   "uses": "scan",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "install-scripts": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "instruction-files": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".1f",
+   ".git",
+   ".md"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "invoices": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "amounts, bank",
+   "writes": "nothing"
+  },
+  "files": [
+   ".2f",
+   ".csv"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "irc": {
+  "card": {
+   "output": null,
+   "reads": ".log, .weechatlog",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".log",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "jeles": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".db",
+   ".json",
+   ".txt"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "jetbrains": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "jira": {
+  "card": {
+   "output": null,
+   "reads": ".csv, .xml",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "job-hunt": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "joplin": {
+  "card": {
+   "output": null,
+   "reads": ".jex, .md",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".jex",
+   ".md",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "jrnl": {
+  "card": {
+   "output": null,
+   "reads": ".txt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "json-paths": {
+  "card": {
+   "output": null,
+   "reads": ".json, .jsonl, .ndjson",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".jsonl",
+   ".ndjson",
+   ".part",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "jupyter": {
+  "card": {
+   "output": "mirror",
+   "reads": ".ipynb",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".ipynb",
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "karakeep": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "kinds": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "latex": {
+  "card": {
+   "output": "mirror",
+   "reads": ".tex",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".places",
+   ".tex",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "launcher": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "lending": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [
+   "lent"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "lesson-time": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "letterboxd": {
+  "card": {
+   "output": null,
+   "reads": ".csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "licenses": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".git"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "life": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "life"
+  ],
+  "writes": [
+   "life"
+  ],
+  "writes_unread": 0
+ },
+ "linkedin": {
+  "card": {
+   "output": null,
+   "reads": ".csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "listening": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "live": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "mcp-lite, pipe",
+   "writes": "nothing"
+  },
+  "files": [
+   ".codex",
+   ".config",
+   ".local",
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "livestock": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "llms-txt": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "local-model": {
+  "card": {
+   "output": "suggestions",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "openai-compatible",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "location-history": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".1f",
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "lockfiles": {
+  "card": {
+   "output": null,
+   "reads": "package-lock.json, Cargo.lock, go.sum",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "log-kit": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [
+   ".1f"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "logs": {
+  "card": {
+   "output": null,
+   "reads": ".log",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".log",
+   ".part",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "look": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "route",
+   "writes": "nothing"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mail": {
+  "card": {
+   "output": "mirror",
+   "reads": ".eml, .mbox",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".eml",
+   ".mbox",
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "make-it-so": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "man-pages": {
+  "card": {
+   "output": null,
+   "reads": ".1, .2, .3, .4, .5, .6, .7, .8",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "markdown": {
+  "card": {
+   "output": "mirror",
+   "reads": ".md, .markdown",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".md",
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "market-calls": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "forecasts",
+   "writes": "record"
+  },
+  "files": [
+   ".3f"
+  ],
+  "reads_record": true,
+  "takes": [
+   "close",
+   "up",
+   "wager"
+  ],
+  "writes": [
+   "close",
+   "wager"
+  ],
+  "writes_unread": 0
+ },
+ "mastodon": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "matrix": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mcp-lite": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mcp-sampling": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "openai-compatible",
+   "writes": "record"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mediawiki": {
+  "card": {
+   "output": null,
+   "reads": ".xml",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "merkle": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "meta-archive": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mileage": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "milestones": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "minutes": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "misquote": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "model-card": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "weights-card",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "model-card"
+  ],
+  "writes": [
+   "model-card"
+  ],
+  "writes_unread": 0
+ },
+ "model-drift": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "openai-compatible",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "model-exam": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "openai-compatible",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "model-fit": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".0f",
+   ".1f"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "model-shelf": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "weights-card",
+   "writes": "nothing"
+  },
+  "files": [
+   ".gguf"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "month-first": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".htm",
+   ".html",
+   ".md",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mood": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits, log-kit",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "musicxml": {
+  "card": {
+   "output": null,
+   "reads": ".musicxml, .xml",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "mutants": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".0f",
+   ".git"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "nestor": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".db",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "nicknames": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "night-batch": {
+  "card": {
+   "output": "suggestions",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "local-model",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "proposal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "nightstand": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "nightstand"
+  ],
+  "writes": [
+   "nightstand"
+  ],
+  "writes_unread": 0
+ },
+ "notation": {
+  "card": {
+   "output": "mirror",
+   "reads": ".tex",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": "equations",
+   "writes": "to"
+  },
+  "files": [
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "notes": {
+  "card": {
+   "output": null,
+   "reads": ".md",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".md",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "notion": {
+  "card": {
+   "output": null,
+   "reads": ".zip, .csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt",
+   ".zip"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "oakenscroll": {
+  "card": {
+   "output": null,
+   "reads": "office.db",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "odds": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "office": {
+  "card": {
+   "output": null,
+   "reads": ".docx, .odt, .pptx, .xlsx, .ods",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".docx",
+   ".ods",
+   ".odt",
+   ".pptx",
+   ".txt",
+   ".xlsx",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "on-this-day": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "openai-compatible": {
+  "card": {
+   "output": "suggestions",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "opencode": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "opml": {
+  "card": {
+   "output": null,
+   "reads": ".opml, .xml",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".opml",
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "oracle-text": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": "tarot",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "orders": {
+  "card": {
+   "output": null,
+   "reads": ".csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".2f",
+   ".csv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "org": {
+  "card": {
+   "output": "mirror",
+   "reads": ".org",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".org",
+   ".places",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "outdated": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": "advisories",
+   "writes": "nothing"
+  },
+  "files": [
+   ".json"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "package-contents": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".1f",
+   ".crate",
+   ".pth",
+   ".tar",
+   ".tgz",
+   ".whl",
+   ".zip"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pair-drift": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "parallel": {
+  "card": {
+   "output": null,
+   "reads": "none",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "people": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "persona-card": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": true,
+  "takes": [
+   "persona-card"
+  ],
+  "writes": [
+   "persona-card"
+  ],
+  "writes_unread": 0
+ },
+ "pets": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "car",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pgn": {
+  "card": {
+   "output": null,
+   "reads": ".pgn",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".pgn",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pii-audit": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-build": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Finding things",
+   "uses": "pile-store",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-gold": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "pile-rank, scan",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [
+   "gold"
+  ],
+  "writes_unread": 0
+ },
+ "pile-poetry": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Play",
+   "uses": "tarot",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-rank": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "pile-store",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-rungs": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "pile-rank",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-serve": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Finding things",
+   "uses": "pile-rank, pile-rungs",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-store": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Finding things",
+   "uses": "index-cache",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pile-sweep": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "pile-gold, pile-rank, scan",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pins": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "For maintainers",
+   "uses": "advisories",
+   "writes": "nothing"
+  },
+  "files": [
+   ".git"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pipe": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "places": {
+  "card": {
+   "output": null,
+   "reads": ".kml, .geojson, .gpx",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".5f",
+   ".gpx",
+   ".kml",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "plain": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pocket": {
+  "card": {
+   "output": null,
+   "reads": ".zip, .csv, .html",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".htm",
+   ".html",
+   ".txt",
+   ".zip"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "policy-watch": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Keeping track",
+   "uses": "clauses, snapshot",
+   "writes": "to"
+  },
+  "files": [
+   ".html",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "predict": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "graded",
+   "predict"
+  ],
+  "writes": [
+   "graded",
+   "predict"
+  ],
+  "writes_unread": 0
+ },
+ "print": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record, to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "privacy": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "profile": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "projects": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "stack",
+   "writes": "nothing"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "proposal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "prov": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "decline",
+   "proposal",
+   "seal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "quantized": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "local-model, model-exam",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "quiz": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "answer",
+   "quiz"
+  ],
+  "writes": [
+   "answer",
+   "quiz"
+  ],
+  "writes_unread": 0
+ },
+ "quote-check": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "quotes": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "misquote, quote-check",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "reading-level": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".2f"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "reading-log": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "readings": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "readme": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "similar, skim",
+   "writes": "README.md, ADDONS.md"
+  },
+  "files": [
+   ".js",
+   ".py",
+   ".ts"
+  ],
+  "reads_record": false,
+  "takes": [
+   "deps",
+   "stdlib"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "readwise": {
+  "card": {
+   "output": null,
+   "reads": ".csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ready": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "ci, stack, restack, test-impact, against",
+   "writes": "to, changes/*"
+  },
+  "files": [
+   ".md",
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "red-on-main": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "verdict"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "reddit": {
+  "card": {
+   "output": null,
+   "reads": ".csv",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".csv",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "renewals": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "repo-digest": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "kinds",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "repo-pile": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": "again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref",
+   "writes": "record, to"
+  },
+  "files": [
+   ".md",
+   ".py",
+   ".rst",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "restack": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "restack-open": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "restack",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "restore-drill": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": "backup",
+   "writes": "nothing"
+  },
+  "files": [
+   ".key"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ris": {
+  "card": {
+   "output": null,
+   "reads": ".ris, .enw",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".enw",
+   ".ris",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "risky-code": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "ro-crate": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".html",
+   ".jsonl",
+   ".zip"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "route": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "rss-out": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "rst": {
+  "card": {
+   "output": "mirror",
+   "reads": ".rst, .rest",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".places",
+   ".rest",
+   ".rst",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "rtf": {
+  "card": {
+   "output": null,
+   "reads": ".rtf",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".rtf",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "rules": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".json",
+   ".md"
+  ],
+  "reads_record": true,
+  "takes": [
+   "proposal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "said": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "same-way": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "openai-compatible",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "sarif": {
+  "card": {
+   "output": null,
+   "reads": ".sarif",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".sarif",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "say": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "say-check",
+   "writes": "nothing"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "say-check": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "suggests",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "sbom": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "scan": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Finding things",
+   "uses": "todo",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "screenplay": {
+  "card": {
+   "output": null,
+   "reads": ".fountain, .fdx",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".fdx",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "scrub": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Privacy and safety",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "secrets-audit": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": "privacy",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "sent-log": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": "openai-compatible",
+   "writes": "nothing"
+  },
+  "files": [
+   ".json"
+  ],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "proposal"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "serve": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "guards",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "record, to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "bite"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "session-cost": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".2f",
+   ".jsonl"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "session-seal": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [
+   ".json"
+  ],
+  "reads_record": true,
+  "takes": [
+   "bite",
+   "session"
+  ],
+  "writes": [
+   "session"
+  ],
+  "writes_unread": 0
+ },
+ "share": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record, to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "proposal",
+   "received",
+   "rotated",
+   "seal",
+   "sent"
+  ],
+  "writes": [
+   "received",
+   "rotated",
+   "sent"
+  ],
+  "writes_unread": 0
+ },
+ "shell": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "shell-history": {
+  "card": {
+   "output": null,
+   "reads": ".bash_history, .zsh_history, fish_history",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "shortcuts": {
+  "card": {
+   "output": null,
+   "reads": ".url, .webloc, .desktop",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".url",
+   ".webloc"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "similar": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "pile-rank, readme",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [
+   "stdlib"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "skim": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "slack": {
+  "card": {
+   "output": null,
+   "reads": ".zip",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".zip"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "slow-tests": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".1f",
+   ".2f",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "snapshot": {
+  "card": {
+   "output": null,
+   "reads": "none",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".html",
+   ".json",
+   ".pdf",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "sort": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "sort-ask": {
+  "card": {
+   "output": "report, suggestions",
+   "reads": null,
+   "role": "suggests",
+   "section": "Finding things",
+   "uses": "openai-compatible, sort",
+   "writes": "record"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "stack": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "stack-bridges": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Ways to use it",
+   "uses": "stack",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "stack-row": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": "stack",
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "stack-row"
+  ],
+  "writes": [
+   "stack-row"
+  ],
+  "writes_unread": 0
+ },
+ "stack-share": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": "forge, stack",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "stale": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "start": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": null,
+   "writes": "record, to"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "starter-words": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "strava": {
+  "card": {
+   "output": null,
+   "reads": ".csv, .gpx, .tcx, .fit, .gz",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".1f",
+   ".2f",
+   ".csv",
+   ".fit",
+   ".gpx",
+   ".gz",
+   ".tcx",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "subscriptions": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [
+   ".2f"
+  ],
+  "reads_record": false,
+  "takes": [
+   "monthly"
+  ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "subtitles": {
+  "card": {
+   "output": "mirror",
+   "reads": ".vtt, .srt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".places",
+   ".srt",
+   ".txt",
+   ".vtt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "surprise": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [
+   "surprise"
+  ],
+  "writes_unread": 0
+ },
+ "syllabus": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "habits",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "symptoms": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "synonyms": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "takeout": {
+  "card": {
+   "output": null,
+   "reads": ".json, .html",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".htm",
+   ".html",
+   ".json",
+   ".part",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "tarot": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Play",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [
+   "draw"
+  ],
+  "writes": [
+   "draw"
+  ],
+  "writes_unread": 0
+ },
+ "test-impact": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "repo",
+   "section": "For maintainers",
+   "uses": "ci",
+   "writes": "nothing"
+  },
+  "files": [
+   ".md",
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "test-shards": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "For maintainers",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".py"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "text": {
+  "card": {
+   "output": null,
+   "reads": ".txt, .text",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".lines",
+   ".part",
+   ".text",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "texts": {
+  "card": {
+   "output": null,
+   "reads": ".xml",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".xml"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "thesis": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": "claim-check",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "three-two-one": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": "backup",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "timeline": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "tip-pin": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "todo": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "transcript-redact": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Privacy and safety",
+   "uses": "privacy",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "translate": {
+  "card": {
+   "output": "suggestions",
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": "local-model, openai-compatible",
+   "writes": "record"
+  },
+  "files": [
+   ".md"
+  ],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "trello": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "typos": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "typosquat": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Privacy and safety",
+   "uses": "advisories",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "vim": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "vscode": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Ways to use it",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "wallabag": {
+  "card": {
+   "output": null,
+   "reads": ".json",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "warc": {
+  "card": {
+   "output": null,
+   "reads": ".warc, .wacz",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt",
+   ".wacz",
+   ".warc"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "warranties": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Keeping track",
+   "uses": "car",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "wayback": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "makes",
+   "section": "Trust and proof",
+   "uses": "snapshot",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "weakest-link": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": true,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "web-pages": {
+  "card": {
+   "output": null,
+   "reads": ".html, .htm, .mhtml, .mht",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": "clauses",
+   "writes": "to"
+  },
+  "files": [
+   ".htm",
+   ".html",
+   ".mht",
+   ".mhtml",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "webarchive": {
+  "card": {
+   "output": null,
+   "reads": ".webarchive",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": "web-pages",
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "weights-card": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "suggests",
+   "section": "Assistants",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "weights-pin": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Trust and proof",
+   "uses": "weights-card",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "why-not": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "windsurf": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-ar": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-cy": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-de": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-es": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-fr": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-it": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-nl": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-pl": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-pt": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-ru": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-sv": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-tlh": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "words-tr": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "words",
+   "section": "Your own words",
+   "uses": null,
+   "writes": "record"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "x-archive": {
+  "card": {
+   "output": null,
+   "reads": ".js",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".js",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "xref": {
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "page",
+   "section": "Trust and proof",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [
+   ".htm",
+   ".html"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "zed": {
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "ways",
+   "section": "Assistants",
+   "uses": "hosts",
+   "writes": "nothing"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "zotero": {
+  "card": {
+   "output": null,
+   "reads": "zotero.sqlite",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".sqlite",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ }
+}

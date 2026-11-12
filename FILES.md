@@ -2404,6 +2404,12 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+│   ├── pools/                where add-ons meet, from what they are seen to do: a plan in the making, nothing run
+│   │   ├── static/           the reading of the code made before any run
+│   │   │   ├── static.json       what static.py said on main at 99e0eee, one entry an add-on
+│   │   │   ├── static.py     what each built add-on's code says it takes and gives, read and not run
+│   │   │   └── test_static.py    it reads a made-up add-on as it should; the kept reading holds the page's figures and the fourteen
+│   │   └── README.md         Pools: where add-ons meet, from what they are seen to do
 ```
 
 #### demo/, from redteam/

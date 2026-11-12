@@ -1,0 +1,1 @@
+`demo/pools/`: a reading of what each stdlib add-on's code says it takes and gives (rows written and told apart, file suffixes named), made before any run so the pools study's traced runs can be held to it. Only three kinds of row are made by one add-on and read by another: add-ons meet in the folder, not the record.
