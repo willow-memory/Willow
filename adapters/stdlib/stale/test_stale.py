@@ -49,6 +49,32 @@ def approved(tmp_path: Path, data: str = "Six hours.") -> tuple[Path, Path]:
     return b, pile
 
 
+def module():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("stale_under_test", HERE / "stale.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_every_id_asked_for_that_is_in_the_pile_is_found(tmp_path):
+    st = module()
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("Tomatoes want six hours of sun.\n")
+    (pile / "b.md").write_text("The shed is blue.\n")
+    ids = {c["id"] for c in __import__("kernel").chunks(pile)}
+    assert len(ids) == 2
+    assert st.present(pile, ids) == ids
+    assert st.present(pile, ids | {"0" * 64}) == ids
+
+
+def test_it_reads_the_pile_a_folder_at_a_time_through_pieces_beside_it():
+    pc = module().pieces()
+    assert pc is not None and hasattr(pc, "passages")
+
+
 def test_an_approval_holds_while_its_cited_passage_is_there(tmp_path):
     b, pile = approved(tmp_path)
     got = stale(b)

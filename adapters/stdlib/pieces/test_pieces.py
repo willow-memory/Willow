@@ -143,6 +143,18 @@ def test_the_command_line_says_what_the_pile_held_and_the_most_at_once(tmp_path)
     assert {f: f.read_bytes() for f in tmp_path.rglob("*") if f.is_file()} == before
 
 
+def test_a_pile_of_one_short_file_names_its_folder_as_the_most_at_once(tmp_path):
+    p = tmp_path / "pile"
+    (p / "notes").mkdir(parents=True)
+    (p / "notes" / "a.md").write_text("Tomatoes want six hours of sun.\n")
+    assert len(kernel.chunks(p)) == 1
+    got = run("--box", str(box(tmp_path, p)))
+    assert got.returncode == 0, got.stderr
+    assert got.stdout == (
+        "pieces: 1 passages from 1 files in 1 pieces; at most 1 at once (notes)\n"
+    )
+
+
 def test_an_empty_pile_says_so(tmp_path):
     (tmp_path / "pile").mkdir()
     got = run("--box", str(box(tmp_path, tmp_path / "pile")))
