@@ -2,6 +2,8 @@
 
     python demo/pools/trace/trace.py pile --pile PILE --name NAME --salt SALT --work DIR --to ROWS
         [--only STEP]... [--timeout SECONDS]
+    python demo/pools/trace/trace.py stack --grid MANIFEST --stack ID [--stack ID]...
+        --pile PILE --name NAME --salt SALT --work DIR --to ROWS [--timeout SECONDS]
 
 PILE is a folder of files; NAME is what the rows call it. A box is made
 over it once, under a key made for the run. Then each add-on that has a
@@ -19,7 +21,9 @@ to ROWS:
                       a step past the timeout is `timed_out`
     state             a report's own word (populated, empty, unreachable),
                       or none when what it printed is no report
-    lines, out        how many lines it printed, and their SHA-256
+    lines, out        how many lines it printed, and their SHA-256 with the
+                      run's own folders and any time of day taken out, so
+                      one step's output can be held to another run of it
     rows              the kinds of row it added to the record, each counted
     wrote             the files it left in its scratch folder, counted by
                       suffix, and how many of them are a mirror's map
@@ -38,6 +42,13 @@ add-on's name. SALT is the pile's own, so one pile's place hashes say
 nothing of another's. A place is seen only when the output names a
 file of the pile as one word (a path with a space in it is missed), so
 the places are a floor, not a count.
+
+`stack` runs stacks of the grid (MANIFEST is the manifest.json that
+demo/pools/grid/grid.py writes): each on a box of its own that carries
+on from step to step, in the order the stack lists, each step's
+scratch folder beside the others' so a later step can be given what an
+earlier one left. The row is the same, with the stack and where in it
+the step came.
 
 DIR is made, and must be outside this repository. Exit codes, the
 kernel's: 0 every step traced; 2 refused (a bad command line, a pile
@@ -65,6 +76,16 @@ CI = ROOT / "adapters" / "stdlib" / "ci"
 USAGE = __doc__.split("\n\n")[1]
 REPORT = re.compile(r"^[a-z0-9-]+: (populated|empty|unreachable)\b")
 TRIM = ",;()[]{}<>\"'`"
+WHEN = re.compile(r"\d{4}-\d\d-\d\d[T ]\d\d:\d\d(:\d\d(\.\d+)?)?(Z|[+-]\d\d:?\d\d)?")
+
+
+def steady(out: str, fill: dict[str, str], mine: Path) -> str:
+    """What was printed with what differs from run to run for no reason of
+    the add-on's taken out: the run's own folders, and the time of day."""
+    for path, word in ((str(mine), "{mine}"), (fill["tmp"], "{tmp}"), (fill["box"], "{box}"),
+                       (fill["pile"], "{pile}")):  # fmt: skip
+        out = out.replace(path, word)
+    return WHEN.sub("{when}", out)
 
 
 def sha(data: bytes) -> str:
@@ -143,13 +164,12 @@ def places(pile: Path, known: set[str], out: str) -> list[tuple[str, str, bool]]
     return sorted(found)
 
 
-def trace(step: str, script: Path, argv: list[str], pile: Path, box0: Path, known: set[str],
-          work: Path, salt: str, timeout: float) -> dict:  # fmt: skip
-    """One step, alone, on a copy of the box: the row of what was seen."""
-    here = work / "steps" / step
-    box, tmp, log = here / "box", here / "tmp", here / "guard.log"
-    shutil.copytree(box0, box)
-    tmp.mkdir(parents=True)
+def trace(step: str, script: Path, argv: list[str], pile: Path, box: Path, tmp: Path, mine: Path,
+          known: set[str], salt: str, timeout: float) -> dict:  # fmt: skip
+    """One step on a box: the row of what was seen. `tmp` is what {tmp}
+    stands for, and `mine` the folder under it that is this step's own."""
+    log = mine.parent / f"{mine.name}.guard.log"
+    mine.mkdir(parents=True, exist_ok=True)
     fill = {"box": str(box), "pile": str(pile), "tmp": str(tmp)}
     env = dict(os.environ)
     env["PYTHONPATH"] = os.pathsep.join(
@@ -157,11 +177,12 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box0: Path, know
     )
     env.update(WILLOW_GUARD_LOG=str(log), PYTHONDONTWRITEBYTECODE="1")
     before = (box / "record.jsonl").read_text(encoding="utf-8").count("\n")
+    had = {x for x in mine.rglob("*") if x.is_file()}
     began, timed_out = time.perf_counter(), False
     try:
         got = subprocess.run([sys.executable, str(script), *(a.format(**fill) for a in argv)],
                              stdin=subprocess.DEVNULL, capture_output=True, text=True, env=env,
-                             cwd=here, timeout=timeout)  # fmt: skip
+                             cwd=mine, timeout=timeout)  # fmt: skip
         code, out, err = got.returncode, got.stdout, got.stderr
     except subprocess.TimeoutExpired as late:
         code, out, err, timed_out = None, late.stdout or "", "", True
@@ -174,9 +195,8 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box0: Path, know
         rows[kind] = rows.get(kind, 0) + 1
     wrote: dict[str, int] = {}
     maps = 0
-    for p in sorted(x for x in tmp.rglob("*") if x.is_file()):
-        rel = p.relative_to(tmp)
-        if ".places" in rel.parts:
+    for p in sorted(x for x in mine.rglob("*") if x.is_file() and x not in had):
+        if ".places" in p.relative_to(mine).parts:
             maps += 1
         else:
             wrote[p.suffix or "(none)"] = wrote.get(p.suffix or "(none)", 0) + 1
@@ -193,18 +213,40 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box0: Path, know
         if log.is_file()
         else []
     )
+    named = (
+        "the pile"
+        if str(pile) in err
+        else "its scratch folder"
+        if str(tmp) in err
+        else None
+    )
     return {
         "step": step, "card": card, "code": code_sha, "exit": code, "timed_out": timed_out,
         "seconds": seconds, "state": state.group(1) if state else None,
-        "lines": len(out.splitlines()), "out": sha(out.encode()), "rows": dict(sorted(rows.items())),
+        "lines": len(out.splitlines()), "out": sha(steady(out, fill, mine).encode()), "rows": dict(sorted(rows.items())),
         "wrote": dict(sorted(wrote.items())), "maps": maps,
         "places": sorted({salted(f"{f}\0{w}") for f, w, _ in seen}),
         "files": sorted({salted(f) for f, _, _ in seen}),
         "mapped": sum(1 for _, _, through in seen if through), "breaches": len(breaches),
-        "refusal_names": ("the pile" if str(pile) in err else "its scratch folder" if str(tmp) in err else None)
-        if code == 2 else None,
         "breach_kinds": sorted({b.split(":")[0][:40] for b in breaches})[:5],
+        "refusal_names": named if code == 2 else None,
     }  # fmt: skip
+
+
+def boxed(pile: Path, work: Path) -> tuple[str, set[str]]:
+    """A box over the pile under a key made for the run: (the pile's
+    manifest, its files)."""
+    work.mkdir(parents=True)
+    was, files = manifest(pile)
+    key = work / "run.key"
+    key.write_text(secrets.token_hex(32))
+    made = subprocess.run([sys.executable, str(ROOT / "kernel.py"), "init", "--box", str(work / "box"),
+                           "--pile", str(pile), "--key", str(key)], capture_output=True, text=True)  # fmt: skip
+    if made.returncode != 0:
+        raise ValueError(
+            f"no box could be made over the pile: {made.stderr.strip()[:200]}"
+        )
+    return was, set(files)
 
 
 def run(
@@ -216,70 +258,121 @@ def run(
     only: list[str],
     timeout: float,
 ) -> int:
-    mod = contract()
-    steps = table(mod)
+    steps = table(contract())
     wanted = only or list(steps)
     unknown = [s for s in wanted if s not in steps]
     if unknown:
         raise ValueError(f"not a step: {', '.join(unknown)}")
-    work.mkdir(parents=True)
-    was, files = manifest(pile)
-    key = work / "run.key"
-    key.write_text(secrets.token_hex(32))
-    made = subprocess.run([sys.executable, str(ROOT / "kernel.py"), "init", "--box", str(work / "box"),
-                           "--pile", str(pile), "--key", str(key)], capture_output=True, text=True)  # fmt: skip
-    if made.returncode != 0:
-        raise ValueError(
-            f"no box could be made over the pile: {made.stderr.strip()[:200]}"
-        )
-    known = set(files)
+    was, known = boxed(pile, work)
     with to.open("a", encoding="utf-8") as f:
         for step in wanted:
             script, argv = steps[step]
+            here = work / "steps" / step
+            shutil.copytree(work / "box", here / "box")
             row = trace(
-                step, script, argv, pile, work / "box", known, work, salt, timeout
+                step,
+                script,
+                argv,
+                pile,
+                here / "box",
+                here / "tmp",
+                here / "tmp",
+                known,
+                salt,
+                timeout,
             )
             f.write(
                 json.dumps({"pile": name, "manifest": was, **row}, sort_keys=True)
                 + "\n"
             )
             f.flush()
-            shutil.rmtree(work / "steps" / step, ignore_errors=True)
+            shutil.rmtree(here, ignore_errors=True)
     if manifest(pile)[0] != was:
         raise ValueError(
             "the pile changed while it was traced; the rows are not to be used"
         )
-    print(f"{len(wanted)} steps traced on {name} ({len(files)} files) to {to}")
+    print(f"{len(wanted)} steps traced on {name} ({len(known)} files) to {to}")
+    return 0
+
+
+def run_stack(grid: Path, ids: list[str], pile: Path, name: str, salt: str, work: Path, to: Path,
+              timeout: float) -> int:  # fmt: skip
+    """Each stack named, on a box of its own that carries on from step to
+    step, in the order the stack lists: the same row a step, with the
+    stack and where in it the step came."""
+    said = json.loads(grid.read_text(encoding="utf-8"))
+    stacks = {row["id"]: row["steps"] for row in said["stacks"]}
+    unknown = [i for i in ids if i not in stacks]
+    if unknown:
+        raise ValueError(f"not a stack of this grid: {', '.join(unknown)}")
+    scripts = table(contract())
+    was, known = boxed(pile, work)
+    done = 0
+    with to.open("a", encoding="utf-8") as f:
+        for n, stack in enumerate(ids):
+            here = work / "stacks" / str(n)
+            shutil.copytree(work / "box", here / "box")
+            for at, step in enumerate(stacks[stack]):
+                argv = said["steps"][step]["args"]
+                row = trace(step, scripts[step][0], argv, pile, here / "box", here / "tmp",
+                            here / "tmp" / step, known, salt, timeout)  # fmt: skip
+                f.write(json.dumps({"pile": name, "manifest": was, "stack": stack, "at": at, **row},
+                                   sort_keys=True) + "\n")  # fmt: skip
+                f.flush()
+                done += 1
+            shutil.rmtree(here, ignore_errors=True)
+    if manifest(pile)[0] != was:
+        raise ValueError(
+            "the pile changed while it was traced; the rows are not to be used"
+        )
+    print(f"{done} steps of {len(ids)} stacks traced on {name} to {to}")
     return 0
 
 
 def main(argv: list[str]) -> int:
-    opts: dict = {"only": []}
+    opts: dict = {"only": [], "stack": []}
     it = iter(argv[1:])
     for a in it:
         if (
-            a in ("--pile", "--name", "--salt", "--work", "--to", "--timeout")
+            a in ("--pile", "--name", "--salt", "--work", "--to", "--timeout", "--grid")
             and a[2:] not in opts
         ):
             opts[a[2:]] = next(it, "")
-        elif a == "--only":
-            opts["only"].append(next(it, ""))
+        elif a in ("--only", "--stack"):
+            opts[a[2:]].append(next(it, ""))
         else:
             opts = {}
             break
     need = ("pile", "name", "salt", "work", "to")
-    if argv[:1] != ["pile"] or not all(opts.get(k) for k in need):
+    verb = argv[0] if argv else ""
+    ok = verb in ("pile", "stack") and all(opts.get(k) for k in need)
+    ok = ok and (verb == "pile") == (not opts.get("grid") and not opts.get("stack"))
+    if not ok or (
+        verb == "stack"
+        and not (opts.get("grid") and opts["stack"] and not opts["only"])
+    ):
         print(USAGE, file=sys.stderr)
         return 2
     try:
         pile, work = Path(opts["pile"]).resolve(), Path(opts["work"]).resolve()
+        timeout = float(opts.get("timeout") or 120)
         if not pile.is_dir():
             raise ValueError("PILE is not a folder")
         if work.is_relative_to(ROOT) or work.exists():
             raise ValueError("DIR must be new, and outside the repository")
-        return run(pile, opts["name"], opts["salt"], work, Path(opts["to"]), opts["only"],
-                   float(opts.get("timeout") or 120))  # fmt: skip
-    except (OSError, ValueError) as why:
+        if verb == "stack":
+            return run_stack(Path(opts["grid"]), opts["stack"], pile, opts["name"], opts["salt"], work,
+                             Path(opts["to"]), timeout)  # fmt: skip
+        return run(
+            pile,
+            opts["name"],
+            opts["salt"],
+            work,
+            Path(opts["to"]),
+            opts["only"],
+            timeout,
+        )
+    except (OSError, ValueError, KeyError) as why:
         print(f"refused: {why}", file=sys.stderr)
         return 2
 

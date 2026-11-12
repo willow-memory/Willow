@@ -129,3 +129,67 @@ def test_a_bad_command_line_or_a_place_inside_the_repository_is_refused(
         == 2
     )
     assert "not a step" in capsys.readouterr().err
+
+
+def test_a_stack_runs_in_its_order_on_one_box_and_a_taker_sees_what_the_giver_left(
+    tmp_path,
+):
+    pile = pile_at(tmp_path)
+    steps = trace.table(trace.contract())
+    args = {
+        n: {"args": [a.replace("{tmp}", "{tmp}/" + n) for a in steps[n][1]]}
+        for n in ("dice", "game-master")
+    }
+    grid = tmp_path / "manifest.json"
+    grid.write_text(json.dumps({"steps": args, "stacks": [
+        {"id": "pair/dice--game-master", "steps": ["dice", "game-master"]},
+        {"id": "pair/game-master--dice", "steps": ["game-master", "dice"]}]}))  # fmt: skip
+    base = ["--pile", str(pile), "--name", "tiny", "--salt", "s"]
+    assert trace.main(["stack", "--grid", str(grid), "--stack", "pair/dice--game-master", "--stack",
+                       "pair/game-master--dice", *base, "--work", str(tmp_path / "w"),
+                       "--to", str(tmp_path / "s.jsonl")]) == 0  # fmt: skip
+    rows = [json.loads(x) for x in (tmp_path / "s.jsonl").read_text().splitlines()]
+    assert [(r["stack"].split("/")[1], r["at"], r["step"]) for r in rows] == [
+        ("dice--game-master", 0, "dice"), ("dice--game-master", 1, "game-master"),
+        ("game-master--dice", 0, "game-master"), ("game-master--dice", 1, "dice")]  # fmt: skip
+    assert trace.main(["pile", *base, "--only", "game-master", "--work", str(tmp_path / "a"),
+                       "--to", str(tmp_path / "a.jsonl")]) == 0  # fmt: skip
+    alone = json.loads((tmp_path / "a.jsonl").read_text())
+    after, before = rows[1], rows[2]
+    assert before["out"] == alone["out"], "before the giver, it is as it is alone"
+    assert after["out"] != alone["out"], (
+        "after the giver, it has the giver's roll to tell of"
+    )
+    assert trace.main(["stack", "--grid", str(grid), "--stack", "no/such", *base,
+                       "--work", str(tmp_path / "x"), "--to", str(tmp_path / "x.jsonl")]) == 2  # fmt: skip
+    assert (
+        trace.main(
+            [
+                "stack",
+                *base,
+                "--work",
+                str(tmp_path / "y"),
+                "--to",
+                str(tmp_path / "y.jsonl"),
+            ]
+        )
+        == 2
+    )
+
+
+def test_the_runs_own_folders_and_the_time_of_day_are_taken_out_before_hashing(
+    tmp_path,
+):
+    fill = {"box": "/w/1/box", "pile": "/p", "tmp": "/w/1/tmp"}
+    one = trace.steady(
+        "wrote /w/1/tmp/x/a.txt from /p/g.md at 2026-11-12T13:01:02Z\n",
+        fill,
+        Path("/w/1/tmp/x"),
+    )
+    fill2 = {"box": "/w/2/box", "pile": "/p", "tmp": "/w/2/tmp"}
+    two = trace.steady(
+        "wrote /w/2/tmp/x/a.txt from /p/g.md at 2026-11-13 09:44\n",
+        fill2,
+        Path("/w/2/tmp/x"),
+    )
+    assert one == two == "wrote {mine}/a.txt from {pile}/g.md at {when}\n"

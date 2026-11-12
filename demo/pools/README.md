@@ -79,6 +79,24 @@ another's mirror, which is what a stack is for. These are a trial's
 figures on a made-up pile, to show the harness works; the study's
 piles, salts and rules are not frozen.
 
+**Stacks, and what is steady.** `trace.py stack` runs stacks of the
+grid on a box that carries on from step to step, the same row a step.
+A step's output is hashed with the run's own folders and any time of
+day taken out, so one run of it can be held to another. Tried on the
+same made-up pile: of 351 steps run alone twice, 14 do not print the
+same thing twice (they draw at random or say how long something took:
+backup, bench, catgrid, dice, dice5e, history, life, merkle, profile,
+quiz, ro-crate, session-seal, tarot, tip-pin). Of the other 337, run
+in one stack of every step, ten printed something they do not print
+alone: again, cloudevents, forecasts, game-master, handover,
+nightstand, predict, prov, sent-log and three-two-one in one order,
+and serve in place of again in another. Those are the steps that read
+what other steps leave on the record, which is what the code reading
+said of most of them; and ten seeded steps at random changed nothing.
+So on this pile a step's company changes what it says for about one
+step in thirty. A trial's figures, again, and a first sight of what
+the study would count.
+
 ## What is not here yet
 
 The piles, the rules for a pool, a gap and a duplicate, the dry runs
