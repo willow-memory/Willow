@@ -636,15 +636,15 @@ willow/
 │   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
 │   │   │   ├── test_pile_sweep.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quote-check/
+
+```
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from quotes/
-
-```
 │   │   ├── quotes/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
