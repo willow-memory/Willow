@@ -188,6 +188,25 @@ and never the value; and it says when it began, so a second push
 halfway through can be told from the first. It needs no credentials and
 reaches no network.
 
+**The probe was pushed**, on the maintainer's word to the laptop
+session, on 2026-11-12, unchanged, private, through the privacy gate.
+What it found, as that session reported it:
+
+| asked | found |
+|---|---|
+| can its output be read while it runs | not from outside, by Kaggle's command line (2.2.4): at one minute and at two and a half, asking for the output and for the log both gave nothing |
+| pushed again while it is still running | the push is taken, and the new version begins about 4 seconds later. Only the second version's output exists afterwards: asking for the first's gives the second's. What the first had done is gone, or cannot be reached |
+| a value that outlasts a run | not settled. The account had no secret of the agreed name, and the secrets client answered with a connection error, so "no such secret" cannot be told from "could not ask" |
+| one machine for the whole of a run | the same processor at the start and at the end of one run of four minutes, an AMD EPYC 7B12 |
+
+Two things follow for a run at size. A notebook's output is all or
+nothing: one that is cut off, or pushed over, leaves nothing, so a
+long machine run is better as several short ones, each ending clean
+and given the one before as an input. And the processor drawn can
+differ from one push to the next (this draw was AMD, where nine of
+nine before were Intel), so a run taken up again may come back on
+another kind.
+
 ### What a run at size would take, by the first study's clock
 
 From what was tried: a baseline notebook stepped about 1.59 million
@@ -212,6 +231,78 @@ no other machine had stepped its trajectories. Kaggle's guidelines say
 not to attach what a notebook does not use. A run of ten rounds should
 give each notebook only its own place's earlier outputs, which is also
 one input a round and not five.
+
+## The machine a run at size would use
+
+[machine.py](machine.py) is what one machine would do: the first
+study's stepping (it calls that study's own steppers and keeps its rule
+for a job, and those files are not changed), with what a longer run
+among less-known machines needs built in. Tried here with the made-up
+stepper in its tests, and once with the project's: machine 3's first
+round of the first study, stopped by a budget after eight jobs and
+taken up again, came to the same 30 acts and the same 891 kept states,
+byte for byte, as Kaggle's run of it.
+
+| built in | what it does |
+|---|---|
+| checks before it starts | the starts are the plan's; the machine and round are in the plan; the stepper is the file the plan names, under the NumPy it names; there is room on the disk; and what is already in its folder is the same run, of the same plan and starts, by the same code, on the same kind of processor. Each is a line in its log, held or not. One that does not hold stops it, exit 2 |
+| a log | `log.jsonl`, one line a thing done (each check, each folder at the door, each stop, each canary, how far it is), every line holding the hash of the one before, so a line changed or taken out shows |
+| going on | the same command again goes on. A job done is not done again. A job cut off goes on from the states it had kept, and its act says the whole of what it stepped and how often it was taken up again. A last line torn by the cut is dropped, and the log says so. `--from DIR` is for a machine that comes back with an empty disk: the folder the run before left |
+| a budget | `--budget SECONDS`: it stops clean, between jobs or inside one at a state it has just kept, and exits 42 |
+| a canary | every 25 jobs it steps one of its own kept states again from the one before; a machine that does not agree with itself stops |
+| a seal | when it ends clean, `manifest.json`: the SHA-256 of every file it leaves, of the plan, the starts and the code, the tip of its log, and what it took in and held, signed with an identity of the share add-on's kind when it is given one. `verify` holds a folder to its seal, and to a ring |
+| the door | another run's folder is taken in only if it is whole by its seal, is this plan's by this code, and its signer is enrolled or an enrolled checker stepped every state of it again and found it the same. Whole and unknown, it is held: logged, and not gone on from. Not whole, it is refused and the run stops |
+| a check that takes no one's word | `check` steps kept states again from the state before, and steps up to every halt the memory names to see it halt. Its seal says, for each folder, how many states it stepped and whether all were the same; that is the vouching the door reads. A run that went on from another's states is vouched for only if that other is enrolled or vouched for too |
+
+A seal says who left a folder and that it is as they left it. It does
+not say the folder is right: in the tests a liar seals its own lie, the
+seal holds, and only the check finds it.
+
+**Not built, and why.** It does not hold a run taken up again on
+another kind of processor to anything gentler than a refusal: the
+first study found three kinds agreeing to the byte, but an act is
+written under one kind, so mixing two in one folder would blur which
+kind stepped what. On Kaggle that means a run taken up again can be
+refused by the draw; a notebook would then start that machine's part
+over. There is no maker of notebooks for it yet, and it has never run
+on Kaggle. The first study's judge reads its acts as they are (the same
+fields, and two more), but has not been pointed at them.
+
+## Willow's add-ons, by what use they would be
+
+Read from every card's own line on 2026-11-12. Only the first row is
+used by anything here; the rest is a reading, to choose from.
+
+| | add-on | for what |
+|---|---|---|
+| **is used** | share | its Ed25519, for the seal on a machine's folder; the same kind of identity, so a place's key here is one it could send packages with |
+| **will be** | tip-pin | a log's tip written where the run cannot reach. The seal holds the tip, but a folder and its seal can be replaced together; a tip kept elsewhere is what catches that |
+| | merkle | one kept state proven from a folder with a handful of hashes. At a hundred times the sweep the memory holds some hundreds of thousands of states, and a door that wants one should not need them all |
+| | stack, stack-row | the maintainer's side of a run (make, push, fetch, verify, judge) as one stack, each run of it a row on the record with the hash of what each step printed |
+| | diverge | two copies of a run's folder, or a run and its copy on the laptop, down to the first line that differs |
+| **should be** | backup, restore-drill, three-two-one | the verdict box and the kept runs are the study. Kaggle keeps one copy and, pushed over, none |
+| | fixity | the kept runs under `study/runs` hashed again now and then, so rot is told from a change |
+| | ci-memo | its idea, more than its code: a job whose inputs' bytes are unchanged keeps its recorded result. That is the shared memory's own rule, already written and tested for CI's gates |
+| | hook-replay | the same again for a check: the hashes of what went in and came out, and a run again to prove the same answer. `check` here is that, for states |
+| | in-toto, prov | a machine's seal written in the envelope others already read, and what came from what across rounds. The seal's own shape is this demo's and no one else's |
+| | weights-pin | for the local-models runs: a model's file held to its hash before it answers |
+| | predict, forecasts | each rule's number written before the run and graded after. The first study did this by hand in its freeze |
+| **might be** | parallel | every core of one machine. The first study used one |
+| | bench, slow-tests | steps a second by kind of processor, kept per run, so a slow draw is seen |
+| | ci-logs, ci-why | Kaggle's own log of a run that failed, as passages, and the block that says why |
+| | handover | where a run of fifty notebooks stands, for whoever takes it up: the laptop, the phone, this session |
+| | box-health, changed, stale | whether the verdict box can still be read, what changed under it, and answers whose passage has gone |
+| | ids, ro-crate | the kept runs as something an archive takes, with names others use |
+| | record-sql | questions of the verdict box straight in SQL |
+| | decisions | each "not built, and why" here as a kept no with what would reopen it |
+| **can be, with care** | night-batch | the pattern of a long local run stopped when its owner is back. It is for model suggestions; a stepper's run is another thing |
+| | snapshot | the project fetched once at its commit and cited as a copy. The runner already holds the stepper to a SHA-256, which is the stronger hold |
+| | claim-check, pair-drift | the write-ups held to the kept figures. The first study's own scorer does this for its accounts |
+
+Three things a run needs that no add-on is: a job taken up again
+after a cut, a budget, and a door that reads a signer's standing. The
+first two are in machine.py. The third is the planned idea `received`
+on the health branch, and the rule here is that one's.
 
 ## What would be run
 

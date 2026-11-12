@@ -2446,11 +2446,13 @@ willow/
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── door/             the shared memory with a door on it, counted at larger sizes: not run, nothing frozen
 │   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
+│   │   │   ├── machine.py    one machine of a run at size: checks before it starts, a chained log, going on after a cut, a budget, a door, a seal
 │   │   │   ├── probe.py      a small notebook asking Kaggle three things its pages don't answer; it steps nothing
 │   │   │   ├── results/
 │   │   │   │   └── tables.json       what door.py counted for the page: the study's own check, size, strangers, how much is checked
 │   │   │   ├── stops.json        where each trajectory stops, as the first study's baseline found it
 │   │   │   ├── test_door.py      counting comes to what the study's machines did, to the step; a lie is found by a check that looks
+│   │   │   ├── test_machine.py   it comes to the first study's bytes; a run cut off ends the same; a changed file shows; the door takes, holds, refuses
 │   │   │   └── README.md     A door on the shared memory, counted at larger sizes
 │   │   ├── every-kind/       an addition to the first study, frozen: every job run alone on other kinds of processor
 │   │   │   ├── every_kind.py every job of the sweep, run alone on another machine, held to the baseline
