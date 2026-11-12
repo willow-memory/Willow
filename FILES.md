@@ -2270,6 +2270,9 @@ willow/
 │   │   ├── names.txt
 │   │   ├── PLANTED.md        What the author planted: the answer key (notes, written before the generator)
 │   │   ├── questions.json
+│   │   ├── results/
+│   │   │   ├── dry-run.json
+│   │   │   └── run-1.json
 │   │   ├── run.py            Marisol's folder asked its questions, every pass rule judged, and
 │   │   ├── sources.json
 │   │   ├── sources.py        the real sources of this demo, fetched again and checked by hash
