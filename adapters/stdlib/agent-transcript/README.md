@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told.
 source: new
 added: 2026-10-31
-version: 0.1.0
+version: 0.2.0
 writes: to
 network: none
 role: reads
@@ -17,6 +17,8 @@ Agent session files as numbered turns, so you can ask what an agent was told.
         mirror --from FOLDER --to MIRROR
 
     session f601db41-9cd9-44dd-9fee-6e7494413255
+    started: 2026-10-31T09:00:00.000Z
+    ended: 2026-10-31T09:00:05.000Z
     2 turns
 
     1  you
@@ -30,6 +32,15 @@ that store one JSON object a line). Each file becomes the spoken turns:
 what you typed and what the assistant said. Tool calls, tool results and
 hidden thinking are left out. [transcript-redact](../transcript-redact/)
 is the one that takes keys out before you share a file.
+
+When a session ran is read from the file, so sessions sort by day:
+`started:` and `ended:` are the earliest and latest ISO `timestamp` on its
+lines, as the file writes them (a line with a malformed one is ignored). A
+file with no such field but a `<timestamp>...</timestamp>` tag in a user
+turn, as Cursor writes, gets `started:` with that text and "(from the
+text)", and no `ended:`. A file with neither says `time: not in the file`.
+The file's modification time is never used: it says when a file changed,
+not when a session ran.
 
 Each session is written to MIRROR at the same relative path with .txt
 added. A file that is not a session is skipped and counted. Point the
