@@ -65,8 +65,14 @@ QUESTIONS = (
 )  # fmt: skip
 
 
+def number(value: float) -> str:
+    """A figure as it is, every digit: a whole number whole, never rounded
+    to six places as it was before the second freeze."""
+    return str(int(value)) if value == int(value) else repr(float(value))
+
+
 def count(value) -> str:
-    return str(len(value)) if isinstance(value, (list, dict)) else f"{value:g}"
+    return str(len(value)) if isinstance(value, (list, dict)) else number(value)
 
 
 def key(f: dict) -> dict[str, str]:
@@ -140,7 +146,7 @@ def norm(answer: str) -> str:
     if re.search(r"don't say|do not say|not said|doesn't say|does not say", a):
         return NOT_SAID
     nums = re.findall(r"\d+(?:\.\d+)?", a.replace(",", ""))
-    return f"{float(nums[0]):g}" if nums else a
+    return number(float(nums[0])) if nums else a
 
 
 def held(plan: dict, f: dict, answers: str) -> dict:

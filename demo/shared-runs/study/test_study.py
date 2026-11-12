@@ -347,13 +347,17 @@ def test_what_the_study_kept_is_what_its_page_says():
         "judged by the frozen judge"
     )
     plan = sweep.load(HERE / "plan.json")
-    assert judge.judged(HERE / "plan.json", HERE / "runs")[1]["R7"]["state"] == "failed"
+    again = judge.judged(HERE / "plan.json", HERE / "runs")[1]
+    assert again["R7"]["state"] == "passed", (
+        "under the second freeze; kept above is the first's"
+    )
+    assert {r: v["state"] for r, v in again.items() if r != "R7"} == {
+        r: v["state"] for r, v in kept["verdicts"].items() if r != "R7"
+    }, "the second freeze moved R7 and nothing else"
     assert account.report(plan, f) == (HERE / "results" / "report.txt").read_text()
     for name in ("small", "larger"):
         got = account.held(plan, f, (HERE / "runs" / "account" / name / "answers.txt").read_text())  # fmt: skip
-        assert [q for q, m in got["marks"].items() if m != "right"] == [
-            "baseline-steps"
-        ]
+        assert [q for q, m in got["marks"].items() if m != "right"] == []
         assert (
             got["struck"] == []
             and "baseline-steps: 1256518"

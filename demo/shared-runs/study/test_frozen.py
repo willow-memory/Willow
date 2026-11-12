@@ -36,3 +36,20 @@ def test_the_rules_frozen_are_the_rules_judged_with_their_thresholds():
     source = (HERE / "judge.py").read_text(encoding="utf-8")
     assert source.count("off <= 2") == 1 and "within 2 points" in FROZEN["rules"]["R3"]
     assert source.count("kinds < 3") == 1 and "three kinds" in FROZEN["rules"]["R1"]
+
+
+def test_the_second_freeze_says_what_changed_and_that_it_came_after_the_answers():
+    second = FROZEN["freeze_2"]
+    assert list(second["changed"]) == ["account.py"]
+    assert second["changed"]["account.py"]["is"] == FROZEN["files"]["account.py"]
+    assert second["changed"]["account.py"]["was"] != FROZEN["files"]["account.py"]
+    assert "answers" in second["made_after"]
+    for name, want in second["answers_read_before"].items():
+        got = hashlib.sha256(
+            (HERE / "runs" / "account" / name / "answers.txt").read_bytes()
+        )
+        assert got.hexdigest() == want, (
+            "the answers are the ones read before the change"
+        )
+    assert account.number(1256518) == "1256518" and account.number(73.2) == "73.2"
+    assert account.norm("1,256,518 steps") == account.norm(account.number(1256518.0))

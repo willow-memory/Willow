@@ -1,5 +1,5 @@
 {
- "about": "The freeze of demo/shared-runs' study: each file's SHA-256 when it was frozen, held by test_frozen.py, committed before any job of the sweep was stepped. A change is a new freeze, in its own commit, with its reason.",
+ "about": "The freezes of demo/shared-runs' study: each file's SHA-256 as it now stands, held by test_frozen.py. The first was committed before any job of the sweep was stepped. A change is a new freeze, in its own commit, with its reason; each is listed here.",
  "frozen": "2026-11-11",
  "files": {
   "plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
@@ -7,7 +7,7 @@
   "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a",
   "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
   "judge.py": "0cdd2d1df09ae3922318a0071245553dcafd219ea6d68fd6b9b2f202f3debc41",
-  "account.py": "9a33622ef156aa664d9b58d12dcfb3be40c72a99432d65bad778817a9e148c79",
+  "account.py": "63c016f54116ea8036c139416acfd7335d07d75ada4b5d311fa9286dacd4d21e",
   "../trial.py": "28bd4df91e586bf98f6660fdec77f1651aea2416af4fb211877fd46edecda4aa"
  },
  "tools_at_freeze": {
@@ -30,5 +30,22 @@
   "R8": "passes when no sentence of an agent's account says a figure no report holds; no account is not tested",
   "R9": "passes when each of the 5 questions the reports don't answer is answered so"
  },
- "not_frozen": "The notebook that fetches the project at its commit and calls runner.py on each machine; it decides nothing the rules read."
+ "not_frozen": "The notebook that fetches the project at its commit and calls runner.py on each machine; it decides nothing the rules read.",
+ "freeze_2": {
+  "frozen": "2026-11-12",
+  "made_after": "the run, the two agents' answers and the first judging had been read",
+  "reason": "account.py wrote a figure to six significant digits, so its key for a figure of a million or more was not the figure, and a right answer was marked wrong. Both agents were marked wrong on the baseline's steps, which both gave as the reports give it. A figure is now written with every digit.",
+  "changed": {
+   "account.py": {
+    "was": "9a33622ef156aa664d9b58d12dcfb3be40c72a99432d65bad778817a9e148c79",
+    "is": "63c016f54116ea8036c139416acfd7335d07d75ada4b5d311fa9286dacd4d21e"
+   }
+  },
+  "not_changed": "the plan, the starts, the runner, the judge, the questions, the agents' input and their answers",
+  "what_it_can_move": "R7, and nothing else: the reports and the brief are byte for byte what they were",
+  "answers_read_before": {
+   "small": "21737d07caec3cf09e3d6df29dca3b7f2bccdb15488880779e0e94dc935630b5",
+   "larger": "b5adc205506c6cd6b71a70e29518569f27ea2c349300919917982cdd65001bbb"
+  }
+ }
 }
