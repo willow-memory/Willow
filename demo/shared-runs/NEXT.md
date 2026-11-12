@@ -84,7 +84,7 @@ Found by holding A1's draft to what is already here
 | W3 | **Work with chance in it**, seeded | whether a seed is enough to make a run a thing that can be remembered | such a program | here | |
 | W4 | **Work on many cores**, or through the linear-algebra library | whether threads and their order break the bytes | such a program | here | |
 | W5 | **Work whose parts must talk.** The plan says this is not helped | a result that says so with a number, as a control | a coupled problem, small | here | |
-| W6 | **Not a simulation at all.** Converting files, an index, a model's answers at a fixed setting. | how much everyday computing is the same work done again | whatever is to hand | laptop | |
+| W6 | **Not a simulation at all.** Converting files, an index, a model's answers at a fixed setting. | how much everyday computing is the same work done again | whatever is to hand | laptop || In part, three kinds. A model's answers at a fixed setting: the escalation benchmark's 200 items asked twice of four hosted models came back identical on 194 to 199 (`~/.forge/escalation-runs/consistency-preview`), so a model's answer is nearly, not quite, the same work again. Fetching documents: the zero project fetched its ledger's 47 sources again, and 36 were the same bytes, the 11 others web pages made afresh each request (`~/willow-stacks/zero`). Willow's own tests: about 40 minutes in a row, 10 on eight cores, and `ci-memo` pins a run so a change reruns only what it touches |
 
 ## E. People and places
 
@@ -102,7 +102,7 @@ Found by holding A1's draft to what is already here
 | S2 | **Time and power, measured.** The agents were right to say the reports don't hold the seconds or the cost. | the saving in what is paid for, not only in steps | a clock in the runner, a meter on one machine | laptop || In part: seconds, not power. Each act in [study/runs/](study/runs/) has its seconds, which the reports leave out. In the workshop, the 95-job sweep took 124.6 s alone and 9.7 s with the memory; the small plan on Kaggle 1,129.7 and 317.2 machine-seconds |
 | S3 | **How far apart the kept states are.** The same sweep at 500 and 2,000 steps. | the curve of what is kept against what is saved, and what a check then costs | nothing new | here || In part, on the dry run's stand-in physics, `~/willow-stacks/shared-runs-dry`: R3 at 78.06 with states every 2,000 steps, 80.9 at 500 and 81.8 at 100, against 82.04 predicted |
 | S4 | **No rule for who steps what.** | what it costs when machines choose for themselves. An early trial saw about 70% against 82% | the notebooks, changed | here || On the stand-in, `~/willow-stacks/shared-runs-dry`: about 70 with no rule, 80.1 and 81.7 with each trajectory one machine's, two rounds. The "early trial" in the second column |
-| S5 | **A machine that stops mid-round.** | what the next round gets back | the notebooks | here | |
+| S5 | **A machine that stops mid-round.** | what the next round gets back | the notebooks | here || In part, for a stack rather than a round: a stack run on 42's pile was stopped when the machine ran out of memory and was restarted; `stack --resume` onto the same run folder kept the step that had finished (696,621 lines) and ran the rest. What was in `/tmp` was lost (`~/willow-stacks/42/mine/run-ask-2`) |
 | S6 | **When the memory is thrown away.** | how much can be dropped before the saving goes | nothing new | here | |
 
 ## H. Upstream
@@ -116,10 +116,10 @@ Found by holding A1's draft to what is already here
 
 | | what is missing | where it was found | already on the maintainer's machine? |
 |---|---|---|---|
-| I1 | a line on an add-on's card for what a step reads besides the pile: the record, the clock | the 95-step stack, in the README | |
+| I1 | a line on an add-on's card for what a step reads besides the pile: the record, the clock | the 95-step stack, in the README || In part: `stack-bridges` reads which steps read a record from how a step names it, not from a card's line; the fix that counts a record named by its folder (`--box PATH`) is on the branch `addons/boxes-here`, not yet on main, and finds 17 bridges, 8 deep, in the ledger's 95-step stack, where main finds none. The clock is still unsaid |
 | I2 | a row's identity without its clock, and a step's output without its place | trial 4 | |
-| I3 | the record's state in the mark of a step that reads it | the 95-step stack | |
-| I4 | a place a study's verdict record can live. It has to be outside the repository, and a cloud session's outside is gone when it ends; a copy was kept this time | this study | |
+| I3 | the record's state in the mark of a step that reads it | the 95-step stack || |
+| I4 | a place a study's verdict record can live. It has to be outside the repository, and a cloud session's outside is gone when it ends; a copy was kept this time | this study || A place exists, not yet used for this: on the laptop each project keeps its box outside any repository, under `~/willow-stacks` (42, zero, money, the shared runs' own folder), and it lasts |
 
 ## J. How the next study should be made
 
