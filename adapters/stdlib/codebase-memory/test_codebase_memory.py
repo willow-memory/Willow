@@ -215,3 +215,22 @@ def test_a_graph_too_long_for_one_file_is_cut_between_functions():
     assert [p.rstrip("\n") for p in got] == [p.rstrip("\n") for p in paras], (
         "every function, whole, once, in order"
     )
+
+
+def test_a_graph_mirrored_in_parts_numbers_its_files_from_one(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location("cbm_parts_named", SCRIPT)
+    cbm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cbm)
+    src, dst = tmp_path / "graphs", tmp_path / "mirror"
+    src.mkdir()
+    write_graph(src / "g.db")
+    whole = cbm.graph_text(src / "g.db")
+    most = len(whole.encode()) - 1  # just too long for one file
+    real = cbm.parts
+    monkeypatch.setattr(cbm, "parts", lambda text: real(text, most=most))
+    cbm.mirror(src, dst)
+    n = len(real(whole, most=most))
+    assert n > 1
+    assert sorted(p.name for p in dst.iterdir() if p.is_file()) == sorted(
+        f"g.db.{i}.txt" for i in range(1, n + 1)
+    )

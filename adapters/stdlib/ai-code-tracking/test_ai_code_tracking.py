@@ -252,6 +252,7 @@ def test_report_totals_models_and_months(tmp_path):
     groups = {
         g["name"]: {r["where"]: r["what"] for r in g["rows"]} for g in doc["groups"]
     }
+    assert groups["totals"]["lines added"] == "30"  # tab 4 + composer 9 + human 17
     assert groups["totals"]["lines added by tab"] == "4"
     assert groups["totals"]["lines added by composer"] == "9"
     assert groups["totals"]["lines added by human"] == "17"

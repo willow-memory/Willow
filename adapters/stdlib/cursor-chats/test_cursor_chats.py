@@ -376,3 +376,10 @@ def test_a_rerun_after_the_chat_shortens_removes_only_the_stale_part(
     assert mod.mirror(folder, to) == (1, 0)
     assert not (here / "store.db.2.txt").exists()
     assert "part " not in (here / "store.db.txt").read_text(encoding="utf-8")
+
+
+def test_a_turn_that_fills_its_room_exactly_is_one_piece():
+    cc = load()
+    block = "ab\ncd\n"
+    assert cc._pieces(block, len(block.encode()), 100) == [block]
+    assert cc._pieces(block, len(block.encode()) - 1, 100) == ["ab\n", "cd\n"]

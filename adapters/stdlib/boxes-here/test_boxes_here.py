@@ -237,3 +237,24 @@ def test_the_key_is_never_read_and_only_the_list_is_written():
     assert "verifiers" not in body and "--key" not in body and ".pem" not in body
     assert body.count("write_text") == 1 and "open(" not in body
     assert "mkdir" not in body and "unlink" not in body and "rename" not in body
+
+
+def test_a_record_that_cant_be_read_has_nothing_waiting(tmp_path):
+    class Unreadable:
+        def tally(self, box):
+            raise OSError("no record")
+
+    said, waiting, broken = boxes_here.waits(tmp_path, Unreadable())
+    assert (waiting, broken) == (0, True)
+    assert said == "its record couldn't be read: OSError"
+
+
+def test_places_are_lined_up_but_never_wider_than_sixty(capsys):
+    long = "x" * 70
+    doc = {"state": "populated", "said": "2 boxes", "groups": [
+        {"name": "here", "rows": [{"where": long, "what": "a"},
+                                  {"where": "b", "what": "c"}]}]}  # fmt: skip
+    boxes_here.show(doc, False)
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[2] == "  " + long + "  a"
+    assert lines[3] == "  " + "b".ljust(60) + "  c"

@@ -467,3 +467,13 @@ def test_a_rerun_after_the_session_shortens_removes_only_the_stale_part(
     assert mod.mirror(folder, to) == (1, 0)
     assert not (to / "sess.jsonl.2.txt").exists()
     assert "part " not in (to / "sess.jsonl.txt").read_text(encoding="utf-8")
+
+
+def test_a_line_is_cut_only_between_characters():
+    spec = importlib.util.spec_from_file_location("agent_transcript_cut", SCRIPT)
+    at = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(at)
+    # "À" is C3 80: a cut at its second byte steps back to before it
+    assert at._cut("a\u00c0b", 2) == ("a", "\u00c0b")
+    # DEL (7F) is a whole character, not the tail of one: cut right there
+    assert at._cut("ab\x7fc", 2) == ("ab", "\x7fc")
