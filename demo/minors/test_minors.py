@@ -87,15 +87,19 @@ def test_the_tense_scene_plays_as_told(tmp_path, capsys):
         "cards_differ": True, "answers_whoever_holds_it": True,
     }  # fmt: skip
     assert said["said"]["guardian"] == {
-        "claim_to_hold": ["sable", "sable-with-bryony"], "old_holder_seals_after_order": 1,
-        "handed_over": False, "old_box_seals": 2, "new_box_seals": 1,
+        "claim_to_hold": ["sable", "sable-with-bryony"],
+        "old_holder_seals_after_order_by_his_clock": 1, "handed_over": False,
+        "order_holds_alone": True, "hold_the_order": ["sable-with-bryony"],
+        "court_sent_to": 3, "served_on_the_old_holder": True,
+        "old_box_seals_its_record_puts_after": None, "had_he_taken_it": 1,
+        "sable_has_the_order": True,
     }  # fmt: skip
     assert said["said"]["kit"] == {
         "before": "empty", "received": 1, "kits_notes_travelled": False, "rosa_asked_again": "empty",
     }  # fmt: skip
     printed = capsys.readouterr().out
     assert (
-        printed.count("received, not sealed by you") == 2
+        printed.count("received, not sealed by you") == 4
         and "went otherwise" not in printed
     )
     assert (

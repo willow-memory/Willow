@@ -97,9 +97,11 @@ What the scene plays:
    nothing, each time. The nurse sends her note to Sable's own box and
    nothing to the house. Sable seals her own card; her seal proves under
    her key and not his.
-2. A court makes Bryony her guardian. Garrick hands nothing over.
-   Bryony starts a box from a photograph of a vaccination card. Garrick
-   goes on sealing in the old one.
+2. A court makes Bryony her guardian and sends its order, signed, to
+   the box Bryony starts, to Sable's own, and to the one Garrick holds.
+   Garrick does not take it in and hands nothing over. Bryony starts
+   from a photograph of a vaccination card. Garrick goes on sealing in
+   the old box.
 3. Rosa asks the box she holds for Kit's readings, and it has none. Then
    Kit seals one sentence, the count for October, and sends it to her,
    with a note: "I want help, not a row."
@@ -122,11 +124,29 @@ What it found:
   opened gives whoever opened it a shell. What the tense case adds is
   only that here it matters where the box is kept, and in the calm
   cases it did not.
-- **Holding ends in law, not in the key.** After the court's order two
-  boxes say they are held for Sable. Both verify. The old holder still
-  seals. The only thing that tells them apart is the order, which is a
-  file in a pile and not a key anyone can check. The `held-for` row this
-  demo invented has an "until", and nothing reads it.
+- **Holding ends in law, and the law can be given a key.** After the
+  court's order two boxes say they are held for Sable, and both verify.
+  So the scene gives the court a box of its own, and its order goes out
+  as any answer does: sealed, signed, sent. Then the two can be told
+  apart by something anyone can check. The order read alone holds, and
+  names Bryony. Of the two boxes, one holds the court's order and one
+  does not. The `held-for` row on Bryony's box names the order's package,
+  where Garrick's names nothing.
+- **Being told and taking it in are two things.** The court's own record
+  says it sent the order to the box Garrick holds. He does not take it
+  in, and nothing can make him. So his seals after the order are after
+  it by his own clock alone, and a clock can be set. In a copy where he
+  does take the order in, the row of taking it is on his record, and a
+  seal made after that row is after the order whatever its clock says.
+  The record's own order is the proof; refusing the order is how he
+  keeps it from being one.
+- **Three things this does not settle.** How anyone knows the court's
+  key is the court's: that comes from outside, as a court's seal on
+  paper does, and Bryony's box meets it as a key never seen before. What
+  the order is to Bryony's box: something received, not something she
+  sealed, so her holding rests on a package and not on an act of hers.
+  And the `held-for` row itself, which still has an "until" that nothing
+  reads.
 - **An uncooperative handover loses the record, and the witness with
   it.** Bryony's box knows of two doses; Garrick's knows of three. What
   he will not hand over, she does not have. And where Imani can hold

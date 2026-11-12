@@ -15,7 +15,8 @@ different to their own box:
 
 A third set, where it is tense, is played by tense.py: `sable` and
 `sable-own`, fifteen, her guardian `garrick`, her aunt `bryony`, the
-school `nurse`, and the box her aunt starts, `sable-with-bryony`; and
+school `nurse`, the family `court`, and the box her aunt starts,
+`sable-with-bryony`; and
 `kit`, sixteen, held by a grandmother, with `kit-own`.
 
 `marit` is Marit's own box, about herself. `--check` reads the files back
@@ -209,6 +210,13 @@ niece, Sable Hart, in place of Garrick Hart.
 Of her papers I have a photograph of her vaccination card, which my
 sister sent me years ago.
 """,
+    "court/orders.md": """\
+# Family court: orders made
+
+2026-11-10. In the matter of Sable Hart, a minor. Bryony Okonjo is
+appointed her guardian from this day, in place of Garrick Hart. Garrick
+Hart is to hand over the papers he holds for her within seven days.
+""",
     "sable-with-bryony/immunizations.md": """\
 # Sable Hart: immunizations, from the photograph of her card
 
@@ -247,6 +255,7 @@ PLANTED = [
     ("sable-own", "mine.md", "She saw me alone at school."),
     ("nurse", "school-notes.md", "Seen alone\nat school."),
     ("bryony", "order.md", "Family court order of 2026-11-10"),
+    ("court", "orders.md", "Bryony Okonjo is\nappointed her guardian from this day"),
     ("kit-own", "meter.md", "In October I took 11 glucose readings."),
 ]
 #: words that are in Sable's own box, or the nurse's, and in no box Garrick holds

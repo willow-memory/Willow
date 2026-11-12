@@ -15,9 +15,13 @@ stories, pulling opposite ways:
    his. Then the scene puts her box in his hands, and it answers him:
    a key says who approved, not who may ask.
 2. **A guardian replaced, who does not hand over.** A court makes her
-   aunt Bryony her guardian. Garrick hands nothing over, so Bryony
-   starts a box from the little she has. He goes on sealing in the old
-   one. Both boxes say they are held for Sable; both verify.
+   aunt Bryony her guardian, and sends its order, signed, to the box
+   Bryony starts, to Sable's own, and to the one Garrick holds. He does
+   not take it in, hands nothing over, and goes on sealing. Both boxes
+   say they are held for Sable and both verify; only one holds the
+   court's order. His seals after it are after it by his own clock
+   alone; in a copy where he takes the order in, his record itself puts
+   them after.
 3. **A wall that shuts out someone who cares.** Kit is sixteen, has
    diabetes, and stopped showing the numbers to a grandmother who is
    frightened for them. Rosa's box has the clinic's letter and no
@@ -32,6 +36,7 @@ scene plays as told, 1 when a step went otherwise, 2 a bad command.
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -49,6 +54,7 @@ BOXES = {
     "sable-own": ("Sable", "sable", None),
     "nurse": ("Tunde", "tunde", None),
     "bryony": ("Bryony", "bryony", None),
+    "court": ("the court", "clerk", None),
     "kit": ("Kit", "rosa", "2028-06-30"),
     "kit-own": ("Kit", "kit", None),
 }
@@ -78,6 +84,35 @@ class Tense(scene.Scene):
         for line in got.splitlines():
             print(f"    {line}")
         return pkg.read_text(encoding="utf-8")
+
+    def pack(self, frm: str, subj: str, to: str, name: str, note: str) -> str:
+        out = self.run(SHARE, "send", "--box", self.box(frm), "--id", self.ids[frm], "--answer", subj,
+                       "--for", self.pub[to], "--to", self.to / f"{name}.pkg", "--note", note,
+                       "--now", self.ts())  # fmt: skip
+        return out.split()[1] if out.startswith("packed ") else ""
+
+    def receive(self, to: str, name: str, quiet: bool = False) -> None:
+        got = self.run(SHARE, "receive", "--box", self.box(to), "--id", self.ids[to],
+                       "--package", self.to / f"{name}.pkg", "--now", self.ts())  # fmt: skip
+        for line in () if quiet else got.splitlines():
+            print(f"    {line}")
+
+    def took_order(self, name: str) -> int | None:
+        """The row at which a box took in a package the court signed."""
+        for r in self.rows(name):
+            if r["kind"] == "received" and r.get("from") == self.pub["court"] and r.get("verdict") == "good":  # fmt: skip
+                return r["n"]
+        return None
+
+    def sealed_after_order(self, name: str) -> int | None:
+        """Seals a record itself puts after the court's order; None when the
+        record never took the order in, so nothing on it says."""
+        at_row = self.took_order(name)
+        if at_row is None:
+            return None
+        return sum(
+            1 for r in self.rows(name) if r["kind"] == "seal" and r["n"] > at_row
+        )
 
     def kinds(self, name: str) -> list[str]:
         return [r["kind"] for r in self.rows(name)]
@@ -155,10 +190,22 @@ class Tense(scene.Scene):
 
         print("── 2. a guardian replaced, who does not hand over")
         self.now = at(f"{ORDER}T12:00:00Z")
+        order = self.seal("court", "who is appointed guardian of Sable Hart", "orders.md",
+                          f"By order of {ORDER}, Bryony Okonjo is guardian of Sable Hart in place of Garrick Hart, who is to hand over her papers within seven days.",
+                          "the order as made")  # fmt: skip
         self.holder["sable-with-bryony"] = "bryony"
         self.start("sable-with-bryony", self.life / "sable-with-bryony")
+        print(
+            "  the court sends its order to the box Bryony starts, and to Sable's own:"
+        )
+        served = {}
+        for to in ("sable-with-bryony", "sable-own", "sable"):
+            served[to] = self.pack("court", order, to, f"order-to-{to}", "An order of this court. Keep it.")  # fmt: skip
+        self.receive("sable-with-bryony", "order-to-sable-with-bryony")
+        self.receive("sable-own", "order-to-sable-own")
+        print("  and to the box Garrick holds. He does not take it in.")
         kernel.append(self.box("sable-with-bryony"), self.ts(), "held-for", who="minors",
-                      **{"for": "Sable", "by": "bryony", "until": "2029-03-08", "on": f"order of {ORDER}"})  # fmt: skip
+                      **{"for": "Sable", "by": "bryony", "until": "2029-03-08", "on": served["sable-with-bryony"]})  # fmt: skip
         self.seal("sable-with-bryony", "which doses are on the photograph of her card", "immunizations.md",
                   "The photograph shows two MMR doses and nothing after 2016.",
                   "all I have of her papers")  # fmt: skip
@@ -171,18 +218,45 @@ class Tense(scene.Scene):
                  if any(r["kind"] == "held-for" and r["for"] == "Sable" for r in self.rows(n))]  # fmt: skip
         handed = "handed-over" in self.kinds("sable")
         print(f"  boxes that say they are held for Sable: {', '.join(claim)}")
-        print(
-            f"  seals Garrick made in the old one after the order: {len(after)}; handed over: {handed}"
-        )
+        print(f"  seals Garrick made in the old one after the order, by his own clock: {len(after)}; handed over: {handed}")  # fmt: skip
         print("  doses Bryony's box knows of: 2; Garrick's: 3")
         self.expect(
             len(after) == 1 and len(claim) == 2 and not handed,
             "the old box was not as told",
         )
+
+        # the order, as something that can be checked
+        checked = self.run(SHARE, "check", "--package", self.to / "order-to-sable-with-bryony.pkg")  # fmt: skip
+        good = (
+            checked.split("\n")[0].endswith("holds")
+            and "Bryony Okonjo is guardian" in checked
+        )
+        by_order = [n for n in claim if self.took_order(n) is not None]
+        told = sorted(r["to"] for r in self.rows("court") if r["kind"] == "sent")
+        print(f"  the order, read alone, holds and names Bryony: {good}")
+        print(f"  of the boxes that say they hold for Sable, the ones that hold the court's order: {', '.join(by_order)}")  # fmt: skip
+        print(f"  the court's own record says it sent the order to {len(told)} keys, the box Garrick holds among them: {self.pub['sable'] in told}")  # fmt: skip
+        self.expect(good and by_order == ["sable-with-bryony"] and self.pub["sable"] in told, "the order did not tell the two boxes apart")  # fmt: skip
+        pinned = self.sealed_after_order("sable")
+        print(f"  seals in the old box that its own record puts after the order: {pinned}. He never took it in, so only his clock says when")  # fmt: skip
+        self.holder["sable-had-he-taken-it"] = "garrick"
+        shutil.copytree(self.box("sable"), self.box("sable-had-he-taken-it"))
+        self.ids["sable-had-he-taken-it"] = self.ids["sable"]
+        self.receive("sable-had-he-taken-it", "order-to-sable", quiet=True)
+        self.seal("sable-had-he-taken-it", "which immunizations has Sable had", "immunizations.md",
+                  "Sable has had MMR twice and one dose of HPV.", "her card and the printout")  # fmt: skip
+        had = self.sealed_after_order("sable-had-he-taken-it")
+        print(f"  in a copy where he does take it in and then seals: {had}, by the order of the rows and whatever his clock says")  # fmt: skip
+        self.expect(
+            pinned is None and had == 1,
+            "a seal after the order was not told from one before",
+        )
         self.said["guardian"] = {
-            "claim_to_hold": claim, "old_holder_seals_after_order": len(after), "handed_over": handed,
-            "old_box_seals": self.proves("sable", self.key("sable")),
-            "new_box_seals": self.proves("sable-with-bryony", self.key("sable-with-bryony")),
+            "claim_to_hold": claim, "old_holder_seals_after_order_by_his_clock": len(after),
+            "handed_over": handed, "order_holds_alone": good, "hold_the_order": by_order,
+            "court_sent_to": len(told), "served_on_the_old_holder": self.pub["sable"] in told,
+            "old_box_seals_its_record_puts_after": pinned, "had_he_taken_it": had,
+            "sable_has_the_order": self.took_order("sable-own") is not None,
         }  # fmt: skip
 
         print("── 3. a wall that shuts out someone who cares: Kit, sixteen")
@@ -206,7 +280,7 @@ class Tense(scene.Scene):
 
         print("── 4. every box")
         table = {}
-        for name in [*BOXES, "sable-with-bryony"]:
+        for name in [*BOXES, "sable-with-bryony", "sable-had-he-taken-it"]:
             out = self.run(KERNEL, "verify", "--box", self.box(name)).strip()
             table[name] = {"holder": self.holder[name], "verify": out,
                            "seals": self.proves(name, self.key(name))}  # fmt: skip
