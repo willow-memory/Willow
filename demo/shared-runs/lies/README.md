@@ -107,6 +107,65 @@ stepped-otherwise, which here is another multiplier and there is the
 project's own arithmetic; and any rate, since its sweep is six
 trajectories and its numbers are its own.
 
+## What is already here, and what this adds
+
+Asked 2026-11-12 of three places: willow's own demos and add-ons, by
+[novelty.py](../../novelty.py) and by reading; the homestead-affairs
+repositories, through the box made for them on the branch
+`health/minors-boxes`; and the four-minors scene on that same branch.
+
+**The novelty check says these pieces have not been put together
+before**: nothing on the idea list is close, and no other demo holds half
+of the description's words.
+
+What exists catches a lie of another kind:
+
+| what is lied to | what catches it here already | where |
+|---|---|---|
+| a record, rewritten after the fact | each row holds the hash of the one before; where the record ends, kept out of its reach; the people who were sent something, holding it to what they kept | the kernel, the tip-pin and share add-ons, and [the Johnson scene](../../johnson/README.md), where a rewritten record still verifies for its owner and is caught by everyone else |
+| something in transit, edited on the way | a signature over every layer | the Johnson scene's edited copy, refused where it lands |
+| a file that is not the one named | its SHA-256 held to a pinned one | the weights-pin add-on; and this study's own runner, which refuses a stepper that is not the plan's |
+| a summary that says more than its source | figures in one and not the other, side by side | the pair-drift add-on. The first study's R8 is the same idea, written again for an agent's account |
+| a log, forged whole with its anchor | a key the forger does not have | homestead's integrity log, with what it still cannot catch written down: a row deleted so the log looks as if it never had a key |
+
+**What none of them is:** every one of those finds a thing changed
+*after* it was written down. The lies here are false *when* they are
+written down. A kept state that is wrong has a true hash of a wrong
+state; no chain breaks and no signature fails. The only thing that can
+find it is doing some of the work again. That is the gap between a
+record being whole and a record being right, and it is this draft's
+whole subject.
+
+Four things the comparison turned up that the draft lacks:
+
+- **It checks a lie against itself.** Homestead's audit found a check
+  that "compared a poisoned reading against itself and reported
+  nothing", and mended it by taking the baseline before anything was
+  declared. This draft's check steps a kept state again *from the kept
+  state before it*. When that one is the lie, everything after it agrees
+  with it. The dry run shows exactly this: a one-bit lie is found only
+  when that one state is looked at. The start of a trajectory, frozen as
+  exact numbers, is the only thing the liar did not write.
+- **Nothing says who told it.** The memory is rows in a file, unsigned.
+  Willow's share add-on gives every sender a key and a standing earned
+  from the packages of theirs that held: rookie, then steady, then
+  veteran. A pool of machines needs just that, and how much of a
+  machine's work is checked could turn on it.
+- **What arrives is used as if it were approved.** In the minors scene a
+  box that receives a package says "received, not sealed by you", and
+  what was received counts for nothing until its owner seals something
+  of their own. The shared memory does the opposite: a state is gone on
+  from the moment it arrives. This study measures what that costs.
+- **A lie found is not a lie recalled.** In the Johnson scene a wrong
+  answer is replaced, and the replacement follows the first along every
+  hand it passed through. Here a found lie is a line in a list. Every
+  job says which kept state it went on from, so the wrong jobs could be
+  named from the lie; nothing does it yet.
+
+And one it shares with what is here: homestead's deleted row and this
+draft's forgotten halt are the same thing. An absence is the one lie no
+check of what is present can find.
+
 ## Before the freeze
 
 The maintainer's to settle:
@@ -123,6 +182,11 @@ The maintainer's to settle:
   false halt is found only by luck of the draw, the mend is a check that
   steps up to a halt and sees it. That is a change to runner.py, which
   the first study froze; here it would be a finding, not a fix.
+- **Whether to add the four things the comparison found** before it is
+  frozen, or leave them as what it finds: a check from the start and not
+  only from the state before; a key on what a machine keeps; a memory
+  that is not gone on from until something has looked at it; and a
+  recall that names the jobs a found lie reached.
 - **Whether the lie should know the seed.** These lies are placed by a
   seed of their own. A liar who knew the check's seed would lie only
   where it does not look, and the `as-run` arm would find nothing. That

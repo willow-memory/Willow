@@ -21,7 +21,7 @@ From "What it cannot show" and "What the passes do and don't say".
 
 | | the gap | entries that would close it |
 |---|---|---|
-| G1 | every machine was honest | A1, A2, A3 |
+| G1 | every machine was honest | A1 to A8 |
 | G2 | only 3 jobs were run in full on all three kinds of processor | B1 |
 | G3 | every processor was x86 | B2, B3 |
 | G4 | both agents got everything right, so the blind half was never strained | C1 to C6 |
@@ -38,6 +38,16 @@ From "What it cannot show" and "What the passes do and don't say".
 | A2 | **Two machines disagree.** One is wrong and nothing says which. | whether a third settles it, and what it costs | A1's set-up, three machines | here | |
 | A3 | **A stale memory.** States kept by an older version of the code are offered to a newer one. | whether the name a state is kept under holds the code as well as the inputs. It does, by the stepper's SHA-256; this would test it | two commits of a project | here | |
 | A4 | **The same thing sent twice**, or a round's output given to the wrong round | whether a repeat or a misdelivery is refused or silently counted | the notebooks | here | |
+
+Found by holding A1's draft to what is already here
+([lies/README.md](lies/README.md)), and not yet anyone's to run:
+
+| | what is tried | what it would show | needs | from where | already on the maintainer's machine? |
+|---|---|---|---|---|---|
+| A5 | **A check from the start.** A drawn state is stepped from the trajectory's frozen start, not from the kept state before it. | what it costs to check against something the liar did not write, and how many more lies it finds | a change to how the check steps | here | |
+| A6 | **A key on what a machine keeps.** Each kept state signed by the machine that kept it, as the share add-on signs a package. | that a found lie names its teller, and whether a machine's standing can set how much of its work is checked | the share add-on's keys, in the runner | here | |
+| A7 | **Received, not yet gone on from.** A state is not used until something has looked at it. | what the saving falls to when nothing is trusted on arrival | a change to the memory | here | |
+| A8 | **A recall.** From a found lie, the jobs that went on from it are named. | how many of the wrong jobs can be called back, from what each job already says it took | nothing new: the acts say it | here | |
 
 ## B. Machines: more kinds, and one difference at a time
 
