@@ -1,0 +1,10 @@
+who holds a child's health record  |  populated  |  homestead/docs/PLAN-homestead-health.md:202
+may a parent see a record the minor consented to alone  |  populated  |  homestead-law/docs/legal_obligations_intl.md:423
+what happens to the record when a child turns eighteen  |  populated  |  homestead-law/homestead_law/app/panes.py:99
+what does the household hold as guardian  |  populated  |  homestead/docs/PLAN-homestead-health.md:103
+is a withheld record shown as withheld  |  populated  |  homestead-law/homestead_law/app/demo.py:135
+what is the open decision on minor consent  |  populated  |  homestead/docs/PLAN-homestead-health.md:303
+who decides for an adult who cannot decide  |  populated  |  homestead/docs/household_safety.md:932
+can one person hold a key for another  |  populated  |  homestead-health/homestead_health/roster.py:210
+does a grown child take the file with them  |  populated  |  homestead-ledger/README.md:219
+which person may see this  |  populated  |  homestead-law/homestead_law/packs/grant.py:160
