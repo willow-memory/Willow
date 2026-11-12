@@ -27,7 +27,8 @@
     "02e79d23c4db": "`last` is None only on a card's first review, when `card` is None too and step() returns before it reads `days`, so the days passed there (0 or 1) change no result."
   },
   "land": {
-    "0d2be111d6b6": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+    "0d2be111d6b6": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report.",
+    "00e011a66d1a": "The size of the blocks a file is read in to hash it: any size reads the same bytes, so the same sha256."
   },
   "lesson-time": {
     "05dbd1b2d85d": "said_at's starting value is never read: a plan that states its time sets said_at to that line, and one that states none is skipped or shown as from --period, so the starting 0 changes no result."
