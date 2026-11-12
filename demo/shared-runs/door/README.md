@@ -254,6 +254,23 @@ byte for byte, as Kaggle's run of it.
 | the door | another run's folder is taken in only if it is whole by its seal, is this plan's by this code, and its signer is enrolled or an enrolled checker stepped every state of it again and found it the same. Whole and unknown, it is held: logged, and not gone on from. Not whole, it is refused and the run stops |
 | a check that takes no one's word | `check` steps kept states again from the state before, and steps up to every halt the memory names to see it halt. Its seal says, for each folder, how many states it stepped and whether all were the same; that is the vouching the door reads. A run that went on from another's states is vouched for only if that other is enrolled or vouched for too |
 
+**The whole first-study sweep through it, with the door on**, on
+2026-11-12, on two machines of one kind (intel x86_64 avx512): the
+cloud session, and the maintainer's laptop on their word, as the
+laptop session reported it. Every machine signed, each second-round
+machine was given only its own place's first-round folder, and each
+took it as enrolled. Both came to 336,379 steps over the ten shared
+runs, the first study's number, with each machine's count the first
+study's own. A check of every kept state found 3,473 of 3,473 the same
+and four halts of four (three part way and one refusal, kept as a halt
+at nothing), for 330,244 steps here. The eleven folders are under
+2 MB together, and `verify` took about a tenth of a second a folder.
+The ten shared runs took 79 seconds here with a round's machines at
+once, and 242 on the laptop under another job's load; the check 213
+and 242. What signing costs was not told apart from that load. These
+are trials of the machine, not a study's results, and the folders are
+kept outside this repository.
+
 A seal says who left a folder and that it is as they left it. It does
 not say the folder is right: in the tests a liar seals its own lie, the
 seal holds, and only the check finds it.
