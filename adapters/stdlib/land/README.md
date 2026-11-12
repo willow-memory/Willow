@@ -48,8 +48,9 @@ extension a reader adds taken off, and a long file's part number with it,
 again while there's one, since a mirror of a mirror carries two);
 then those two with the first folder taken off (a reader's own folder, in a
 pile made by several), the mirror first. The first that is a file in FOLDER
-is the one copied, so a bank statement lands as the CSV the bank reader
-reads, not as its words. The same original reached by two readers is
+(or, failing that, the one file whose name differs only in case, for a
+reader that lowercased `.PDF`) is the one copied, so a bank statement
+lands as the CSV the bank reader reads, not as its words. The same original reached by two readers is
 copied once; put in two categories by them, it is said, under **in two
 categories**, and copied nowhere.
 

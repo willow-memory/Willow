@@ -114,13 +114,30 @@ def candidates(rel: str) -> list[str]:
 
 
 def original(src: Path, rel: str) -> str | None:
-    """The original in `src` that pile path `rel` was read from, or None."""
+    """The original in `src` that pile path `rel` was read from, or None. A
+    reader that lowercased a name (`.PDF` read as `.pdf`) still leads back:
+    when no candidate is there as spelled, the one file whose name differs
+    only in case is the original."""
+    tried = []
     for c in candidates(rel):
         parts = PurePosixPath(c).parts
         if ".." in parts or PurePosixPath(c).is_absolute():
             continue
         if (src / c).is_file():
             return c
+        tried.append(c)
+    for c in tried:
+        p = PurePosixPath(c)
+        folder = src / p.parent
+        if not folder.is_dir():
+            continue
+        same = [
+            f.name
+            for f in folder.iterdir()
+            if f.is_file() and f.name.casefold() == p.name.casefold()
+        ]
+        if len(same) == 1:
+            return str(p.parent / same[0]) if str(p.parent) != "." else same[0]
     return None
 
 

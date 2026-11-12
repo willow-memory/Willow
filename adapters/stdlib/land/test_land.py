@@ -132,6 +132,12 @@ def test_a_file_at_the_pile_path_itself_is_the_original_first(tmp_path):
     assert la.original(src, "notes.txt") == "notes.txt"
     assert la.original(src, "markdown/notes.txt") == "notes"
     assert la.original(src, "../etc/passwd") is None
+    (src / "forms").mkdir()
+    (src / "forms" / "Notice.PDF").write_text("n")
+    (src / "Two.TXT").write_text("a")
+    (src / "two.txt").write_text("b")
+    assert la.original(src, "pdf/forms/notice.pdf.txt") == "forms/Notice.PDF"
+    assert la.original(src, "TWO.txt") is None  # two names differ only in case: neither
     assert la.candidates("notes") == ["notes"]  # tried once, not twice
     assert la.candidates("a/b") == ["a/b", "b"]
     # a mirror of a mirror: nest-read's own .txt, then the reader's part
