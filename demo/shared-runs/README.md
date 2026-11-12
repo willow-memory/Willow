@@ -1,6 +1,8 @@
-# Shared runs: a study, frozen and not yet run
+# Shared runs: a study of remembering and sharing, run and judged
 
-**Status: frozen 2026-11-11, and not run. No number below is a result.**
+**Status: frozen 2026-11-11, run and judged 2026-11-12. The results are
+in the section called "The results"; every number before it is an
+account from before the freeze.**
 The sweep, the scripts, the rules and the questions were committed alone,
 as [the rules for a study](../../docs/agents/studies.md) say; what was
 frozen is in [study/FROZEN.json](study/FROZEN.json). The trials and the
@@ -745,6 +747,113 @@ there is judged yet.
 Left: the cloud session's check (step 7, `--to RUNS/cloud-session`), then
 step 8.
 
+## The results
+
+Judged 2026-11-12 by the frozen judge.py, from what fifteen machine runs
+and two agents kept ([study/runs/](study/runs/)). Each verdict is a row,
+`shared-runs:R1` to `R9`, on a record outside the repository; a copy of
+that record is [study/results/record.jsonl](study/results/record.jsonl),
+and the kernel says of it: "the chain holds: 10 rows, 0 sealed". The
+figures are in [study/results/verdicts.json](study/results/verdicts.json).
+No frozen file was changed between the freeze and the judging.
+
+The last machine was the cloud session: its check and its run of the
+project as written, on the project at its commit under NumPy 2.1.3. It
+says the same kind as the laptop, `intel x86_64 avx512`, so it added a
+machine and not a kind.
+
+| rule | verdict | what was counted |
+|---|---|---|
+| R1, the machines agree | **passed** | all 220 jobs and all 1,305 kept states stepped again came to the same bytes, on three kinds of processor |
+| R2, the project as written | measured | 14 of 220 jobs the same bytes on all five machines that ran it |
+| R3, memory saves the work it should | **passed** | measured 73.2%; predicted 73.7% once the baseline's three halts are known, 73.3% from the sweep alone; 0.5 points apart |
+| R4, memory serves only what a run would give | **passed** | 20 of 20 served jobs the draw picked, run afresh, the same bytes |
+| R5, what a check costs | measured | 100 steps at the median, 2.0% of the median job's 5,095 |
+| R6, a halt is not repeated | **passed** | three trajectories began and halted; each was stepped into its halt once |
+| R7, the blind account | **failed** | each agent right on 15 of the 16 questions the reports answer |
+| R8, the blind account adds nothing | **passed** | no sentence of either account says a figure the reports lack |
+| R9, the blind account says when the reports don't | **passed** | each agent left all 5 unanswerable questions unsaid |
+
+The baseline stepped 1,256,518 steps. The shared run stepped 336,379: of
+its 220 jobs, 22 took nothing from memory, 169 went on from a kept state
+and 29 were served whole.
+
+### What failed, and why
+
+**R7 failed, and the fault is the judge's, not the agents'.** The one
+answer marked wrong for both is how many steps a baseline run stepped.
+Both wrote 1256518, which is the figure and is what the reports say. The
+frozen account.py writes its key with six significant digits, so its key
+for that question is 1.25652e+06, and its comparison then reads the
+agent's whole number and the key's rounded one as different. Any figure
+of a million or more would have been marked wrong whatever was answered.
+
+The dry run could not see it: its largest figure was 10,656. That is
+what a dry run on a small sweep misses, and it is written here because
+the next study should have one figure in its dry run as large as any the
+real one will hold.
+
+The verdict stands as frozen: R7 failed. Mending the key would be a
+change to a frozen file after the answers were read, which is a new
+freeze with its reason, and the maintainer's to call. Read by hand, both
+agents were right on all 16.
+
+### What the passes do and don't say
+
+- **R1 passed as frozen, on thinner ground than its sentence suggests.**
+  The rule counts kinds across the machines that ran, not for each job.
+  Only 3 jobs were run in full by all three kinds. The Intel AVX2
+  machines ran everything. The AMD machine ran the 20 jobs dealt to it.
+  The two AVX-512 machines did what check machines do: each stepped 435
+  kept states again and ran the 20 drawn jobs afresh. So the claim R1
+  supports is that nothing disagreed anywhere it was tried: 220 jobs,
+  1,305 state checks and 60 fresh runs, without one other byte.
+- **R2's fourteen has a plain shape, seen after the judging.** As the
+  project is written, the three AVX2 machines agree with each other on
+  all 220 jobs, and the two AVX-512 machines, a laptop's Core i7 and a
+  cloud Xeon, agree with each other on all 220. Across the two groups
+  they agree on 14. The first difference falls by the shortest job, 310
+  steps, on 18 of the 21 trajectories that ran. So it is the instruction
+  set and nothing else that was varied, which fits what an earlier trial
+  found of one power in the gravity. It is a finding for the project's
+  author; nothing of theirs was changed.
+- **R3 held with three halts**, which the dry run had shown would have
+  failed it under the rule as first written.
+- **R6 was tested**, which was not known beforehand: three of the five
+  crowded setups halted.
+- **R8 struck nothing, and one sentence shows its limit.** The larger
+  model wrote that 14 of 220 jobs agreed on all five machines, "which
+  ran on 3 kinds of processor". Both figures are in the reports; joined
+  that way they are wrong, since those five machines were of two kinds.
+  R8 holds an account to its figures, not to how it joins them.
+
+### The claim, held to this
+
+> A sweep of simulations, run on machines nobody chose, sharing one
+> memory keyed by each run's inputs, does less computing than the same
+> sweep run alone; what it serves from memory is, bit for bit, what
+> running it would have given; checking a served result costs far less
+> than making it; and an agent handed only the reports can say what
+> happened, and no more.
+
+- **Less computing:** 73.2% fewer steps, within half a point of what was
+  predicted.
+- **Bit for bit:** every served job tried afresh, and every kept state
+  stepped again, on three kinds of processor.
+- **Checking costs far less:** a hundred steps against a median job of
+  five thousand.
+- **An agent can say what happened, and no more:** nothing added, and
+  nothing guessed where the reports were silent. Whether it said what
+  happened is what R7 asks, and R7's verdict is failed, for the reason
+  above.
+
+What it still cannot show is what the plan said it could not: scale, a
+machine that lies, tightly coupled work. Two of the machines were
+chosen, the laptop and the cloud session, and did only checking. The
+two agents were this session's own, given the brief as their whole
+prompt but not sealed off from the repository; each made one call, to
+hand back its answer.
+
 ## The order
 
 1. Settle the list above. Kaggle's pages are read. The maintainer has
@@ -759,9 +868,12 @@ step 8.
    them to it. With it in that commit are only that test and their two
    lines in the file tree. From here a change to any of them is a new
    freeze, with its reason.
-5. The baseline: one notebook, no memory, twice. The notebooks for this
-   and the next two steps are written and rehearsed; see "Running it".
-6. The shared run: many notebooks, one dataset.
-7. The check: a fresh notebook that only verifies.
+5. The baseline: one notebook, no memory, twice. Done 2026-11-11.
+6. The shared run: many notebooks, one dataset. Done 2026-11-11; the
+   wire was each notebook's output, not a dataset.
+7. The check: a fresh notebook that only verifies. Done, by Kaggle's
+   notebook, the laptop and the cloud session.
 8. The blind account: a fresh agent, the reports, the frozen questions.
-9. The report: what held, what did not, with the frozen numbers.
+   Done 2026-11-12, by two models.
+9. The report: what held, what did not, with the frozen numbers. Done:
+   "The results", above.

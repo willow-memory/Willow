@@ -1,0 +1,1 @@
+demo/shared-runs: the study run and judged. Fifteen machine runs on three kinds of processor and two agents; R1, R3, R4, R6, R8 and R9 passed, R2 and R5 were measured, and R7 failed on a fault in the frozen scorer, said as it stands.

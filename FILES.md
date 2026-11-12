@@ -2482,8 +2482,25 @@ willow/
 │   │   │   ├── judge.py          the study's nine rules, each held to what the machines kept
 │   │   │   ├── notebooks.py      the study's Kaggle notebooks, made from the frozen files: one script a machine run
 │   │   │   ├── plan.json         the study's sweep: 220 jobs over 22 trajectories, its machines, seeds and agents
+│   │   │   ├── results/          what the frozen judge made of the run: verdicts, figures, and the record they are rows on
+│   │   │   │   ├── agent-input.txt   the two agents' whole input: what is asked, the reports, the questions
+│   │   │   │   ├── key.json          each question's answer, as the frozen account.py wrote it
+│   │   │   │   ├── record.jsonl      a copy of the record outside the repository that the nine verdicts are rows on
+│   │   │   │   ├── report.txt        the run's reports, made by account.py: no agent wrote any of it
+│   │   │   │   ├── verdicts.json     the run's figures and its nine verdicts, as judge.py printed them
+│   │   │   │   └── verify.txt        what the kernel said of that record
 │   │   │   ├── runner.py         what one machine does: every job alone, its share with the memory, a check, or the project as written
+```
+
+#### demo/shared-runs/study/, from runs/
+
+```
 │   │   │   ├── runs/             the real run, 2026-11-11: twelve Kaggle notebooks, the check, and the laptop
+│   │   │   │   ├── account/          what each of the two agents sent back
+│   │   │   │   │   ├── larger/           the mid-size model
+│   │   │   │   │   │   └── answers.txt       its answers and its account, word for word
+│   │   │   │   │   └── small/            the smallest model
+│   │   │   │   │       └── answers.txt       its answers and its account, word for word
 │   │   │   │   ├── baseline-1/
 │   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
 │   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
@@ -2499,6 +2516,10 @@ willow/
 │   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
 │   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
 │   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── cloud-session/    the cloud session's check and its run of the project as written
+│   │   │   │   │   ├── acts.jsonl        what it did, one line a job or a check
+│   │   │   │   │   ├── machine.json      what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl      the states it kept, as numbers in hex
 │   │   │   │   ├── laptop/
 │   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
 │   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
@@ -2513,11 +2534,6 @@ willow/
 │   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
 │   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
 │   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
-```
-
-#### demo/shared-runs/study/runs/, from round-1-machine-2/
-
-```
 │   │   │   │   ├── round-1-machine-2/
 │   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
 │   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
@@ -2533,6 +2549,11 @@ willow/
 │   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
 │   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
 │   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+```
+
+#### demo/shared-runs/study/runs/, from round-2-machine-0/
+
+```
 │   │   │   │   ├── round-2-machine-0/
 │   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
 │   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
@@ -2563,11 +2584,6 @@ willow/
 │   │   │   ├── TESTER.md     Trying it on a machine of your own
 │   │   │   ├── test_frozen.py    every frozen file is the bytes it was, and the rules frozen are the rules judged
 │   │   │   └── test_study.py     the deal, the memory against a job alone, each rule failing when broken, the dry run kept
-```
-
-#### demo/shared-runs/, from trial-1/
-
-```
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
 │   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
@@ -2593,6 +2609,11 @@ willow/
 │   │   │   ├── RESULTS.md    what was counted, a reading of whether each step was the next one needed, and what to hold against it
 │   │   │   ├── RULES.md      what a link may do, what the script refuses, and what will be counted
 │   │   │   └── stack-at-the-end.txt the stack the chain left: seven steps it was given, three it added
+```
+
+#### demo/shared-runs/, from trial-3/
+
+```
 │   │   ├── trial-3/      code in the agents' place, from the same start, and the two compared
 │   │   │   ├── 08-why-not.txt what the first step the rules added printed
 │   │   │   ├── 09-fair-merge.txt what the second printed: which piles hold nothing for the question
@@ -2615,11 +2636,6 @@ willow/
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
-```
-
-#### demo/, from small-models/
-
-```
 │   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
 │   │   ├── README.md         what was tried, what came of it, the box, what asking it found
 │   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
@@ -2647,6 +2663,11 @@ willow/
 │   │   │   ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │   │   └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
 │   │   └── KEPT.json     the thirteen saved model runs, each with its SHA-256, listed as kept
+```
+
+#### demo/, from soil-phys-001/
+
+```
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
 │   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256
@@ -2672,11 +2693,6 @@ willow/
 │   │       ├── record-2.jsonl  a copy of run 2's record, without its key
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       └── record-3.jsonl  a copy of run 3's record, without its key
-```
-
-#### demo/, from teodora/
-
-```
 │   ├── teodora/              built blind, from a different line of work
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md

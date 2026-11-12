@@ -319,3 +319,45 @@ def test_a_machine_trying_the_dry_sweep_is_told_how_its_bytes_compare(tmp_path):
     page = (HERE / "TESTER.md").read_text()
     plan = json.loads((HERE / "dry-plan.json").read_text())["project"]
     assert plan["commit"] in page and f"numpy=={plan['numpy']}" in page
+
+
+def test_what_the_study_kept_is_what_its_page_says():
+    kept = json.loads((HERE / "results" / "verdicts.json").read_text())
+    assert {r: v["state"] for r, v in kept["verdicts"].items()} == {
+        "R1": "passed", "R2": "measured", "R3": "passed", "R4": "passed", "R5": "measured",
+        "R6": "passed", "R7": "failed", "R8": "passed", "R9": "passed",
+    }  # fmt: skip
+    f = kept["figures"]
+    assert (f["baseline_steps"], f["shared_steps"], f["measured"], f["predicted_with_halts"]) == (1256518, 336379, 73.2, 73.7)  # fmt: skip
+    assert (f["computed"], f["stepped_on"], f["served"]) == (22, 169, 29)
+    assert (f["states_checked"], f["states_same"], f["jobs_on_three_kinds"]) == (
+        1305,
+        1305,
+        3,
+    )
+    assert f["kinds"] == ["amd x86_64 avx2", "intel x86_64 avx2", "intel x86_64 avx512"]
+    assert (f["native_same"], f["native_jobs"], f["native_machines"]) == (14, 220, 5)
+    rows = [json.loads(x) for x in (HERE / "results" / "record.jsonl").read_text().splitlines()]  # fmt: skip
+    assert [r.get("gate") for r in rows[1:]] == [
+        f"shared-runs:{r}" for r in judge.RULES
+    ]
+    assert [r["verdict"] for r in rows[1:]] == [kept["verdicts"][r]["state"] for r in judge.RULES]  # fmt: skip
+    frozen = json.loads((HERE / "FROZEN.json").read_text())["files"]
+    assert rows[1]["tools"]["judge.py"] == frozen["judge.py"], (
+        "judged by the frozen judge"
+    )
+    plan = sweep.load(HERE / "plan.json")
+    assert judge.judged(HERE / "plan.json", HERE / "runs")[1]["R7"]["state"] == "failed"
+    assert account.report(plan, f) == (HERE / "results" / "report.txt").read_text()
+    for name in ("small", "larger"):
+        got = account.held(plan, f, (HERE / "runs" / "account" / name / "answers.txt").read_text())  # fmt: skip
+        assert [q for q, m in got["marks"].items() if m != "right"] == [
+            "baseline-steps"
+        ]
+        assert (
+            got["struck"] == []
+            and "baseline-steps: 1256518"
+            in (HERE / "runs" / "account" / name / "answers.txt").read_text()
+        ), "the answer marked wrong is the figure the reports give"
+    page = (HERE.parent / "README.md").read_text()
+    assert "R7 failed, and the fault is the judge's" in page and "73.2%" in page
