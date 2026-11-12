@@ -458,12 +458,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="medical-records"></a>**medical-records** (idea) \
   Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. \
   *new* `no-install` `offline` `json` `health` · near: box-health, takeout, schema-check
-
-#### Other readers: ideas, not built yet, m to w
-
 - <a id="moodle"></a>**moodle** (idea) \
   Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
   *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
+
+#### Other readers: ideas, not built yet, m to w
+
 - <a id="music-library"></a>**music-library** (idea) \
   Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines. \
   *new* `no-install` `offline` `year` `library` · near: listening, livestock, tax-year
@@ -500,6 +500,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="teams"></a>**teams** (idea) \
   Microsoft Teams chats from your Microsoft account's export, one dated line per message. \
   *new* `no-install` `offline` `message` `chats` · near: chats, signal, texts
+- <a id="turns"></a>**turns** (idea) \
+  An interview transcript's speaker turns (Interviewer:, Narrator:) as lines cited by speaker and time, the narrator's words apart. \
+  *new* `no-install` `offline` `transcript` · near: subtitles, line-origin, agent-transcript
 - <a id="voice"></a>**voice** (idea) \
   Dictation, calls and lectures transcribed into dated text. \
   Needs faster-whisper; MIT. Goes online: the model, downloaded once. *new* `needs-install` `online` `voice` `transcribed` · near: wis, writefreely, texts
@@ -1076,6 +1079,18 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. \
   *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, secrets-audit, quotes
 
+#### What runs on your page: ideas, not built yet
+
+- <a id="copies"></a>**copies** (idea) \
+  Which file copies which, as the share of one file's words found in another, so two copies agreeing count as one source. \
+  *new* `no-install` `offline` `found` `copy` · near: diverge, why-not, words-zh
+- <a id="ocr-noise"></a>**ocr-noise** (idea) \
+  Passages that look like OCR damage (stray marks, split words), so a hit on one is read with care before it is quoted. \
+  *new* `no-install` `offline` `quote` `ocr` · near: hook-shell, ocr, misquote
+- <a id="odd-years"></a>**odd-years** (idea) \
+  A year that does not fit its own subject (summer of 1561 in an 1860s account), a likely OCR misreading, listed by line. \
+  *new* `no-install` `offline` `ocr` `odd` · near: my-lessons, transcript-redact, ocr
+
 ### Checking a model before you trust it
 
 - <a id="say-check"></a>[**say-check**](adapters/stdlib/say-check/) \
@@ -1088,6 +1103,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="join-check"></a>**join-check** (idea) \
   A connection a model made between two passages, held to your files: each thing it says looked for, and the passage that backs it shown. \
   Uses claim-check, connect. *new* `no-install` `offline` `join` `between` · near: joins, clauses, contradictions
+- <a id="narrator-review"></a>**narrator-review** (idea) \
+  A narrator's corrections to their own transcript, each proposed against the line it fixes and sealed by them; the original stays. \
+  *new* `no-install` `offline` `transcript` `propose` · near: hook-feedback, transcript-redact, translate
 
 ### What guards it
 
@@ -1191,6 +1209,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="chain-check"></a>**chain-check** (idea) \
   A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks. \
   *new* `no-install` `offline` `rows` `chain` · near: merkle, sync, diverge
+- <a id="consent-register"></a>**consent-register** (idea) \
+  A narrator's grants (keep, publish with their name), who holds them, and until when, sealed; an export refuses a line without one. \
+  *new* `no-install` `offline` `refuses` `register` · near: hosts, grant, memory-import
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
   Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0.
@@ -1292,6 +1313,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="typosquat"></a>[**typosquat**](adapters/stdlib/typosquat/) \
   Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. \
   Uses advisories. *new* `no-install` `offline` `dependency` `package` · near: outdated, advisories, claim-check
+
+#### What runs on your page: ideas, not built yet
+
+- <a id="contact-audit"></a>**contact-audit** (idea) \
+  Phone numbers and emails in your files, by file and line, never showing the value; pii-audit reads only numbers it can check. \
+  *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, pii-audit, privacy
 
 ### What guards it
 
