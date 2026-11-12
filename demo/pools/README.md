@@ -55,9 +55,33 @@ seen, in a traced run, to leave a file under a mirror's `.places`;
 nothing else settles it. Another session counted the cards that say
 `output: mirror` and got the same fourteen.
 
+## The trace: [trace/](trace/)
+
+`python demo/pools/trace/trace.py pile --pile PILE --name NAME --salt SALT --work DIR --to ROWS`
+runs every add-on that has a command line (the contract test's tables,
+which the [grid](GRID.md) takes its steps from) alone on one pile, each
+on a copy of one box and under the add-on guard, and writes one row a
+step of what was seen: how it ended, a report's state, the kinds of row
+it added, the files it left by suffix and whether a mirror's map is
+among them, and the places in the pile its output names, each hashed
+with the pile's salt and taken back through a mirror's map to the
+original where there is one. A row holds counts, hashes and the
+add-on's name, and none of the pile's words; its test holds it to that.
+
+**Tried, not run as a study.** On a pile made of every reader's own
+sample file from the contract test (105 files), all 351 steps took 29
+seconds on one core, none timed out and the guard refused nothing. 242
+ended 0, 77 ended 42 and 32 refused, 9 of those naming a file the pile
+did not have. Fourteen steps left a mirror's map, and they are the
+fourteen the reading predicted, no more and no fewer. 45 steps named a
+place in the pile; none went through a map, since no step was given
+another's mirror, which is what a stack is for. These are a trial's
+figures on a made-up pile, to show the harness works; the study's
+piles, salts and rules are not frozen.
+
 ## What is not here yet
 
-The piles, the grid of stacks, the trace of a run, the rules for a
-pool, a gap and a duplicate, the dry runs, the freeze, and anything
-for Kaggle. Those are being worked out between sessions and are the
+The piles, the rules for a pool, a gap and a duplicate, the dry runs
+(a nonsense pile, planted pairs, shuffled labels), the freeze, and
+anything for Kaggle. Those are being worked out between sessions and are the
 maintainer's to start.

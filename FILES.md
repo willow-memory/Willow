@@ -2414,6 +2414,9 @@ willow/
 │   │   │   ├── static.json       what static.py said on main at 99e0eee, one entry an add-on
 │   │   │   ├── static.py     what each built add-on's code says it takes and gives, read and not run
 │   │   │   └── test_static.py    it reads a made-up add-on as it should; the kept reading holds the page's figures and the fourteen
+│   │   ├── trace/            every add-on run alone on a pile under the guard, a row a step of what was seen
+│   │   │   ├── trace.py      one add-on's command run on one pile under the guard, and one row of what was seen: not what its card says
+│   │   │   └── test_trace.py     a row says what was seen and keeps none of the pile's words; places are salted and mapped back
 │   │   └── README.md         Pools: where add-ons meet, from what they are seen to do
 ```
 
