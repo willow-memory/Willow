@@ -117,3 +117,106 @@ def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):
     assert got.returncode == 2 and "duplicates.py" in got.stderr
     got = run(str(HERE / "duplicates.py"), "--box", str(tmp_path))
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+TEXT = (
+    "the following winter father was at omaha attending the legislature and "
+    "the rest of us stayed on the claim through the cold months until spring"
+)  # 25 words
+
+
+def spread(text: str, per: int) -> str:
+    """The same words in paragraphs of `per` words each: the kernel cuts a file
+    at its blank lines, so where they fall decides which passages it has."""
+    ws = text.split()
+    return "\n\n".join(" ".join(ws[i : i + per]) for i in range(0, len(ws), per))
+
+
+def pile_paras(**files: str) -> list[dict]:
+    """A pile cut at blank lines, as the kernel cuts a file into passages."""
+    rows = []
+    for name, text in files.items():
+        line = 1
+        for para in text.split("\n\n"):
+            rows.append({"path": name, "line": line, "text": para})
+            line += para.count("\n") + 2  # its lines, and the blank one after
+    return rows
+
+
+def test_runs_find_a_copy_whose_paragraphs_were_broken_differently():
+    pile = pile_paras(**{"a.txt": spread(TEXT, 5), "b.txt": spread(TEXT, 9)})
+    got = du.runs_of(pile)
+    assert len(got) == 1
+    assert [(r["path"], r["line"]) for r in got[0]] == [("a.txt", 1), ("b.txt", 1)]
+    assert len(got[0][0]["words"]) == 25
+    assert " ".join(got[0][0]["words"]) == TEXT
+    assert du.copies_of(pile) == [], (
+        "the same text cut into passages two ways never matches"
+    )
+
+
+def test_a_run_ends_where_a_word_changes_and_short_runs_are_not_copies():
+    ws = TEXT.split()
+    late = ws[:20] + ["CHANGED"] + ws[21:]  # a word changed at the 21st
+    got = du.runs_of(pile_of(**{"a.txt": " ".join(ws), "b.txt": " ".join(late)}))
+    assert [len(g[0]["words"]) for g in got] == [20]  # the 4 after it are under 8
+    mid = ws[:12] + ["CHANGED"] + ws[13:]  # at the 13th: 12 words before, 12 after
+    got = du.runs_of(pile_of(**{"a.txt": " ".join(ws), "b.txt": " ".join(mid)}))
+    assert sorted(len(g[0]["words"]) for g in got) == [12, 12]
+    seven = pile_of(
+        **{"a.txt": " ".join(ws[:7]) + " x1", "b.txt": " ".join(ws[:7]) + " y2"}
+    )
+    assert du.runs_of(seven) == []  # 7 shared words: under the floor of 8
+    eight = pile_of(
+        **{"a.txt": " ".join(ws[:8]) + " x1", "b.txt": " ".join(ws[:8]) + " y2"}
+    )
+    assert len(du.runs_of(eight)) == 1 and len(du.runs_of(eight)[0][0]["words"]) == 8
+
+
+def test_one_files_repeats_are_its_own_unless_another_file_has_them_too():
+    twice = pile_of(**{"a.txt": TEXT + "\n\n" + TEXT})
+    assert du.runs_of(twice) == []
+    three = pile_of(
+        **{"a.txt": TEXT + "\n\nbreak of words here\n\n" + TEXT, "b.txt": TEXT}
+    )
+    got = du.runs_of(three)
+    assert len(got) == 1
+    assert [r["path"] for r in got[0]] == [
+        "a.txt",
+        "a.txt",
+        "b.txt",
+    ]  # every copy listed
+
+
+def test_a_run_is_cut_where_the_files_that_share_it_change():
+    """c.txt holds all of TEXT; a.txt holds all of it, b.txt only the first half:
+    the first 15 words are a run of three copies, the last 17 a run of two (the
+    two overlap by the 7 words the window that changes the sharing spans)."""
+    ws = TEXT.split()
+    pile = pile_of(
+        **{"a.txt": TEXT, "b.txt": " ".join(ws[:15]) + " zz1 zz2", "c.txt": TEXT}
+    )
+    got = sorted(du.runs_of(pile), key=lambda g: len(g[0]["words"]))
+    assert [(len(g[0]["words"]), [r["path"] for r in g]) for g in got] == [
+        (15, ["a.txt", "b.txt", "c.txt"]),
+        (17, ["a.txt", "c.txt"]),
+    ]
+
+
+def test_runs_are_a_flag_of_box_and_the_default_is_unchanged(tmp_path):
+    b = box(tmp_path, {"a.txt": spread(TEXT, 5), "b.txt": spread(TEXT, 9)})
+    default = run(str(HERE / "duplicates.py"), "--box", str(b))
+    assert default.returncode == 42 and "No passage of 8 words" in default.stdout
+    runs = run(str(HERE / "duplicates.py"), "--box", str(b), "--runs")
+    assert runs.returncode == 0
+    assert runs.stdout.splitlines()[0] == "2 copies of a run of 25 words"
+    assert runs.stdout.splitlines()[1].startswith("  a.txt:1  ")
+    assert runs.stdout.splitlines()[2].startswith("  b.txt:1  ")
+    assert (
+        runs.stdout.splitlines()[-1]
+        == "1 run said in two or more files, 2 copies in all"
+    )
+    none = box(tmp_path / "n", {"a.txt": TEXT, "b.txt": "nothing at all alike in here"})
+    got = run(str(HERE / "duplicates.py"), "--box", str(none), "--runs")
+    assert got.returncode == 42 and "No run of 8 words or more" in got.stdout
+    assert run(str(HERE / "duplicates.py"), "--runs").returncode == 2  # no box

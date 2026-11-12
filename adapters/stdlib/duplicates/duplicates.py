@@ -1,6 +1,6 @@
 """duplicates.py: passages saying the same thing in two files, the newer said.
 
-    python adapters/stdlib/duplicates/duplicates.py --box DIR
+    python adapters/stdlib/duplicates/duplicates.py --box DIR [--runs]
 
 Every passage of your folder that says the same thing as a passage in
 another file, grouped, each copy with its date and place, the newest first
@@ -28,12 +28,31 @@ leave it unsaid: your files don't say which is newer.
 Copies in one file count only when the passage is also in another: the same
 line twice in one log is the log's business, not a duplicate.
 
+A passage is where the kernel cut the file: at a blank line, or after 500
+characters. The same text with its paragraphs broken in other places, or cut
+at the 500th character on a different word, is cut differently in two files,
+and its passages never match. With `--runs` the passages are not what is
+compared: each file is its words in order, and a run of 8 words or more that
+two files share is a copy, wherever each file broke its paragraphs:
+
+    2 copies of a run of 214 words
+      cox-1905-part17.txt:45         the following winter father was at omaha ...
+      dar-reminiscences.txt:135      the following winter father was at omaha ...
+
+A word in order is still the only thing a copy is: a word changed ends the
+run, and so does a word one file breaks across two lines. A run also ends
+where the files that share it change, so a stretch three files hold and the
+next stretch only two hold are two runs, each listing the files that hold it.
+Each copy is shown at the line its first word is on, with no date: which is
+newer is the other mode's question.
+
 It only reads. Exit codes, the kernel's: 0 duplicates found; 42 none; 2
 refused.
 """
 
 from __future__ import annotations
 
+import hashlib
 import sys
 from pathlib import Path
 
@@ -98,11 +117,81 @@ def show(found: list[list[dict]]) -> list[str]:
     return out
 
 
+def streams(pile: list[dict]) -> dict[str, list[tuple[str, int]]]:
+    """Each file's words in order, each with the line it is on, in the order
+    the files first come in the pile."""
+    out: dict[str, list[tuple[str, int]]] = {}
+    for c in pile:
+        ws = out.setdefault(c["path"], [])
+        for i, line in enumerate(c["text"].splitlines()):
+            ws += [(w, c["line"] + i) for w in kernel.words(line)]
+    return out
+
+
+def _window(ws: list[tuple[str, int]], i: int) -> bytes:
+    """A fingerprint of the FLOOR words starting at i."""
+    return hashlib.md5(" ".join(w for w, _ in ws[i : i + FLOOR]).encode()).digest()
+
+
+def runs_of(pile: list[dict]) -> list[list[dict]]:
+    """Groups of runs of FLOOR words or more that two files share, the words
+    the same in order, however each file broke its lines. A run lasts as long
+    as the same files share it: where a third file stops sharing, or starts,
+    a new run begins, so each group is the copies of one stretch of words in
+    exactly the files that hold it. A group lists its copies in file order
+    then line order."""
+    by = streams(pile)
+    seen: dict[bytes, set[str]] = {}  # a window of FLOOR words -> the files with it
+    for path, ws in by.items():
+        for i in range(len(ws) - FLOOR + 1):
+            seen.setdefault(_window(ws, i), set()).add(path)
+    groups: dict[tuple[str, ...], list[dict]] = {}
+    for path, ws in by.items():
+        last = len(ws) - FLOOR + 1  # one past the last window
+        i = 0
+        while i < last:
+            held_by = seen[_window(ws, i)]
+            if len(held_by) < 2:
+                i += 1
+                continue
+            j = i  # the window at i is shared: grow the run while the same files share
+            while j + 1 < last and seen[_window(ws, j + 1)] == held_by:
+                j += 1
+            words = tuple(w for w, _ in ws[i : j + FLOOR])
+            groups.setdefault(words, []).append(
+                {"path": path, "line": ws[i][1], "words": words}
+            )
+            i = j + 1
+    found = []
+    for rows in groups.values():
+        if len({r["path"] for r in rows}) >= 2:
+            found.append(sorted(rows, key=lambda r: (r["path"], r["line"])))
+    return found
+
+
+def show_runs(found: list[list[dict]]) -> list[str]:
+    out = []
+    for rows in found:
+        n = len(rows[0]["words"])
+        out.append(f"{len(rows)} copies of a run of {n} words")
+        width = max(len(f"{r['path']}:{r['line']}") for r in rows)
+        for r in rows:
+            where = f"{r['path']}:{r['line']}"
+            out.append(f"  {where:<{width}}  {' '.join(r['words'])[:100]}")
+    runs = len(found)
+    copies = sum(len(rows) for rows in found)
+    out.append(f"{runs} run{'s' if runs > 1 else ''} said in two or more files,"
+               f" {copies} copies in all")  # fmt: skip
+    return out
+
+
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a == "--box":
             opts[a] = next(it, "")
+        elif a == "--runs":
+            opts[a] = "yes"
         else:
             args.append(a)
     if not opts.get("--box") or args:
@@ -112,7 +201,16 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found = copies_of(kernel.chunks(Path(kernel.config(box)["pile"])))
+    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    if opts.get("--runs"):
+        found = runs_of(pile)
+        if not found:
+            print("No run of 8 words or more is in two files.")
+            return kernel.ESCALATE
+        for line in show_runs(found):
+            print(line)
+        return kernel.ALIVE
+    found = copies_of(pile)
     if not found:
         print("No passage of 8 words or more is in two files.")
         return kernel.ESCALATE
