@@ -25,8 +25,8 @@ From "What it cannot show" and "What the passes do and don't say".
 | G2 | only 3 jobs were run in full on all three kinds of processor | B1 |
 | G3 | every processor was x86 | B2, B3 |
 | G4 | both agents got everything right, so the blind half was never strained | C1 to C6 |
-| G5 | one workload, one author's code | D1 to D5 |
-| G6 | fifteen machine runs of minutes each | F1, F2 |
+| G5 | one workload, one author's code | W1 to W5 |
+| G6 | fifteen machine runs of minutes each | S1, S2 |
 | G7 | every machine was one person's | E1, E2 |
 | G8 | the project as written agrees on 14 of 220 | H1 |
 
@@ -61,16 +61,16 @@ From "What it cannot show" and "What the passes do and don't say".
 | C6 | **A report with a wrong line planted in it.** | whether an agent repeats it, which it should, or mends it from what it knows, which it should not | one changed report | here | |
 | C7 | **A person as the control.** Someone who was not there answers the same questions. | what the agents are being compared with | a willing reader | someone | |
 
-## D. Other work than one simulation
+## W. Other work than one simulation
 
 | | what is tried | what it would show | needs | from where | already on the maintainer's machine? |
 |---|---|---|---|---|---|
-| D1 | **Willow's own stacks.** A stack run on several machines with a shared memory of steps, under these rules. | the design note's claim that it is one shape at every size. Trial 4 found 27 of 30 steps the same across two folders | a name for a step without its place and clock (I1, I2) | here, laptop | |
-| D2 | **Another author's simulation.** | whether any of this is special to one project's care | a deterministic program with a fixed step | here | |
-| D3 | **Work with chance in it**, seeded | whether a seed is enough to make a run a thing that can be remembered | such a program | here | |
-| D4 | **Work on many cores**, or through the linear-algebra library | whether threads and their order break the bytes | such a program | here | |
-| D5 | **Work whose parts must talk.** The plan says this is not helped | a result that says so with a number, as a control | a coupled problem, small | here | |
-| D6 | **Not a simulation at all.** Converting files, an index, a model's answers at a fixed setting. | how much everyday computing is the same work done again | whatever is to hand | laptop | |
+| W1 | **Willow's own stacks.** A stack run on several machines with a shared memory of steps, under these rules. | the design note's claim that it is one shape at every size. Trial 4 found 27 of 30 steps the same across two folders | a name for a step without its place and clock (I1, I2) | here, laptop | |
+| W2 | **Another author's simulation.** | whether any of this is special to one project's care | a deterministic program with a fixed step | here | |
+| W3 | **Work with chance in it**, seeded | whether a seed is enough to make a run a thing that can be remembered | such a program | here | |
+| W4 | **Work on many cores**, or through the linear-algebra library | whether threads and their order break the bytes | such a program | here | |
+| W5 | **Work whose parts must talk.** The plan says this is not helped | a result that says so with a number, as a control | a coupled problem, small | here | |
+| W6 | **Not a simulation at all.** Converting files, an index, a model's answers at a fixed setting. | how much everyday computing is the same work done again | whatever is to hand | laptop | |
 
 ## E. People and places
 
@@ -80,16 +80,16 @@ From "What it cannot show" and "What the passes do and don't say".
 | E2 | **A second account.** Kaggle allows one a person, so another person's. | the first run where the machines are not all one person's, and what sharing an output across accounts takes | a person with an account | someone | |
 | E3 | **What is in a building.** Old laptops, a school's room of them, a phone. | the first thesis of all this: anything with a chip and a wire | the machines, and B2 | someone | |
 
-## F. Size and cost
+## S. Size and cost
 
 | | what is tried | what it would show | needs | from where | already on the maintainer's machine? |
 |---|---|---|---|---|---|
-| F1 | **Ten times the sweep**, in more rounds | whether the saving holds, and what the memory weighs | hours of a notebook's twelve | Kaggle | |
-| F2 | **Time and power, measured.** The agents were right to say the reports don't hold the seconds or the cost. | the saving in what is paid for, not only in steps | a clock in the runner, a meter on one machine | laptop | |
-| F3 | **How far apart the kept states are.** The same sweep at 500 and 2,000 steps. | the curve of what is kept against what is saved, and what a check then costs | nothing new | here | |
-| F4 | **No rule for who steps what.** | what it costs when machines choose for themselves. An early trial saw about 70% against 82% | the notebooks, changed | here | |
-| F5 | **A machine that stops mid-round.** | what the next round gets back | the notebooks | here | |
-| F6 | **When the memory is thrown away.** | how much can be dropped before the saving goes | nothing new | here | |
+| S1 | **Ten times the sweep**, in more rounds | whether the saving holds, and what the memory weighs | hours of a notebook's twelve | Kaggle | |
+| S2 | **Time and power, measured.** The agents were right to say the reports don't hold the seconds or the cost. | the saving in what is paid for, not only in steps | a clock in the runner, a meter on one machine | laptop | |
+| S3 | **How far apart the kept states are.** The same sweep at 500 and 2,000 steps. | the curve of what is kept against what is saved, and what a check then costs | nothing new | here | |
+| S4 | **No rule for who steps what.** | what it costs when machines choose for themselves. An early trial saw about 70% against 82% | the notebooks, changed | here | |
+| S5 | **A machine that stops mid-round.** | what the next round gets back | the notebooks | here | |
+| S6 | **When the memory is thrown away.** | how much can be dropped before the saving goes | nothing new | here | |
 
 ## H. Upstream
 
