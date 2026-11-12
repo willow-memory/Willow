@@ -325,6 +325,28 @@
   "version": "0.0.1"
  },
  {
+  "name": "consent-register",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A narrator's grants (keep, publish with their name), who holds them, and until when, sealed; an export refuses a line without one.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "contact-audit",
+  "kind": "stdlib",
+  "section": "Privacy and safety",
+  "line": "Phone numbers and emails in your files, by file and line, never showing the value; pii-audit reads only numbers it can check.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "page",
+  "version": "0.0.1"
+ },
+ {
   "name": "contracts",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -355,6 +377,17 @@
   "writes": "nothing",
   "network": "GitHub, through gh, with your own login",
   "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "copies",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Which file copies which, as the share of one file's words found in another, so two copies agreeing count as one source.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "page",
   "version": "0.0.1"
  },
  {
@@ -1194,6 +1227,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "narrator-review",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A narrator's corrections to their own transcript, each proposed against the line it fixes and sealed by them; the original stays.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "suggests",
+  "version": "0.0.1"
+ },
+ {
   "name": "narrow",
   "kind": "stdlib",
   "section": "Finding things",
@@ -1279,6 +1323,28 @@
   "writes": "nothing",
   "network": "loopback",
   "role": "ways",
+  "version": "0.0.1"
+ },
+ {
+  "name": "ocr-noise",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Passages that look like OCR damage (stray marks, split words), so a hit on one is read with care before it is quoted.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "page",
+  "version": "0.0.1"
+ },
+ {
+  "name": "odd-years",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A year that does not fit its own subject (summer of 1561 in an 1860s account), a likely OCR misreading, listed by line.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "page",
   "version": "0.0.1"
  },
  {
@@ -2045,6 +2111,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "turns",
+  "kind": "stdlib",
+  "section": "Reading more kinds of files",
+  "line": "An interview transcript's speaker turns (Interviewer:, Narrator:) as lines cited by speaker and time, the narrator's words apart.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "upgrade-notes",
   "kind": "stdlib",
   "section": "Finding things",
@@ -2235,6 +2312,17 @@
   "writes": "to",
   "network": "none",
   "role": "reads",
+  "version": "0.0.1"
+ },
+ {
+  "name": "year-claims",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "The years your sources give for one event (platted 1868, organised 1865), lined up, so where they differ each side is shown, cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
   "version": "0.0.1"
  }
 ]

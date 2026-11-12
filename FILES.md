@@ -430,19 +430,23 @@ willow/
 │   │   │   ├── git_history.py  commit messages and diffs as a dated pile, git called not linked
 │   │   │   ├── test_git_history.py
 │   │   │   └── README.md
+│   │   ├── hurdat2/
+│   │   │   ├── hurdat2.py    NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows
+│   │   │   ├── test_hurdat2.py
+│   │   │   └── README.md     its card
 │   │   ├── jira/
 │   │   │   ├── jira.py   a Jira export issue by issue
 │   │   │   ├── test_jira.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from json-paths/
+
+```
 │   │   ├── json-paths/
 │   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
 │   │   │   ├── test_json_paths.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from jupyter/
-
-```
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py

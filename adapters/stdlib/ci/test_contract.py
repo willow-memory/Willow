@@ -309,6 +309,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'[{"entity_id":"sensor.hall_humidity","state":"48.5","last_changed":"2024-03-02T09:00:00+00:00","attributes":{"unit_of_measurement":"%","friendly_name":"Hall, humidity"}}],'
         b'[{"entity_id":"light.hall","state":"on","last_changed":"2024-03-02T09:00:00+00:00"}]]'
     )}),
+    "hurdat2": ("hurdat2.py", {"hurdat2.txt": (
+        b"AL152017,              MARIA,      1,\n"
+        b"20170920, 1015, L, HU, 18.0N,  65.9W, 135,  920,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0, -999\n"
+    )}),
     "irc": ("irc.py", {"irc.libera.#garden.weechatlog": (
         b"2024-03-02 08:15:30\tana\tSix hours of sun, I read.\n2024-03-02 08:15:50\t--> \tben (~b@host) has joined #garden\n"
         b"2024-03-02 08:16:01\t *\tben waves\n2024-03-03 19:40:00\tben\tThe slugs are winning.\n"
