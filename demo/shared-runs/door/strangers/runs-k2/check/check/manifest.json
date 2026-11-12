@@ -1,0 +1,73 @@
+{
+ "acts": 2847,
+ "checked": {
+  "round-1-machine-0": {
+   "all_the_same": true,
+   "halts": 1,
+   "halts_that_halt": 1,
+   "of": 556,
+   "same": 556,
+   "seal": "a73a29c7bbee658510ebaecc3313474f31b0097201ec651c377adf5fcfdb571f",
+   "states": 556
+  },
+  "round-1-machine-1": {
+   "all_the_same": true,
+   "halts": 2,
+   "halts_that_halt": 2,
+   "of": 475,
+   "same": 475,
+   "seal": "b58c7fed859119174a81e26e9894b363b4a16a42e0658eb25816c1440f3291c1",
+   "states": 475
+  },
+  "round-1-machine-2": {
+   "all_the_same": true,
+   "halts": 1,
+   "halts_that_halt": 1,
+   "of": 521,
+   "same": 521,
+   "seal": "83572eeccf63de78fad4ef43a46b8ff5126121eee61ea8f530afc1140a76240d",
+   "states": 521
+  },
+  "round-1-machine-3": {
+   "all_the_same": false,
+   "halts": 1,
+   "halts_that_halt": 0,
+   "of": 891,
+   "same": 889,
+   "seal": "b1ba78d744fed5e1ebf264fbed8712d850798c04d8a0da1db73efe4c87f02525",
+   "states": 891
+  },
+  "round-1-machine-4": {
+   "all_the_same": true,
+   "halts": 0,
+   "halts_that_halt": 0,
+   "of": 399,
+   "same": 399,
+   "seal": "e4a094b84e38784f376aea37eddb513b7e4d6b133848393c07fa822fede6f245",
+   "states": 399
+  }
+ },
+ "files": {
+  "acts.jsonl": "657819cbb3122a3929a431611ce709b3437bb6bea4c183c69fc18964af179913",
+  "log.jsonl": "a492f0ff2ff108d9ef6d3dd13c5a06d5655f0287bda83fadbc2d11935be4c098",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 16,
+ "log_tip": "1d998b0019a145c40c63cf9557c13a258663eca723ffcd5e571a628792aa771e",
+ "machine": null,
+ "mode": "check",
+ "plan": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+ "power": "a product and a square root",
+ "round": null,
+ "sig": "d874fde53e5d9f057be01c0fb5584f9354fe891d090e66e5673fd249c1aa23d2c6a01478bdd159d8fc44ba5fba83d916bdf44423f68421cfb110223c3524c809",
+ "signer": "b4bc2f6235f4b0c1883700b4bc121601ee68487a0b170b956254a9f2e56b5612",
+ "starts": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+ "took_in": {},
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

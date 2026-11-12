@@ -1,0 +1,15 @@
+T1  passed: 13 folders whole; two first rounds signed by keys the ring does not hold
+T2  passed: round-2-machine-1-before held, 53562 steps where the first study stepped 14765; round-2-machine-3-before held, 56635 steps where the first study stepped 4530
+T3  passed: the changed state found, the halt that is no halt found; 3 of the liar's 891 states and halts not the same; the other four clean
+T4  passed: place 1: taken, 14765 steps (the first study's 14765); place 3: held, 56635 steps
+T5  passed: every job of 7 second rounds ends as the first study's did
+measured:
+  round-2-machine-0-before: 735 steps, 0 more than the first study's second round there
+  round-2-machine-1-after: 14765 steps, 0 more than the first study's second round there
+  round-2-machine-1-before: 53562 steps, 38797 more than the first study's second round there
+  round-2-machine-2-before: 4030 steps, 0 more than the first study's second round there
+  round-2-machine-3-after: 56635 steps, 52105 more than the first study's second round there
+  round-2-machine-3-before: 56635 steps, 52105 more than the first study's second round there
+  round-2-machine-4-before: 33800 steps, 0 more than the first study's second round there
+  the check stepped 276269 steps
+  kinds drawn: amd x86_64 avx2 (1), intel x86_64 avx2 (12)
