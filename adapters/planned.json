@@ -2236,5 +2236,16 @@
   "network": "none",
   "role": "reads",
   "version": "0.0.1"
+ },
+ {
+  "name": "year-claims",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "The years your sources give for one event (platted 1868, organised 1865), lined up, so where they differ each side is shown, cited.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
  }
 ]

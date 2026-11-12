@@ -1219,7 +1219,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. \
   *new* `no-install` `offline` `suggests` `second` · near: openai-compatible, model-exam, sort-ask
 
-#### Tools you run yourself: ideas, not built yet, n to w
+#### Tools you run yourself: ideas, not built yet, n to y
 
 - <a id="notary"></a>**notary** (idea) \
   The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. \
@@ -1254,6 +1254,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="witness"></a>**witness** (idea) \
   A second person's seal beside yours, for answers that need two people to agree. \
   *new* `no-install` `offline` `beside` `second` · near: second-opinion, translate, model-recall
+- <a id="year-claims"></a>**year-claims** (idea) \
+  The years your sources give for one event (platted 1868, organised 1865), lined up, so where they differ each side is shown, cited. \
+  *new* `no-install` `offline` `sources` `claim` · near: thesis, claim-check, contradictions
 
 ## Privacy and safety
 
