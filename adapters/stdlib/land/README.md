@@ -78,10 +78,10 @@ lands where you said, "settled by you", before anything sort said of it,
 and no longer waits.
 
 A path with `*`, `?` or `[` in it is a pattern, and a `*` reaches across
-folders, so `evidence/*` is everything under `evidence/`:
+folders, so `<folder>/*` is everything under that folder:
 
 ```
-custody: evidence/*
+custody: <the evidence folder>/*
 leave:   *.svg
 ```
 
