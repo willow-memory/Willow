@@ -1,0 +1,1 @@
+`demo/shared-runs/door/trusted/`: the fourth run for Kaggle, built and not yet frozen: a liar whose key the ring holds. Before anyone looks its folder is taken and wrong bytes go out; a check finds both of its changes; after, the door holds it and the round that went on from it, whoever signed them.

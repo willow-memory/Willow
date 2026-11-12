@@ -2479,6 +2479,11 @@ willow/
 │   │   │   │   ├── test_strangers.py the strangers are held, the honest one cleared, the lie found and never gone on from
 │   │   │   │   ├── test_strangers_frozen.py  every frozen file is the bytes it was; the rules frozen are the rules judged
 │   │   │   │   └── README.md Strangers at the door, and one who lies
+│   │   │   ├── trusted/          the door met by a liar the ring trusts, for Kaggle: taken, then found, then held
+│   │   │   │   ├── seen.py   what came back from the trusted-liar run held to its rules: taken before anyone looked, held after
+│   │   │   │   ├── trusted_notebooks.py the door met by a liar the ring trusts, as Kaggle notebooks: taken, then found, then held
+│   │   │   │   ├── test_trusted.py   the trusted liar is taken and harm goes out; the check finds it; after, it is held and bytes are right
+│   │   │   │   └── README.md A liar the ring trusts
 │   │   │   ├── wagers/           what was said before the runs, on a box apart from the verdict box
 │   │   │   │   ├── claims.txt        twelve claims about the runs to come, each with how likely the cloud session thought it
 │   │   │   │   ├── record.jsonl      the wagers box's record as it stood: twelve wagers, five choices and noes, none sealed
