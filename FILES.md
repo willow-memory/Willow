@@ -2404,6 +2404,8 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+│   ├── pools/                a plan for a study, nothing frozen: which add-ons fire together on which pile, from one to every one
+│   │   └── GRID.md           the grid of stacks: made from the cards, in three stages, and what each run records
 ```
 
 #### demo/, from redteam/
