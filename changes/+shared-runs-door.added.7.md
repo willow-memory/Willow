@@ -1,0 +1,1 @@
+`demo/shared-runs/door/grown/README.md`: the sweep grown ten times came back from Kaggle and every rule passed. 2,200 jobs in 1,726,780 steps where alone would be 13,319,565, 87.0% saved against 87.6% foretold; every one of 18,290 kept states stepped again and the same; and checking everything cost exactly one more pass, so shared and fully checked it still saved 74.6%.
