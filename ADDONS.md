@@ -446,6 +446,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="homestead"></a>**homestead** (idea) \
   Homestead's exports from its law, ledger and health modules: records, deadlines and evidence as dated passages. \
   *new* `no-install` `offline` `health` `ledger` · near: gitlab-export, oakenscroll, github-archive
+- <a id="hurdat2"></a>**hurdat2** (idea) \
+  NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows. \
+  *new* `no-install` `offline` `rows` `track` · near: ids, tip-pin, reversi
 - <a id="instapaper"></a>**instapaper** (idea) \
   Instapaper's CSV and HTML export: saved articles and highlights as dated lines. \
   *new* `no-install` `offline` `html` `article` · near: pocket, wallabag, readwise
@@ -458,12 +461,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="medical-records"></a>**medical-records** (idea) \
   Your health records as FHIR JSON or C-CDA XML: visits, results and prescriptions as dated lines. \
   *new* `no-install` `offline` `json` `health` · near: box-health, takeout, schema-check
-- <a id="moodle"></a>**moodle** (idea) \
-  Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
-  *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
 
 #### Other readers: ideas, not built yet, m to w
 
+- <a id="moodle"></a>**moodle** (idea) \
+  Moodle course backups: pages, assignments, quizzes and forum posts as passages. \
+  *new* `no-install` `offline` `assignments` `course` · near: canvas, syllabus, front-page
 - <a id="music-library"></a>**music-library** (idea) \
   Your music files' tags (MP3, FLAC, M4A): artist, album, year and track, as lines. \
   *new* `no-install` `offline` `year` `library` · near: listening, livestock, tax-year
