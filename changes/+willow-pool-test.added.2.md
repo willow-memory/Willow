@@ -1,0 +1,1 @@
+`ci`'s contract test has `DEPS_COMMANDS` and `DEPS_TAKES` beside `COMMANDS`: a command line for each of the 15 add-ons in adapters/deps that run over a box or pile, and for the 12 that can't, what each must be handed first. Each row runs or refuses by naming what to install, and each of the 12 refuses an empty command line.

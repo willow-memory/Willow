@@ -1314,3 +1314,85 @@ def test_every_suggestion_keeps_the_suggestions_contract(name, tmp_path):
     assert c and c["url"] == url and c["who"] == "m", said
     assert list(c["settings"])[:2] == ["temperature", "seed"], said
     assert said == OC.claim(c["who"], c["where"], list(c["settings"].items()), c["did"])
+
+
+# ── adapters/deps: how a person runs each, over a box and pile it is given ──
+#: The deps add-ons' rows, in COMMANDS' form, `{box}`, `{pile}` and `{tmp}`
+#: filled the same way. Their packages aren't installed where these tests
+#: run, so a row is held to running (0 or 42) or refusing by naming what to
+#: install. A study's grid reads its steps from here and from COMMANDS.
+DEPS = ROOT / "adapters" / "deps"
+DEPS_COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "code-shape": ("code_shape.py", ["--box", "{box}", "--lang", "python", "def $F($$$A)"]),
+    "dialect": ("dialect.py", ["--box", "{box}"]),
+    "dialect-dates": ("dialect_dates.py", ["--box", "{box}"]),
+    "forge": ("suggest.py", ["suggest", "--box", "{box}", "grow tomatoes"]),
+    "kart": ("kart.py", ["policy", "--box", "{box}"]),
+    "llm-cli": ("llm_cli.py", ["ask", "--box", "{box}", "when do tomatoes want sun"]),
+    "manifests": ("manifests.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"]),
+    "ocr": ("ocr.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"]),
+    "pdf": ("pdf.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"]),
+    "photos": ("photos.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"]),
+    "record-sql": ("record_sql.py", ["--box", "{box}", "SELECT count(*) FROM record"]),
+    "ripgrep": ("ripgrep.py", ["--box", "{box}", "tomatoes"]),
+    "sheets": ("sheets.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"]),
+    "static-search": ("static_search.py", ["--box", "{box}", "--to", "{tmp}/site"]),
+    "stems": ("stems.py", ["--box", "{box}", "tomatoes"]),
+}  # fmt: skip
+#: The ones that can't run over a pile alone: what each must be handed first.
+#: In a study's grid these are steps only after the step that makes it.
+DEPS_TAKES: dict[str, tuple[str, str]] = {
+    "dp": ("dp.py", "a kart result of yours, proposed by kart run, wasm run or wasi-python run"),
+    "fast-tests": ("fast_tests.py", "test paths to run, not a box"),
+    "in-process": ("in_process.py", "a GGUF model file of yours"),
+    "latent": ("latent.py", "a scan index, as scan --to writes one"),
+    "mcp": ("server.py", "an MCP client on its standard input, and no end"),
+    "pgp": ("pgp.py", "a signing key of yours in gpg"),
+    "robinhood": ("robinhood.py", "the network, and an account there"),
+    "secure-sum": ("secure_sum.py", "a sealed kart result, a share identity and the round's keys"),
+    "star-system": ("star_system.py", "a checkout of science_bitch"),
+    "wake-gate": ("wake_gate.py", "a wake-word model and a whisper model"),
+    "wasi-python": ("wasi_py.py", "a kart job taken and sealed, a Python script"),
+    "wasm": ("wasm.py", "a kart job taken and sealed, a WebAssembly module"),
+}  # fmt: skip
+
+
+def test_every_deps_add_on_a_person_runs_is_in_one_table():
+    """Each deps add-on with a command line runs over a pile (DEPS_COMMANDS)
+    or says what it must be handed (DEPS_TAKES); none is left out of a grid."""
+    run_by_people = {
+        p.parent.name for p in DEPS.glob("*/*.py")
+        if "__main__" in p.read_text(encoding="utf-8") and not p.name.startswith("test_")
+    }  # fmt: skip
+    assert not set(DEPS_COMMANDS) & set(DEPS_TAKES)
+    assert run_by_people == set(DEPS_COMMANDS) | set(DEPS_TAKES)
+    for name, (script, _) in {**DEPS_COMMANDS, **DEPS_TAKES}.items():
+        assert (DEPS / name / script).is_file(), f"{name}: no {script}"
+    for name, (_, what) in DEPS_TAKES.items():
+        assert len(what) >= 10, f"{name}: say what it must be handed"
+
+
+@pytest.mark.parametrize("name", only(DEPS_COMMANDS))
+def test_a_deps_row_runs_or_names_what_to_install(name, tmp_path):
+    script_name, argv = DEPS_COMMANDS[name]
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "garden.md").write_text("Tomatoes want sun.\n")
+    box = tmp_path / "box"
+    subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(box), "--pile",
+                    str(pile), "--key", str(tmp_path / "key"), *NOW], check=True,
+                   capture_output=True)  # fmt: skip
+    fill = {"box": str(box), "pile": str(pile), "tmp": str(tmp_path)}
+    got = run(
+        DEPS / name / script_name, *(a.format(**fill) if "{" in a else a for a in argv)
+    )
+    assert got.returncode in (0, 42) or (
+        got.returncode == 2 and "install" in got.stderr
+    ), (got.returncode, got.stdout[-300:], got.stderr[-300:])
+
+
+@pytest.mark.parametrize("name", only(DEPS_TAKES))
+def test_a_deps_add_on_that_must_be_handed_something_refuses_without_it(name):
+    script_name, _ = DEPS_TAKES[name]
+    got = run(DEPS / name / script_name)
+    assert got.returncode == 2, (got.returncode, got.stderr[-300:])
