@@ -363,17 +363,30 @@ def test_a_report_step_is_kept_as_its_report_not_its_json(tmp_path):
     assert "01 rep: exit 0, 2 lines\n" in (to / "00-stack.txt").read_text()
 
 
-def test_a_run_wants_a_folder_of_its_own_that_is_there(tmp_path):
+def test_a_new_runs_folder_is_made_on_the_first_run(tmp_path):
     box = a_box(tmp_path)
     stack = a_stack(tmp_path, THREE)
-    missing = tmp_path / "nowhere"
+    new = tmp_path / "runs-here" / "first"
+    new.parent.mkdir()
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(new))
+    assert got.returncode in (0, 42), got.stderr
+    assert (new / "00-stack.txt").is_file()
+
+
+def test_a_run_wants_a_folder_of_its_own_whose_parent_is_there(tmp_path):
+    box = a_box(tmp_path)
+    stack = a_stack(tmp_path, THREE)
+    missing = tmp_path / "nowhere" / "run"
     got = run("--box", str(box), "--stack", str(stack), "--to", str(missing))
-    assert (
-        got.returncode == 2 and f"{missing} isn't a folder that's there" in got.stderr
-    )
-    assert not missing.exists() and got.stdout == "", (
+    assert got.returncode == 2 and f"{missing.parent} isn't there" in got.stderr
+    assert not missing.parent.exists() and got.stdout == "", (
         "it makes no folder and runs no step"
     )
+    afile = tmp_path / "afile"
+    afile.write_text("not a folder")
+    got = run("--box", str(box), "--stack", str(stack), "--to", str(afile))
+    assert got.returncode == 2 and "it is a file" in got.stderr
+    assert afile.read_text() == "not a folder"
     full = tmp_path / "full"
     full.mkdir()
     (full / "yours.txt").write_text("keep me")
@@ -387,7 +400,8 @@ def test_a_run_wants_a_folder_of_its_own_that_is_there(tmp_path):
     a_file = tmp_path / "a-file"
     a_file.write_text("x")
     got = run("--box", str(box), "--stack", str(stack), "--to", str(a_file))
-    assert got.returncode == 2 and "isn't a folder" in got.stderr
+    assert got.returncode == 2 and "it is a file" in got.stderr
+    assert a_file.read_text() == "x"
 
 
 def test_step_files_sort_in_the_order_they_ran_however_many(tmp_path, monkeypatch):

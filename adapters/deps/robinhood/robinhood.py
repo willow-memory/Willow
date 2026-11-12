@@ -192,6 +192,19 @@ def return_server(port: int):
     return httpd, thread, got
 
 
+def returned(got: dict):
+    """What the sign-in's return carried, for the SDK: the code, its state,
+    and the issuer (RFC 9207's `iss`) when the server sent one. Robinhood's
+    sign-in says it sends `iss`, and the SDK refuses a return without it
+    then, so leaving it out failed every first sign-in; the SDK checks it is
+    the server it signed in to."""
+    from mcp.shared.auth import AuthorizationCodeResult
+
+    return AuthorizationCodeResult(
+        code=got.get("code", ""), state=got.get("state"), iss=got.get("iss")
+    )
+
+
 def provider(url: str, port: int):
     """Robinhood's OAuth, kept in memory only."""
     import anyio
@@ -225,7 +238,7 @@ def provider(url: str, port: int):
         thread.start()
         await anyio.to_thread.run_sync(thread.join)
         httpd.server_close()
-        return AuthorizationCodeResult(code=got.get("code", ""), state=got.get("state"))
+        return returned(got)
 
     meta = OAuthClientMetadata(
         client_name="willow (read-only)",

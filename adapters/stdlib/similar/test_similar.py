@@ -146,3 +146,10 @@ def test_tags_on_the_command_line():
     assert got.stdout.startswith("vim: no-install, offline")
     assert "· near: emacs" in got.stdout and "\nocr: needs-install" in got.stdout
     assert cli("tags", "no-such-add-on").returncode == 2
+
+
+def test_one_entry_worked_out_alone_is_its_line_in_the_whole_list():
+    every = sim.entries()
+    whole = sim.worked_out(every)
+    for name in (every[0]["name"], every[len(every) // 2]["name"], every[-1]["name"]):
+        assert sim.worked_out(every, only={name}) == {name: whole[name]}

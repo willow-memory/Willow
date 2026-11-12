@@ -390,6 +390,10 @@ willow/
 │   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
 │   │   │   ├── test_agent_transcript.py
 │   │   │   └── README.md
+│   │   ├── ai-code-tracking/
+│   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its tracking database
+│   │   │   ├── test_ai_code_tracking.py
+│   │   │   └── README.md     its card
 │   │   ├── ci-logs/
 │   │   │   ├── ci_logs.py   a CI run log as its failing steps
 │   │   │   ├── test_ci_logs.py
@@ -410,6 +414,10 @@ willow/
 │   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
 │   │   │   ├── test_csv_rows.py
 │   │   │   └── README.md
+│   │   ├── cursor-chats/
+│   │   │   ├── cursor_chats.py Cursor agent chats as numbered turns
+│   │   │   ├── test_cursor_chats.py
+│   │   │   └── README.md     its card
 │   │   ├── dotfiles/
 │   │   │   ├── dotfiles.py    a dotfiles repository's settings, each on its own line in the file's own words, secrets withheld
 │   │   │   ├── test_dotfiles.py
@@ -434,6 +442,11 @@ willow/
 │   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
 │   │   │   ├── test_json_paths.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from jupyter/
+
+```
 │   │   ├── jupyter/
 │   │   │   ├── jupyter.py   a Jupyter notebook as text, one block for each cell with its number and kind
 │   │   │   ├── test_jupyter.py
@@ -607,6 +620,10 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── pieces/
+│   │   │   ├── pieces.py     Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once
+│   │   │   ├── test_pieces.py
+│   │   │   └── README.md     its card
 │   │   ├── pile-gold/
 │   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
 │   │   │   ├── test_pile_gold.py
@@ -623,15 +640,15 @@ willow/
 │   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
 │   │   │   ├── test_pile_sweep.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quote-check/
+
+```
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from quotes/
-
-```
 │   │   ├── quotes/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
@@ -889,6 +906,10 @@ willow/
 ### adapters/stdlib/: Keeping track: Tools you run yourself
 
 ```
+│   │   ├── boxes-here/
+│   │   │   ├── boxes_here.py The boxes already in a folder, and how much waits on each
+│   │   │   ├── test_boxes_here.py
+│   │   │   └── README.md     its card
 │   │   ├── flashcards/
 │   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
 │   │   │   ├── test_flashcards.py
@@ -937,6 +958,11 @@ willow/
 │   │   │   ├── session_cost.py  tokens each agent session spent, by day and by repo, priced from a table you keep
 │   │   │   ├── test_session_cost.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from symptoms/
+
+```
 │   │   ├── symptoms/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py

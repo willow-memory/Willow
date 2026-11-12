@@ -68,7 +68,7 @@ READERS = (
                                         "almanac", "almanac-keep", "oakenscroll")),
     ("Code and data", ("code-comments", "codebase-memory", "dotfiles", "git-history",
                        "gh-json", "jira", "lockfiles", "manifests", "sarif", "sbom",
-                       "ci-logs", "logs", "shell-history", "agent-transcript",
+                       "ci-logs", "logs", "shell-history", "agent-transcript", "ai-code-tracking", "cursor-chats",
                        "corpus-lens", "csv-rows", "json-paths", "jupyter", "parallel",
                        "star-system", "hurdat2")),
     ("Media", ("photos", "subtitles", "musicxml", "chordpro")),

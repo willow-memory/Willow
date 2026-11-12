@@ -1,0 +1,1 @@
+`cursor-chats`: Cursor agent chats as numbered turns. Cursor keeps each chat in a SQLite database of its own (`store.db`); it reads them read-only, puts the turns in the order the store's root links them, and leaves out system prompts, tool calls, tool results and reasoning. When the order cannot be read the header says so and the turns are listed as SQLite returns them.

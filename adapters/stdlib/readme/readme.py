@@ -569,9 +569,10 @@ def similar_add_on():
     return similar
 
 
-def worked_out(every: list[dict]) -> dict[str, dict]:
-    """Each entry's tags and nearest entries, from the similar add-on."""
-    return similar_add_on().worked_out(every, ROOT)
+def worked_out(every: list[dict], only: set[str] | None = None) -> dict[str, dict]:
+    """Each entry's tags and nearest entries, from the similar add-on (only
+    those named, when `only` is given)."""
+    return similar_add_on().worked_out(every, ROOT, only)
 
 
 def week_worked(listed: list[dict], week: str) -> tuple[dict[str, dict], dict]:
@@ -595,7 +596,7 @@ def week_worked(listed: list[dict], week: str) -> tuple[dict[str, dict], dict]:
     # a new entry against the week's entries and itself: what another pull
     # request adds this week never reaches its line
     base = [a for a in listed if a["name"] in frozen]
-    fresh = {a["name"]: worked_out(base + [a])[a["name"]]
+    fresh = {a["name"]: worked_out(base + [a], {a["name"]})[a["name"]]
              for a in listed if a["name"] not in frozen}  # fmt: skip
     similar = similar_add_on()
     worked = {}
