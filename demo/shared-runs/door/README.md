@@ -154,6 +154,57 @@ trust, from anyone.
 5. **Kinds of processor at size.** The first study had Kaggle's draw
    give one AMD machine in thirteen.
 
+### What Kaggle will and won't do, as far as is known
+
+Asked of the maintainer's laptop session, which has the account, on
+2026-11-12. Each answer says how it is known: *tried* is from the
+thirteen notebooks of the first study or an earlier probe; *pages* is
+Kaggle's own pages as read for the first study; *recalled* is a
+session's own knowledge and is not checked.
+
+| asked | answer | how known |
+|---|---|---|
+| can a run hand something out before it ends | no way is described. With the internet on and the account's credentials given to the notebook, the Kaggle API inside it may be able to write a new version of a dataset mid-run | pages; the second part recalled |
+| how long a session is held | twelve hours for a CPU notebook; a saved version runs top to bottom within that. The longest tried was about 25 minutes | pages; tried |
+| the idle limit of a session someone is typing into | not found | |
+| one machine for the whole of a session | not found; thought to be so | recalled |
+| a value that outlasts a run and is not in its output | notebook secrets are thought to exist, and to be kept out of output | recalled |
+| how many inputs a notebook may have | 5 were taken, and 10 by the check notebook. The most, and any limit on size: not found | tried |
+| what a run may leave | 20 GB. A limit on the number of files: not found | pages |
+| a limit on CPU time over a day or a week | none is shown: the account's quota lists hours for GPU and TPU only | tried |
+| how many at once | five. The sixth was refused, twice | tried |
+| pushed again while it is still running | not tried | |
+| how long before a pushed notebook starts | under about 20 seconds, every time | tried |
+| the machine | nine draws of nine an Intel Xeon at 2.20 GHz with AVX2; one AMD EPYC in the first study's thirteen | tried |
+
+Three of those can be settled only by pushing a notebook, which is the
+maintainer's to allow on their own account: handing out mid-run, a
+value that outlasts a run, and a push onto a running notebook.
+[probe.py](probe.py) is one small notebook that asks all three. It
+writes a numbered line to its output every half minute for four
+minutes, so that whoever pushed it can ask for its output while it
+runs; it says whether the account gave it a secret of one agreed name,
+and never the value; and it says when it began, so a second push
+halfway through can be told from the first. It needs no credentials and
+reaches no network.
+
+### What a run at size would take, by the first study's clock
+
+From what was tried: a baseline notebook stepped about 1.59 million
+steps in about 25 minutes, near a thousand steps a second with its
+starting and stopping.
+
+| | ten times the sweep | a hundred times |
+|---|---|---|
+| the baseline, every job alone | about 3.3 hours in one notebook | about 33 hours: more than one session holds, so five notebooks of about 6.6 hours |
+| the shared run, over five machines | about 11 minutes each, all rounds together | about 1.8 hours each |
+| checking every kept state against the one before | about 53 minutes for one checker | about 8.8 hours for one checker |
+
+So ten times fits easily, and a hundred times fits only if the baseline
+is split. The baseline is the dearest thing in the study at any size:
+it is the work the memory exists to avoid. These are estimates from one
+evening's timings, and nothing more.
+
 **One thing to put right before any such run.** Each second-round
 notebook of the first study was given all five first-round outputs. By
 the rule of who steps what, it needed only the one from its own place:

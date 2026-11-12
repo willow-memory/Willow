@@ -2446,6 +2446,7 @@ willow/
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
 │   │   ├── door/             the shared memory with a door on it, counted at larger sizes: not run, nothing frozen
 │   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
+│   │   │   ├── probe.py      a small notebook asking Kaggle three things its pages don't answer; it steps nothing
 │   │   │   ├── results/
 │   │   │   │   └── tables.json       what door.py counted for the page: the study's own check, size, strangers, how much is checked
 │   │   │   ├── stops.json        where each trajectory stops, as the first study's baseline found it

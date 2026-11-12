@@ -121,3 +121,21 @@ def test_the_tables_kept_are_what_counting_again_gives(capsys):
     assert door.main(["count", "--plan", str(STUDY / "plan.json"), "--stops", str(HERE / "stops.json")]) == 0  # fmt: skip
     assert "336379" in capsys.readouterr().out
     assert door.main(["count"]) == 2 and door.main([]) == 2
+
+
+def test_the_probe_ticks_into_its_own_folder_and_says_no_secrets_value(tmp_path, capsys, monkeypatch):  # fmt: skip
+    import probe
+
+    monkeypatch.setenv("PROBE_SECONDS", "0")
+    monkeypatch.setenv("PROBE_OUT", str(tmp_path))
+    assert probe.main() == 0
+    said = json.loads((tmp_path / "probe.json").read_text())
+    assert said["ticks"] == 1 and said["same_machine"] is True
+    assert (tmp_path / "ticks.txt").read_text().startswith("tick 0 of run ")
+    assert (
+        "its value is not said" in probe.secret.__doc__
+        or "never what it is" in probe.secret.__doc__
+    )
+    assert "no secrets client here" in said["secret"]
+    assert "tick 0" in capsys.readouterr().out
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["probe.json", "ticks.txt"]
