@@ -2486,12 +2486,12 @@ willow/
 │   │   │   │   ├── test_trusted.py   the trusted liar is taken and harm goes out; the check finds it; after, it is held and bytes are right
 │   │   │   │   ├── test_trusted_frozen.py    every frozen file is the bytes it was; the rules frozen are the rules judged
 │   │   │   │   └── README.md A liar the ring trusts
-│   │   │   ├── unknown/
+│   │   │   ├── unknown/          the grown sweep where nobody is known, for Kaggle: every round held, the saving counted beforehand
 │   │   │   │   ├── fell.py   what came back from the sweep where nobody is known, held to its rules: what the saving fell to, and that no byte was wrong
-│   │   │   │   ├── FROZEN.json
+│   │   │   │   ├── FROZEN.json       the freeze: each file's SHA-256, the five rules and what was foretold, before any job was stepped
 │   │   │   │   ├── unknown_notebooks.py the grown sweep where nobody is known, as Kaggle notebooks: every round held, nothing gone on from but a round's own work
-│   │   │   │   ├── test_unknown.py
-│   │   │   │   ├── test_unknown_frozen.py
+│   │   │   │   ├── test_unknown.py   every round holds what it is given, the steps are what was counted, every job ends as the enrolled run's
+│   │   │   │   ├── test_unknown_frozen.py    every frozen file is the bytes it was; the rules and the figure foretold are kept
 │   │   │   │   └── README.md The grown sweep where nobody is known
 │   │   │   ├── wagers/           what was said before the runs, on a box apart from the verdict box
 │   │   │   │   ├── claims.txt        twelve claims about the runs to come, each with how likely the cloud session thought it
