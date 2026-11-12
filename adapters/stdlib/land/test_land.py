@@ -132,6 +132,8 @@ def test_a_file_at_the_pile_path_itself_is_the_original_first(tmp_path):
     assert la.original(src, "notes.txt") == "notes.txt"
     assert la.original(src, "markdown/notes.txt") == "notes"
     assert la.original(src, "../etc/passwd") is None
+    assert la.candidates("notes") == ["notes"]  # tried once, not twice
+    assert la.candidates("a/b") == ["a/b", "b"]
 
 
 def test_ties_unsorted_and_two_categories_wait_and_are_copied_nowhere(tmp_path):
