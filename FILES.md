@@ -482,6 +482,15 @@ willow/
 │   │   │   └── README.md
 ```
 
+### adapters/stdlib/: Reading more kinds of files: Other readers
+
+```
+│   │   ├── ai-code-tracking/
+│   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its ai-code-tracking database: each scored commit and conversation as passages, and a report of lines by tab, composer and human
+│   │   │   ├── test_ai_code_tracking.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Reading more kinds of files: What it makes for elsewhere
 
 ```

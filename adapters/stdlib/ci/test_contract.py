@@ -104,6 +104,18 @@ def _tar(files: dict[str, str]) -> bytes:
 
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {
+    # Cursor's tracking database, for the report to read
+    "ai-code-tracking": {
+        "ai-code-tracking.db": _sqlite(
+            "CREATE TABLE scored_commits (commitHash TEXT, branchName TEXT, scoredAt INTEGER, "
+            "linesAdded INTEGER, linesDeleted INTEGER, tabLinesAdded INTEGER, tabLinesDeleted INTEGER, "
+            "composerLinesAdded INTEGER, composerLinesDeleted INTEGER, humanLinesAdded INTEGER, "
+            "humanLinesDeleted INTEGER, commitMessage TEXT, commitDate TEXT, v1AiPercentage TEXT, "
+            "v2AiPercentage TEXT);\n"
+            "INSERT INTO scored_commits VALUES ('c0ffee1','main',1779072120000,10,2,3,0,5,1,2,1,"
+            "'fix the tomato bed','2026-05-17T23:02:29-06:00','80.0','75.5');\n"
+        )
+    },
     # an entry with no permitted copy: almanac-keep answers before any fetch
     "almanac-keep": {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
@@ -137,6 +149,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"message":{"role":"user","content":"When is the dentist?"}}\n'
         b'{"type":"assistant","sessionId":"s1","message":{"role":"assistant",'
         b'"content":[{"type":"text","text":"Tuesday at 3."}]}}\n')}),
+    "ai-code-tracking": ("ai_code_tracking.py", {"ai-code-tracking.db": _sqlite(
+        "CREATE TABLE scored_commits (commitHash TEXT, branchName TEXT, scoredAt INTEGER, "
+        "linesAdded INTEGER, linesDeleted INTEGER, tabLinesAdded INTEGER, tabLinesDeleted INTEGER, "
+        "composerLinesAdded INTEGER, composerLinesDeleted INTEGER, humanLinesAdded INTEGER, "
+        "humanLinesDeleted INTEGER, commitMessage TEXT, commitDate TEXT, v1AiPercentage TEXT, "
+        "v2AiPercentage TEXT);\n"
+        "INSERT INTO scored_commits VALUES ('c0ffee1','main',1779072120000,10,2,3,0,5,1,2,1,"
+        "'fix the tomato bed','2026-05-17T23:02:29-06:00','80.0','75.5');\n"
+    )}),
     "almanac": ("almanac.py", {"catalog.json": (
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '
@@ -615,6 +636,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # no other pull request given: it stops before anything is read, nothing to check
     "against": ("against.py", ["check", "--base", "HEAD", "HEAD"]),
     "agents-md-check": ("agents_md_check.py", ["--box", "{box}"]),
+    "ai-code-tracking": ("ai_code_tracking.py", ["mirror", "--from", "{pile}", "--to", "{tmp}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
     "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
@@ -1149,6 +1171,10 @@ FINDINGS = {
 #: the command a report comes from, where it isn't the one COMMANDS runs: an
 #: add-on with verbs reports from one of them (score, check)
 REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "ai-code-tracking": (
+        "ai_code_tracking.py",
+        ["report", "--from", "{pile}/ai-code-tracking.db"],
+    ),
     "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
     "predict": ("predict.py", ["score", "--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", "check"]),

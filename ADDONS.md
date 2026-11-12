@@ -410,6 +410,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ### Other readers
 
+- <a id="ai-code-tracking"></a>[**ai-code-tracking**](adapters/stdlib/ai-code-tracking/) \
+  Which code Cursor's AI wrote, from its tracking database: each scored commit and conversation, and lines by tab, composer and human. \
+  *new* `no-install` `offline` `score` · near: musicxml, sarif, text
 
 #### Other readers: ideas, not built yet, a to m
 
