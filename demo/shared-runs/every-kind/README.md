@@ -1,7 +1,8 @@
 # Every job on every kind: an addition to the first study
 
-**Status: frozen 2026-11-12. The cloud session's and the laptop's parts
-are run and judged; the phone's is under way. See "What has
+**Status: frozen 2026-11-12, and all three named machines are run and
+judged. E1 passed for each; every one of the 220 jobs is now run in
+full on three kinds of processor. See "What has
 come back" at the end.**
 An addition made after [the first study](../README.md) was judged. It
 changes none of that study's verdicts and none of its files.
@@ -73,7 +74,7 @@ ran the sweep alone. Each judging is a pair of rows,
 `shared-runs:every-kind:E1` and `E2`, on the same record outside the
 repository as the first study's verdicts; a copy is
 [results/record.jsonl](results/record.jsonl), and the kernel says of it:
-"the chain holds: 23 rows, 0 sealed". It is judged again, onto that
+"the chain holds: 25 rows, 0 sealed". It is judged again, onto that
 record, each time a machine's folder comes back, so the record holds a
 pair of rows for each judging.
 
@@ -111,6 +112,39 @@ that wrote the page; as the project is written, 6 of 30. That is a dry
 run on made-up setups and no result. It is the first sign from a
 processor that is not x86, and from a machine whose NumPy is linked to
 another linear-algebra library.
+
+**The phone, 2026-11-12.** A Samsung phone on a Qualcomm processor: ARM,
+with NEON. Android, Python 3.13 under Termux, NumPy 2.1.3 built there
+from source against Termux's own linear-algebra library, the project at
+its commit, run by the maintainer and brought in from the branch
+`shared-runs/phone-every-kind`. It ran all 220 jobs alone, in about 32
+minutes by its own count of seconds.
+
+| rule | verdict | what was counted |
+|---|---|---|
+| E1 | **passed**, for all three machines named | cloud-session, laptop and phone each 220 of 220 the same outcome, step and bytes as Kaggle's baseline |
+| E2 | measured | **220 of 220 jobs run in full, from their start, on three kinds**: Intel AVX2 220, Intel AVX-512 220, ARM NEON 220 |
+
+What that says, and what it was said beforehand it could not:
+
+- **The first study's R1 now rests on the job itself, for every job, on
+  three kinds.** Before this it was 0 by this count.
+- **The phone differed in two things and agreed anyway.** Had it come
+  out otherwise, the processor and the linear-algebra library could not
+  have been told apart. It did not, so neither moved a byte: an x86
+  server, an x86 laptop and an ARM phone, on two builds of NumPy's
+  underpinnings, come to the same 220 answers.
+- **The halts fell on the same steps.** The three trajectories that halt
+  stopped after steps 327, 425 and 5,492 on the phone as on every other
+  machine, and the one refused was refused. The cube in the project's
+  step-size check, which an earlier trial found can differ between
+  machines, did not move a halt here.
+- **Its kind reads "other".** The runner names Intel, AMD and Apple as
+  makers and this is a Qualcomm; the runner is frozen, so it stays. The
+  kind is still its own, which is all the count needs.
+- **One step off the tester's page**, for the phone's dry sweep before
+  this: no environment of its own was made, and the NumPy built in
+  Termux was used as it stood.
 
 ## What it cannot show
 

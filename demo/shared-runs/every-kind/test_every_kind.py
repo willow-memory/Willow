@@ -141,3 +141,29 @@ def test_what_has_come_back_is_what_the_page_says():
     assert [r.get("gate") for r in rows[-2:]] == ["shared-runs:every-kind:E1", "shared-runs:every-kind:E2"]  # fmt: skip
     frozen = json.loads((HERE / "FROZEN.json").read_text())
     assert rows[-2]["tools"]["every_kind.py"] == frozen["files"]["every_kind.py"]
+
+
+def test_all_three_named_machines_ran_every_job_and_came_to_the_baseline():
+    kept = json.loads((HERE / "results" / "verdicts.json").read_text())["verdicts"]
+    came = kept["E1"]["figures"]
+    assert sorted(came) == ["cloud-session", "laptop", "phone"]
+    assert all(
+        (m["ran"], m["same"], m["differ"]) == (220, 220, []) for m in came.values()
+    )
+    assert came["phone"]["kind"] == "other arm64 neon"
+    assert kept["E2"]["figures"]["by_kind"] == {
+        "intel x86_64 avx2": 220,
+        "intel x86_64 avx512": 220,
+        "other arm64 neon": 220,
+    }
+    assert kept["E2"]["figures"]["jobs_by_number_of_kinds"]["3"] == 220
+    phone = [json.loads(x) for x in (HERE / "runs" / "phone" / "acts.jsonl").read_text().splitlines()]  # fmt: skip
+    halts = sorted(
+        {(a["trajectory"], a["ended"]) for a in phone if a["outcome"] == "halted"}
+    )
+    assert [n for _, n in halts] == [327, 425, 5492]
+    rows = [
+        json.loads(x)
+        for x in (HERE / "results" / "record.jsonl").read_text().splitlines()
+    ]
+    assert sum(1 for r in rows if r.get("gate") == "shared-runs:every-kind:E1") == 3

@@ -1,1 +1,1 @@
-the chain holds: 23 rows, 0 sealed
+the chain holds: 25 rows, 0 sealed

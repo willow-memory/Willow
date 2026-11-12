@@ -829,6 +829,10 @@ only what was fixed beforehand has the first: R7 failed.
 
 ### What the passes do and don't say
 
+- **R1's thin ground, below, was closed afterwards** by an addition
+  frozen and run on 2026-11-12, [every-kind/](every-kind/README.md): all
+  220 jobs run alone on an AVX-512 server, an AVX-512 laptop and an ARM
+  phone, each the same bytes as Kaggle's.
 - **R1 passed as frozen, on thinner ground than its sentence suggests.**
   The rule counts kinds across the machines that ran, not for each job.
   Only 3 jobs were run in full by all three kinds. The Intel AVX2

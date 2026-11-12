@@ -13,25 +13,33 @@
      "kind": "intel x86_64 avx512",
      "ran": 220,
      "same": 220
+    },
+    "phone": {
+     "differ": [],
+     "kind": "other arm64 neon",
+     "ran": 220,
+     "same": 220
     }
    },
-   "said": "cloud-session (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline; laptop (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline",
+   "said": "cloud-session (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline; laptop (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline; phone (other arm64 neon): 220 of 220 jobs the same bytes as the baseline",
    "state": "passed"
   },
   "E2": {
    "figures": {
     "by_kind": {
      "intel x86_64 avx2": 220,
-     "intel x86_64 avx512": 220
+     "intel x86_64 avx512": 220,
+     "other arm64 neon": 220
     },
     "jobs": 220,
     "jobs_by_number_of_kinds": {
      "0": 0,
      "1": 0,
-     "2": 220
+     "2": 0,
+     "3": 220
     }
    },
-   "said": "0 of 220 jobs run in full, from their start, on three kinds of processor or more; by kind: intel x86_64 avx2: 220; intel x86_64 avx512: 220",
+   "said": "220 of 220 jobs run in full, from their start, on three kinds of processor or more; by kind: intel x86_64 avx2: 220; intel x86_64 avx512: 220; other arm64 neon: 220",
    "state": "measured"
   }
  }
