@@ -11,9 +11,10 @@ are skipped, so a stack file reads as markdown; a step before any pool is
 refused.
 
 stack runs every step and composes one markdown document: a `##` section per
-pool, each step's output under it in a fenced block. The order is the stacking
-order -- peaks first: pools, and the steps within them, run tallest first, by
-how many lines of output stack up, because that is what a reader meets first.
+pool, each step's output under it in a fenced block. The steps run in the order
+the stack file lists them, pool by pool; the document is then stacked peaks
+first: pools, and the steps within them, printed tallest first, by how many
+lines of output stack up, because that is what a reader meets first.
 A step whose card says `output: report` is asked for its report as JSON and
 printed in the report's one shape (ci/README.md, the report contract); its
 height is its rows, not its lines, and it is flagged by its exit code alone,
