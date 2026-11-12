@@ -374,3 +374,33 @@ def test_what_the_study_kept_is_what_its_page_says():
     page = (HERE.parent / "README.md").read_text()
     assert "R7 failed, and the fault is the judge's" in page and "73.2%" in page
     assert "R7 under the second\nfreeze: passed" in page and "19 rows, 0 sealed" in page
+
+
+def test_the_local_models_scores_kept_are_what_the_frozen_scorer_gives():
+    local = HERE.parent / "local-models"
+    kept = json.loads((local / "results.json").read_text())
+    plan = sweep.load(HERE / "plan.json")
+    f = judge.figures(plan, judge.load(HERE / "runs"))
+    assert len(kept) == 14 and sum(1 for r in kept.values() if r["answered"]) == 12
+    whole = [n for n, r in kept.items() if r["answered"] and (r["right_of_16"], r["unsaid_of_5"]) == (16, 5)]  # fmt: skip
+    assert sorted(whole) == ["gemma4-e2b", "llama3.2-3b", "qwen2.5vl-7b", "qwen3-4b", "qwen3-4b-32k-latest"]  # fmt: skip
+    for name, r in kept.items():
+        if not r["answered"]:
+            continue
+        got = account.held(
+            plan, f, (local / "answers" / name / "answers.txt").read_text()
+        )
+        able = [q for q, yes in got["answerable"].items() if yes]
+        assert sum(got["marks"][q] == "right" for q in able) == r["right_of_16"], name
+        assert len(got["struck"]) == r["struck"] == 0 and got["account"] == r["account"]
+    assert kept["willow-lane4-3b-latest"]["guessed_of_5"] == 5
+    assert (
+        kept["qwen2.5-0.5b"]["right_of_16"] == 0
+        and kept["llama3.1-8b"]["missing_of_16"] == 16
+    )
+    plain = (
+        (local / "answers" / "llama3.1-8b" / "answers.txt").read_text().replace("*", "")
+    )
+    assert set(account.held(plan, f, plain)["marks"].values()) == {"right"}, (
+        "its answers are right; only the bold kept the scorer from finding them"
+    )

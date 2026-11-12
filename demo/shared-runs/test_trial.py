@@ -479,6 +479,11 @@ def test_what_the_trials_printed_is_listed_as_kept_and_what_was_written_is_not()
         ]
         + [
             p.relative_to(here).as_posix()
+            for p in (here / "local-models").rglob("*")
+            if p.is_file() and p.name != "README.md"
+        ]
+        + [
+            p.relative_to(here).as_posix()
             for sub in ("results", "runs")
             for p in (here / "study" / sub).rglob("*")
             if p.is_file()

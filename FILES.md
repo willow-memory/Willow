@@ -2484,7 +2484,7 @@ willow/
 #### demo/shared-runs/, from local-models/
 
 ```
-│   │   ├── local-models/     the first study's brief given to models a laptop runs: asked, not yet run
+│   │   ├── local-models/     the first study's brief given to models a laptop runs, and how each did
 │   │   │   ├── answers/           each local model's answer to the two agents' input, one folder a model
 │   │   │   │   ├── gemma3-4b/
 │   │   │   │   │   ├── answers.txt   what it sent back, word for word
@@ -2532,6 +2532,7 @@ willow/
 │   │   │   │   └── willow-lane4-3b-latest/
 │   │   │   │       ├── answers.txt   what it sent back, word for word
 │   │   │   │       └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   ├── results.json      each model's counts, as the first study's scorer gives them
 │   │   │   └── README.md     The same brief, given to models that run on a laptop
 │   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
