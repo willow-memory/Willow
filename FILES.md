@@ -2456,7 +2456,11 @@ willow/
 │   │   │   │   │   ├── acts.jsonl        what it did, one line a job
 │   │   │   │   │   ├── machine.json      what the machine said of itself
 │   │   │   │   │   └── memory.jsonl      empty: a job run alone keeps nothing
-│   │   │   │   └── laptop/           the maintainer's laptop's run of all 220 jobs
+│   │   │   │   ├── laptop/           the maintainer's laptop's run of all 220 jobs
+│   │   │   │   │   ├── acts.jsonl        what it did, one line a job
+│   │   │   │   │   ├── machine.json      what the machine said of itself
+│   │   │   │   │   └── memory.jsonl      empty: a job run alone keeps nothing
+│   │   │   │   └── phone/            the maintainer's phone's run of all 220 jobs: ARM, NEON, Termux's OpenBLAS
 │   │   │   │       ├── acts.jsonl        what it did, one line a job
 │   │   │   │       ├── machine.json      what the machine said of itself
 │   │   │   │       └── memory.jsonl      empty: a job run alone keeps nothing
