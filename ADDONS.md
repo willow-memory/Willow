@@ -327,7 +327,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. \
   *new* `no-install` `offline` `html` `json` · near: matrix, chats, pocket
 
-### Code and data, a to j
+### Code and data, a to h
 
 - <a id="agent-transcript"></a>[**agent-transcript**](adapters/stdlib/agent-transcript/) \
   Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. \
@@ -356,12 +356,15 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="git-history"></a>[**git-history**](adapters/stdlib/git-history/) \
   Commit messages and diffs as a dated pile: "when did we change the retry limit?" \
   *new* `no-install` `offline` `history` `message` · near: clauses, discord, linkedin
-- <a id="jira"></a>[**jira**](adapters/stdlib/jira/) \
-  Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. \
-  *new* `no-install` `offline` `comments` `xml` · near: mediawiki, linkedin, day-one
+- <a id="hurdat2"></a>[**hurdat2**](adapters/stdlib/hurdat2/) \
+  NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows. \
+  *new* `no-install` `offline` `rows` · near: csv-rows, notion, listening
 
 #### Code and data, j to s
 
+- <a id="jira"></a>[**jira**](adapters/stdlib/jira/) \
+  Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. \
+  *new* `no-install` `offline` `comments` `xml` · near: mediawiki, linkedin, day-one
 - <a id="json-paths"></a>[**json-paths**](adapters/stdlib/json-paths/) \
   Any JSON or JSON Lines file as plain lines, one passage per record, each value beside its key. \
   *new* `no-install` `offline` `value` `key` · near: org, csv-rows, rst
@@ -410,9 +413,6 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ### Other readers
 
-- <a id="hurdat2"></a>[**hurdat2**](adapters/stdlib/hurdat2/) \
-  NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows. \
-  *new* `no-install` `offline` `rows` · near: csv-rows, notion, listening
 
 #### Other readers: ideas, not built yet, a to m
 
