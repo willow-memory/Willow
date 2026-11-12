@@ -628,6 +628,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="glance"></a>[**glance**](adapters/stdlib/glance/) \
   What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
   Uses scan. *new* `no-install` `offline` `scan` · near: scan, synonyms, latent
+- <a id="land"></a>[**land**](adapters/stdlib/land/) \
+  The files sort placed, copied (never moved) into a folder per category, each copy logged with its hash. \
+  Uses sort. *new* `no-install` `offline` `category` `sort` · near: sort, sort-ask, pii-audit
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \
   Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `index` `scan` · near: scan, all, duplicates
