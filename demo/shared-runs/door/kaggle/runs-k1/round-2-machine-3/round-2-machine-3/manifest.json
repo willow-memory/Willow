@@ -1,0 +1,32 @@
+{
+ "acts": 20,
+ "files": {
+  "acts.jsonl": "6f9d9eab743b1901bf423a5ea6be1d996108466344b1a629d22ed38cf687fb58",
+  "log.jsonl": "139efbd7d6aff3977e24f776da9eb7b382ac00748a7753c2e311699cceac474f",
+  "machine.json": "713127ab0931becc1b43b7f17919d0a92409a52666a8ae5884d706d6e0d4b999",
+  "memory.jsonl": "dcfb60c73fea37fa7fcc5fcf9616820cde023f5a6d1e260530164fc79dd71a38"
+ },
+ "kind": "intel x86_64 avx2",
+ "log_lines": 8,
+ "log_tip": "dcc24706b75063dc5090bcfcd736f0f28a3ae3e32d1129c134d4b068dbfff594",
+ "machine": 3,
+ "mode": "shared",
+ "plan": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+ "power": "a product and a square root",
+ "round": 2,
+ "sig": "e1d7002b44091b9e8d9a2371d49ea20528eaafa952b76700828c215f5e547d0edac6f5f229487f11a4ffa7b330bb05a35c4507e92ad61ae1be083c1b2ec8f909",
+ "signer": "60aa451f48a9b7807329b7076936a11b09f595761d6c09385961cb8d7f9d4f16",
+ "starts": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+ "took_in": {
+  "round-1-machine-3": {
+   "how": "taken",
+   "seal": "06e99279a1d049c5eb9a72bb5d843aa0bc94394373562af518bcf8e3fa0a27ee",
+   "why": "its signer is enrolled: place 3"
+  }
+ },
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

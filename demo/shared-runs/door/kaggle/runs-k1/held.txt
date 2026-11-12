@@ -1,0 +1,13 @@
+K1  passed: 16 folders whole and signed by the ring
+K2  passed: every part is the first study's, byte for byte
+K3  passed: 5 carried on, 5 cut inside a job, 0 begun over and said so
+K4  passed: 336379 steps, the first study's 336379
+K5  passed: 3473 of 3473 states the same, 4 of 4 halts halt, over 10 folders
+K6  passed: each later round took in its own place's earlier rounds, as enrolled
+measured:
+  kinds drawn: amd x86_64 avx2 (2), intel x86_64 avx2 (14)
+  begun over on another kind: 0 (none)
+  cut by the budget: 5, inside a job: 5
+  seconds stepping, all folders: 325.9
+  bytes that came back: 2213481, the largest 445750
+  the check stepped 330244 steps

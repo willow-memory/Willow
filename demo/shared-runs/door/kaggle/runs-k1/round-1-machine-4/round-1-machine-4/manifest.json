@@ -1,0 +1,26 @@
+{
+ "acts": 14,
+ "files": {
+  "acts.jsonl": "9f24423085ea3c6ca4e9bd819bfbabcef65ae0998dabde0e1b858a3ad28fa31a",
+  "log.jsonl": "36aae82d61e48398adce89d6bd7cadc8a0fb9cf607a2194e9b5e167e3d361dc7",
+  "machine.json": "d8a5f190e1a197f477e241ccf44ec7b86be78449b78a5c47bc158f5e1d6df997",
+  "memory.jsonl": "dffae495fcc137e29f3e0115bbf79f7f2a20bf0f3843769c252d472b668ca138"
+ },
+ "kind": "amd x86_64 avx2",
+ "log_lines": 17,
+ "log_tip": "87a357d6aada9836883316879d9fca4dd5924d2a6e57a190fa0cb4e32fd26349",
+ "machine": 4,
+ "mode": "shared",
+ "plan": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+ "power": "a product and a square root",
+ "round": 1,
+ "sig": "a2cf934f2df85a9bf33a662a5384ae9425589ade15dc2366d3c75655c5791cd4ffca15118b2a851a9735159a0746847c56394891356eec1c7266d8649e38c10f",
+ "signer": "7e9db1f87360b3a08b23488f2809a9bbe53d07f84b892f0853d3cb2807f94b71",
+ "starts": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+ "took_in": {},
+ "tools": {
+  "machine.py": "7e95de4c93c82df65fdc5647a167b5a43b21a778355614f2fa88b0cfb227df3a",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ }
+}

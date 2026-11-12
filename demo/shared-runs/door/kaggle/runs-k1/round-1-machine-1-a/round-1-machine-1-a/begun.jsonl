@@ -1,0 +1,6 @@
+{"again":0,"from":0,"job":"proxima-close@310","took":false}
+{"again":0,"from":0,"job":"crowded-three@1520","took":false}
+{"again":0,"from":1520,"job":"crowded-three@14575","took":true}
+{"again":0,"from":0,"job":"crowded-coarse-three@310","took":false}
+{"again":0,"from":310,"job":"proxima-close@1520","took":true}
+{"again":0,"from":0,"job":"sirius-earth-jupiter-saturn@4030","took":false}

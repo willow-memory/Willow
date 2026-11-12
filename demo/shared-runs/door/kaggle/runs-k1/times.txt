@@ -1,0 +1,17 @@
+Push to first seen COMPLETE, polled every 30 s, so queue and run aren't apart at this grain.
+round-1-machine-0-a: pushed to complete 39 s
+round-1-machine-1-a: pushed to complete 38 s
+round-1-machine-2-a: pushed to complete 37 s
+round-1-machine-3-a: pushed to complete 35 s
+round-1-machine-4-a: pushed to complete 33 s
+round-1-machine-0: pushed to complete 73 s
+round-1-machine-1: pushed to complete 71 s
+round-1-machine-2: pushed to complete 70 s
+round-1-machine-3: pushed to complete 102 s
+round-1-machine-4: pushed to complete 67 s
+round-2-machine-0: pushed to complete 40 s
+round-2-machine-1: pushed to complete 38 s
+round-2-machine-2: pushed to complete 36 s
+round-2-machine-3: pushed to complete 35 s
+round-2-machine-4: pushed to complete 68 s
+check: pushed to complete 399 s
