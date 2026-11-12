@@ -591,27 +591,31 @@ def chunks(files: list[str], n: int, base: Path = ROOT) -> list[list[str]]:
 
 
 #: what a gate costs, in seconds on a CI runner, for the ones TIMES can't
-#: price: from the last green main run (tests:alone ran with tests:adapters-1
-#: in about 540 s, tests:docs with tests:adapters-5 in about 430). A gate it
-#: doesn't list weighs DEFAULT_COST. Only the balance of the shards depends on
-#: these, never which gate runs.
+#: price: from #353's tests (3.14) job, 2026-11-12, its four lanes at once,
+#: each pytest gate's own "passed in", and alone by its lane's end less the
+#: rest (tests:alone about 546 s beside tests:kernel and tests:adapters-7). A
+#: gate it doesn't list weighs DEFAULT_COST. Only the balance of the shards
+#: depends on these, never which gate runs.
 GATE_COST = {
-    "tests:alone": 310,
-    "tests:docs": 340,
-    "tests:kernel": 30,
-    "tests:beats": 20,
-    "tests:ui": 60,
-    "tests:vectors": 30,
-    "tests:constitution": 30,
-    "tests:coverage": 30,
+    "tests:alone": 550,
+    "tests:docs": 90,
+    "tests:kernel": 15,
+    "tests:beats": 5,
+    "tests:ui": 150,
+    "tests:vectors": 10,
+    "tests:constitution": 5,
+    "tests:coverage": 5,
     "lint:check": 10,
     "lint:format": 10,
     "lint:py39": 10,
 }
 DEFAULT_COST = 30
-#: TIMES was taken on a busier box than a CI runner: about this much of a
-#: second there is a second of a runner's
-TIMES_TO_RUNNER = 0.5
+#: TIMES is written by times.py from main's own CI run (since bc34c98d), so
+#: its seconds are already a runner's, taken four lanes at once as cores.py
+#: runs them: a second there is a second here. (It was 0.5 when TIMES was
+#: taken by hand on a busier box; kept at 0.5, it priced every adapter chunk
+#: at half, and the shards put five of them in one lane.)
+TIMES_TO_RUNNER = 1.0
 #: a mutants gate copies the add-on, then runs its tests once per break, and
 #: CI makes six breaks
 MUTANT_BREAKS = 6
