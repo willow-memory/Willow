@@ -1,7 +1,7 @@
 # Every job on every kind: an addition to the first study
 
-**Status: frozen 2026-11-12. The cloud session's part is run and judged;
-the laptop's and the phone's are asked and not yet back. See "What has
+**Status: frozen 2026-11-12. The cloud session's and the laptop's parts
+are run and judged; the phone's is under way. See "What has
 come back" at the end.**
 An addition made after [the first study](../README.md) was judged. It
 changes none of that study's verdicts and none of its files.
@@ -73,8 +73,9 @@ ran the sweep alone. Each judging is a pair of rows,
 `shared-runs:every-kind:E1` and `E2`, on the same record outside the
 repository as the first study's verdicts; a copy is
 [results/record.jsonl](results/record.jsonl), and the kernel says of it:
-"the chain holds: 21 rows, 0 sealed". It is judged again, onto that
-record, each time a machine's folder comes back.
+"the chain holds: 23 rows, 0 sealed". It is judged again, onto that
+record, each time a machine's folder comes back, so the record holds a
+pair of rows for each judging.
 
 **The cloud session, 2026-11-12.** An Intel Xeon with AVX-512, NumPy
 2.1.3, the project at its commit. It ran all 220 jobs alone.
@@ -87,6 +88,29 @@ record, each time a machine's folder comes back.
 So what the first study's R1 rested on for most jobs, kept states
 stepped again, is now the job itself for all of them, on a second kind.
 A third kind in full waits on the phone.
+
+**The laptop, 2026-11-12.** An Intel Core i7 with AVX-512, NumPy 2.1.3
+in an environment of its own, the project at its commit, run by the
+maintainer and brought in from the branch
+`shared-runs/laptop-every-kind`. It ran all 220 jobs alone.
+
+| rule | verdict | what was counted |
+|---|---|---|
+| E1 | **passed**, for the two machines back | cloud-session 220 of 220 the same as Kaggle's baseline; laptop 220 of 220 |
+| E2 | measured | unchanged: Intel AVX2 220, Intel AVX-512 220; on three kinds 0. The laptop is the cloud session's kind, so it is a second machine and not a third kind |
+
+Two machines of one kind, a laptop's Core i7 and a cloud Xeon, now
+agree with each other and with Kaggle's on every job.
+
+**The phone, so far, as the laptop's session tells it.** Its every-kind
+run is still going. Before it, the phone did the dry sweep by the
+tester's page: it says its kind is `other arm64 neon` (the runner names
+Intel, AMD and Apple as makers, and this is none of them), NumPy 2.1.3;
+with the power rewritten, 30 of 30 jobs the same bytes as the machine
+that wrote the page; as the project is written, 6 of 30. That is a dry
+run on made-up setups and no result. It is the first sign from a
+processor that is not x86, and from a machine whose NumPy is linked to
+another linear-algebra library.
 
 ## What it cannot show
 

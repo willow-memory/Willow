@@ -7,9 +7,15 @@
      "kind": "intel x86_64 avx512",
      "ran": 220,
      "same": 220
+    },
+    "laptop": {
+     "differ": [],
+     "kind": "intel x86_64 avx512",
+     "ran": 220,
+     "same": 220
     }
    },
-   "said": "cloud-session (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline",
+   "said": "cloud-session (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline; laptop (intel x86_64 avx512): 220 of 220 jobs the same bytes as the baseline",
    "state": "passed"
   },
   "E2": {
