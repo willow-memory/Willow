@@ -17,7 +17,9 @@ whoever holds it. Nobody here is real. Then the scene:
 3. **Handed over.** Imani is eighteen tomorrow. Marit seals what the box
    she held can say, packs it for Imani's key, and hands her the files.
    Imani starts a box of her own, receives the package, and seals her own
-   answer. The box Marit held stays Marit's record of what she did.
+   answer. The box Marit held stays Marit's record of what she did, and
+   what Imani was sent says where that record stood: a copy of it
+   rewritten afterwards still verifies alone, and does not hold to it.
 4. **Between two houses.** Leo is ten. His box is held by his mother,
    Dana. His father Ravi keeps his own box of nights at his, seals what
    happened on one of them and sends it to Leo's box: the answer and
@@ -226,6 +228,39 @@ class Scene:
             "received": [r["kind"] for r in self.rows("imani-own")].count("received"),
             "held_box_ends": kinds[-1],
         }
+        # the link: what Imani was sent says where her mother's record stood,
+        # so she can hold that record to it from then on
+        fake = self.to / "imani-rewritten"
+        shutil.copytree(self.box("imani"), fake)
+        rows = [json.loads(x) for x in (fake / "record.jsonl").read_text().splitlines()]
+        n = next(r["n"] for r in rows if r["kind"] == "seal")
+        rows[n]["ts"] = "2019-06-01T10:00:00Z"
+        for i in range(n, len(rows)):
+            rows[i]["prev"] = rows[i - 1]["hash"]
+            rows[i]["hash"] = kernel.h256(kernel.canon({k: v for k, v in rows[i].items() if k != "hash"}))  # fmt: skip
+        (fake / "record.jsonl").write_text(
+            "".join(kernel.canon(r) + "\n" for r in rows)
+        )
+        fooled = (
+            self.run(KERNEL, "verify", "--box", fake)
+            .strip()
+            .startswith("the chain holds")
+        )
+        self.expect(fooled, "the rewritten copy did not pass its own verify")
+        held = {}
+        for name, box, want in (
+            ("as it was", self.box("imani"), 0),
+            ("rewritten", fake, 42),
+        ):
+            got = self.run(
+                SHARE, "witness", "--box", box, "--package", pkg, want=(want,)
+            )
+            held[name] = [line.split()[0] for line in got.splitlines()]
+            print(f"  Imani holds the record her mother kept, {name}, to what she was sent: {' '.join(held[name])}")  # fmt: skip
+        self.expect(held == {"as it was": ["holds"], "rewritten": ["rewritten"]}, f"the package did not tell the two apart: {held}")  # fmt: skip
+        self.said["imani"]["rewritten_copy_verifies_alone"] = fooled
+        self.said["imani"]["held_to_the_package"] = held
+        shutil.rmtree(fake)
 
         print("── 4. between two houses: Leo, ten")
         night = self.seal("ravi", "what happened when Leo's asthma flared", "leo-nights.md",

@@ -55,11 +55,17 @@ Marit also has a box about herself. One key holds all four of hers.
   nothing is withheld, because nothing Marit holds refers to it. Her
   boxes say "empty", truthfully, and the same as for any question they
   can't answer.
-- **A handover is three things, and willow has two.** The files are
-  copied. What the guardian knew goes as a package, signed, each answer
-  with where it came from. The third is missing: Imani's box met her
-  mother's as "a key you haven't had a package from before". Nothing
-  ties the box that was held for her to the box that is now hers.
+- **A handover is three things, and willow has all three, once looked
+  for.** The files are copied. What the guardian knew goes as a package,
+  signed, each answer with where it came from. And the link between the
+  box that was held and the box that is now hers is that same package:
+  it says where her mother's record stood on the day. The scene rewrites
+  a copy of that record afterwards, so that it still verifies alone, and
+  Imani's package tells the two apart with the share add-on's `witness`.
+  A grown child can hold what was kept for her to the day she was given
+  it. What is still missing is small: her box met her mother's as "a key
+  you haven't had a package from before", true the first time and odd to
+  read of one's own mother.
 - **What arrives is not approved by arriving.** Both receipts say
   "received, not sealed by you". Imani's own seal is the one she made
   after.
@@ -121,9 +127,12 @@ What it found:
   seals. The only thing that tells them apart is the order, which is a
   file in a pile and not a key anyone can check. The `held-for` row this
   demo invented has an "until", and nothing reads it.
-- **An uncooperative handover loses the record.** Bryony's box knows of
-  two doses; Garrick's knows of three. What he will not hand over, she
-  does not have.
+- **An uncooperative handover loses the record, and the witness with
+  it.** Bryony's box knows of two doses; Garrick's knows of three. What
+  he will not hand over, she does not have. And where Imani can hold
+  her mother's record to the package she was sent, Sable was sent
+  nothing by Garrick, so nothing pins where his record stood: he could
+  rewrite it and no one could show it.
 - **Two cards, two answers.** A stranger in an emergency would find one
   card or the other, and nothing says which is hers.
 - **The wall is the same wall.** Rosa's box says "empty" exactly as
@@ -134,6 +143,35 @@ What it found:
   asked again and her box still said "empty". A package received is on
   the record, not in her files, and the kernel answers from files. She
   would have to read the receipt.
+
+### What covers what
+
+The scene found that a box answers whoever holds it. That is the
+computer's to guard, not willow's, and most of what guards it is already
+there:
+
+| what Garrick does | what stops it | whose it is |
+|---|---|---|
+| sits down at her laptop, unlocked | a password on the lock screen | the computer's |
+| logs in as himself on a shared computer | an account of her own, her files readable only by it | the computer's |
+| takes the laptop, or copies its disk | the disk encrypted | the computer's |
+| knows her password, or makes her give it | the box kept somewhere else: her aunt's | hers, and the adults she trusts |
+| approves something in her name | her key | willow's |
+| rewrites what the record says happened | each row holding the hash of the one before, and where the record ends kept out of his reach | willow's |
+| has an assistant read her key for him | a hook that blocks it by fixed rule | willow's |
+
+Where it still runs out:
+
+- **One login for the whole house.** No application can keep one person's
+  files from another on an account they share.
+- **Someone with authority over the child.** A password keeps out a
+  stranger. It does less against a guardian who can ask for it.
+- **A copy.** An asking leaves its mark on the box that was asked. A
+  copy of the box, asked somewhere else, leaves none on hers.
+- **A box at rest.** No add-on here encrypts a box where it lies. For
+  most people the computer's own disk encryption makes that needless;
+  for someone on a shared login whose trouble is inside the house, it is
+  the one piece the computer does not give.
 
 ## What it does not show
 

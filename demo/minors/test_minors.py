@@ -55,6 +55,8 @@ def test_the_scene_plays_as_told(tmp_path, capsys):
     assert tobias["named_by"] == [] and (tobias["his_key"], tobias["her_key"]) == (1, 0)
     assert said["said"]["imani"] == {
         "held_box_seals": 2, "own_box_seals": 1, "received": 1, "held_box_ends": "handed-over",
+        "rewritten_copy_verifies_alone": True,
+        "held_to_the_package": {"as it was": ["holds"], "rewritten": ["rewritten"]},
     }  # fmt: skip
     assert said["said"]["leo"] == {"received": 1, "ravis_notes_travelled": False, "leo_box_seals": 0}  # fmt: skip
     printed = capsys.readouterr().out
