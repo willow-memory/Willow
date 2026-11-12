@@ -591,6 +591,10 @@ willow/
 │   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
 │   │   │   ├── test_glance.py
 │   │   │   └── README.md     its card
+│   │   ├── land/
+│   │   │   ├── land.py       The files sort placed, copied (never moved) into a pile of their own per category, each copy logged with where it came from and its hash
+│   │   │   ├── test_land.py
+│   │   │   └── README.md     its card
 │   │   ├── look/
 │   │   │   ├── look.py       One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel
 │   │   │   ├── test_look.py
@@ -619,15 +623,15 @@ willow/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quotes/
+
+```
 │   │   ├── quotes/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from route/
-
-```
 │   │   ├── route/
 │   │   │   ├── kinds.txt
 │   │   │   ├── route.py      A question sent to the step whose job it is, by a file of kinds you can edit

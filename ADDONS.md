@@ -622,6 +622,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="glance"></a>[**glance**](adapters/stdlib/glance/) \
   What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
   Uses scan. *new* `no-install` `offline` `scan` · near: scan, synonyms, latent
+- <a id="land"></a>[**land**](adapters/stdlib/land/) \
+  The files sort placed, copied (never moved) into a pile of their own per category, each copy logged with where it came from and its hash. \
+  Uses sort. *new* `no-install` `offline` `category` `sort` · near: sort, sort-ask, pii-audit
 - <a id="latent"></a>[**latent**](adapters/deps/latent/) \
   Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way. \
   Needs numpy; BSD-3-Clause. Uses scan. *new* `needs-install` `offline` `index` `scan` · near: scan, all, duplicates
@@ -634,12 +637,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
   Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
   Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
-- <a id="pile-rank"></a>[**pile-rank**](adapters/stdlib/pile-rank/) \
-  Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. \
-  Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, all
 
 #### Tools you run yourself, p to w
 
+- <a id="pile-rank"></a>[**pile-rank**](adapters/stdlib/pile-rank/) \
+  Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. \
+  Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, all
 - <a id="pile-rungs"></a>[**pile-rungs**](adapters/stdlib/pile-rungs/) \
   Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't. \
   Uses pile-rank. *bot* `no-install` `offline` `matched` `phrases` `pile` · near: pile-rank, pile-serve, pile-store
