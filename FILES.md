@@ -2472,6 +2472,10 @@ willow/
 ```
 │   │   │   └── stage0/
 │   │   │       ├── climate-almanac/
+│   │   │       │   ├── laptop/
+│   │   │       │   │   ├── rows-a.jsonl
+│   │   │       │   │   ├── rows-b.jsonl
+│   │   │       │   │   └── run.json
 │   │   │       │   ├── rows-a.jsonl
 │   │   │       │   ├── rows-b.jsonl
 │   │   │       │   └── run.json
@@ -2492,6 +2496,7 @@ willow/
 │   │   │       │   ├── probes.json
 │   │   │       │   ├── rows-a.jsonl
 │   │   │       │   └── rows-b.jsonl
+│   │   │       ├── machine-bound.json
 │   │   │       ├── nestor/
 │   │   │       │   ├── rows-a.jsonl
 │   │   │       │   ├── rows-b.jsonl

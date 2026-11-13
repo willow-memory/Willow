@@ -1,0 +1,16 @@
+{
+ "pile": "climate-almanac",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "c1e9b478cce34aa22634f3c22de7df914e5c4b3dea307aae5d81085d78efb4ed",
+ "machine": {
+  "cpu": "11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz",
+  "cores": 8,
+  "avx512": true,
+  "python": "3.14.4"
+ },
+ "seconds": {
+  "a": 29.7,
+  "b": 28.7
+ },
+ "total_seconds": 64.3
+}

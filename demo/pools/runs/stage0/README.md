@@ -31,3 +31,25 @@ deny-list flag is the add-on name oakenscroll, a step name already public in
 this repository; the maintainer said it should not be on that list.
 
 The private piles' rows stay on the maintainer's laptop.
+
+## The laptop against Kaggle, on one pile
+
+The private piles run on the maintainer's laptop and the public ones on
+Kaggle, so a step whose output depends on the machine would look like a
+difference between piles. To know which, climate-almanac was traced on the
+laptop too, from the same freeze (`climate-almanac/laptop/`). Same pile, byte
+for byte (the manifests match). Of 357 steps, 15 are unsteady on one machine
+or the other; of the other 342, **317 print the same bytes on both** and 25
+don't. They are kept in [machine-bound.json](machine-bound.json):
+
+- They describe the machine they run on (the editors and assistants it has,
+  its setup): aider, bot-venv, browse, claude-code, codex-cli, copilot,
+  cursor, emacs, gemini-cli, jetbrains, opencode, shell, start, vim, vscode,
+  windsurf, zed.
+- A tool is on one machine and not the other, so the step fires on one
+  only: code-shape fires on the laptop; ocr, pdf, photos, record-sql, sheets
+  and stems on Kaggle. forge reads differently too.
+
+The report marks these steps wherever a public pile meets a private one, so
+nothing it says turns on the machine. The rest are held to be the machines'
+same answer.
