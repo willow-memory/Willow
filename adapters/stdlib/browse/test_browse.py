@@ -1517,3 +1517,122 @@ def test_with_no_model_named_none_is_asked_and_small_talk_is_never_said(tmp_path
 def test_a_say_with_no_model_named_is_refused(tmp_path, capsys):
     b = make_box(tmp_path)
     assert br.main(["--box", str(b), "--say"]) == 2
+
+
+BOXES_HERE = PROJECTS_HERE and (br.STDLIB / "boxes-here" / "boxes_here.py").is_file()
+
+
+def nav_of(s) -> str:
+    _, text = s.req("GET", "/")
+    return text[text.index("<nav>") : text.index("</nav>")]
+
+
+@pytest.mark.skipif(not BOXES_HERE, reason="the boxes-here or projects add-on isn't here")  # fmt: skip
+def test_a_box_already_in_a_folder_is_found_ticked_kept_and_opened_where_it_is(
+    tmp_path,
+):
+    home = two_projects(tmp_path)
+    away = two_projects(tmp_path / "away")  # boxes somewhere else on the machine
+    kept = tmp_path / "kept.json"
+    s = opened(home / "garden" / "box", home=home, boxes=kept)
+    try:
+        nav = nav_of(s)
+        assert "<p class=proj>Elsewhere</p>" in nav
+        assert '<a href="/find">Find boxes in a folder</a>' in nav
+        assert str(away) not in nav and not kept.exists()
+        _, text = s.req("GET", "/find")
+        assert '<form class=find method=post action="/find">' in text
+        assert "name=box" not in text
+        _, text = s.post("/find", folder=str(away))
+        house, garden = away / "house" / "box", away / "garden" / "box"
+        assert f"<h2>Already in {away}</h2>" in text
+        assert f'<input type=checkbox name=box value="{house}"> <b>house</b>' in text
+        assert f'<input type=checkbox name=box value="{garden}"> <b>garden</b>' in text
+        assert "1 row: 0 asked, 0 approved, 0 waiting" in text
+        assert not kept.exists(), "looking keeps nothing"
+        r, _ = s.req("POST", "/keep", [("box", str(house)), ("box", str(garden)),
+                                       ("token", s.willow.token)])  # fmt: skip
+        assert r.status == 303 and r.getheader("Location") == "/"
+        assert json.loads(kept.read_text()) == [
+            {"box": str(garden)},
+            {"box": str(house)},
+        ]
+        nav = nav_of(s)
+        assert (
+            f'name=box value="{house}"><button class=link title="{house}">house' in nav
+        )
+        _, text = s.post("/find", folder=str(away))
+        assert "<span class=pill>kept</span> <b>house</b>" in text
+        assert "type=checkbox" not in text, "a box already kept isn't offered again"
+        before = sorted(p.name for p in (away / "house").iterdir())
+        r, _ = s.post("/switch", box=str(house))
+        assert r.status == 303 and s.willow.box == house
+        nav = nav_of(s)
+        assert "<p class=proj>house</p>" in nav
+        assert f'<a class=on title="{house}">house' in nav
+        _, text = s.post("/ask", q="when does the roofer come")
+        assert "The roofer comes on Friday." in text
+        rows = (house / "record.jsonl").read_text().splitlines()
+        assert json.loads(rows[-1])["kind"] == "bite", "it is asked where it is"
+        assert sorted(p.name for p in (away / "house").iterdir()) == before, (
+            "nothing is copied in or moved out"
+        )
+        r, _ = s.post("/keep", box=str(garden), off="1")
+        assert r.status == 303
+        assert [b["box"] for b in json.loads(kept.read_text())] == [str(house)]
+        assert (garden / "kernel.json").is_file(), "dropped from the list, not deleted"
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not BOXES_HERE, reason="the boxes-here or projects add-on isn't here")  # fmt: skip
+def test_only_a_box_on_the_list_is_opened_and_what_waits_or_is_gone_is_said(tmp_path):
+    home = two_projects(tmp_path)
+    away = two_projects(tmp_path / "away")
+    house, garden = away / "house" / "box", away / "garden" / "box"
+    kept = tmp_path / "kept.json"
+    kept.write_text(json.dumps([{"box": str(house)},
+                                {"box": str(garden)}]))  # fmt: skip
+    s = opened(home / "garden" / "box", home=home, boxes=kept)
+    try:
+        for at in (str(home / "house" / "box"), str(away), "../house"):
+            r, text = s.post("/switch", box=at)
+            assert r.status == 404 and "no box kept by that place" in text, at
+        assert s.willow.box == home / "garden" / "box"
+        r, _ = s.req("POST", "/switch", {"box": str(house), "token": "wrong"})
+        assert r.status == 403
+        r, _ = s.req("POST", "/keep", {"box": str(house), "off": "1", "token": "wrong"})
+        assert r.status == 403 and len(json.loads(kept.read_text())) == 2
+        (garden / "kernel.json").unlink()
+        nav = nav_of(s)
+        assert "garden <span class='pill wait'>gone</span>" in nav
+        r, _ = s.post("/switch", box=str(garden))
+        assert r.status == 404, "a box that is gone isn't opened"
+        r, text = s.post("/keep", box=str(tmp_path))
+        assert r.status == 409 and "is not a box" in text
+        r, text = s.req("POST", "/keep", {"token": s.willow.token})
+        assert r.status == 409 and "No box was ticked." in text
+        _, text = s.post("/find", folder=str(tmp_path / "nope"))
+        assert "nope isn't a folder on this machine" in text
+        (tmp_path / "bare" / "a" / "b" / "c" / "d").mkdir(parents=True)
+        _, text = s.post("/find", folder=str(tmp_path / "bare"))
+        assert "No box is in" in text and "kernel.py init" in text
+        assert "<h2>Not looked in</h2>" in text and "it is 3 folders down" in text
+    finally:
+        s.close()
+
+
+def test_with_no_list_no_box_elsewhere_is_listed_found_or_kept(site, tmp_path):
+    site.start()
+    _, text = site.req("GET", "/")
+    assert "Elsewhere" not in text and "/find" not in text
+    _, text = site.req("GET", "/find")
+    assert "started without a list" in text
+    r, text = site.post("/keep", box=str(tmp_path))
+    assert r.status == 409 and "without a list" in text
+    r, _ = site.post("/switch", box=str(tmp_path))
+    assert r.status == 404
+    b = site.willow.box
+    assert br.main(["--box", str(b), "--no-open", "--boxes"]) == 2
+    nope = tmp_path / "nope" / "k.json"
+    assert br.main(["--box", str(b), "--boxes", str(nope), "--no-open"]) == 2

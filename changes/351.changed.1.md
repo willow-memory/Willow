@@ -1,0 +1,1 @@
+`agent-transcript`: each mirrored session now says when it ran, so sessions can be put in order: `started:` and `ended:` from the file's own ISO timestamps, `started:` from a Cursor `<timestamp>` tag in the text, else `time: not in the file`; never the file's modification time

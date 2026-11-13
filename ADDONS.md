@@ -327,11 +327,14 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Google Takeout's My Activity and YouTube history, JSON or HTML, as dated lines. \
   *new* `no-install` `offline` `html` `json` · near: matrix, chats, pocket
 
-### Code and data, a to j
+### Code and data, a to g
 
 - <a id="agent-transcript"></a>[**agent-transcript**](adapters/stdlib/agent-transcript/) \
   Claude Code, Codex, Gemini CLI, Cursor and Copilot session files as plain text, each turn numbered, so you can ask what an agent was told. \
   *new* `no-install` `offline` `gemini` `claude` · near: instruction-files, session-cost, hooks-elsewhere
+- <a id="ai-code-tracking"></a>[**ai-code-tracking**](adapters/stdlib/ai-code-tracking/) \
+  Which code Cursor's AI wrote, from its tracking database: each scored commit and conversation, and lines by tab, composer and human. \
+  *new* `no-install` `offline` `score` · near: musicxml, sarif, text
 - <a id="ci-logs"></a>[**ci-logs**](adapters/stdlib/ci-logs/) \
   CI run logs you downloaded (GitHub Actions, GitLab CI, Forgejo Actions): each failing step as a passage. \
   *new* `no-install` `offline` `log` `fails` · near: ci-why, logs, ci-cache
@@ -347,6 +350,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="csv-rows"></a>[**csv-rows**](adapters/stdlib/csv-rows/) \
   CSV and TSV tables as one passage per row, the header row kept once as the first. \
   *new* `no-install` `offline` `csv` `log` · near: json-paths, google-keep, irc
+- <a id="cursor-chats"></a>[**cursor-chats**](adapters/stdlib/cursor-chats/) \
+  Cursor agent chats, each kept in its own SQLite database, as plain text with each turn numbered, so you can ask what the agent was told. \
+  *new* `no-install` `offline` `told` `cursor` · near: agent-transcript, notion, rtf
 - <a id="dotfiles"></a>[**dotfiles**](adapters/stdlib/dotfiles/) \
   Your dotfiles as passages: which file sets what, for 'where did I set my editor?' \
   *new* `no-install` `offline` · near: org, json-paths, latex
@@ -356,12 +362,15 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="git-history"></a>[**git-history**](adapters/stdlib/git-history/) \
   Commit messages and diffs as a dated pile: "when did we change the retry limit?" \
   *new* `no-install` `offline` `history` `message` · near: clauses, discord, linkedin
+
+#### Code and data, h to s
+
+- <a id="hurdat2"></a>[**hurdat2**](adapters/stdlib/hurdat2/) \
+  NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows. \
+  *new* `no-install` `offline` `rows` · near: csv-rows, notion, listening
 - <a id="jira"></a>[**jira**](adapters/stdlib/jira/) \
   Jira's issue export, CSV or XML: each issue, comment and status change as dated passages. \
   *new* `no-install` `offline` `comments` `xml` · near: mediawiki, linkedin, day-one
-
-#### Code and data, j to s
-
 - <a id="json-paths"></a>[**json-paths**](adapters/stdlib/json-paths/) \
   Any JSON or JSON Lines file as plain lines, one passage per record, each value beside its key. \
   *new* `no-install` `offline` `value` `key` · near: org, csv-rows, rst
@@ -510,9 +519,6 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="signal"></a>**signal** (idea) \
   A Signal backup, decrypted with its passphrase, as one dated line per message. \
   Needs cryptography; Apache-2.0 or BSD. *new* `needs-install` `offline` `message` `backup` · near: texts, teams, chats
-- <a id="social-osint-cache"></a>**social-osint-cache** (idea) \
-  The local cache of OWASP SocialOSINTLM, read offline: posts it gathered from Bluesky, Mastodon and Reddit as dated lines. \
-  *new* `no-install` `offline` `posts` `bluesky` · near: bluesky, mastodon, reddit
 - <a id="sqlite"></a>**sqlite** (idea) \
   Any SQLite database, read from a copy: each table as a section, each row a line with its column names. \
   *new* `no-install` `offline` `copy` `sqlite` · near: writefreely, apple-notes, codebase-memory
@@ -526,8 +532,11 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Microsoft Teams chats from your Microsoft account's export, one dated line per message. \
   *new* `no-install` `offline` `message` `chats` · near: chats, signal, texts
 - <a id="tiktok-studio"></a>**tiktok-studio** (idea) \
-  TikTok Studio's exported video stats as dated lines, kept past the app's 60-day window. \
-  *new* `no-install` `offline` · near: chats, slack, instapaper
+  TikTok Studio's exported stats: each video's views, likes and followers gained as dated lines, kept past the app's 60-day window. \
+  *new* `no-install` `offline` · near: chats, takeout, matrix
+- <a id="turns"></a>**turns** (idea) \
+  An interview transcript's speaker turns (Interviewer:, Narrator:) as lines cited by speaker and time, the narrator's words apart. \
+  *new* `no-install` `offline` `transcript` · near: subtitles, line-origin, agent-transcript
 - <a id="umami-clicks"></a>**umami-clicks** (idea) \
   Link clicks and UTM sources exported from Umami or Plausible, as dated lines: which post sent the visits. \
   *new* `no-install` `offline` `posts` `visits` · near: deep-links, bluesky, linkedin
@@ -561,8 +570,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Each file the kernel leaves out, named by what its first bytes say it is (a PDF, a PNG, a zip), whatever its name or extension says. \
   From: shape of [wagtail/Willow](https://github.com/wagtail/Willow), BSD-3-Clause. *new* `no-install` `offline` `pdf` `whatever` · near: text, pdf, why-not
 - <a id="reddit-history"></a>**reddit-history** (idea) \
-  Older Reddit posts and comments from an archive you name, for a window of days, written as dated lines beside your own export. \
-  Goes online: the archive you name, to read posts from a window of days. *new* `no-install` `online` `posts` `archive` · near: reddit, meta-archive, wayback
+  Your own older Reddit posts and comments, asked by username of an archive you name for a window of days, as dated lines. \
+  Goes online: the archive you name, to read your own posts from a window of days. *new* `no-install` `online` `posts` `archive` · near: reddit, meta-archive,
+  x-archive
 
 ## Finding things
 
@@ -671,6 +681,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="misquote"></a>[**misquote**](adapters/stdlib/misquote/) \
   A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. \
   *new* `no-install` `offline` `quote` `drops` · near: quotes, stale, quote-check
+- <a id="pieces"></a>[**pieces**](adapters/stdlib/pieces/) \
+  Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once. \
+  *new* `no-install` `offline` · near: pile-store, surprise, scan
 - <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
   Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
   Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
@@ -1022,6 +1035,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 
 ### Tools you run yourself
 
+- <a id="boxes-here"></a>[**boxes-here**](adapters/stdlib/boxes-here/) \
+  The boxes already in a folder and what waits on each, so one that is there is opened, not made twice; and a list of the ones you choose. \
+  Uses projects. *new* `no-install` `offline` `open` · near: thesis, timeline, box-health
 - <a id="flashcards"></a>[**flashcards**](adapters/stdlib/flashcards/) \
   Approved question-and-answer pairs become cards, scheduled by spaced repetition. \
   *box* `no-install` `offline` · near: jeles, ask-later, hook-compact
@@ -1123,6 +1139,18 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. \
   *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, secrets-audit, quotes
 
+#### What runs on your page: ideas, not built yet
+
+- <a id="copies"></a>**copies** (idea) \
+  Which file copies which, as the share of one file's words found in another, so two copies agreeing count as one source. \
+  *new* `no-install` `offline` `found` `copy` · near: diverge, why-not, words-zh
+- <a id="ocr-noise"></a>**ocr-noise** (idea) \
+  Passages that look like OCR damage (stray marks, split words), so a hit on one is read with care before it is quoted. \
+  *new* `no-install` `offline` `quote` `ocr` · near: hook-shell, ocr, misquote
+- <a id="odd-years"></a>**odd-years** (idea) \
+  A year that does not fit its own subject (summer of 1561 in an 1860s account), a likely OCR misreading, listed by line. \
+  *new* `no-install` `offline` `ocr` `odd` · near: my-lessons, transcript-redact, ocr
+
 ### Checking a model before you trust it
 
 - <a id="say-check"></a>[**say-check**](adapters/stdlib/say-check/) \
@@ -1135,6 +1163,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="join-check"></a>**join-check** (idea) \
   A connection a model made between two passages, held to your files: each thing it says looked for, and the passage that backs it shown. \
   Uses claim-check, connect. *new* `no-install` `offline` `join` `between` · near: joins, clauses, contradictions
+- <a id="narrator-review"></a>**narrator-review** (idea) \
+  A narrator's corrections to their own transcript, each proposed against the line it fixes and sealed by them; the original stays. \
+  *new* `no-install` `offline` `transcript` `propose` · near: hook-feedback, transcript-redact, translate
 
 ### What guards it
 
@@ -1238,6 +1269,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="chain-check"></a>**chain-check** (idea) \
   A hash-chained JSONL log that isn't willow's own record, checked link by link: where its chain holds, and the first row where it breaks. \
   *new* `no-install` `offline` `rows` `chain` · near: merkle, sync, diverge
+- <a id="consent-register"></a>**consent-register** (idea) \
+  A narrator's grants (keep, publish with their name), who holds them, and until when, sealed; an export refuses a line without one. \
+  *new* `no-install` `offline` `refuses` `register` · near: hosts, grant, memory-import
 - <a id="encrypt"></a>**encrypt** (idea) \
   Keeps the record folder encrypted at rest. \
   Needs cryptography; Apache-2.0 or BSD. From: shape of [willow-memory/willow-data-vault](https://github.com/willow-memory/willow-data-vault), Apache-2.0.
@@ -1266,7 +1300,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. \
   *new* `no-install` `offline` `suggests` `second` · near: openai-compatible, model-exam, sort-ask
 
-#### Tools you run yourself: ideas, not built yet, n to w
+#### Tools you run yourself: ideas, not built yet, n to y
 
 - <a id="notary"></a>**notary** (idea) \
   The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. \
@@ -1301,6 +1335,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="witness"></a>**witness** (idea) \
   A second person's seal beside yours, for answers that need two people to agree. \
   *new* `no-install` `offline` `beside` `second` · near: second-opinion, translate, model-recall
+- <a id="year-claims"></a>**year-claims** (idea) \
+  The years your sources give for one event (platted 1868, organised 1865), lined up, so where they differ each side is shown, cited. \
+  *new* `no-install` `offline` `sources` `claim` · near: thesis, claim-check, contradictions
 
 ## Privacy and safety
 
@@ -1336,6 +1373,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="typosquat"></a>[**typosquat**](adapters/stdlib/typosquat/) \
   Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. \
   Uses advisories. *new* `no-install` `offline` `dependency` `package` · near: outdated, advisories, claim-check
+
+#### What runs on your page: ideas, not built yet
+
+- <a id="contact-audit"></a>**contact-audit** (idea) \
+  Phone numbers and emails in your files, by file and line, never showing the value; pii-audit reads only numbers it can check. \
+  *new* `no-install` `offline` `numbers` `audit` · near: secrets-audit, pii-audit, privacy
 
 ### What guards it
 
@@ -1484,7 +1527,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="say"></a>[**say**](adapters/stdlib/say/) \
   One sentence a model on this machine says about your boxes, struck and left to code when it adds a word or number they lack. \
   Uses say-check. Reaches this machine only. From: code of [willow-memory/willows-grove](https://github.com/willow-memory/willows-grove), Apache-2.0. *new*
-  `no-install` `this-machine` `sentence` `left` · near: on-this-day, hooks-elsewhere, clauses
+  `no-install` `this-machine` `sentence` · near: on-this-day, hooks-elsewhere, clauses
 - <a id="weights-card"></a>[**weights-card**](adapters/stdlib/weights-card/) \
   A model card filled in from the weights file's own GGUF or safetensors header: architecture, quantization, context length, licence. \
   *new* `no-install` `offline` `weights` `quantization` · near: model-shelf, weights-pin, model-card

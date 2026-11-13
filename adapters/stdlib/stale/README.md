@@ -3,10 +3,11 @@ section: Trust and proof
 line: Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact.
 source: box
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
+looks-for: pieces
 output: report
 -->
 # stale
@@ -42,6 +43,10 @@ why, never read for its cites, and counted:
 **Exit codes:** 0 every approval holds, or there are none (empty); 42 one has
 gone stale or broken and waits on you (populated); 2 refused (a record that
 doesn't verify).
+
+With [pieces](../pieces/) beside it, the folder is read a folder at a time
+and only the cited passages are looked for, so a big folder is never held in
+memory all at once.
 
 **Uses:** the kernel's `read`, `sealed`, `standing`, `config` and `chunks`.
 

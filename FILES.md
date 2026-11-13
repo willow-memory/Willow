@@ -390,6 +390,10 @@ willow/
 │   │   │   ├── agent_transcript.py  Claude Code, Cursor and other session files as numbered spoken turns
 │   │   │   ├── test_agent_transcript.py
 │   │   │   └── README.md
+│   │   ├── ai-code-tracking/
+│   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its tracking database
+│   │   │   ├── test_ai_code_tracking.py
+│   │   │   └── README.md     its card
 │   │   ├── ci-logs/
 │   │   │   ├── ci_logs.py   a CI run log as its failing steps
 │   │   │   ├── test_ci_logs.py
@@ -410,6 +414,10 @@ willow/
 │   │   │   ├── csv_rows.py   a CSV or TSV table as one passage per row, the header row once as the first
 │   │   │   ├── test_csv_rows.py
 │   │   │   └── README.md
+│   │   ├── cursor-chats/
+│   │   │   ├── cursor_chats.py Cursor agent chats as numbered turns
+│   │   │   ├── test_cursor_chats.py
+│   │   │   └── README.md     its card
 │   │   ├── dotfiles/
 │   │   │   ├── dotfiles.py    a dotfiles repository's settings, each on its own line in the file's own words, secrets withheld
 │   │   │   ├── test_dotfiles.py
@@ -422,10 +430,19 @@ willow/
 │   │   │   ├── git_history.py  commit messages and diffs as a dated pile, git called not linked
 │   │   │   ├── test_git_history.py
 │   │   │   └── README.md
+│   │   ├── hurdat2/
+│   │   │   ├── hurdat2.py    NOAA's hurricane track file (HURDAT2) with each storm's name and id on every track row, so 'Maria' finds Maria's rows
+│   │   │   ├── test_hurdat2.py
+│   │   │   └── README.md     its card
 │   │   ├── jira/
 │   │   │   ├── jira.py   a Jira export issue by issue
 │   │   │   ├── test_jira.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from json-paths/
+
+```
 │   │   ├── json-paths/
 │   │   │   ├── json_paths.py   any JSON or JSON Lines file as plain lines, one passage per record
 │   │   │   ├── test_json_paths.py
@@ -438,11 +455,6 @@ willow/
 │   │   │   ├── lockfiles.py   lockfiles as a line for each locked package
 │   │   │   ├── test_lockfiles.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from logs/
-
-```
 │   │   ├── logs/
 │   │   │   ├── logs.py   system and web server logs as dated lines
 │   │   │   ├── test_logs.py
@@ -603,6 +615,10 @@ willow/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
 │   │   │   ├── test_misquote.py
 │   │   │   └── README.md
+│   │   ├── pieces/
+│   │   │   ├── pieces.py     Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once
+│   │   │   ├── test_pieces.py
+│   │   │   └── README.md     its card
 │   │   ├── pile-gold/
 │   │   │   ├── pile_gold.py   your sealed answers as a test of the search, scored as recall at five
 │   │   │   ├── test_pile_gold.py
@@ -619,15 +635,15 @@ willow/
 │   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
 │   │   │   ├── test_pile_sweep.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quote-check/
+
+```
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from quotes/
-
-```
 │   │   ├── quotes/
 │   │   │   ├── quotes.py     every quote in a document checked: as written, almost (and what differs), or not there
 │   │   │   ├── test_quotes.py
@@ -885,6 +901,10 @@ willow/
 ### adapters/stdlib/: Keeping track: Tools you run yourself
 
 ```
+│   │   ├── boxes-here/
+│   │   │   ├── boxes_here.py The boxes already in a folder, and how much waits on each
+│   │   │   ├── test_boxes_here.py
+│   │   │   └── README.md     its card
 │   │   ├── flashcards/
 │   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
 │   │   │   ├── test_flashcards.py
@@ -933,6 +953,11 @@ willow/
 │   │   │   ├── session_cost.py  tokens each agent session spent, by day and by repo, priced from a table you keep
 │   │   │   ├── test_session_cost.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from symptoms/
+
+```
 │   │   ├── symptoms/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py
@@ -2446,11 +2471,242 @@ willow/
 #### demo/, from shared-runs/
 
 ```
-│   ├── shared-runs/          a plan for a study, nothing frozen: simulations on machines nobody chose, sharing one memory, run by a script
+│   ├── shared-runs/          a study, frozen and not yet run: simulations on machines nobody chose, sharing one memory, run by a script
 │   │   ├── chain.py      starts the project, makes each link's handoff, and applies or refuses the step a link offers
+│   │   ├── door/             the shared memory with a door on it, counted at larger sizes: not run, nothing frozen
+│   │   │   ├── door.py       the shared memory with a door on it, counted and not run, to see
+│   │   │   ├── machine.py    one machine of a run at size: checks before it starts, a chained log, going on after a cut, a budget, a door, a seal
+│   │   │   ├── probe.py      a small notebook asking Kaggle three things its pages don't answer; it steps nothing
+│   │   │   ├── results/
+│   │   │   │   └── tables.json       what door.py counted for the page: the study's own check, size, strangers, how much is checked
+│   │   │   ├── stops.json        where each trajectory stops, as the first study's baseline found it
+│   │   │   ├── wagers/           what was said before the runs, on a box apart from the verdict box
+│   │   │   │   ├── claims.txt        twelve claims about the runs to come, each with how likely the cloud session thought it
+│   │   │   │   ├── record.jsonl      the wagers box's record as it stood: twelve wagers, five choices and noes, none sealed
+│   │   │   │   ├── tip.json          where that record ended, by tip-pin
+│   │   │   │   └── README.md What was said before the runs
+│   │   │   ├── test_door.py      counting comes to what the study's machines did, to the step; a lie is found by a check that looks
+│   │   │   ├── test_machine.py   it comes to the first study's bytes; a run cut off ends the same; a changed file shows; the door takes, holds, refuses
+│   │   │   └── README.md     A door on the shared memory, counted at larger sizes
+│   │   ├── every-kind/       an addition to the first study, frozen: every job run alone on other kinds of processor
+│   │   │   ├── every_kind.py every job of the sweep, run alone on another machine, held to the baseline
+│   │   │   ├── FROZEN.json   the addition's freeze: its judge, the first study's files it uses, the truth, the machines and the rules
+│   │   │   ├── results/          what the frozen judge made of the machines that have come back
+│   │   │   │   ├── record.jsonl      a copy of the record outside the repository, with this addition's rows after the first study's
+│   │   │   │   ├── verdicts.json     the two verdicts and what each machine came to, as every_kind.py printed them
+│   │   │   │   └── verify.txt        what the kernel said of that record
+│   │   │   ├── runs/             one folder for each named machine that has run the sweep alone
+│   │   │   │   ├── cloud-session/    the cloud session's run of all 220 jobs
+│   │   │   │   │   ├── acts.jsonl        what it did, one line a job
+│   │   │   │   │   ├── machine.json      what the machine said of itself
+│   │   │   │   │   └── memory.jsonl      empty: a job run alone keeps nothing
+│   │   │   │   ├── laptop/           the maintainer's laptop's run of all 220 jobs
+│   │   │   │   │   ├── acts.jsonl        what it did, one line a job
+│   │   │   │   │   ├── machine.json      what the machine said of itself
+│   │   │   │   │   └── memory.jsonl      empty: a job run alone keeps nothing
+│   │   │   │   └── phone/            the maintainer's phone's run of all 220 jobs: ARM, NEON, Termux's OpenBLAS
+│   │   │   │       ├── acts.jsonl        what it did, one line a job
+│   │   │   │       ├── machine.json      what the machine said of itself
+│   │   │   │       └── memory.jsonl      empty: a job run alone keeps nothing
+│   │   │   ├── test_every_kind.py a machine is held job by job, and a job counts only when run from its start
+│   │   │   ├── test_every_kind_frozen.py the frozen files are the bytes they were, and only the named machines are added
+│   │   │   └── README.md     Every job on every kind: an addition to the first study
 │   │   ├── KEPT.json     what the trials' scripts and agents printed, listed as kept
+│   │   ├── lies/             a study drafted and dry-run, not frozen: a memory that has been lied to
+│   │   │   ├── dry/
+│   │   │   │   ├── trials.txt        every trial of the dry run, listed before any was run
+│   │   │   │   └── verdicts.json     each dry trial and the seven verdicts, as lies.py printed them
+│   │   │   ├── dry-lies.json     the dry run's lies: how many of each kind, the arms and the seed
+│   │   │   ├── dry-plan.json     the dry run's made-up sweep of whole-number steppers
+│   │   │   ├── dry-starts.json   that sweep's starts
+│   │   │   ├── lies.json         the lies proposed for the first study's own memory: not frozen
+│   │   │   ├── lies.py       a memory that has been lied to, and whether the checks find it
+│   │   │   ├── test_lies.py
+│   │   │   └── README.md     A memory that has been lied to: a study, drafted
+```
+
+#### demo/shared-runs/, from local-models/
+
+```
+│   │   ├── local-models/     the first study's brief given to models a laptop runs, and how each did
+│   │   │   ├── answers/           each local model's answer to the two agents' input, one folder a model
+│   │   │   │   ├── gemma3-4b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── gemma4-e2b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   ├── llama3.1-8b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── llama3.2-1b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── llama3.2-3b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── mistral-7b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── nomic-embed-text-latest/
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── refused.txt   why it gave no answer: an embedding model can't generate
+│   │   │   │   ├── phi4-mini-latest/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── qwen2.5-0.5b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── qwen2.5vl-7b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   ├── qwen3-4b/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   ├── qwen3-4b-32k-latest/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   ├── qwen3.5-latest/
+│   │   │   │   │   ├── answers.txt   what it sent back, word for word
+│   │   │   │   │   ├── model.txt     its line in `ollama list`: name, id, size
+│   │   │   │   │   └── thinking.txt  what it thought before answering, kept apart
+│   │   │   │   └── willow-lane4-3b-latest/
+│   │   │   │       ├── answers.txt   what it sent back, word for word
+│   │   │   │       └── model.txt     its line in `ollama list`: name, id, size
+│   │   │   ├── results.json      each model's counts, as the first study's scorer gives them
+│   │   │   └── README.md     The same brief, given to models that run on a laptop
+│   │   ├── NEXT.md           What could be tried next
 │   │   ├── rules.py          the next step of a stack chosen by rule from what its last run said, or that no rule fits
 │   │   ├── same.py       two kept runs of one stack, step by step: asked the same way, printed the same thing
+```
+
+#### demo/shared-runs/, from study/
+
+```
+│   │   ├── study/            the study's sweep and scripts, frozen, and the dry run that came before
+│   │   │   ├── account.py        the blind half: the reports, an agent's whole input, the questions and key, and answers held to them
+│   │   │   ├── dry/              what the dry run printed and what two agents sent back; made-up setups, no result
+│   │   │   │   ├── agent-input.txt   an agent's whole input in the dry run: what is asked, the reports, the questions
+│   │   │   │   ├── answers-larger.txt what the larger model sent back, word for word
+│   │   │   │   ├── answers-small.txt what the small model sent back, word for word
+│   │   │   │   ├── bytes.json        what each dry job came to on the machine that wrote it, to hold another machine to
+│   │   │   │   ├── key.json          each question's answer, counted from the dry run's acts
+│   │   │   │   ├── report.txt        the dry run's reports, made by account.py: no agent wrote any of it
+│   │   │   │   ├── verdicts.json     the dry run's figures and its nine verdicts, as judge.py printed them
+│   │   │   │   └── verify.txt        what the kernel said of the scratch record the dry verdicts are rows on
+│   │   │   ├── dry-plan.json     the dry run's sweep: six made-up setups under nonsense names
+│   │   │   ├── dry.py            the whole plan on one machine, only for a plan that says it is a dry one
+│   │   │   ├── FROZEN.json       the study's freeze: each frozen file's SHA-256, the rules and their thresholds
+│   │   │   ├── judge.py          the study's nine rules, each held to what the machines kept
+│   │   │   ├── notebooks.py      the study's Kaggle notebooks, made from the frozen files: one script a machine run
+│   │   │   ├── plan.json         the study's sweep: 220 jobs over 22 trajectories, its machines, seeds and agents
+│   │   │   ├── results/          what the frozen judge made of the run: verdicts, figures, and the record they are rows on
+│   │   │   │   ├── agent-input.txt   the two agents' whole input: what is asked, the reports, the questions
+│   │   │   │   ├── freeze-2-key.json each question's answer under the second freeze: every figure whole
+│   │   │   │   ├── freeze-2-verdicts.json the same figures and the nine verdicts, judged again under the second freeze
+│   │   │   │   ├── key.json          each question's answer, as the frozen account.py wrote it
+│   │   │   │   ├── record.jsonl      a copy of the record outside the repository that both judgings' verdicts are rows on
+│   │   │   │   ├── report.txt        the run's reports, made by account.py: no agent wrote any of it
+│   │   │   │   ├── verdicts.json     the run's figures and its nine verdicts, as judge.py printed them
+│   │   │   │   └── verify.txt        what the kernel said of that record
+│   │   │   ├── runner.py         what one machine does: every job alone, its share with the memory, a check, or the project as written
+```
+
+#### demo/shared-runs/study/, from runs/
+
+```
+│   │   │   ├── runs/             the real run, 2026-11-11: twelve Kaggle notebooks, the check, and the laptop
+│   │   │   │   ├── account/          what each of the two agents sent back
+│   │   │   │   │   ├── larger/           the mid-size model
+│   │   │   │   │   │   └── answers.txt       its answers and its account, word for word
+│   │   │   │   │   └── small/            the smallest model
+│   │   │   │   │       └── answers.txt       its answers and its account, word for word
+│   │   │   │   ├── baseline-1/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── baseline-2/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── check/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── cloud-session/    the cloud session's check and its run of the project as written
+│   │   │   │   │   ├── acts.jsonl        what it did, one line a job or a check
+│   │   │   │   │   ├── machine.json      what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl      the states it kept, as numbers in hex
+│   │   │   │   ├── laptop/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-1-machine-0/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-1-machine-1/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-1-machine-2/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-1-machine-3/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-1-machine-4/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+```
+
+#### demo/shared-runs/study/runs/, from round-2-machine-0/
+
+```
+│   │   │   │   ├── round-2-machine-0/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-2-machine-1/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-2-machine-2/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   ├── round-2-machine-3/
+│   │   │   │   │   ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │   │   ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │   │   ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │   │   └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   │   └── round-2-machine-4/
+│   │   │   │       ├── acts.jsonl    what it did, one line a job or a check
+│   │   │   │       ├── kaggle.log    Kaggle's own log of the notebook
+│   │   │   │       ├── machine.json  what the machine said of itself: its processor and kind, system, Python and NumPy
+│   │   │   │       └── memory.jsonl  the states it kept, as numbers in hex
+│   │   │   ├── starts.json   each trajectory's start as exact numbers, built once and never stepped
+│   │   │   ├── sweep.py          a plan's jobs, the deal, each trajectory's owner, the predicted saving and the seeded draw
+│   │   │   ├── TESTER.md     Trying it on a machine of your own
+│   │   │   ├── test_frozen.py    every frozen file is the bytes it was, and the rules frozen are the rules judged
+│   │   │   └── test_study.py     the deal, the memory against a job alone, each rule failing when broken, the dry run kept
 │   │   ├── trial-1/          a first try of the blind handover, on demo/kept's run: what was fixed before, what each agent said
 │   │   │   ├── a-account-struck.txt that account after the strike, which took nothing out: what the last agent was given
 │   │   │   ├── a-account.txt what the first agent wrote from the report, word for word
@@ -2476,6 +2732,11 @@ willow/
 │   │   │   ├── RESULTS.md    what was counted, a reading of whether each step was the next one needed, and what to hold against it
 │   │   │   ├── RULES.md      what a link may do, what the script refuses, and what will be counted
 │   │   │   └── stack-at-the-end.txt the stack the chain left: seven steps it was given, three it added
+```
+
+#### demo/shared-runs/, from trial-3/
+
+```
 │   │   ├── trial-3/      code in the agents' place, from the same start, and the two compared
 │   │   │   ├── 08-why-not.txt what the first step the rules added printed
 │   │   │   ├── 09-fair-merge.txt what the second printed: which piles hold nothing for the question
@@ -2498,11 +2759,6 @@ willow/
 │   │   ├── trial.py          makes the report and the key from a kept run, strikes what an account adds, scores answers
 │   │   ├── test_trial.py
 │   │   └── README.md         the claim, eight proposed rules, a session led by a script, how it could be wrong, what waits before the freeze
-```
-
-#### demo/, from small-models/
-
-```
 │   ├── small-models/         Gemma 3 and Qwen2.5 on willow's own cards and teodora's files, and one box of it all
 │   │   ├── README.md         what was tried, what came of it, the box, what asking it found
 │   │   ├── SESSION.json      the session that ran it, by its first bytes and their SHA-256, never its text
@@ -2530,6 +2786,11 @@ willow/
 │   │   │   ├── weeknote-qwen-teodora.json  a this-week note the model wrote
 │   │   │   └── weeknote2-qwen-teodora.json  the same, five lines kept a chunk
 │   │   └── KEPT.json     the thirteen saved model runs, each with its SHA-256, listed as kept
+```
+
+#### demo/, from soil-phys-001/
+
+```
 │   ├── soil-phys-001/
 │   │   ├── fetch.py          the study's sources, fetched again and held to their hashes
 │   │   ├── FROZEN.json       the pre-registration: the key, sources, runner, rules and tools by SHA-256
@@ -2555,11 +2816,6 @@ willow/
 │   │       ├── record-2.jsonl  a copy of run 2's record, without its key
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       └── record-3.jsonl  a copy of run 3's record, without its key
-```
-
-#### demo/, from teodora/
-
-```
 │   ├── teodora/              built blind, from a different line of work
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md

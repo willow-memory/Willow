@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.4.1
+version: 0.5.1
 writes: to
 network: none
 role: ways
@@ -42,10 +42,12 @@ written out to share by [stack-share](../stack-share/).
 
 ## pools and peaks
 
-The order is the stacking order — **peaks first**. Each step's **mass** is how
-many non-blank lines it printed; a pool's mass is its steps' together. Pools,
-and the steps within them, run tallest first, because mass is what decides
-attention: the reader meets the biggest stack first. The document is markdown —
+The steps run in the order the stack file lists them, pool by pool, so a
+step that needs another's output comes after it. The document is then stacked
+**peaks first**. Each step's **mass** is how many non-blank lines it printed;
+a pool's mass is its steps' together. Pools, and the steps within them, are
+printed tallest first, because mass is what decides attention: the reader
+meets the biggest stack first. The document is markdown —
 a `##` per pool, each step's output fenced under it, a step flagged `(exit N)`
 when it didn't run clean.
 
@@ -53,7 +55,9 @@ when it didn't run clean.
 
 A stack of slow steps (a model, a big index) prints nothing until the last
 one ends, because the page is ordered by what every step made. `--to FOLDER`
-keeps the run as it happens:
+keeps the run as it happens. FOLDER is made when it isn't there yet, so a new
+run is one command; the folder it goes in must be there, so a mistyped path
+is refused rather than made:
 
     <FOLDER>/00-stack.txt     a line as each step starts, a line as it ends
     <FOLDER>/01-todo.txt      the first step's output

@@ -1,0 +1,1 @@
+`ai-code-tracking`: which code Cursor's AI wrote, read from the ai-code-tracking database Cursor keeps, each scored commit and each conversation as passages for the kernel, and a report of lines added by tab completion, by the composer and by the person, by model and by month; the hashes and the code Cursor keeps of your files are never written

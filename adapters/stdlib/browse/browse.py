@@ -1,7 +1,7 @@
 """browse.py: your folder in your web browser, on this machine only. Python 3.9+.
 
     python adapters/stdlib/browse/browse.py --box DIR [--stack FILE] [--run FOLDER]
-        [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--say MODEL] [--port N] [--lang de|es|fr|pt] [--no-open]
+        [--index INDEX] [--beside INDEX ...] [--home FOLDER] [--boxes FILE] [--say MODEL] [--port N] [--lang de|es|fr|pt] [--no-open]
     python adapters/stdlib/browse/browse.py launcher --box DIR
 
 A page to ask your folder questions, read the passages that answer them
@@ -33,6 +33,12 @@ With --beside INDEX, once for each, other piles' indexes are asked too
 answer, apart from it, with the words each one lacks.
 With --home FOLDER, the folder your projects are under, the left panel
 lists them (the projects add-on) and a click opens another.
+With --boxes FILE, a list of boxes kept somewhere else on this machine
+(the boxes-here add-on's), the left panel lists those too, each with how
+many suggestions wait on it, and a click opens one where it is. "Find
+boxes in a folder" looks through a folder you name for boxes already
+there, and the ones you tick are kept on the list. The list is written by
+boxes-here, not by this page.
 
 The middle is a stream: each question is added under the last, your line
 plain and what the page says back marked as code's, one line made from
@@ -538,6 +544,12 @@ def passage(where: str, text: str, note: str = "") -> str:
             f'<p class=text>{esc(text)}</p></div>')  # fmt: skip
 
 
+def box_name(box: Path) -> str:
+    """What a box is called: its folder's name, or the folder it is in when
+    it is itself named box."""
+    return box.parent.name if box.name == "box" and box.parent.name else box.name
+
+
 class Willow:
     """The pages for one box, with this start's secret."""
 
@@ -552,7 +564,9 @@ class Willow:
         home: Path | None = None,
         say: str | None = None,
         beside: list[Path] | None = None,
+        boxes: Path | None = None,
     ):
+        self.kept = boxes  # the list of boxes kept elsewhere, boxes-here's
         self.beside = list(beside or [])  # other piles' indexes, asked too
         self.joined: dict[str, list[Path]] = {}  # projects put beside this one
         self.say_model = say  # the model that says a turn's boxes, if any
@@ -598,10 +612,143 @@ class Willow:
                 return True
         return False
 
+    def elsewhere(self) -> list[dict]:
+        """The boxes on the --boxes list, as the boxes-here add-on keeps it:
+        where each is, what it is called, how many suggestions wait on it,
+        and anything else there is to say (it is gone, its chain is
+        broken). Empty with no list, or one that can't be read."""
+        bh, pr = sibling("boxes-here", "boxes_here"), sibling("projects", "projects")
+        if self.kept is None or bh is None or pr is None:
+            return []
+        doc, _ = bh.kept(self.kept)
+        out = []
+        for b in doc or []:
+            at = Path(b["box"])
+            row = {"box": at, "name": box_name(at), "waiting": 0, "said": ""}
+            if not bh.is_box(at):
+                row["said"] = "gone"
+            else:
+                said, row["waiting"], broken = bh.waits(at, pr)
+                row["said"] = said if broken else ""
+            out.append(row)
+        return out
+
+    def switch_box(self, at: str) -> bool:
+        """Open a box kept elsewhere. Only one on the --boxes list, and
+        still there, can be opened."""
+        for b in self.elsewhere():
+            if str(b["box"]) == at and b["said"] != "gone":
+                self.box, self.run = b["box"], None
+                self.stack = self.index = None
+                self.beside, self.joined = [], {}
+                return True
+        return False
+
+    def find_boxes(self, folder: str) -> str:
+        """The page of the boxes already in a folder, each to tick and
+        keep, by the boxes-here add-on; with no folder, the form alone."""
+        bh, pr = sibling("boxes-here", "boxes_here"), sibling("projects", "projects")
+        token = f'<input type=hidden name=token value="{esc(self.token)}">'
+        form = (
+            '<form class=find method=post action="/find">' + token
+            + '<label>A folder on this machine <input name=folder size=40 '
+            f'value="{esc(folder)}"></label> <button>Look</button></form>'
+        )  # fmt: skip
+        head = (
+            "<p>A box that is already there is opened, never made again. Only "
+            "whether a box is there, and its record's rows, are looked at. "
+            "Nothing is copied or moved.</p>"
+        )
+        if self.kept is None or bh is None or pr is None:
+            return self.page(
+                "Boxes elsewhere",
+                "<p class=muted>This page was started without a list to keep "
+                "them on (--boxes FILE), or the boxes-here add-on isn't here.</p>",
+                here="/find",
+            )
+        if not folder.strip():
+            return self.page("Boxes elsewhere", head + form, here="/find")
+        at = Path(folder.strip()).expanduser()
+        if not at.is_dir():
+            body = f"<p>{esc(str(at))} isn't a folder on this machine.</p>"
+            return self.page("Boxes elsewhere", head + form + body, here="/find")
+        at = at.resolve()
+        found, skipped = bh.find(at)
+        have = {str(b["box"]) for b in self.elsewhere()}
+        body = [head, form]
+        if found:
+            body.append(f'<form method=post action="/keep">{token}<h2>Already in {esc(str(at))}</h2>')  # fmt: skip
+            for b in found:
+                said, _, _ = bh.waits(b, pr)
+                tick = (
+                    "<span class=pill>kept</span>"
+                    if str(b) in have
+                    else f'<input type=checkbox name=box value="{esc(str(b))}">'
+                )
+                body.append(
+                    f"<p><label>{tick} <b>{esc(box_name(b))}</b> "
+                    f"<span class=muted>{esc(str(b))}</span><br>{esc(said)}</label></p>"
+                )
+            body.append(
+                "<p><button>Keep the ticked ones at hand</button></p></form>"
+            )  # fmt: skip
+        else:
+            body.append(
+                f"<p>No box is in {esc(str(at))} or {bh.DEEP} folders under it. "
+                "To start one there, with the kernel: <code>python kernel.py init "
+                "--box FOLDER/box --pile FOLDER</code>.</p>"
+            )
+        if skipped:
+            body.append("<h2>Not looked in</h2>")
+            body += [
+                f"<p><span class=muted>{esc(str(d))}</span>: {esc(why)}</p>"
+                for d, why in skipped
+            ]
+        return self.page("Boxes elsewhere", "".join(body), here="/find")
+
+    def keep(self, boxes: list[str], drop: bool = False) -> str | None:
+        """Keep boxes on the --boxes list, or drop them from it, by the
+        boxes-here add-on, in a process of its own: the list is its file to
+        write, not this page's. It says why not, or None when it is done."""
+        script = STDLIB / "boxes-here" / "boxes_here.py"
+        if self.kept is None or not script.is_file():
+            return "This page was started without a list to keep boxes on."
+        if not boxes:
+            return "No box was ticked."
+        got = subprocess.run(
+            [sys.executable, str(script), "drop" if drop else "keep",
+             "--to", str(self.kept), *boxes],
+            capture_output=True, text=True, timeout=60,
+        )  # fmt: skip
+        return None if got.returncode == 0 else got.stderr.strip() or "It wasn't kept."
+
     def name(self) -> str:
         """What this project is called: its folder's name."""
-        box = self.box.resolve()
-        return box.parent.name if box.name == "box" and box.parent.name else box.name
+        return box_name(self.box.resolve())
+
+    def pile(self) -> Path:
+        return Path(kernel.config(self.box)["pile"])
+
+    def cited(self, ids: set[str]) -> dict[str, dict]:
+        """The passages of the open box's pile with these ids, read a folder
+        at a time by the pieces add-on, so a big pile is never all held at
+        once; the kernel's whole read when pieces isn't here."""
+        if not ids:
+            return {}
+        pc = sibling("pieces", "pieces")
+        found = {}
+        for c in pc.passages(self.pile()) if pc else kernel.chunks(self.pile()):
+            if c["id"] in ids:
+                found[c["id"]] = c
+                if len(found) == len(ids):
+                    break
+        return found
+
+    def of_file(self, path: str) -> list[dict]:
+        """One file's passages, and only that file read (pieces), or the
+        kernel's whole read when pieces isn't here."""
+        pc = sibling("pieces", "pieces")
+        return pc.of_file(self.pile(), path) if pc else kernel.chunks(self.pile())
 
     def owed(self) -> tuple[list[str], list[str]]:
         """(the suggestions waiting for a yes or a no, the record's breaks)."""
@@ -696,6 +843,29 @@ class Willow:
                     + f'<button class=tiny title="{"Stop asking it" if on else "Ask it"} beside '
                     f'{esc(self.name())}">{"×" if on else "+"}</button></form></div>'
                 )
+        if self.kept is not None:
+            out.append("<p class=proj>Elsewhere</p>")
+            for b in self.elsewhere():
+                at = esc(str(b["box"]))
+                hidden = (f'<input type=hidden name=token value="{esc(self.token)}">'
+                          f'<input type=hidden name=box value="{at}">')  # fmt: skip
+                marks = (
+                    (f" <span class='pill wait'>{b['waiting']}</span>" if b["waiting"] else "")
+                    + (f" <span class='pill wait'>{esc(b['said'].split(':')[0])}</span>" if b["said"] else "")
+                )  # fmt: skip
+                if b["box"].resolve() == self.box.resolve():
+                    out.append(f'<a class=on title="{at}">{esc(b["name"])}{marks}</a>')
+                    continue
+                out.append(
+                    "<div class=prow>"
+                    f'<form class=switch method=post action="/switch">{hidden}'
+                    f'<button class=link title="{at}">{esc(b["name"])}{marks}</button></form>'
+                    f'<form class=switch method=post action="/keep">{hidden}'
+                    "<input type=hidden name=off value=1>"
+                    '<button class=tiny title="Take it off this list; the box stays '
+                    'where it is">×</button></form></div>'
+                )
+            out.append(link("/find", "Find boxes in a folder"))
         return "".join(out)
 
     def page(self, title: str, body: str, head: str = "", here: str = "") -> str:
@@ -725,7 +895,7 @@ class Willow:
                 )
                 return at, f"<p class=kick>What the run kept</p><div class=card>{near}</div>"  # fmt: skip
         best = None
-        for c in kernel.chunks(Path(kernel.config(self.box)["pile"])):
+        for c in self.of_file(path):
             if c["path"] == path and c["line"] <= n:
                 if best is None or c["line"] > best["line"]:
                     best = c
@@ -1142,9 +1312,11 @@ class Willow:
                 "Waiting for you",
                 "<p class=muted>Nothing is waiting for your approval.</p>",
             )
-        pile = {
-            c["id"]: c for c in kernel.chunks(Path(kernel.config(self.box)["pile"]))
+        props = {
+            subj: json.loads((self.box / "proposals" / f"{subj[9:]}.json").read_text())
+            for subj in subjects
         }
+        pile = self.cited({c for prop in props.values() for c in prop["cites"]})
         n = len(subjects)
         body = [
             f"<p><strong>{n} waiting.</strong> Each was suggested by something you let "
@@ -1152,7 +1324,7 @@ class Willow:
             "now on.</p>"
         ]
         for subj in subjects:
-            prop = json.loads((self.box / "proposals" / f"{subj[9:]}.json").read_text())
+            prop = props[subj]
             cites = "".join(
                 passage(f"{pile[c]['path']}:{pile[c]['line']}", pile[c]["text"])
                 if c in pile
@@ -1310,6 +1482,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200, self.willow.steps())
         if url.path == "/run":
             return self.send(200, self.willow.ran())
+        if url.path == "/find":
+            return self.send(200, self.willow.find_boxes(""))
         if url.path == "/page.js":
             return self.send(200, SCRIPT.read_text(encoding="utf-8"),
                              {"Content-Type": "text/javascript; charset=utf-8"})  # fmt: skip
@@ -1341,6 +1515,17 @@ class Handler(BaseHTTPRequestHandler):
         url = urlsplit(self.path)
         if url.path == "/ask":
             return self.send(200, self.willow.ask(form.get("q", [""])[0]))
+        if url.path == "/find":
+            return self.send(200, self.willow.find_boxes(form.get("folder", [""])[0]))
+        if url.path == "/keep":
+            why = self.willow.keep(form.get("box", []), "off" in form)
+            if why is not None:
+                return self.send(409, self.willow.page("Not kept", f"<p>{esc(why)}</p>"))  # fmt: skip
+            return self.send(303, "", {"Location": "/"})
+        if url.path == "/switch" and "box" in form:
+            if not self.willow.switch_box(form["box"][0]):
+                return self.send(404, self.willow.page("Not here", "<p>There's no box kept by that place.</p>"))  # fmt: skip
+            return self.send(303, "", {"Location": "/"})
         if url.path == "/switch":
             if not self.willow.switch(form.get("project", [""])[0]):
                 return self.send(404, self.willow.page("Not here", "<p>There's no project by that name.</p>"))  # fmt: skip
@@ -1436,6 +1621,7 @@ def main(argv: list[str]) -> int:
             "--index",
             "--home",
             "--say",
+            "--boxes",
         ):
             opts[a] = next(it, "")
         elif a == "--beside":
@@ -1452,6 +1638,7 @@ def main(argv: list[str]) -> int:
             or ("--index" in opts and not opts["--index"])
             or ("--home" in opts and not opts["--home"])
             or ("--say" in opts and not opts["--say"])
+            or ("--boxes" in opts and not opts["--boxes"])
             or "" in beside):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -1480,8 +1667,12 @@ def main(argv: list[str]) -> int:
         if home is not None and not home.is_dir():
             print(f"refused: {home} isn't a folder that's there", file=sys.stderr)
             return kernel.REFUSED
+        kept = Path(opts["--boxes"]).expanduser() if "--boxes" in opts else None
+        if kept is not None and not kept.parent.is_dir():
+            print(f"refused: {kept.parent} isn't a folder that's there", file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
         willow = Willow(box, opts.get("--lang"), stack=stack, run=run, index=index, home=home, say=opts.get("--say"),
-                        beside=[Path(i) for i in beside])  # fmt: skip
+                        beside=[Path(i) for i in beside], boxes=kept)  # fmt: skip
         server = serve(willow, int(port))
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
