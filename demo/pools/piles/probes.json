@@ -1,0 +1,236 @@
+{
+ "about": "Known-answer probes for the pools study, DRAFT for the maintainer's yes, not frozen. Pile: known_gaps.py make. Each answer's place was read off the source file, never by asking the question. Gaps from willow-f9's proof runs, checked again 2026-11-13 (two it first reported were not gaps). keyed-once is fixed on main (hurdat2, #354): its probes should hit, and a miss is the fix failing.",
+ "probes": [
+  {
+   "id": "hurdat2-maria",
+   "gap": "keyed-once",
+   "reader": "hurdat2",
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "question": "Maria hurricane landfall 2017-09-20",
+   "answer": {
+    "file": "hurdat2.txt",
+    "line": 52508
+   }
+  },
+  {
+   "id": "hurdat2-katrina",
+   "gap": "keyed-once",
+   "reader": "hurdat2",
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "question": "Katrina hurricane landfall 2005-08-29",
+   "answer": {
+    "file": "hurdat2.txt",
+    "line": 46251
+   }
+  },
+  {
+   "id": "hurdat2-harvey",
+   "gap": "keyed-once",
+   "reader": "hurdat2",
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "question": "Harvey hurricane landfall 2017-08-26",
+   "answer": {
+    "file": "hurdat2.txt",
+    "line": 52221
+   }
+  },
+  {
+   "id": "hurdat2-irma",
+   "gap": "keyed-once",
+   "reader": "hurdat2",
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "question": "Irma hurricane landfall 2017-09-10",
+   "answer": {
+    "file": "hurdat2.txt",
+    "line": 52306
+   }
+  },
+  {
+   "id": "hurdat2-control-irma-barbuda",
+   "gap": "control",
+   "reader": "hurdat2",
+   "expect": "hit",
+   "question": "Irma hurricane landfall 2017-09-06",
+   "answer": {
+    "file": "hurdat2.txt",
+    "line": 52283
+   }
+  },
+  {
+   "id": "hurdat2-control-harvey-ts",
+   "gap": "control",
+   "reader": "hurdat2",
+   "expect": "hit",
+   "question": "Harvey tropical storm landfall 2017-08-18",
+   "answer": {
+    "file": "hurdat2.txt",
+    "line": 52188
+   }
+  },
+  {
+   "id": "tsv-dogs",
+   "gap": "stray-quotes",
+   "reader": "csv-rows",
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "question": "Dogs are very light sleepers",
+   "answer": {
+    "file": "spa.tsv",
+    "line": 70329
+   }
+  },
+  {
+   "id": "tsv-tom",
+   "gap": "stray-quotes",
+   "reader": "csv-rows",
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "question": "Did Tom say something to you?",
+   "answer": {
+    "file": "spa.tsv",
+    "line": 70176
+   }
+  },
+  {
+   "id": "tsv-tired",
+   "gap": "stray-quotes",
+   "reader": "csv-rows",
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "question": "Don't you ever get tired?",
+   "answer": {
+    "file": "spa.tsv",
+    "line": 50000
+   }
+  },
+  {
+   "id": "tsv-hurry",
+   "gap": "stray-quotes",
+   "reader": "csv-rows",
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "question": "There seems to be no need to hurry",
+   "answer": {
+    "file": "spa.tsv",
+    "line": 100000
+   }
+  },
+  {
+   "id": "tsv-control-history",
+   "gap": "control",
+   "reader": "csv-rows",
+   "expect": "hit",
+   "question": "He taught me history",
+   "answer": {
+    "file": "spa-clean.tsv",
+    "line": 30000
+   }
+  },
+  {
+   "id": "tsv-control-july",
+   "gap": "control",
+   "reader": "csv-rows",
+   "expect": "hit",
+   "question": "I come here every Fourth of July",
+   "answer": {
+    "file": "spa-clean.tsv",
+    "line": 90000
+   }
+  },
+  {
+   "id": "tsv-control-fish",
+   "gap": "control",
+   "reader": "csv-rows",
+   "expect": "hit",
+   "question": "Some fish are able to change their gender",
+   "answer": {
+    "file": "spa-clean.tsv",
+    "line": 120000
+   }
+  },
+  {
+   "id": "dict-perro",
+   "gap": "split-entry",
+   "reader": "kernel",
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "question": "perro",
+   "answer": {
+    "file": "freedict-spa-eng-part-02.html",
+    "line": 7947
+   }
+  },
+  {
+   "id": "dict-gato",
+   "gap": "split-entry",
+   "reader": "kernel",
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "question": "gato",
+   "answer": {
+    "file": "freedict-spa-eng-part-01.html",
+    "line": 31780
+   }
+  },
+  {
+   "id": "dict-casa",
+   "gap": "split-entry",
+   "reader": "kernel",
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "question": "casa",
+   "answer": {
+    "file": "freedict-spa-eng-part-01.html",
+    "line": 14904
+   }
+  },
+  {
+   "id": "dict-libro",
+   "gap": "split-entry",
+   "reader": "kernel",
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "question": "libro",
+   "answer": {
+    "file": "freedict-spa-eng-part-01.html",
+    "line": 37361
+   }
+  },
+  {
+   "id": "dict-control-persian",
+   "gap": "control",
+   "reader": "kernel",
+   "expect": "hit",
+   "question": "Persian",
+   "answer": {
+    "file": "freedict-spa-eng-part-02.html",
+    "line": 7957
+   }
+  },
+  {
+   "id": "dict-control-umbrella",
+   "gap": "control",
+   "reader": "kernel",
+   "expect": "hit",
+   "question": "umbrella",
+   "answer": {
+    "file": "freedict-spa-eng-part-02.html",
+    "line": 6596
+   }
+  },
+  {
+   "id": "dict-control-house",
+   "gap": "control",
+   "reader": "kernel",
+   "expect": "hit: the same line casa's probe wants, asked by its own word",
+   "question": "house",
+   "answer": {
+    "file": "freedict-spa-eng-part-01.html",
+    "line": 14904
+   }
+  },
+  {
+   "id": "dict-control-cat",
+   "gap": "control",
+   "reader": "kernel",
+   "expect": "hit: the same line gato's probe wants",
+   "question": "cat",
+   "answer": {
+    "file": "freedict-spa-eng-part-01.html",
+    "line": 31780
+   }
+  }
+ ]
+}
