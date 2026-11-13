@@ -97,6 +97,28 @@ So on this pile a step's company changes what it says for about one
 step in thirty. A trial's figures, again, and a first sight of what
 the study would count.
 
+**The run memory** (`trace.py stack --memo DIR`). A stack re-runs every
+step on the same pile, and most steps print what they did alone. The memory
+keeps, for each step that ran, what it read (each file of the pile, the box
+and the stack's scratch folders it opened or listed, as hashes, said by
+[memo/sitecustomize.py](trace/memo/sitecustomize.py) before the guard runs)
+and what came of it; a step whose every read is as it was is not run again,
+and its row and the files it left are taken from the memory. A step that
+adds a row to the record (which chains), changes the box, starts a program
+that isn't Python, or is unsteady is always run. A share of the remembered
+ones (5% unless said) is run anyway and held to the memory.
+
+Measured on climate-almanac, its 357 singles, 207 bridges and 40 random
+stacks (2,201 step runs), once with the memory and once without: 1,319
+steps reused, 72 run anyway as checks and all 72 the same, and every
+reused row the same as the run without the memory, in every field the
+study reads. Step time 79 s against 169 s (53% saved), and 87 s against
+172 s of wall clock. Two rows differed between the runs, both of steps
+that ran both times (across and sent-log in two random stacks of 100):
+the steps' own unsteadiness in company, not the memory's. The more of a
+stack's steps a run has seen before, the more is saved: all-but-one, the
+row that costs most, repeats almost every step.
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and

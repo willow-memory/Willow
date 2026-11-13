@@ -193,3 +193,122 @@ def test_the_runs_own_folders_and_the_time_of_day_are_taken_out_before_hashing(
         Path("/w/2/tmp/x"),
     )
     assert one == two == "wrote {mine}/a.txt from {pile}/g.md at {when}\n"
+
+
+def _memo_grid(tmp: Path, stacks: dict[str, list[str]]) -> Path:
+    steps = trace.table(trace.contract())
+    names = {n for v in stacks.values() for n in v}
+    args = {
+        n: {"args": [a.replace("{tmp}", "{tmp}/" + n) for a in steps[n][1]]}
+        for n in names
+    }
+    grid = tmp / "manifest.json"
+    grid.write_text(json.dumps({"steps": args, "stacks": [{"id": k, "steps": v} for k, v in stacks.items()]}))  # fmt: skip
+    return grid
+
+
+def _memo_run(
+    tmp: Path, grid: Path, ids: list[str], name: str, *more: str
+) -> list[dict]:
+    args = ["stack", "--grid", str(grid), *[x for i in ids for x in ("--stack", i)],
+            "--pile", str(tmp / "pile"), "--name", "tiny", "--salt", "s",
+            "--work", str(tmp / name), "--to", str(tmp / f"{name}.jsonl"), *more]  # fmt: skip
+    assert trace.main(args) == 0
+    return [json.loads(x) for x in (tmp / f"{name}.jsonl").read_text().splitlines()]
+
+
+def test_the_memory_reuses_a_step_whose_reads_are_as_they_were_and_runs_one_whose_arent(
+    tmp_path,
+):
+    pile_at(tmp_path)
+    stacks = {"a": ["markdown", "csv-rows", "game-master"], "b": ["markdown", "csv-rows", "game-master"],
+              "c": ["dice", "game-master"]}  # fmt: skip
+    grid = _memo_grid(tmp_path, stacks)
+    memo = ["--memo", str(tmp_path / "memo"), "--check", "0"]
+    rows = _memo_run(tmp_path, grid, ["a", "b", "c"], "w", *memo)
+    got = {(r["stack"], r["step"]): r for r in rows}
+    assert [got["a", s]["memo"] for s in stacks["a"]] == ["ran", "ran", "ran"]
+    assert [got["b", s]["memo"] for s in stacks["b"]] == ["reused", "reused", "reused"]
+    for s in stacks["b"]:
+        assert all(got["b", s][k] == got["a", s][k] for k in trace.SAME), s
+    assert got["c", "dice"]["memo"] == "ran", (
+        "a step that adds a row is never remembered"
+    )
+    assert got["c", "game-master"]["memo"] == "ran", (
+        "the record it reads has the giver's row now"
+    )
+    assert got["c", "game-master"]["out"] != got["a", "game-master"]["out"]
+    plain = _memo_run(tmp_path, grid, ["a", "b", "c"], "p")
+    for r, q in zip(rows, plain):
+        assert "memo" not in q
+        if "dice" in stacks[r["stack"]]:
+            continue  # dice rolls at random, and what reads its roll tells of it
+        assert all(r[k] == q[k] for k in trace.SAME), (r["stack"], r["step"])
+
+
+def test_a_remembered_step_drawn_to_be_checked_runs_and_is_held_to_the_memory(tmp_path):
+    pile_at(tmp_path)
+    grid = _memo_grid(
+        tmp_path, {"a": ["markdown", "game-master"], "b": ["markdown", "game-master"]}
+    )
+    never = tmp_path / "never.json"
+    never.write_text(json.dumps(["game-master"]))
+    rows = _memo_run(tmp_path, grid, ["a", "b"], "w", "--memo", str(tmp_path / "m"), "--check", "1",
+                     "--never", str(never))  # fmt: skip
+    got = {(r["stack"], r["step"]): r for r in rows}
+    assert (
+        got["b", "markdown"]["memo"] == "checked"
+        and got["b", "markdown"]["memo_same"] is True
+    )
+    assert got["a", "game-master"]["memo"] == got["b", "game-master"]["memo"] == "never"
+
+
+def test_reads_count_only_on_the_runs_roots_and_a_program_started_ends_the_memory(
+    tmp_path,
+):
+    roots = {r: tmp_path / r for r in ("pile", "box", "tmp")}
+    for p in roots.values():
+        p.mkdir()
+    (roots["pile"] / "a.md").write_text("x")
+    mine = roots["tmp"] / "me"
+    log = tmp_path / "log"
+    log.write_text("\n".join(json.dumps({"e": e, "p": str(p)}) for e, p in [
+        ("open", roots["pile"] / "a.md"), ("list", roots["pile"]), ("open", mine / "own.txt"),
+        ("open", Path("/etc/hostname")), ("open", roots["box"] / "gone")]) + "\n")  # fmt: skip
+    got = trace._reads(log, roots, mine)
+    assert set(got) == {"file pile a.md", "list pile .", "file box gone"}
+    assert got["file box gone"] == "absent"
+    log.write_text(log.read_text() + json.dumps({"e": "run", "p": "git"}) + "\n")
+    assert trace._reads(log, roots, mine) is None
+
+
+def test_the_memory_is_refused_inside_the_repository_or_off_a_stack(tmp_path):
+    pile_at(tmp_path)
+    grid = _memo_grid(tmp_path, {"a": ["markdown"]})
+    base = [
+        "--pile",
+        str(tmp_path / "pile"),
+        "--name",
+        "t",
+        "--salt",
+        "s",
+        "--to",
+        str(tmp_path / "o.jsonl"),
+    ]
+    assert trace.main(["stack", "--grid", str(grid), "--stack", "a", *base, "--work", str(tmp_path / "w1"),
+                       "--memo", str(trace.ROOT / "memo-here")]) == 2  # fmt: skip
+    assert (
+        trace.main(
+            [
+                "pile",
+                *base,
+                "--work",
+                str(tmp_path / "w2"),
+                "--memo",
+                str(tmp_path / "m"),
+            ]
+        )
+        == 2
+    )
+    assert trace.main(["stack", "--grid", str(grid), "--stack", "a", *base, "--work", str(tmp_path / "w3"),
+                       "--check", "0.5"]) == 2  # fmt: skip

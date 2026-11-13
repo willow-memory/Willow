@@ -2449,6 +2449,8 @@ willow/
 │   │   │   ├── static.py     what each built add-on's code says it takes and gives, read and not run
 │   │   │   └── test_static.py    it reads a made-up add-on as it should; the kept reading holds the page's figures and the fourteen
 │   │   ├── trace/            every add-on run alone on a pile under the guard, a row a step of what was seen
+│   │   │   ├── memo/
+│   │   │   │   └── sitecustomize.py The run memory's reader: what a step reads, said to WILLOW_READ_LOG, one
 │   │   │   ├── trace.py      one add-on's command run on one pile under the guard, and one row of what was seen: not what its card says
 │   │   │   └── test_trace.py     a row says what was seen and keeps none of the pile's words; places are salted and mapped back
 │   │   ├── truth/            what the report may say, and only from the runs: the rules, the dry runs, the report
@@ -2464,12 +2466,12 @@ willow/
 │   │   │   └── test_known_gaps.py
 │   │   ├── FROZEN.json
 │   │   ├── test_pools_frozen.py
+```
+
+#### demo/pools/, from runs/
+
+```
 │   │   ├── runs/
-```
-
-#### demo/pools/runs/, from stage0/
-
-```
 │   │   │   └── stage0/
 │   │   │       ├── climate-almanac/
 │   │   │       │   ├── laptop/
