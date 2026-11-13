@@ -245,3 +245,24 @@ def test_a_graph_mirrored_in_parts_numbers_its_files_from_one(tmp_path, monkeypa
     assert sorted(p.name for p in dst.iterdir() if p.is_file()) == sorted(
         f"g.db.{i}.txt" for i in range(1, n + 1)
     )
+
+
+def _wal(path: Path) -> None:
+    con = sqlite3.connect(path)
+    con.execute("PRAGMA journal_mode=WAL")
+    con.close()
+
+
+def test_a_wal_database_is_read_and_nothing_is_written_beside_it(tmp_path):
+    """A database in WAL mode opened with mode=ro alone gets a -shm and -wal
+    file beside it: a write to the person's folder. Opened immutable, none."""
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    db = folder / "graph.db"
+    write_graph(db)
+    _wal(db)
+    before = {p.name: p.read_bytes() for p in folder.iterdir()}
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    assert {p.name: p.read_bytes() for p in folder.iterdir()} == before
+    assert any(p.is_file() for p in to.rglob("*"))
