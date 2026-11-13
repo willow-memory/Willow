@@ -1,5 +1,5 @@
 {
- "about": "Known-answer probes for the pools study, DRAFT for the maintainer's yes, not frozen. Pile: known_gaps.py make. Each answer's place was read off the source file, never by asking the question. Gaps from willow-f9's proof runs, checked again 2026-11-13 (two it first reported were not gaps). keyed-once is fixed on main (hurdat2, #354): its probes should hit, and a miss is the fix failing.",
+ "about": "Known-answer probes for the pools study, DRAFT for the maintainer's yes, not frozen. Pile: known_gaps.py make. The pairs are lines 70,001 to 75,000 of spa.txt, so their lines here are counted from there. Each answer's place was read off the source file, never by asking the question. Gaps from willow-f9's proof runs, checked again 2026-11-13 (two it first reported were not gaps). keyed-once is fixed on main (hurdat2, #354): its probes should hit, and a miss is the fix failing. Each probe is asked of its folder in what known_gaps.py read gathers: pile (the pile as it is) for the kernel's, the reader's mirror for a reader's.",
  "probes": [
   {
    "id": "hurdat2-maria",
@@ -10,7 +10,8 @@
    "answer": {
     "file": "hurdat2.txt",
     "line": 52508
-   }
+   },
+   "folder": "hurdat2"
   },
   {
    "id": "hurdat2-katrina",
@@ -21,7 +22,8 @@
    "answer": {
     "file": "hurdat2.txt",
     "line": 46251
-   }
+   },
+   "folder": "hurdat2"
   },
   {
    "id": "hurdat2-harvey",
@@ -32,7 +34,8 @@
    "answer": {
     "file": "hurdat2.txt",
     "line": 52221
-   }
+   },
+   "folder": "hurdat2"
   },
   {
    "id": "hurdat2-irma",
@@ -43,7 +46,8 @@
    "answer": {
     "file": "hurdat2.txt",
     "line": 52306
-   }
+   },
+   "folder": "hurdat2"
   },
   {
    "id": "hurdat2-control-irma-barbuda",
@@ -54,7 +58,8 @@
    "answer": {
     "file": "hurdat2.txt",
     "line": 52283
-   }
+   },
+   "folder": "hurdat2"
   },
   {
    "id": "hurdat2-control-harvey-ts",
@@ -65,7 +70,8 @@
    "answer": {
     "file": "hurdat2.txt",
     "line": 52188
-   }
+   },
+   "folder": "hurdat2"
   },
   {
    "id": "tsv-dogs",
@@ -75,8 +81,9 @@
    "question": "Dogs are very light sleepers",
    "answer": {
     "file": "spa.tsv",
-    "line": 70329
-   }
+    "line": 329
+   },
+   "folder": "csv-rows"
   },
   {
    "id": "tsv-tom",
@@ -86,63 +93,69 @@
    "question": "Did Tom say something to you?",
    "answer": {
     "file": "spa.tsv",
-    "line": 70176
-   }
+    "line": 176
+   },
+   "folder": "csv-rows"
   },
   {
-   "id": "tsv-tired",
+   "id": "tsv-morning",
    "gap": "stray-quotes",
    "reader": "csv-rows",
    "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
-   "question": "Don't you ever get tired?",
+   "question": "I just got here this morning",
    "answer": {
     "file": "spa.tsv",
-    "line": 50000
-   }
+    "line": 1500
+   },
+   "folder": "csv-rows"
   },
   {
-   "id": "tsv-hurry",
+   "id": "tsv-room",
    "gap": "stray-quotes",
    "reader": "csv-rows",
    "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
-   "question": "There seems to be no need to hurry",
+   "question": "This room is air-conditioned",
    "answer": {
     "file": "spa.tsv",
-    "line": 100000
-   }
+    "line": 3500
+   },
+   "folder": "csv-rows"
   },
   {
-   "id": "tsv-control-history",
+   "id": "tsv-control-chalk",
    "gap": "control",
    "reader": "csv-rows",
    "expect": "hit",
-   "question": "He taught me history",
+   "question": "He took out a piece of chalk",
    "answer": {
     "file": "spa-clean.tsv",
-    "line": 30000
-   }
+    "line": 800
+   },
+   "folder": "csv-rows"
   },
   {
-   "id": "tsv-control-july",
+   "id": "tsv-control-telephone",
    "gap": "control",
    "reader": "csv-rows",
    "expect": "hit",
-   "question": "I come here every Fourth of July",
+   "question": "My telephone is out of order",
    "answer": {
     "file": "spa-clean.tsv",
-    "line": 90000
-   }
+    "line": 2600
+   },
+   "folder": "csv-rows"
   },
   {
-   "id": "tsv-control-fish",
+   "id": "tsv-control-coincidence",
    "gap": "control",
    "reader": "csv-rows",
    "expect": "hit",
-   "question": "Some fish are able to change their gender",
+   "question": "What a fantastic coincidence",
    "answer": {
     "file": "spa-clean.tsv",
-    "line": 120000
-   }
+    "line": 4400
+   },
+   "folder": "csv-rows"
   },
   {
    "id": "dict-perro",
@@ -153,7 +166,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-02.html",
     "line": 7947
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-gato",
@@ -164,7 +178,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-01.html",
     "line": 31780
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-casa",
@@ -175,7 +190,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-01.html",
     "line": 14904
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-libro",
@@ -186,7 +202,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-01.html",
     "line": 37361
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-control-persian",
@@ -197,7 +214,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-02.html",
     "line": 7957
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-control-umbrella",
@@ -208,7 +226,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-02.html",
     "line": 6596
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-control-house",
@@ -219,7 +238,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-01.html",
     "line": 14904
-   }
+   },
+   "folder": "pile"
   },
   {
    "id": "dict-control-cat",
@@ -230,7 +250,8 @@
    "answer": {
     "file": "freedict-spa-eng-part-01.html",
     "line": 31780
-   }
+   },
+   "folder": "pile"
   }
  ]
 }

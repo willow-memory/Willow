@@ -155,7 +155,56 @@ and its files' salted hashes, never their names or words), the cards
 500 by the rules' seed, each run in both orders), and the probes, each
 with its answer's place, before any of them is asked.
 
-## What is not here yet
+## The piles and the probes: [piles/](piles/)
 
-The piles, the probes' questions and answers, the freeze, and anything
-for Kaggle. Those are the maintainer's to start.
+Chosen by the maintainer on 2026-11-13. Each pile is run whole, every step
+alone twice and then the grid's stacks.
+
+**Public, run on Kaggle.** Each notebook fetches Willow at the freeze and
+its pile from GitHub at the commit the freeze pins;
+nothing else is uploaded. The piles are willow, nestor, jeles,
+homestead-law, forge, climate-almanac, and known-gaps, which
+[known_gaps.py](piles/known_gaps.py) makes from three public sources
+fetched by address and held to their SHA-256: NOAA's HURDAT2, 5,000 lines
+of Tatoeba's English-Spanish pairs, and FreeDict's Spanish-English TEI cut
+into parts. Their salts are public, in the freeze.
+
+**Private, run on the maintainer's laptop only.** sessions, slm, the Nest,
+workshop and gm. Their salts never leave it, and the freeze holds only the
+SHA-256 of each pile's shape and salt. Rows leave the laptop only as the
+trace writes them (places and files as salted hashes, no words), and only
+through the maintainer's privacy gate. Piles holding money, health or
+other people's affairs are left out by the maintainer's choice.
+
+**The probes** ([probes.json](piles/probes.json)) are 21 questions over three
+known reader gaps, each answer's place read off its source and never
+asked:
+
+| gap | reader | probes | controls | expected |
+|---|---|---|---|---|
+| keyed-once: a storm's name only on its HURDAT2 header | hurdat2 | 4 | 2 | hit: fixed on main by hurdat2, so a miss is the fix failing |
+| stray-quotes: a TSV with a quote inside a field | csv-rows | 4 | 3, on the same lines with the quotes taken out | miss: csv-rows skips the file |
+| split-entry: a dictionary's headword and gloss on lines of their own | the kernel | 4 | 4, two asking for the same lines by the gloss's own word | miss |
+
+They came from willow-f9's proof runs. Two more it first reported were
+not gaps: an array-of-arrays JSON was an HTML error page, and Spanish
+needing words-es was one pair of questions, not a rule. They are left
+out.
+
+**The dry run** (2026-11-13, on this laptop, from the public sources): the
+pile made, hurdat2 and csv-rows run on it into a trace's layout,
+`known_gaps.py read` gathering their mirrors, and every probe asked with
+its question replaced by "qqqq zzzz", beside three planted passages, one in
+each folder (a storm QZXQVORP added to HURDAT2, a row of made-up words to
+the clean TSV, a made-up dictionary entry). All three planted passages were
+hit, each through its reader's map back to the line it was planted on; all
+21 nonsense questions missed; and every gap read "can't be read", since
+its controls missed too. What it can't see: whether a real question hits,
+which is the study.
+
+**What the dry run found first.** csv-rows writes a file's whole mirror as
+one file. Tatoeba's whole spa.txt made a 23 MB mirror, past the kernel's
+1,000,000 bytes, so even the clean control could not have been served.
+That is a gap of its own, large CSVs, found by the dry run and not asked
+by any probe; the pile keeps 5,000 lines so that the probes test the
+quotes and nothing else.
