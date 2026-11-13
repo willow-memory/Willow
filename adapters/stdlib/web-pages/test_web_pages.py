@@ -142,3 +142,89 @@ def test_the_mark_of_the_webs_zone_marker_is_not_an_address():
     assert web_pages.address("<!-- saved from url=(0018)https://b.example/ -->") == (
         "https://b.example/"
     )
+
+
+PAGE = (
+    "<html><body>\n"
+    "<header><h1>The Mill</h1></header>\n"
+    '<nav><ul><li><a href="/a">Departments</a></li></ul></nav>\n'
+    "<p>The mill opened in 1880.</p>\n"
+    "<aside><p>Related links</p></aside>\n"
+    "<p>It closed in 1921.</p>\n"
+    "<footer><p>Copyright</p></footer>\n"
+    "</body></html>\n"
+)
+
+
+def test_body_only_leaves_out_menus_and_keeps_the_page():
+    kept = web_pages.as_text(PAGE, body_only=True)
+    assert kept == (
+        "address: not in the file\n\nThe Mill\n\n"
+        "The mill opened in 1880.\n\nIt closed in 1921.\n"
+    )  # the header's title stays; nav, aside and footer words do not
+    assert "Departments" in web_pages.as_text(PAGE)  # without it, nothing is cut
+    assert web_pages.as_text(PAGE) == web_pages.as_text(PAGE, "", False)
+
+
+def test_an_element_that_says_its_role_is_a_menu_is_one():
+    page = (
+        '<div role="navigation"><p>Menu words</p></div><p>Kept.</p>'
+        '<div role="Complementary"><p>Side words</p></div>'
+        '<div role="foo contentinfo"><p>Foot words</p></div>'
+        '<div role="banner"><p>Banner words</p></div>'
+        '<div role="main"><p>Main words</p></div>'
+    )
+    got = web_pages.as_text(page, body_only=True)
+    assert got == (
+        "address: not in the file\n\nKept.\n\nBanner words\n\nMain words\n"
+    )  # the role may sit among others, in any case; banner and main stay
+
+
+def test_a_menu_inside_a_menu_ends_with_its_own_end_tag():
+    page = "<nav><p>A</p><nav><p>B</p></nav><p>C</p></nav><p>After.</p>"
+    assert web_pages.as_text(page, body_only=True).endswith("\n\nAfter.\n")
+    assert "C" not in web_pages.as_text(page, body_only=True).split("\n\n")[1:]
+    two = "<nav>one</nav><p>Mid.</p><nav>two</nav><p>End.</p>"
+    assert web_pages.as_text(two, body_only=True) == (
+        "address: not in the file\n\nMid.\n\nEnd.\n"
+    )  # both menus go, and what lies between them stays
+
+
+def test_a_menu_that_never_closes_is_kept_not_guessed_at():
+    page = "<p>Before.</p><nav><p>Left open.</p><p>After.</p>"
+    got = web_pages.as_text(page, body_only=True)
+    assert got == web_pages.as_text(page)
+    assert "Left open." in got and "After." in got
+
+
+def test_a_menu_named_in_a_comment_or_an_attribute_is_not_a_menu():
+    page = (
+        '<!-- <nav><p>Hidden</p></nav> --><p>Kept.</p><p title="<nav>">Also kept.</p>'
+    )
+    got = web_pages.as_text(page, body_only=True)
+    assert "Kept." in got and "Also kept." in got
+
+
+def test_the_cut_is_found_on_the_right_line_and_column():
+    page = "<p>One.</p>\r\n<p>Two.</p>\r\n  <nav>\r\n<p>Gone.</p>\r\n</nav>\r\n<p>Three.</p>"
+    assert (
+        web_pages.without_chrome(page)
+        == "<p>One.</p>\r\n<p>Two.</p>\r\n  \n\r\n<p>Three.</p>"
+    )
+    one = "<nav>x</nav>tail"
+    assert web_pages.without_chrome(one) == "\ntail"  # a menu at the very start
+
+
+def test_body_only_is_a_flag_of_mirror_and_nothing_else_is(tmp_path):
+    src = tmp_path / "saved"
+    src.mkdir()
+    (src / "p.html").write_text(PAGE)
+    plain = run("mirror", "--from", str(src), "--to", str(tmp_path / "a"))
+    body = run("mirror", "--from", str(src), "--to", str(tmp_path / "b"), "--body-only")
+    assert plain.returncode == 0 and body.returncode == 0
+    assert "Departments" in (tmp_path / "a" / "p.html.txt").read_text()
+    assert "Departments" not in (tmp_path / "b" / "p.html.txt").read_text()
+    for extra in ("--body", "--all", "body-only"):
+        got = run("mirror", "--from", str(src), "--to", str(tmp_path / "c"), extra)
+        assert got.returncode == 2 and not (tmp_path / "c").exists()
+    assert run("--body-only").returncode == 2

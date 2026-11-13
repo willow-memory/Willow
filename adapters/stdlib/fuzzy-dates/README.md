@@ -3,7 +3,7 @@ section: Finding things
 line: Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.
 source: new
 added: 2026-10-27
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
@@ -34,11 +34,21 @@ year or a year (`1880~`, `1972-03~`); maybe, possibly or perhaps before a
 year (`1880?`); a decade, with or without early, mid or late (`188X`);
 spring, summer, autumn, fall or winter of a year (EDTF's seasons, `1944-21`
 to `1944-24`); before or after a year (`../1900`, `1950/..`); between one
-year and another, or from one to another (`1880/1885`); and sometime in a
-month (`XXXX-03` for a year unsaid). A year is four digits, 1000 to 2999,
-so a price, a page number or "about 500 people" never reads as one, and a
-bare question mark is a sentence's, not a date's. Early, mid and late stay
-in the phrase shown, not the EDTF: the decade is what the format can carry.
+year and another, or from one to another (`1880/1885`); sometime in a
+month (`XXXX-03` for a year unsaid); early or late in a year, the early or
+latter part of it, or the close, end or beginning of it (`1872`); and a year
+said as two digits, in '79 or of '79, or a season of it, spring of '79
+(`XX79`, `XX79-21`: the century is unsaid, so the format leaves it
+unspecified and the add-on does not choose one). A year is four digits, 1000
+to 2999, so a price, a page number or "about 500 people" never reads as one,
+and a bare question mark is a sentence's, not a date's; a two-digit year
+needs its apostrophe, and `'60s` is a decade, not a year. Early, mid and late
+stay in the phrase shown, not the EDTF: the decade, or the year, is what the
+format can carry.
+
+The two-digit and early-or-late shapes came from reading a county's old
+histories, where "late in 1893", "very early in the year 1873" and "in the
+spring of '79" are how a date is said and none of the other shapes read them.
 
 **What admits no doubt is left to the kernel.** A plain "March 1972" and an
 exact day are `newest`'s job; this reads only the doubt, so the two never
@@ -46,8 +56,9 @@ read the same words. Overlapping readings keep the first, so the years
 inside "between 1880 and 1885" read once, as the span.
 
 On willow's demo folders, Hollis's piano ledger gives 91 fuzzy dates, most
-of them instruments logged by their build decade ("1910s upright"); the
-other three folders have none, and say so.
+of them instruments logged by their build decade ("1910s upright");
+Stewart's crossover notes give one ("from 2020 to 2023"); the other seven
+folders have none, and say so.
 
 It only reads, and the same folder gives the same bytes. Exit codes, the
 kernel's: 0 fuzzy dates found; 42 none; 2 refused.

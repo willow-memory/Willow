@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Saved web pages, .html and .mhtml, as their readable text, with the address they came from.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: reads
@@ -14,7 +14,7 @@ uses: clauses
 
 Saved web pages as their readable text, with the address they came from.
 
-    python adapters/stdlib/web-pages/web_pages.py mirror --from FOLDER --to MIRROR
+    python adapters/stdlib/web-pages/web_pages.py mirror --from FOLDER --to MIRROR [--body-only]
     python kernel.py init --box BOX --pile MIRROR --key KEY
 
 The kernel reads a web page as the words it shows, but a page saved from a
@@ -40,6 +40,19 @@ except `about:internet`, which marks a zone, not an address; an .mhtml's
 canonical link; its `og:url`. A page that says none of these gets
 `address: not in the file`, never a guess.
 
+**Menus, with `--body-only`:** a county's page opens with its whole menu
+(Departments, Courthouse, Assessor and the rest), and every one of those
+words then answers a question about the county. With `--body-only` a page's
+menus are left out: any nav, footer or aside element, and any element whose
+role says navigation, contentinfo or complementary, with everything inside
+it. Without the flag nothing is left out, and the same folder gives the same
+bytes as before. A header is kept, since an article's title is often in one,
+and so is an element that never closes: what the rule cannot cut cleanly
+stays in. On seven saved pages about a Nebraska county, the county's own page
+went from 647 words to 174, the menu gone and its history facts kept; the
+other five that had menus lost between 39 and 568 words, and one with no menu markup came
+out the same.
+
 **Its charset:** UTF-8, or the one the page's own `<meta charset>` names
 in its first 4,096 bytes. An .mhtml's page is read in the charset its part
 names, else the same way: Chrome names none on the part, only in the page.
@@ -62,7 +75,9 @@ is read as a page of its own.
 
 **Can't:** run a page's scripts, so text a page only draws with JavaScript
 isn't there; or keep a page's pictures. A page's menus and footers come out
-as paragraphs too.
+as paragraphs too unless `--body-only` leaves them out; that rule reads the
+page's own markup, so a menu a page draws from a plain div with no role
+stays, and so does a "Skip to content" link.
 
 **Exit codes:** 0 wrote at least one file; 42 nothing to read; 2 refused.
 

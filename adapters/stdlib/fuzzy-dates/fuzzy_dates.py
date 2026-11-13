@@ -24,7 +24,11 @@ The grammar is words, small and said in full, and nothing else is guessed:
   `1944-21` to `1944-24`;
 - before or after a year: `../1900`, `1950/..`;
 - between one year and another, or from one to another: `1880/1885`;
-- sometime in a month: `XXXX-03` for a year unsaid, `1972-03` with one.
+- sometime in a month: `XXXX-03` for a year unsaid, `1972-03` with one;
+- early or late in a year, the early or latter part of it, the close, end or
+  beginning of it: the year, `1872`, with early or late left in the phrase;
+- a year said as two digits, in '79 or of '79, or a season of it, spring of
+  '79: `XX79`, `XX79-21`, the century left unspecified because it is unsaid.
 
 A year is four digits, 1000 to 2999, so a price or a page number never
 reads as one. Early, mid and late stay in the phrase, not the EDTF: the
@@ -54,6 +58,8 @@ for _m, _i in list(MONTHS.items()):
 SEASONS = {"spring": 21, "summer": 22, "autumn": 23, "fall": 23, "winter": 24}
 YEAR = r"(?P<year>[12]\d{3})(?!\d)"
 MONTH = r"(?P<month>" + "|".join(sorted(MONTHS, key=len, reverse=True)) + r")\b"
+APOS = r"['’](?P<yy>\d\d)(?!\d|s\b)"  # '71, with the century unsaid; '60s is a decade
+SEASON = r"(?P<season>spring|summer|autumn|fall|winter)"
 SHAPES = [
     ("about", re.compile(
         rf"\b(?:about|around|circa|c\.|roughly|approximately)\s+(?:{MONTH}\s+)?{YEAR}",
@@ -72,6 +78,13 @@ SHAPES = [
         re.IGNORECASE)),
     ("sometime", re.compile(
         rf"\bsometime\s+in\s+{MONTH}(?:\s+{YEAR})?", re.IGNORECASE)),
+    ("within", re.compile(
+        r"\b(?:(?:early|late)\s+in"
+        r"|(?:the\s+)?(?:early|latter|first|last)\s+part\s+of"
+        rf"|(?:the\s+)?(?:close|end|beginning)\s+of)\s+(?:the\s+year\s+)?{YEAR}",
+        re.IGNORECASE)),
+    ("season2", re.compile(rf"\b{SEASON}(?:\s+of)?\s+{APOS}", re.IGNORECASE)),
+    ("year2", re.compile(rf"\b(?:in|of)\s+{APOS}", re.IGNORECASE)),
 ]  # fmt: skip
 
 
@@ -94,6 +107,12 @@ def edtf(kind: str, m: re.Match) -> str:
         return f"{year}/.."
     if kind == "between":
         return f"{year}/{got['year2']}"
+    if kind == "within":
+        return year  # the year is what the format carries; early or late stays in the phrase
+    if kind == "season2":
+        return f"XX{got['yy']}-{SEASONS[got['season'].lower()]}"
+    if kind == "year2":
+        return f"XX{got['yy']}"  # the century is unsaid, so it is left unspecified
     month = f"{MONTHS[got['month'].lower()]:02}"
     return f"{year}-{month}" if year else f"XXXX-{month}"
 
