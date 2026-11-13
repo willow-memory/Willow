@@ -30,6 +30,7 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
@@ -44,7 +45,9 @@ def _one_line(value) -> str:
 def graph_text(path: Path) -> str | None:
     """The mirror text for a graph database, or None if it isn't one."""
     try:
-        con = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+        con = sqlite3.connect(
+            f"file:{quote(path.resolve().as_posix())}?mode=ro&immutable=1", uri=True
+        )
     except sqlite3.Error:
         return None
     try:

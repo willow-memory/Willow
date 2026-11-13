@@ -34,6 +34,7 @@ import sqlite3
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
@@ -92,7 +93,9 @@ def load(path: Path) -> dict | None:
     """The commits and the per-conversation and per-model sums of one
     database, or None when it is not Cursor's tracking database."""
     try:
-        con = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+        con = sqlite3.connect(
+            f"file:{quote(path.resolve().as_posix())}?mode=ro&immutable=1", uri=True
+        )
     except sqlite3.Error:
         return None
     try:

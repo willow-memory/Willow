@@ -3,7 +3,7 @@ section: Trust and proof
 line: Your approved answers as Jeles nuggets (question, answer, sources, who sealed it), and Jeles' own verified nuggets read back as passages.
 source: new
 added: 2026-11-01
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes

@@ -314,3 +314,24 @@ def test_mirror_answers_json_as_a_report_since_a_stack_asks_for_it(tmp_path):
     assert doc["addon"] == "ai-code-tracking" and doc["state"] == "populated"
     assert doc["said"].startswith("wrote 1 files")
     assert (tmp_path / "m").is_dir()
+
+
+def _wal(path: Path) -> None:
+    con = sqlite3.connect(path)
+    con.execute("PRAGMA journal_mode=WAL")
+    con.close()
+
+
+def test_a_wal_database_is_read_and_nothing_is_written_beside_it(tmp_path):
+    """A database in WAL mode opened with mode=ro alone gets a -shm and -wal
+    file beside it: a write to the person's folder. Opened immutable, none."""
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    db = folder / "ai-code-tracking.db"
+    make_db(db)
+    _wal(db)
+    before = {p.name: p.read_bytes() for p in folder.iterdir()}
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    assert {p.name: p.read_bytes() for p in folder.iterdir()} == before
+    assert any(p.is_file() for p in to.rglob("*"))
