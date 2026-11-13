@@ -1,0 +1,16 @@
+{
+ "pile": "forge",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "ee0c7977a3559e8e5a61adf82bc27df5d6f08ee0a4888cd552760b55225e5320",
+ "machine": {
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "seconds": {
+  "a": 171.7,
+  "b": 173.9
+ },
+ "total_seconds": 350.9
+}

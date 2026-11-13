@@ -1,0 +1,12 @@
+{
+ "pile": "known-gaps",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "cb7a503325bf8386dcccd40295e9846c69a551ce5689cbac687486dc2a8927a4",
+ "machine": {
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "total_seconds": 77.8
+}

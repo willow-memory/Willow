@@ -1,0 +1,16 @@
+{
+ "pile": "homestead-law",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "14813faf97b224c8e40946829384e85df62cee6e685687e8f376d9f5f32c0113",
+ "machine": {
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "seconds": {
+  "a": 143.4,
+  "b": 140.9
+ },
+ "total_seconds": 289.7
+}

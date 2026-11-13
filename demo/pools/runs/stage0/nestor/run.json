@@ -1,0 +1,16 @@
+{
+ "pile": "nestor",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "56c6a1f7444843329944ec0a4356b78b9c149758253d18c1b9e8b76d641b76c7",
+ "machine": {
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "seconds": {
+  "a": 815.6,
+  "b": 808.2
+ },
+ "total_seconds": 1645.6
+}

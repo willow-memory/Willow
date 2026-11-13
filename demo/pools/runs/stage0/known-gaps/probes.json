@@ -1,0 +1,195 @@
+{
+ "gaps": [
+  {
+   "gap": "keyed-once",
+   "missed": 0,
+   "probes": 4,
+   "reader": "hurdat2",
+   "state": "not found"
+  },
+  {
+   "gap": "split-entry",
+   "missed": 4,
+   "probes": 4,
+   "reader": "kernel",
+   "state": "found"
+  },
+  {
+   "gap": "stray-quotes",
+   "missed": 4,
+   "probes": 4,
+   "reader": "csv-rows",
+   "state": "found"
+  }
+ ],
+ "probes": [
+  {
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "gap": "keyed-once",
+   "hit": true,
+   "id": "hurdat2-maria",
+   "question": "16526d1aa18b",
+   "reader": "hurdat2"
+  },
+  {
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "gap": "keyed-once",
+   "hit": true,
+   "id": "hurdat2-katrina",
+   "question": "2e42c74b6ead",
+   "reader": "hurdat2"
+  },
+  {
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "gap": "keyed-once",
+   "hit": true,
+   "id": "hurdat2-harvey",
+   "question": "7eb273c5e49c",
+   "reader": "hurdat2"
+  },
+  {
+   "expect": "hit: hurdat2 (#354) reads it; a miss is the fix failing",
+   "gap": "keyed-once",
+   "hit": true,
+   "id": "hurdat2-irma",
+   "question": "8f43345b29c0",
+   "reader": "hurdat2"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "hurdat2-control-irma-barbuda",
+   "question": "b93668a101c6",
+   "reader": "hurdat2"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "hurdat2-control-harvey-ts",
+   "question": "eb9ee032c621",
+   "reader": "hurdat2"
+  },
+  {
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "gap": "stray-quotes",
+   "hit": false,
+   "id": "tsv-dogs",
+   "question": "3463e5edfd52",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "gap": "stray-quotes",
+   "hit": false,
+   "id": "tsv-tom",
+   "question": "81151695f721",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "gap": "stray-quotes",
+   "hit": false,
+   "id": "tsv-morning",
+   "question": "c57de6c18a6b",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "miss: csv-rows skips spa.tsv for its stray quotes",
+   "gap": "stray-quotes",
+   "hit": false,
+   "id": "tsv-room",
+   "question": "5f9f1b7dece0",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "tsv-control-chalk",
+   "question": "66f2e1aaa63f",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "tsv-control-telephone",
+   "question": "4ba66c1d140e",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "tsv-control-coincidence",
+   "question": "59d316fd5299",
+   "reader": "csv-rows"
+  },
+  {
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "gap": "split-entry",
+   "hit": false,
+   "id": "dict-perro",
+   "question": "8fc9c94f022d",
+   "reader": "kernel"
+  },
+  {
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "gap": "split-entry",
+   "hit": false,
+   "id": "dict-gato",
+   "question": "d4e8973e04e6",
+   "reader": "kernel"
+  },
+  {
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "gap": "split-entry",
+   "hit": false,
+   "id": "dict-casa",
+   "question": "b3813027ed21",
+   "reader": "kernel"
+  },
+  {
+   "expect": "miss: the headword is served, its gloss four lines on is not",
+   "gap": "split-entry",
+   "hit": false,
+   "id": "dict-libro",
+   "question": "4a1e8c16a962",
+   "reader": "kernel"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "dict-control-persian",
+   "question": "7428909a1062",
+   "reader": "kernel"
+  },
+  {
+   "expect": "hit",
+   "gap": "control",
+   "hit": true,
+   "id": "dict-control-umbrella",
+   "question": "2974744982f0",
+   "reader": "kernel"
+  },
+  {
+   "expect": "hit: the same line casa's probe wants, asked by its own word",
+   "gap": "control",
+   "hit": true,
+   "id": "dict-control-house",
+   "question": "d6e21286621a",
+   "reader": "kernel"
+  },
+  {
+   "expect": "hit: the same line gato's probe wants",
+   "gap": "control",
+   "hit": true,
+   "id": "dict-control-cat",
+   "question": "77af778b51ab",
+   "reader": "kernel"
+  }
+ ]
+}

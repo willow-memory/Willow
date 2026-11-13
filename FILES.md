@@ -2433,6 +2433,11 @@ willow/
 │   │       ├── reword.txt     the author's eight, rephrased five ways each, blind
 │   │       ├── advisory-words.txt  a words list of acronyms the advisories expand
 │   │       └── null.txt      fifty questions with nothing to do with the bug
+```
+
+#### demo/, from pools/
+
+```
 │   ├── pools/                where add-ons meet, from what they are seen to do: a plan in the making, nothing run
 │   │   ├── GRID.md           the grid of stacks: what it is made from, what it writes, and the two rules it keeps
 │   │   ├── grid/             every stack the study runs, written from the cards and the command tables
@@ -2459,6 +2464,45 @@ willow/
 │   │   │   └── test_known_gaps.py
 │   │   ├── FROZEN.json
 │   │   ├── test_pools_frozen.py
+│   │   ├── runs/
+```
+
+#### demo/pools/runs/, from stage0/
+
+```
+│   │   │   └── stage0/
+│   │   │       ├── climate-almanac/
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   ├── rows-b.jsonl
+│   │   │       │   └── run.json
+│   │   │       ├── forge/
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   ├── rows-b.jsonl
+│   │   │       │   └── run.json
+│   │   │       ├── homestead-law/
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   ├── rows-b.jsonl
+│   │   │       │   └── run.json
+│   │   │       ├── jeles/
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   ├── rows-b.jsonl
+│   │   │       │   └── run.json
+│   │   │       ├── known-gaps/
+│   │   │       │   ├── probes-run.json
+│   │   │       │   ├── probes.json
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   └── rows-b.jsonl
+│   │   │       ├── nestor/
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   ├── rows-b.jsonl
+│   │   │       │   └── run.json
+│   │   │       ├── probes-timeline.txt
+│   │   │       ├── timeline.txt
+│   │   │       ├── willow/
+│   │   │       │   ├── rows-a.jsonl
+│   │   │       │   ├── rows-b.jsonl
+│   │   │       │   └── run.json
+│   │   │       └── README.md Stage 0: every step alone, twice, on the public piles
 │   │   └── README.md         Pools: where add-ons meet, from what they are seen to do
 ```
 

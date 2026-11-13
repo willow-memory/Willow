@@ -1,0 +1,12 @@
+2026-11-13T22:28:06Z wave 1: pushing pools-s0b-probes
+2026-11-13T22:28:08Z pushed pools-s0b-probes: exit 0: ider upgrading to the latest version (2.2.5) Kernel version 1 successfully pushed. Please check progress at https://www.kaggle.com/code/rudi193/pools-s0b-probes
+2026-11-13T22:28:39Z pools-s0b-probes: error
+2026-11-13T22:28:39Z STOP: wave 1: pools-s0b-probes ended in error; fetching their output for the log
+--- retry 2026-11-13T22:30:22Z: truth.py probe takes the list, unwrapped from probes.json
+2026-11-13T22:30:22Z wave 1: pushing pools-s0b-probes
+2026-11-13T22:30:24Z pushed pools-s0b-probes: exit 0: ider upgrading to the latest version (2.2.5) Kernel version 2 successfully pushed. Please check progress at https://www.kaggle.com/code/rudi193/pools-s0b-probes
+2026-11-13T22:30:55Z pools-s0b-probes: running
+2026-11-13T22:32:27Z pools-s0b-probes: complete
+2026-11-13T22:32:29Z fetched pools-s0b-probes: exit 0, 3 files
+2026-11-13T22:32:29Z wave 1: complete
+2026-11-13T22:32:29Z probes: all 1 waves complete

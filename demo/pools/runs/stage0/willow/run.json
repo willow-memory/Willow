@@ -1,0 +1,16 @@
+{
+ "pile": "willow",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "4c62c89a3dd7c6c5e62d9d73b3e457d0c514b3befd1e7bbe4fcb0260bf75596f",
+ "machine": {
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "seconds": {
+  "a": 1174.0,
+  "b": 1154.9
+ },
+ "total_seconds": 2335.5
+}

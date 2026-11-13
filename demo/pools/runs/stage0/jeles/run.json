@@ -1,0 +1,16 @@
+{
+ "pile": "jeles",
+ "freeze": "b33031cba41c6f74a42a43004eef40918870fee5",
+ "shape": "b8ce58df5702dfa2f93d2bb8bd3c1439eaf5274ea1f0046fd6ac0946bff96810",
+ "machine": {
+  "cpu": "AMD EPYC 7B12",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "seconds": {
+  "a": 274.4,
+  "b": 271.9
+ },
+ "total_seconds": 553.2
+}
