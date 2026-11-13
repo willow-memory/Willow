@@ -1,7 +1,7 @@
 {
  "about": "The pools study's freeze: every file the run and the measure read, the grid, the seeded pairs and the cards as made from them, each pile and the probes, before any probe is asked or any pile run. Held by test_pools_frozen.py. A change is a new freeze in its own commit, with its reason.",
  "frozen": "2026-11-13",
- "on": "willow-pool-test after 0f010593 (main merged in at 8125716)",
+ "on": "willow-pool-test with main merged in at 3784e418 (the sqlite fix, #358)",
  "maintainer": "the piles and probes approved 2026-11-13 (\"Looks good.\"); the record bridge approved the same day",
  "files": {
   "demo/pools/truth/rules.json": "bd9701cf018ee62e5ba2986731bdb2a516bdf675334ea77275e1c71e3b595532",
@@ -18,8 +18,8 @@
   "kernel.py": "953bb4ccc65f9fd013c31d6c9a2fa33e76acb3f37637dea0395969f0184a99da"
  },
  "made": {
-  "grid manifest (grid.py write)": "5308a53d53a4512743017e5faea92bfa2a23d890d2ab79949f745446e3a04d4c",
-  "no-bridge pairs (truth.py pairs)": "f4e5a1cc0ab0a9098deb2acfa29b7013eceb4c3fdd40569f7ec08b242cb346ae",
+  "grid manifest (grid.py write)": "7e99856a11fcee236bd1af95fecf8d87b8a4c7e6819652f87a87a9675a4a259e",
+  "no-bridge pairs (truth.py pairs)": "96382bea12e74e0d6f2cfb3ec732d18e351739f971bb42c5c41d7b11ea83debd",
   "cards (truth.py cards)": "d4acd17699b225c102896f1cf4c2eac0bd6799d237a5978622f458add162a602"
  },
  "grid": {
@@ -34,9 +34,9 @@
   "public, on Kaggle": {
    "willow": {
     "repo": "willow-memory/Willow",
-    "commit": "574434a291a27e0768d1ccd5752af4f891917288",
+    "commit": "3784e418aad60f596a3ace7dbe333d16cdd40099",
     "salt": "pools-2026-11-13-willow",
-    "shape": "eaa416d5169ffadc3ad816229f47d7fbee786c5416d1d3d0b775291a9cd87ac8"
+    "shape": "4c62c89a3dd7c6c5e62d9d73b3e457d0c514b3befd1e7bbe4fcb0260bf75596f"
    },
    "nestor": {
     "repo": "Die-Namic-Systems/Nestor",
@@ -104,5 +104,36 @@
   }
  },
  "dry_run": "2026-11-13, before this freeze: every probe asked with its question replaced by 'qqqq zzzz', with three planted passages; 3 planted hit through their maps, 21 nonsense missed, every gap can't be read. README.md says what it could see.",
- "pass_rules": "rules.json, as frozen above; the probes' expected states in probes.json"
+ "pass_rules": "rules.json, as frozen above; the probes' expected states in probes.json",
+ "freezes": [
+  {
+   "frozen": "2026-11-13",
+   "why": "Stage 0's first run on Kaggle found four readers (ai-code-tracking, codebase-memory, jeles, nestor) writing a -shm and -wal file beside a WAL database they read, in the pile: the trace refused nestor's rows, as built. The fix (#358) changes those four add-ons' code and cards, so the grid, pairs and cards are made again, and the willow pile is pinned to main with the fix in it. No rule, threshold, probe or other pile changed; no stage 0 row of the first freeze is used.",
+   "was": {
+    "made": {
+     "grid manifest (grid.py write)": "5308a53d53a4512743017e5faea92bfa2a23d890d2ab79949f745446e3a04d4c",
+     "no-bridge pairs (truth.py pairs)": "f4e5a1cc0ab0a9098deb2acfa29b7013eceb4c3fdd40569f7ec08b242cb346ae",
+     "cards (truth.py cards)": "d4acd17699b225c102896f1cf4c2eac0bd6799d237a5978622f458add162a602"
+    },
+    "willow": {
+     "repo": "willow-memory/Willow",
+     "commit": "574434a291a27e0768d1ccd5752af4f891917288",
+     "salt": "pools-2026-11-13-willow",
+     "shape": "eaa416d5169ffadc3ad816229f47d7fbee786c5416d1d3d0b775291a9cd87ac8"
+    },
+    "on": "willow-pool-test after 0f010593 (main merged in at 8125716)"
+   },
+   "now": {
+    "made": {
+     "grid manifest (grid.py write)": "7e99856a11fcee236bd1af95fecf8d87b8a4c7e6819652f87a87a9675a4a259e",
+     "no-bridge pairs (truth.py pairs)": "96382bea12e74e0d6f2cfb3ec732d18e351739f971bb42c5c41d7b11ea83debd",
+     "cards (truth.py cards)": "d4acd17699b225c102896f1cf4c2eac0bd6799d237a5978622f458add162a602"
+    },
+    "willow": {
+     "commit": "3784e418aad60f596a3ace7dbe333d16cdd40099",
+     "shape": "4c62c89a3dd7c6c5e62d9d73b3e457d0c514b3befd1e7bbe4fcb0260bf75596f"
+    }
+   }
+  }
+ ]
 }
