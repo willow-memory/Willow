@@ -46,6 +46,7 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
@@ -132,7 +133,9 @@ def seed_text(raw: bytes) -> str | None:
 def store_text(path: Path) -> str | None:
     """A Jeles corpus store's nuggets as passages, or None if it isn't one."""
     try:
-        con = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+        con = sqlite3.connect(
+            f"file:{quote(path.resolve().as_posix())}?mode=ro&immutable=1", uri=True
+        )
     except sqlite3.Error:
         return None
     try:

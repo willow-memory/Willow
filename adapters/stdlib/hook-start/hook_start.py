@@ -1,12 +1,15 @@
 """hook_start.py: a SessionStart hook that hands the assistant what needs
 the person. Python 3.9+.
 
-    python adapters/stdlib/hook-start/hook_start.py --box DIR [--days N] [--now TS]
+    python adapters/stdlib/hook-start/hook_start.py --box DIR [--days N | --no-dates] [--now TS]
 
 When a session opens, the assistant is told what the box is waiting on, read
 the way [digest](../digest/) reads it: the suggestions that passed the door
 and wait for the person's approval, the approved answers whose source went
 stale, and the dates coming up in the next N days (14 unless --days says).
+`--no-dates` leaves the dates out, unread: on a pile of records (notes,
+commits, code) every line dated today is a record of the day, not an
+appointment, and reading a big pile's dates is most of the time.
 What it prints is the JSON an assistant's SessionStart hook reads, and its
 `additionalContext` is digest's report under this add-on's name (the report
 contract, adapters/stdlib/ci/README.md), then whose it is, and who approves
@@ -79,15 +82,37 @@ def context(doc: dict, days: int) -> str:
     return f"{text}\n\n{WHOSE}{APPROVES if doc['waiting']['items'] else ''}"
 
 
+def without_dates(box: Path) -> dict:
+    """digest's sections with coming-up left out and the pile's dates never
+    read, or {"refused": why} for a record that doesn't verify."""
+    rows, breaks = kernel.read(box / "record.jsonl")
+    if breaks:
+        return {"refused": "; ".join(breaks)}
+    return {
+        "waiting": digest.waiting(box, rows),
+        "stale": digest.gone_stale(box),
+        "coming": digest.section([]),
+        "again": digest.section([]),
+    }
+
+
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
         if a in ("--box", "--days", "--now"):
             opts[a] = next(it, "")
+        elif a == "--no-dates":
+            opts[a] = "yes"
         else:
             args.append(a)
     days = opts.get("--days", "14")
-    if not opts.get("--box") or args or not days.isdigit():
+    undated = "--no-dates" in opts
+    if (
+        not opts.get("--box")
+        or args
+        or not days.isdigit()
+        or (undated and "--days" in opts)
+    ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -100,7 +125,7 @@ def main(argv: list[str]) -> int:
     except ValueError:
         print(f"refused: --now {ts!r} isn't a date, YYYY-MM-DD", file=sys.stderr)
         return kernel.REFUSED
-    doc = digest.digest(box, today, int(days))
+    doc = without_dates(box) if undated else digest.digest(box, today, int(days))
     if "refused" in doc:
         print(f"refused: {doc['refused']}", file=sys.stderr)
         return kernel.REFUSED
