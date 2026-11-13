@@ -2457,6 +2457,8 @@ willow/
 │   │   │   ├── known_gaps.py the pools study's pile of known reader gaps, made from public
 │   │   │   ├── probes.json
 │   │   │   └── test_known_gaps.py
+│   │   ├── FROZEN.json
+│   │   ├── test_pools_frozen.py
 │   │   └── README.md         Pools: where add-ons meet, from what they are seen to do
 ```
 
