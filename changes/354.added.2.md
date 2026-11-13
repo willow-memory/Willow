@@ -1,0 +1,1 @@
+`year-claims` (idea): the years sources give for one event, lined up across them, so where sources differ on a year (platted 1868, organised 1865) each side is shown with its source. `contradictions` reads only full dates and amounts, and `first-mention` and `timeline` leave bare years undated

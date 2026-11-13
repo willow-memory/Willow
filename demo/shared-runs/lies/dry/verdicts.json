@@ -1,0 +1,999 @@
+{
+ "trials": [
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "none",
+   "lie_checked": 0,
+   "machine": 1,
+   "n": 1,
+   "round_2_jobs": 4,
+   "step": null,
+   "trajectory": null,
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "none",
+   "lie_checked": 0,
+   "machine": 0,
+   "n": 2,
+   "round_2_jobs": 0,
+   "step": null,
+   "trajectory": null,
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 3,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@62"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 0,
+   "machine": 1,
+   "n": 4,
+   "round_2_jobs": 4,
+   "step": 40,
+   "trajectory": "qqqq",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 5,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "zzzz",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 6,
+   "round_2_jobs": 14,
+   "step": 30,
+   "trajectory": "zzzz",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 7,
+   "round_2_jobs": 14,
+   "step": 110,
+   "trajectory": "wwww",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 1,
+   "n": 8,
+   "round_2_jobs": 4,
+   "step": 10,
+   "trajectory": "qqqq",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "uuuu@120"
+   ],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 9,
+   "round_2_jobs": 14,
+   "step": 90,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120"
+   ]
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 10,
+   "round_2_jobs": 14,
+   "step": 50,
+   "trajectory": "uuuu",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "wwww@155"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 11,
+   "round_2_jobs": 14,
+   "step": 120,
+   "trajectory": "wwww",
+   "wrong": [
+    "wwww@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "wwww@155"
+   ]
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "uuuu@120"
+   ],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 12,
+   "round_2_jobs": 14,
+   "step": 90,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120"
+   ]
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 13,
+   "round_2_jobs": 14,
+   "step": 155,
+   "trajectory": "zzzz",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 0,
+   "machine": 1,
+   "n": 14,
+   "round_2_jobs": 4,
+   "step": 155,
+   "trajectory": "qqqq",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "uuuu@120"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 15,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@62"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120"
+   ]
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "wwww@155"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 16,
+   "round_2_jobs": 14,
+   "step": 90,
+   "trajectory": "wwww",
+   "wrong": [
+    "wwww@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "wwww@155"
+   ]
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "qqqq@120"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 1,
+   "n": 17,
+   "round_2_jobs": 4,
+   "step": 90,
+   "trajectory": "qqqq",
+   "wrong": [
+    "qqqq@120"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "qqqq@120"
+   ]
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 18,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "zzzz",
+   "wrong": [
+    "zzzz@90"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 1,
+   "kind": "no-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 19,
+   "round_2_jobs": 14,
+   "step": 71,
+   "trajectory": "vvvv-halts",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "stepped-otherwise",
+   "lie_checked": 2,
+   "machine": 2,
+   "n": 20,
+   "round_2_jobs": 14,
+   "step": 10,
+   "trajectory": "xxxx",
+   "wrong": [
+    "xxxx@120",
+    "xxxx@155",
+    "xxxx@90"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [],
+   "found_by_state": 4,
+   "halts_again": 0,
+   "kind": "stepped-otherwise",
+   "lie_checked": 4,
+   "machine": 2,
+   "n": 21,
+   "round_2_jobs": 14,
+   "step": 10,
+   "trajectory": "zzzz",
+   "wrong": [
+    "zzzz@90"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "as-run",
+   "found_by_afresh": [
+    "uuuu@120",
+    "uuuu@35"
+   ],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "stepped-otherwise",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 22,
+   "round_2_jobs": 14,
+   "step": 10,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@35",
+    "uuuu@62"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120",
+    "uuuu@35"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "none",
+   "lie_checked": 0,
+   "machine": 1,
+   "n": 1,
+   "round_2_jobs": 4,
+   "step": null,
+   "trajectory": null,
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "none",
+   "lie_checked": 0,
+   "machine": 0,
+   "n": 2,
+   "round_2_jobs": 0,
+   "step": null,
+   "trajectory": null,
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "uuuu@62"
+   ],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 3,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@62"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@62"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 1,
+   "n": 4,
+   "round_2_jobs": 4,
+   "step": 40,
+   "trajectory": "qqqq",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 5,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "zzzz",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 6,
+   "round_2_jobs": 14,
+   "step": 30,
+   "trajectory": "zzzz",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 7,
+   "round_2_jobs": 14,
+   "step": 110,
+   "trajectory": "wwww",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 1,
+   "n": 8,
+   "round_2_jobs": 4,
+   "step": 10,
+   "trajectory": "qqqq",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "uuuu@120",
+    "uuuu@155"
+   ],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 9,
+   "round_2_jobs": 14,
+   "step": 90,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120",
+    "uuuu@155"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 2,
+   "halts_again": 0,
+   "kind": "one-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 10,
+   "round_2_jobs": 14,
+   "step": 50,
+   "trajectory": "uuuu",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "wwww@155"
+   ],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 11,
+   "round_2_jobs": 14,
+   "step": 120,
+   "trajectory": "wwww",
+   "wrong": [
+    "wwww@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "wwww@155"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "uuuu@120",
+    "uuuu@155"
+   ],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 12,
+   "round_2_jobs": 14,
+   "step": 90,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120",
+    "uuuu@155"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 1,
+   "machine": 2,
+   "n": 13,
+   "round_2_jobs": 14,
+   "step": 155,
+   "trajectory": "zzzz",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 1,
+   "halts_again": 0,
+   "kind": "last-bit",
+   "lie_checked": 1,
+   "machine": 1,
+   "n": 14,
+   "round_2_jobs": 4,
+   "step": 155,
+   "trajectory": "qqqq",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@62"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 15,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@62"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@62"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "wwww@155"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 16,
+   "round_2_jobs": 14,
+   "step": 90,
+   "trajectory": "wwww",
+   "wrong": [
+    "wwww@155"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "wwww@155"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "qqqq@120"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 1,
+   "n": 17,
+   "round_2_jobs": 4,
+   "step": 90,
+   "trajectory": "qqqq",
+   "wrong": [
+    "qqqq@120"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "qqqq@120"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "zzzz@90"
+   ],
+   "found_by_state": 0,
+   "halts_again": 0,
+   "kind": "false-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 18,
+   "round_2_jobs": 14,
+   "step": 60,
+   "trajectory": "zzzz",
+   "wrong": [
+    "zzzz@90"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "zzzz@90"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [],
+   "found_by_state": 0,
+   "halts_again": 1,
+   "kind": "no-halt",
+   "lie_checked": 0,
+   "machine": 2,
+   "n": 19,
+   "round_2_jobs": 14,
+   "step": 71,
+   "trajectory": "vvvv-halts",
+   "wrong": [],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": []
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "xxxx@120",
+    "xxxx@155",
+    "xxxx@90"
+   ],
+   "found_by_state": 9,
+   "halts_again": 0,
+   "kind": "stepped-otherwise",
+   "lie_checked": 9,
+   "machine": 2,
+   "n": 20,
+   "round_2_jobs": 14,
+   "step": 10,
+   "trajectory": "xxxx",
+   "wrong": [
+    "xxxx@120",
+    "xxxx@155",
+    "xxxx@90"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "xxxx@120",
+    "xxxx@155",
+    "xxxx@90"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "zzzz@90"
+   ],
+   "found_by_state": 19,
+   "halts_again": 0,
+   "kind": "stepped-otherwise",
+   "lie_checked": 19,
+   "machine": 2,
+   "n": 21,
+   "round_2_jobs": 14,
+   "step": 10,
+   "trajectory": "zzzz",
+   "wrong": [
+    "zzzz@90"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "zzzz@90"
+   ]
+  },
+  {
+   "arm": "everything",
+   "found_by_afresh": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@35",
+    "uuuu@62"
+   ],
+   "found_by_state": 10,
+   "halts_again": 0,
+   "kind": "stepped-otherwise",
+   "lie_checked": 10,
+   "machine": 2,
+   "n": 22,
+   "round_2_jobs": 14,
+   "step": 10,
+   "trajectory": "uuuu",
+   "wrong": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@35",
+    "uuuu@62"
+   ],
+   "wrong_elsewhere": [],
+   "wrong_run_afresh": [
+    "uuuu@120",
+    "uuuu@155",
+    "uuuu@35",
+    "uuuu@62"
+   ]
+  }
+ ],
+ "verdicts": {
+  "L1": {
+   "figures": {
+    "noisy": 0,
+    "trials": 4
+   },
+   "said": "4 of 4 trials with no lie found nothing and got every job right",
+   "state": "passed"
+  },
+  "L2": {
+   "figures": {
+    "checked": 23,
+    "missed": []
+   },
+   "said": "23 of 23 lies whose state the check stepped again were found by it",
+   "state": "passed"
+  },
+  "L3": {
+   "figures": {
+    "slipped": [],
+    "trials": 18
+   },
+   "said": "18 of 18 trials where a wrong job was run afresh had it found",
+   "state": "passed"
+  },
+  "L4": {
+   "figures": {
+    "trials": 15,
+    "unfound": []
+   },
+   "said": "with everything checked, 15 of 15 lies in a state were found",
+   "state": "passed"
+  },
+  "L5": {
+   "figures": {
+    "found": {
+     "as-run, false-halt": "3 of 4",
+     "as-run, last-bit": "3 of 4",
+     "as-run, no-halt": "0 of 1",
+     "as-run, one-bit": "3 of 8",
+     "as-run, stepped-otherwise": "3 of 3",
+     "everything, false-halt": "4 of 4",
+     "everything, last-bit": "4 of 4",
+     "everything, no-halt": "0 of 1",
+     "everything, one-bit": "8 of 8",
+     "everything, stepped-otherwise": "3 of 3"
+    }
+   },
+   "said": "lies found, by arm and kind: as-run, one-bit: 3 of 8; as-run, last-bit: 3 of 4; as-run, false-halt: 3 of 4; as-run, no-halt: 0 of 1; as-run, stepped-otherwise: 3 of 3; everything, one-bit: 8 of 8; everything, last-bit: 4 of 4; everything, false-halt: 4 of 4; everything, no-halt: 0 of 1; everything, stepped-otherwise: 3 of 3",
+   "state": "measured"
+  },
+  "L6": {
+   "figures": {
+    "harm": {
+     "as-run, false-halt": {
+      "halts_again": 0,
+      "lies": 4,
+      "reached_no_job": 0,
+      "wrong_jobs": 6,
+      "wrong_jobs_where_nothing_was_found": 1
+     },
+     "as-run, last-bit": {
+      "halts_again": 0,
+      "lies": 4,
+      "reached_no_job": 2,
+      "wrong_jobs": 3,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "as-run, no-halt": {
+      "halts_again": 1,
+      "lies": 1,
+      "reached_no_job": 1,
+      "wrong_jobs": 0,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "as-run, one-bit": {
+      "halts_again": 0,
+      "lies": 8,
+      "reached_no_job": 6,
+      "wrong_jobs": 3,
+      "wrong_jobs_where_nothing_was_found": 1
+     },
+     "as-run, stepped-otherwise": {
+      "halts_again": 0,
+      "lies": 3,
+      "reached_no_job": 0,
+      "wrong_jobs": 8,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "everything, false-halt": {
+      "halts_again": 0,
+      "lies": 4,
+      "reached_no_job": 0,
+      "wrong_jobs": 6,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "everything, last-bit": {
+      "halts_again": 0,
+      "lies": 4,
+      "reached_no_job": 2,
+      "wrong_jobs": 3,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "everything, no-halt": {
+      "halts_again": 1,
+      "lies": 1,
+      "reached_no_job": 1,
+      "wrong_jobs": 0,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "everything, one-bit": {
+      "halts_again": 0,
+      "lies": 8,
+      "reached_no_job": 6,
+      "wrong_jobs": 3,
+      "wrong_jobs_where_nothing_was_found": 0
+     },
+     "everything, stepped-otherwise": {
+      "halts_again": 0,
+      "lies": 3,
+      "reached_no_job": 0,
+      "wrong_jobs": 8,
+      "wrong_jobs_where_nothing_was_found": 0
+     }
+    }
+   },
+   "said": "wrong jobs handed out, by arm and kind: as-run, one-bit: 3 from 8 lies, 6 reaching none; as-run, last-bit: 3 from 4 lies, 2 reaching none; as-run, false-halt: 6 from 4 lies, 0 reaching none; as-run, no-halt: 0 from 1 lies, 1 reaching none; as-run, stepped-otherwise: 8 from 3 lies, 0 reaching none; everything, one-bit: 3 from 8 lies, 6 reaching none; everything, last-bit: 3 from 4 lies, 2 reaching none; everything, false-halt: 6 from 4 lies, 0 reaching none; everything, no-halt: 0 from 1 lies, 1 reaching none; everything, stepped-otherwise: 8 from 3 lies, 0 reaching none",
+   "state": "measured"
+  },
+  "L7": {
+   "figures": {
+    "strayed": []
+   },
+   "said": "44 of 44 trials left every other trajectory's jobs right",
+   "state": "passed"
+  }
+ }
+}

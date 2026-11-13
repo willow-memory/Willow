@@ -104,10 +104,27 @@ def _tar(files: dict[str, str]) -> bytes:
 
 #: files an add-on needs in the pile besides the default, by add-on
 PILE_EXTRA: dict[str, dict[str, bytes]] = {
+    # Cursor's tracking database, for the report to read
+    "ai-code-tracking": {
+        "ai-code-tracking.db": _sqlite(
+            "CREATE TABLE scored_commits (commitHash TEXT, branchName TEXT, scoredAt INTEGER, "
+            "linesAdded INTEGER, linesDeleted INTEGER, tabLinesAdded INTEGER, tabLinesDeleted INTEGER, "
+            "composerLinesAdded INTEGER, composerLinesDeleted INTEGER, humanLinesAdded INTEGER, "
+            "humanLinesDeleted INTEGER, commitMessage TEXT, commitDate TEXT, v1AiPercentage TEXT, "
+            "v2AiPercentage TEXT);\n"
+            "INSERT INTO scored_commits VALUES ('c0ffee1','main',1779072120000,10,2,3,0,5,1,2,1,"
+            "'fix the tomato bed','2026-05-17T23:02:29-06:00','80.0','75.5');\n"
+        )
+    },
     # an entry with no permitted copy: almanac-keep answers before any fetch
     "almanac-keep": {
         "catalog.json": b'{"entries": [{"id": "tides", "status": "dark", '
         b'"recovery": [{"url": "https://x.example/", "permission": "excluded"}]}]}'
+    },
+    # sort's report placing the default pile's garden.md: land copies it
+    "land": {
+        "sort.json": b'{"addon": "sort", "state": "populated", "said": "", '
+        b'"groups": [{"name": "garden", "rows": [{"where": "garden.md", "what": "1 hit"}]}]}'
     },
     # no pull request open: restack-open answers before any fetch or push
     "restack-open": {"open-prs.json": b"[]"},
@@ -137,6 +154,15 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'"message":{"role":"user","content":"When is the dentist?"}}\n'
         b'{"type":"assistant","sessionId":"s1","message":{"role":"assistant",'
         b'"content":[{"type":"text","text":"Tuesday at 3."}]}}\n')}),
+    "ai-code-tracking": ("ai_code_tracking.py", {"ai-code-tracking.db": _sqlite(
+        "CREATE TABLE scored_commits (commitHash TEXT, branchName TEXT, scoredAt INTEGER, "
+        "linesAdded INTEGER, linesDeleted INTEGER, tabLinesAdded INTEGER, tabLinesDeleted INTEGER, "
+        "composerLinesAdded INTEGER, composerLinesDeleted INTEGER, humanLinesAdded INTEGER, "
+        "humanLinesDeleted INTEGER, commitMessage TEXT, commitDate TEXT, v1AiPercentage TEXT, "
+        "v2AiPercentage TEXT);\n"
+        "INSERT INTO scored_commits VALUES ('c0ffee1','main',1779072120000,10,2,3,0,5,1,2,1,"
+        "'fix the tomato bed','2026-05-17T23:02:29-06:00','80.0','75.5');\n"
+    )}),
     "almanac": ("almanac.py", {"catalog.json": (
         '{"name": "Made-Up Almanac", "entries": [{"id": "tide-gauge-records", '
         '"title": "Tide Gauge Records", "source": {"canonical_url": '
@@ -200,6 +226,19 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "csv-rows": ("csv_rows.py", {"census.csv": (
         b"Surname,Forename,Townland,Age,Occupation\n"
         b"Considine,Patrick,Caherfeenick,17,Farm Labourer\n"
+    )}),
+    "cursor-chats": ("cursor_chats.py", {"store.db": _sqlite(
+        "CREATE TABLE meta (key TEXT, value TEXT);\n"
+        "CREATE TABLE blobs (id TEXT, data BLOB);\n"
+        "INSERT INTO meta VALUES ('0', '"
+        + b'{"agentId":"c1","latestRootBlobId":"'.hex() + ("cc" * 32).encode().hex()
+        + b'","name":"Dentist","createdAt":1788174000000}'.hex() + "');\n"
+        "INSERT INTO blobs VALUES ('" + "aa" * 32 + "', X'"
+        + b'{"role":"user","content":"When is the dentist?"}'.hex() + "');\n"
+        "INSERT INTO blobs VALUES ('" + "bb" * 32 + "', X'"
+        + b'{"role":"assistant","content":"Tuesday at 3."}'.hex() + "');\n"
+        "INSERT INTO blobs VALUES ('" + "cc" * 32 + "', X'"
+        + ("0a20" + "aa" * 32 + "0a20" + "bb" * 32) + "');\n"
     )}),
     "day-one": ("day_one.py", {"Journal.json": (
         b'{"metadata":{"version":"1.0"},"entries":['
@@ -269,6 +308,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         b'{"entity_id":"sensor.kitchen_temp","state":"20.9","last_changed":"2024-03-03T08:00:00+00:00"}],'
         b'[{"entity_id":"sensor.hall_humidity","state":"48.5","last_changed":"2024-03-02T09:00:00+00:00","attributes":{"unit_of_measurement":"%","friendly_name":"Hall, humidity"}}],'
         b'[{"entity_id":"light.hall","state":"on","last_changed":"2024-03-02T09:00:00+00:00"}]]'
+    )}),
+    "hurdat2": ("hurdat2.py", {"hurdat2.txt": (
+        b"AL152017,              MARIA,      1,\n"
+        b"20170920, 1015, L, HU, 18.0N,  65.9W, 135,  920,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0, -999\n"
     )}),
     "irc": ("irc.py", {"irc.libera.#garden.weechatlog": (
         b"2024-03-02 08:15:30\tana\tSix hours of sun, I read.\n2024-03-02 08:15:50\t--> \tben (~b@host) has joined #garden\n"
@@ -615,6 +658,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # no other pull request given: it stops before anything is read, nothing to check
     "against": ("against.py", ["check", "--base", "HEAD", "HEAD"]),
     "agents-md-check": ("agents_md_check.py", ["--box", "{box}"]),
+    "ai-code-tracking": ("ai_code_tracking.py", ["mirror", "--from", "{pile}", "--to", "{tmp}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
     "all": ("all.py", ["--box", "{box}", "tomatoes"]),
     "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
@@ -628,6 +672,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
+    "boxes-here": ("boxes_here.py", ["--in", "{box}/.."]),
     "braille": ("braille.py", ["--box", "{box}", "--to", "{tmp}/answers.brf"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "budget": ("budget.py", ["--box", "{box}"]),
@@ -715,6 +760,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
     "kinds": ("kinds.py", ["count"]),
+    "land": ("land.py", ["--of", "{pile}/sort.json", "--from", "{pile}", "--to", "{tmp}/landed", "--dry-run"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
@@ -764,6 +810,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "people": ("people.py", ["--box", "{box}"]),
     "persona-card": ("persona_card.py", ["--box", "{box}", "--from", "{pile}/garden.md", *NOW]),
     "pets": ("pets.py", ["--box", "{box}"]),
+    "pieces": ("pieces.py", ["--box", "{box}"]),
     "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pile-build": ("pile_build.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "pile-gold": ("pile_gold.py", ["--box", "{box}", "--questions", "{pile}/garden.md", *NOW]),
@@ -1147,6 +1194,10 @@ FINDINGS = {
 #: the command a report comes from, where it isn't the one COMMANDS runs: an
 #: add-on with verbs reports from one of them (score, check)
 REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {
+    "ai-code-tracking": (
+        "ai_code_tracking.py",
+        ["report", "--from", "{pile}/ai-code-tracking.db"],
+    ),
     "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
     "predict": ("predict.py", ["score", "--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", "check"]),

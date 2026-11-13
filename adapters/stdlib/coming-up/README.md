@@ -3,10 +3,11 @@ section: Keeping track
 line: Dates written in your files in the next N days: appointments, renewals, deadlines.
 source: box
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
+looks-for: pieces
 output: report
 -->
 # coming-up
@@ -55,6 +56,10 @@ in Bernadette's demo, her car's registration on 3 November and her friend's
 birthday on 30 October were both missing from her next thirty days.
 
 **Exit codes:** 0 something is coming up (`populated`) or nothing is in the window (`empty`); 2 refused.
+
+With [pieces](../pieces/) beside it, the folder is read a folder at a time,
+so a big one is never held in memory all at once; the dates are the same,
+since every one is found within its own file.
 
 **Uses:** the kernel's `chunks`, `newest`, `words`, `config` and `now`.
 

@@ -3,7 +3,7 @@ section: Assistants
 line: A SessionStart hook that hands the assistant what needs you, read the way digest reads it, so opening a session writes nothing.
 source: bot
 added: 2026-10-29
-version: 0.1.0
+version: 0.2.0
 writes: nothing
 network: none
 hands: what needs you, its dated lines and waiting suggestions included, to the assistant's model at the session's start
@@ -20,7 +20,13 @@ read the way [digest](../digest/) reads it: the suggestions that passed the
 door and wait for your approval, the approved answers whose source went
 stale, and the dates coming up. It prints the JSON a SessionStart hook reads.
 
-    python adapters/stdlib/hook-start/hook_start.py --box DIR [--days N]
+    python adapters/stdlib/hook-start/hook_start.py --box DIR [--days N | --no-dates]
+
+**`--no-dates` leaves the dates out**, and the pile's dates aren't read. Use
+it on a box whose pile is records rather than plans (notes, commits, code):
+there every line dated today is a record of the day, and showed up as
+something coming up. On a big pile, reading the dates is also most of the
+time it takes. It and `--days` aren't given together.
 
 What the assistant is given is digest's
 [report](../ci/README.md#the-report-contract) under this add-on's name, then
