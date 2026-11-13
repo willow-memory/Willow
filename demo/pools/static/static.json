@@ -158,6 +158,25 @@
   "writes": [],
   "writes_unread": 0
  },
+ "ai-code-tracking": {
+  "bites": false,
+  "card": {
+   "output": "report",
+   "reads": ".db",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".db",
+   ".txt"
+  ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
  "aider": {
   "bites": false,
   "card": {
@@ -528,6 +547,22 @@
    "proposal",
    "seal"
   ],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "boxes-here": {
+  "bites": false,
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Keeping track",
+   "uses": "projects",
+   "writes": "to"
+  },
+  "files": [],
+  "reads_record": false,
+  "takes": [],
   "writes": [],
   "writes_unread": 0
  },
@@ -1128,6 +1163,24 @@
    "writes": "nothing"
   },
   "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "cursor-chats": {
+  "bites": false,
+  "card": {
+   "output": null,
+   "reads": ".db",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".txt"
+  ],
   "reads_record": false,
   "takes": [],
   "writes": [],
@@ -2240,7 +2293,7 @@
    "writes": "nothing"
   },
   "files": [],
-  "reads_record": false,
+  "reads_record": true,
   "takes": [],
   "writes": [],
   "writes_unread": 0
@@ -2320,6 +2373,27 @@
    "writes": "nothing"
   },
   "files": [],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "hurdat2": {
+  "bites": false,
+  "card": {
+   "output": "mirror",
+   "reads": ".txt",
+   "role": "reads",
+   "section": "Reading more kinds of files",
+   "uses": null,
+   "writes": "to"
+  },
+  "files": [
+   ".json",
+   ".part",
+   ".places",
+   ".txt"
+  ],
   "reads_record": false,
   "takes": [],
   "writes": [],
@@ -2631,6 +2705,22 @@
   "files": [
    ".py"
   ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "land": {
+  "bites": false,
+  "card": {
+   "output": "report",
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": "sort",
+   "writes": "to"
+  },
+  "files": [],
   "reads_record": false,
   "takes": [],
   "writes": [],
@@ -3876,6 +3966,22 @@
    ".pgn",
    ".txt"
   ],
+  "reads_record": false,
+  "takes": [],
+  "writes": [],
+  "writes_unread": 0
+ },
+ "pieces": {
+  "bites": false,
+  "card": {
+   "output": null,
+   "reads": null,
+   "role": "tools",
+   "section": "Finding things",
+   "uses": null,
+   "writes": "nothing"
+  },
+  "files": [],
   "reads_record": false,
   "takes": [],
   "writes": [],

@@ -46,12 +46,12 @@ def test_it_reads_rows_written_rows_told_apart_and_suffixes(tmp_path):
 def test_the_kept_reading_holds_the_figures_the_page_gives():
     said = static.say(KEPT).splitlines()
     for line in (
-        "341 add-ons with a card under adapters/stdlib",
+        "347 add-ons with a card under adapters/stdlib",
         "write a row to the record: 32",
         "tell rows apart by kind: 48",
-        "read the record at all: 78",
-        "name a file suffix: 157",
-        "none of those: 129",
+        "read the record at all: 79",
+        "name a file suffix: 160",
+        "none of those: 131",
         "kinds of row seen: 54",
         "made and taken only by their maker: 33",
         "made by one add-on and taken by another: 3",
@@ -62,7 +62,8 @@ def test_the_kept_reading_holds_the_figures_the_page_gives():
 
 def test_the_fourteen_are_the_ones_that_name_the_map_less_two():
     name_it = {a for a, got in KEPT.items() if ".places" in got["files"]}
-    assert name_it - {"ci", "deep-links"} == set(PREDICTED.split())
+    # hurdat2 came after the prediction (99e0eee), with #354 on 2026-11-12
+    assert name_it - {"ci", "deep-links", "hurdat2"} == set(PREDICTED.split())
     page = (HERE.parent / "README.md").read_text(encoding="utf-8")
     assert all(a in page for a in PREDICTED.split())
 

@@ -13,18 +13,18 @@ any run, to hold the runs to.
 ## The reading: [static/](static/)
 
 `python demo/pools/static/static.py say` reads every add-on under
-`adapters/stdlib` that has a card, and runs none of them. On main at
-99e0eee it says, and [static/static.json](static/static.json) keeps
+`adapters/stdlib` that has a card, and runs none of them. On
+willow-pool-test at 8125716 (main merged in, 2026-11-13) it says, and [static/static.json](static/static.json) keeps
 one entry an add-on:
 
 | | |
 |---|---|
-| add-ons read | 341 (the 27 under `adapters/deps` are not read) |
+| add-ons read | 347 (those under `adapters/deps` are not read) |
 | write a row to the record | 32 |
 | tell rows apart by kind | 48 |
-| read the record at all | 78 |
-| name a file suffix in a string | 157 |
-| none of those | 129 |
+| read the record at all | 79 |
+| name a file suffix in a string | 160 |
+| none of those | 131 |
 | kinds of row seen | 54 |
 | kinds made and taken only by the add-on that makes them | 33 |
 | kinds made and taken by nothing | 5 |

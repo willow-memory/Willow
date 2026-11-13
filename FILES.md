@@ -2453,6 +2453,10 @@ willow/
 │   │   │   │   └── planted.md    the report made from it
 │   │   │   ├── truth.py      what the pools study may say, and only from its runs
 │   │   │   └── test_truth.py     each rule holds on rows made to test it, each shown to fail when broken, the report byte for byte
+│   │   ├── piles/
+│   │   │   ├── known_gaps.py the pools study's pile of known reader gaps, made from public
+│   │   │   ├── probes.json
+│   │   │   └── test_known_gaps.py
 │   │   └── README.md         Pools: where add-ons meet, from what they are seen to do
 ```
 

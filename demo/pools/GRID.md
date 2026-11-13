@@ -37,24 +37,24 @@ with the study's freeze (see [studies.md](../../docs/agents/studies.md)).
 17 cards have no step: the 12 above, and 5 that run only on willow's own
 repository (ci, github, mutants, readme, similar).
 
-## What it writes, on main at 99e0eee
+## What it writes, on willow-pool-test at 8125716 (main merged in, 2026-11-13)
 
-1,447 stacks of 351 steps, in half a second, the same bytes every time:
+1,473 stacks of 357 steps, in half a second, the same bytes every time:
 
 | way | stacks | what each is |
 |---|---|---|
-| single | 351 | one step alone: stage 0, the fire matrix |
-| bridge | 201 | the giver, then the taker, for each bridge |
+| single | 357 | one step alone: stage 0, the fire matrix |
+| bridge | 207 | the giver, then the taker, for each bridge |
 | section | 10 | every step of one card section |
 | role | 9 | every step of one card role |
 | cell | 19 | a section and a role, where three steps or more share both |
-| near | 351 | a card and its three `near:` entries |
-| leans | 111 | a card and everything its `uses` reaches |
+| near | 357 | a card and its three `near:` entries |
+| leans | 113 | a card and everything its `uses` reaches |
 | random | 40 | ten seeded draws each of 3, 10, 30 and 100 steps: the control |
 | all | 4 | every step, in name order and in three running orders |
-| all-but-one | 351 | every step but one, for each |
+| all-but-one | 357 | every step but one, for each |
 
-Over one pile that is 129,129 step runs, 122,850 of them in all-but-one.
+Over one pile that is 133,442 step runs, 127,092 of them in all-but-one.
 At 0.2 to 1 second a step, some 7 to 36 CPU hours a pile: all-but-one is
 the row that decides how many piles the study can afford, and the dry
 run's times are the figure to plan by.
@@ -69,12 +69,12 @@ three running orders, and shuffling the list is how to shuffle the run.
 **A bridge is frozen from code and cards, before any run.** A pair is
 bridged when the static reading says the taker takes a kind of record row
 the giver writes (26 pairs), or the taker's card names the giver in
-`uses`, `looks-for` or `hands` (177). Two pairs are both, and are one
+`uses`, `looks-for` or `hands` (183). Two pairs are both, and are one
 bridge with both reasons. A run tests a bridge (does the taker's output
 change when the giver runs first?); a run doesn't make one.
 
 **A record bridge is the third kind, frozen the same way.** A step whose
-code reads the record at all (77 with a step) is reached by any step that
+code reads the record at all (78 with a step) is reached by any step that
 adds a row to it (53): its code writes a kind of row, appends one whose
 kind can't be read, or asks for a bite, which the kernel writes a row
 for; or its own command line is a bite. That is what a trial run on a
