@@ -5,8 +5,9 @@
 For every add-on under adapters/stdlib with a card, from its code (tests
 left out), by `ast`: the kinds of row it writes to the record (the kind
 given to `kernel.append`), the kinds of row it tells apart (a string a
-row's `kind` is compared with), whether it reads the record at all, and
-the file suffixes it names in a string. Then who makes each kind of row
+row's `kind` is compared with), whether it reads the record at all,
+whether it calls the kernel's bite (which writes a bite row), and the file
+suffixes it names in a string. Then who makes each kind of row
 and who takes it.
 
 It is rough, and says so: a suffix is any string like `.abc`, so a
@@ -89,10 +90,18 @@ def of_kernel(node: ast.AST) -> str | None:
     return None
 
 
+def asks_bite(node: ast.AST) -> bool:
+    """Whether a node is a command line asking for a bite: a list whose first
+    word is "bite", as `kernel.main(["bite", ...])` is, or an argv handed to
+    another add-on to run. Rough, as the rest: any such list counts."""
+    return (isinstance(node, ast.List) and bool(node.elts)
+            and isinstance(node.elts[0], ast.Constant) and node.elts[0].value == "bite")  # fmt: skip
+
+
 def read(folder: Path) -> dict:
     """What one add-on's code says, over its files that are not tests."""
     writes, takes, files = set(), set(), set()
-    unread, reads_record = 0, False
+    unread, reads_record, bites = 0, False, False
     for file in sorted(folder.glob("*.py")):
         if file.name.startswith("test_"):
             continue
@@ -108,6 +117,7 @@ def read(folder: Path) -> dict:
                 writes.update(got)
                 unread += not got
             reads_record = reads_record or called in RECORD_READS
+            bites = bites or called == "bite" or asks_bite(node)
             if isinstance(node, ast.Compare):
                 sides = [node.left, *node.comparators]
                 if any(is_kind(s) for s in sides):
@@ -116,7 +126,7 @@ def read(folder: Path) -> dict:
                 if SUFFIX.fullmatch(node.value):
                     files.add(node.value)
     return {"writes": sorted(writes), "writes_unread": unread, "takes": sorted(takes),
-            "reads_record": reads_record, "files": sorted(files)}  # fmt: skip
+            "reads_record": reads_record, "bites": bites, "files": sorted(files)}  # fmt: skip
 
 
 def every() -> dict[str, dict]:

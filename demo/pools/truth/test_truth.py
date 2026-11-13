@@ -290,3 +290,18 @@ def test_the_cards_are_read_as_the_rules_need_them():
 )
 def test_a_bad_command_line_is_refused(argv):
     assert t.main(argv) == 2
+
+
+def test_a_record_bridge_reaches_a_reader_after_a_row_adder_and_nothing_else():
+    grid = {"steps": {}, "bridges": [],
+            "record_bridges": {"by": "record", "readers": ["r", "w"], "givers": ["w", "x"]}}  # fmt: skip
+    g = t.bridge_map(grid)
+    assert t.reached(["x", "r"], 1, g)  # a reader after a row adder
+    assert not t.reached(["r", "x"], 1, g)  # a row adder that is no reader
+    assert not t.reached(["q", "r"], 1, g)  # a reader after a step that adds nothing
+    assert not t.reached(["w"], 0, g)  # a reader that adds rows is not its own bridge
+    assert t.reached(["w", "r"], 1, g)
+    pairs = t.no_bridge_pairs(
+        {**grid, "steps": {"q": {}, "r": {}, "w": {}, "x": {}}}, 99, 1
+    )
+    assert ["r", "x"] not in pairs and ["q", "r"] in pairs

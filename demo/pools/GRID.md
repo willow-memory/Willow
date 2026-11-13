@@ -73,6 +73,17 @@ the giver writes (26 pairs), or the taker's card names the giver in
 bridge with both reasons. A run tests a bridge (does the taker's output
 change when the giver runs first?); a run doesn't make one.
 
+**A record bridge is the third kind, frozen the same way.** A step whose
+code reads the record at all (77 with a step) is reached by any step that
+adds a row to it (53): its code writes a kind of row, appends one whose
+kind can't be read, or asks for a bite, which the kernel writes a row
+for; or its own command line is a bite. That is what a trial run on a
+made-up pile showed: steps that read the record print otherwise in a
+stack of every step than alone. It is too wide (some four thousand pairs)
+for each to get a stack of its own, so the manifest keeps it apart, in
+`record_bridges`, as the two lists; the null reads it with the other two,
+and the seeded pairs no bridge joins leave its pairs out.
+
 ## What a run of a stack is held to
 
 Each step's `{tmp}` is a folder of its own under the run's, so no two steps

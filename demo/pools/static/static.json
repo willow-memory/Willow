@@ -1,5 +1,6 @@
 {
  "a11y-check": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -19,6 +20,7 @@
   "writes_unread": 0
  },
  "abbreviations": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -34,6 +36,7 @@
   "writes_unread": 0
  },
  "accents": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -49,6 +52,7 @@
   "writes_unread": 0
  },
  "across": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -64,6 +68,7 @@
   "writes_unread": 0
  },
  "advisories": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -81,6 +86,7 @@
   "writes_unread": 0
  },
  "again": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -98,6 +104,7 @@
   "writes_unread": 0
  },
  "against": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -115,6 +122,7 @@
   "writes_unread": 0
  },
  "agent-transcript": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".jsonl",
@@ -133,6 +141,7 @@
   "writes_unread": 0
  },
  "agents-md-check": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -150,6 +159,7 @@
   "writes_unread": 0
  },
  "aider": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -165,6 +175,7 @@
   "writes_unread": 0
  },
  "all": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -180,6 +191,7 @@
   "writes_unread": 0
  },
  "almanac": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "catalog.json",
@@ -197,6 +209,7 @@
   "writes_unread": 0
  },
  "almanac-keep": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "none",
@@ -212,6 +225,7 @@
   "writes_unread": 0
  },
  "amounts": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -227,6 +241,7 @@
   "writes_unread": 0
  },
  "annotations": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -242,6 +257,7 @@
   "writes_unread": 0
  },
  "apple-mail": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".emlx",
@@ -260,6 +276,7 @@
   "writes_unread": 0
  },
  "asciidoc": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".adoc, .asc, .asciidoc",
@@ -280,6 +297,7 @@
   "writes_unread": 0
  },
  "assistant-scores": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -299,6 +317,7 @@
   "writes_unread": 0
  },
  "attendance": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -314,6 +333,7 @@
   "writes_unread": 0
  },
  "baby-log": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -329,6 +349,7 @@
   "writes_unread": 0
  },
  "backup": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -346,6 +367,7 @@
   "writes_unread": 0
  },
  "badge": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -363,6 +385,7 @@
   "writes_unread": 0
  },
  "bank": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv, .ofx, .qfx",
@@ -384,6 +407,7 @@
   "writes_unread": 0
  },
  "bench": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -399,6 +423,7 @@
   "writes_unread": 0
  },
  "bibtex": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".bib",
@@ -417,6 +442,7 @@
   "writes_unread": 0
  },
  "bookmarks": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".html, .mozlz4, .sqlite",
@@ -435,6 +461,7 @@
   "writes_unread": 0
  },
  "books": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".epub, .txt",
@@ -455,6 +482,7 @@
   "writes_unread": 0
  },
  "bot-venv": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -473,6 +501,7 @@
   "writes_unread": 0
  },
  "box-health": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -503,6 +532,7 @@
   "writes_unread": 0
  },
  "braille": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -518,6 +548,7 @@
   "writes_unread": 0
  },
  "browse": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -542,6 +573,7 @@
   "writes_unread": 0
  },
  "budget": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -559,6 +591,7 @@
   "writes_unread": 0
  },
  "calendar": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".ics, .vcf",
@@ -578,6 +611,7 @@
   "writes_unread": 0
  },
  "calendar-out": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -595,6 +629,7 @@
   "writes_unread": 0
  },
  "capture": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -612,6 +647,7 @@
   "writes_unread": 0
  },
  "car": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -627,6 +663,7 @@
   "writes_unread": 0
  },
  "catgrid": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -646,6 +683,7 @@
   "writes_unread": 0
  },
  "changed": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -665,6 +703,7 @@
   "writes_unread": 0
  },
  "chats": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".json, .txt",
@@ -684,6 +723,7 @@
   "writes_unread": 0
  },
  "chordpro": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".cho, .chopro, .chordpro, .crd, .pro",
@@ -705,6 +745,7 @@
   "writes_unread": 0
  },
  "ci": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -735,6 +776,7 @@
   "writes_unread": 0
  },
  "ci-cache": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -750,6 +792,7 @@
   "writes_unread": 0
  },
  "ci-logs": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".log, .txt",
@@ -768,6 +811,7 @@
   "writes_unread": 0
  },
  "ci-memo": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -788,6 +832,7 @@
   "writes_unread": 0
  },
  "ci-why": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -805,6 +850,7 @@
   "writes_unread": 0
  },
  "claim-check": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -820,6 +866,7 @@
   "writes_unread": 0
  },
  "claude-code": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -839,6 +886,7 @@
   "writes_unread": 0
  },
  "clauses": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".html, .htm, .md, .txt",
@@ -859,6 +907,7 @@
   "writes_unread": 0
  },
  "cloudevents": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -874,6 +923,7 @@
   "writes_unread": 0
  },
  "code-comments": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".c, .cc, .cpp, .cs, .go, .h, .hpp, .java, .js, .jsx, .kt, .mjs, .php, .py, .rb, .rs, .sh, .swift, .ts, .tsx",
@@ -910,6 +960,7 @@
   "writes_unread": 0
  },
  "codebase-memory": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".db",
@@ -928,6 +979,7 @@
   "writes_unread": 0
  },
  "codeowners": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -943,6 +995,7 @@
   "writes_unread": 0
  },
  "codex-cli": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -958,6 +1011,7 @@
   "writes_unread": 0
  },
  "coming-up": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -973,6 +1027,7 @@
   "writes_unread": 0
  },
  "connect": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -990,6 +1045,7 @@
   "writes_unread": 0
  },
  "contradictions": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1005,6 +1061,7 @@
   "writes_unread": 0
  },
  "copilot": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1020,6 +1077,7 @@
   "writes_unread": 0
  },
  "corpus-lens": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json, .md",
@@ -1039,6 +1097,7 @@
   "writes_unread": 0
  },
  "csv-rows": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".csv, .tsv",
@@ -1059,6 +1118,7 @@
   "writes_unread": 0
  },
  "cursor": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1074,6 +1134,7 @@
   "writes_unread": 0
  },
  "daily-word": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1093,6 +1154,7 @@
   "writes_unread": 0
  },
  "day-one": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -1111,6 +1173,7 @@
   "writes_unread": 0
  },
  "debts": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1126,6 +1189,7 @@
   "writes_unread": 0
  },
  "decisions": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1145,6 +1209,7 @@
   "writes_unread": 0
  },
  "deep-links": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1163,6 +1228,7 @@
   "writes_unread": 0
  },
  "dice": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1182,6 +1248,7 @@
   "writes_unread": 0
  },
  "dice5e": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1201,6 +1268,7 @@
   "writes_unread": 0
  },
  "digest": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1222,6 +1290,7 @@
   "writes_unread": 0
  },
  "discord": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".zip",
@@ -1240,6 +1309,7 @@
   "writes_unread": 0
  },
  "diverge": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1255,6 +1325,7 @@
   "writes_unread": 0
  },
  "dotfiles": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".bash, .cfg, .conf, .fish, .gitconfig, .ini, .lua, .properties, .sh, .toml, .vim, .zsh",
@@ -1285,6 +1356,7 @@
   "writes_unread": 0
  },
  "duplicates": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1300,6 +1372,7 @@
   "writes_unread": 0
  },
  "emacs": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1315,6 +1388,7 @@
   "writes_unread": 0
  },
  "equations": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".tex",
@@ -1334,6 +1408,7 @@
   "writes_unread": 0
  },
  "evernote": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".enex",
@@ -1352,6 +1427,7 @@
   "writes_unread": 0
  },
  "export": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1369,6 +1445,7 @@
   "writes_unread": 0
  },
  "fair-merge": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1384,6 +1461,7 @@
   "writes_unread": 0
  },
  "family-tree": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".ged",
@@ -1402,6 +1480,7 @@
   "writes_unread": 0
  },
  "first-mention": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1417,6 +1496,7 @@
   "writes_unread": 0
  },
  "fixity": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1436,6 +1516,7 @@
   "writes_unread": 0
  },
  "flashcards": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1455,6 +1536,7 @@
   "writes_unread": 0
  },
  "foia": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1470,6 +1552,7 @@
   "writes_unread": 0
  },
  "folder-card": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1485,6 +1568,7 @@
   "writes_unread": 0
  },
  "food-log": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1500,6 +1584,7 @@
   "writes_unread": 0
  },
  "forecasts": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1525,6 +1610,7 @@
   "writes_unread": 0
  },
  "format-rot": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1553,6 +1639,7 @@
   "writes_unread": 0
  },
  "fuzzy-dates": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1568,6 +1655,7 @@
   "writes_unread": 0
  },
  "game-master": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -1604,6 +1692,7 @@
   "writes_unread": 0
  },
  "gaps": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1619,6 +1708,7 @@
   "writes_unread": 0
  },
  "garden": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1634,6 +1724,7 @@
   "writes_unread": 0
  },
  "gather": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1649,6 +1740,7 @@
   "writes_unread": 0
  },
  "gemini-cli": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1664,6 +1756,7 @@
   "writes_unread": 0
  },
  "gh-json": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -1682,6 +1775,7 @@
   "writes_unread": 0
  },
  "git-history": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "none",
@@ -1699,6 +1793,7 @@
   "writes_unread": 0
  },
  "github": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1717,6 +1812,7 @@
   "writes_unread": 0
  },
  "glance": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1732,6 +1828,7 @@
   "writes_unread": 0
  },
  "goodreads": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv",
@@ -1750,6 +1847,7 @@
   "writes_unread": 0
  },
  "google-keep": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -1768,6 +1866,7 @@
   "writes_unread": 0
  },
  "gradebook": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1783,6 +1882,7 @@
   "writes_unread": 0
  },
  "habits": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1798,6 +1898,7 @@
   "writes_unread": 0
  },
  "handover": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1817,6 +1918,7 @@
   "writes_unread": 0
  },
  "health": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".xml",
@@ -1836,6 +1938,7 @@
   "writes_unread": 0
  },
  "history": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -1853,6 +1956,7 @@
   "writes_unread": 0
  },
  "home-sensors": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -1872,6 +1976,7 @@
   "writes_unread": 0
  },
  "home-upkeep": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1887,6 +1992,7 @@
   "writes_unread": 0
  },
  "hook-compact": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1902,6 +2008,7 @@
   "writes_unread": 0
  },
  "hook-errors": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1921,6 +2028,7 @@
   "writes_unread": 0
  },
  "hook-fail-closed": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1936,6 +2044,7 @@
   "writes_unread": 0
  },
  "hook-feedback": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1957,6 +2066,7 @@
   "writes_unread": 0
  },
  "hook-fuzz": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1972,6 +2082,7 @@
   "writes_unread": 0
  },
  "hook-guard": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -1987,6 +2098,7 @@
   "writes_unread": 0
  },
  "hook-handoff": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2008,6 +2120,7 @@
   "writes_unread": 0
  },
  "hook-impact": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2023,6 +2136,7 @@
   "writes_unread": 0
  },
  "hook-leaks": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2038,6 +2152,7 @@
   "writes_unread": 0
  },
  "hook-pin": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2057,6 +2172,7 @@
   "writes_unread": 0
  },
  "hook-read-first": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2076,6 +2192,7 @@
   "writes_unread": 0
  },
  "hook-replay": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2097,6 +2214,7 @@
   "writes_unread": 0
  },
  "hook-shell": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2112,6 +2230,7 @@
   "writes_unread": 0
  },
  "hook-start": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2127,6 +2246,7 @@
   "writes_unread": 0
  },
  "hook-stop": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2142,6 +2262,7 @@
   "writes_unread": 0
  },
  "hooks-elsewhere": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2157,6 +2278,7 @@
   "writes_unread": 0
  },
  "horoscope": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2172,6 +2294,7 @@
   "writes_unread": 0
  },
  "hosts": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2187,6 +2310,7 @@
   "writes_unread": 0
  },
  "hours": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2202,6 +2326,7 @@
   "writes_unread": 0
  },
  "ids": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2217,6 +2342,7 @@
   "writes_unread": 0
  },
  "in-toto": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2232,6 +2358,7 @@
   "writes_unread": 0
  },
  "index-cache": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2247,6 +2374,7 @@
   "writes_unread": 0
  },
  "install-scripts": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -2262,6 +2390,7 @@
   "writes_unread": 0
  },
  "instruction-files": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2281,6 +2410,7 @@
   "writes_unread": 0
  },
  "invoices": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2299,6 +2429,7 @@
   "writes_unread": 0
  },
  "irc": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".log, .weechatlog",
@@ -2317,6 +2448,7 @@
   "writes_unread": 0
  },
  "jeles": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2336,6 +2468,7 @@
   "writes_unread": 0
  },
  "jetbrains": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2351,6 +2484,7 @@
   "writes_unread": 0
  },
  "jira": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv, .xml",
@@ -2370,6 +2504,7 @@
   "writes_unread": 0
  },
  "job-hunt": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2385,6 +2520,7 @@
   "writes_unread": 0
  },
  "joplin": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".jex, .md",
@@ -2404,6 +2540,7 @@
   "writes_unread": 0
  },
  "jrnl": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".txt",
@@ -2421,6 +2558,7 @@
   "writes_unread": 0
  },
  "json-paths": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json, .jsonl, .ndjson",
@@ -2442,6 +2580,7 @@
   "writes_unread": 0
  },
  "jupyter": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".ipynb",
@@ -2461,6 +2600,7 @@
   "writes_unread": 0
  },
  "karakeep": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -2479,6 +2619,7 @@
   "writes_unread": 0
  },
  "kinds": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -2496,6 +2637,7 @@
   "writes_unread": 0
  },
  "latex": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".tex",
@@ -2515,6 +2657,7 @@
   "writes_unread": 0
  },
  "launcher": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2530,6 +2673,7 @@
   "writes_unread": 0
  },
  "lending": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2547,6 +2691,7 @@
   "writes_unread": 0
  },
  "lesson-time": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2562,6 +2707,7 @@
   "writes_unread": 0
  },
  "letterboxd": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv",
@@ -2580,6 +2726,7 @@
   "writes_unread": 0
  },
  "licenses": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2597,6 +2744,7 @@
   "writes_unread": 0
  },
  "life": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2616,6 +2764,7 @@
   "writes_unread": 0
  },
  "linkedin": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv",
@@ -2634,6 +2783,7 @@
   "writes_unread": 0
  },
  "listening": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -2652,6 +2802,7 @@
   "writes_unread": 0
  },
  "live": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2672,6 +2823,7 @@
   "writes_unread": 0
  },
  "livestock": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2687,6 +2839,7 @@
   "writes_unread": 0
  },
  "llms-txt": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2702,6 +2855,7 @@
   "writes_unread": 0
  },
  "local-model": {
+  "bites": false,
   "card": {
    "output": "suggestions",
    "reads": null,
@@ -2717,6 +2871,7 @@
   "writes_unread": 0
  },
  "location-history": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -2736,6 +2891,7 @@
   "writes_unread": 0
  },
  "lockfiles": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "package-lock.json, Cargo.lock, go.sum",
@@ -2753,6 +2909,7 @@
   "writes_unread": 0
  },
  "log-kit": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2770,6 +2927,7 @@
   "writes_unread": 0
  },
  "logs": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".log",
@@ -2789,6 +2947,7 @@
   "writes_unread": 0
  },
  "look": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -2806,6 +2965,7 @@
   "writes_unread": 0
  },
  "mail": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".eml, .mbox",
@@ -2826,6 +2986,7 @@
   "writes_unread": 0
  },
  "make-it-so": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2841,6 +3002,7 @@
   "writes_unread": 0
  },
  "man-pages": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".1, .2, .3, .4, .5, .6, .7, .8",
@@ -2858,6 +3020,7 @@
   "writes_unread": 0
  },
  "markdown": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".md, .markdown",
@@ -2877,6 +3040,7 @@
   "writes_unread": 0
  },
  "market-calls": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2901,6 +3065,7 @@
   "writes_unread": 0
  },
  "mastodon": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -2919,6 +3084,7 @@
   "writes_unread": 0
  },
  "matrix": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -2937,6 +3103,7 @@
   "writes_unread": 0
  },
  "mcp-lite": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2952,6 +3119,7 @@
   "writes_unread": 0
  },
  "mcp-sampling": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -2969,6 +3137,7 @@
   "writes_unread": 0
  },
  "mediawiki": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".xml",
@@ -2987,6 +3156,7 @@
   "writes_unread": 0
  },
  "merkle": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3002,6 +3172,7 @@
   "writes_unread": 0
  },
  "meta-archive": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -3020,6 +3191,7 @@
   "writes_unread": 0
  },
  "mileage": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3035,6 +3207,7 @@
   "writes_unread": 0
  },
  "milestones": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3050,6 +3223,7 @@
   "writes_unread": 0
  },
  "minutes": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3065,6 +3239,7 @@
   "writes_unread": 0
  },
  "misquote": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3080,6 +3255,7 @@
   "writes_unread": 0
  },
  "model-card": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3099,6 +3275,7 @@
   "writes_unread": 0
  },
  "model-drift": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3114,6 +3291,7 @@
   "writes_unread": 0
  },
  "model-exam": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3129,6 +3307,7 @@
   "writes_unread": 0
  },
  "model-fit": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3147,6 +3326,7 @@
   "writes_unread": 0
  },
  "model-shelf": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3164,6 +3344,7 @@
   "writes_unread": 0
  },
  "month-first": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3184,6 +3365,7 @@
   "writes_unread": 0
  },
  "mood": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3199,6 +3381,7 @@
   "writes_unread": 0
  },
  "musicxml": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".musicxml, .xml",
@@ -3217,6 +3400,7 @@
   "writes_unread": 0
  },
  "mutants": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3235,6 +3419,7 @@
   "writes_unread": 0
  },
  "nestor": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3253,6 +3438,7 @@
   "writes_unread": 0
  },
  "nicknames": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3268,6 +3454,7 @@
   "writes_unread": 0
  },
  "night-batch": {
+  "bites": false,
   "card": {
    "output": "suggestions",
    "reads": null,
@@ -3286,6 +3473,7 @@
   "writes_unread": 0
  },
  "nightstand": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3305,6 +3493,7 @@
   "writes_unread": 0
  },
  "notation": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".tex",
@@ -3323,6 +3512,7 @@
   "writes_unread": 0
  },
  "notes": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".md",
@@ -3341,6 +3531,7 @@
   "writes_unread": 0
  },
  "notion": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".zip, .csv",
@@ -3360,6 +3551,7 @@
   "writes_unread": 0
  },
  "oakenscroll": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "office.db",
@@ -3377,6 +3569,7 @@
   "writes_unread": 0
  },
  "odds": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3392,6 +3585,7 @@
   "writes_unread": 0
  },
  "office": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".docx, .odt, .pptx, .xlsx, .ods",
@@ -3415,6 +3609,7 @@
   "writes_unread": 0
  },
  "on-this-day": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3430,6 +3625,7 @@
   "writes_unread": 0
  },
  "openai-compatible": {
+  "bites": true,
   "card": {
    "output": "suggestions",
    "reads": null,
@@ -3447,6 +3643,7 @@
   "writes_unread": 0
  },
  "opencode": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3462,6 +3659,7 @@
   "writes_unread": 0
  },
  "opml": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".opml, .xml",
@@ -3481,6 +3679,7 @@
   "writes_unread": 0
  },
  "oracle-text": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3496,6 +3695,7 @@
   "writes_unread": 0
  },
  "orders": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv",
@@ -3515,6 +3715,7 @@
   "writes_unread": 0
  },
  "org": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".org",
@@ -3534,6 +3735,7 @@
   "writes_unread": 0
  },
  "outdated": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3551,6 +3753,7 @@
   "writes_unread": 0
  },
  "package-contents": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3574,6 +3777,7 @@
   "writes_unread": 0
  },
  "pair-drift": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3589,6 +3793,7 @@
   "writes_unread": 0
  },
  "parallel": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "none",
@@ -3604,6 +3809,7 @@
   "writes_unread": 0
  },
  "people": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3619,6 +3825,7 @@
   "writes_unread": 0
  },
  "persona-card": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3640,6 +3847,7 @@
   "writes_unread": 0
  },
  "pets": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3655,6 +3863,7 @@
   "writes_unread": 0
  },
  "pgn": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".pgn",
@@ -3673,6 +3882,7 @@
   "writes_unread": 0
  },
  "pii-audit": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3688,6 +3898,7 @@
   "writes_unread": 0
  },
  "pile-build": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3703,6 +3914,7 @@
   "writes_unread": 0
  },
  "pile-gold": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3720,6 +3932,7 @@
   "writes_unread": 0
  },
  "pile-poetry": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3735,6 +3948,7 @@
   "writes_unread": 0
  },
  "pile-rank": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3750,6 +3964,7 @@
   "writes_unread": 0
  },
  "pile-rungs": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3765,6 +3980,7 @@
   "writes_unread": 0
  },
  "pile-serve": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3780,6 +3996,7 @@
   "writes_unread": 0
  },
  "pile-store": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3795,6 +4012,7 @@
   "writes_unread": 0
  },
  "pile-sweep": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3810,6 +4028,7 @@
   "writes_unread": 0
  },
  "pins": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3827,6 +4046,7 @@
   "writes_unread": 0
  },
  "pipe": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -3842,6 +4062,7 @@
   "writes_unread": 0
  },
  "places": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".kml, .geojson, .gpx",
@@ -3862,6 +4083,7 @@
   "writes_unread": 0
  },
  "plain": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -3877,6 +4099,7 @@
   "writes_unread": 0
  },
  "pocket": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".zip, .csv, .html",
@@ -3898,6 +4121,7 @@
   "writes_unread": 0
  },
  "policy-watch": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3916,6 +4140,7 @@
   "writes_unread": 0
  },
  "predict": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -3938,6 +4163,7 @@
   "writes_unread": 0
  },
  "print": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -3953,6 +4179,7 @@
   "writes_unread": 0
  },
  "privacy": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -3968,6 +4195,7 @@
   "writes_unread": 0
  },
  "profile": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -3983,6 +4211,7 @@
   "writes_unread": 0
  },
  "projects": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4003,6 +4232,7 @@
   "writes_unread": 0
  },
  "prov": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4023,6 +4253,7 @@
   "writes_unread": 0
  },
  "quantized": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4038,6 +4269,7 @@
   "writes_unread": 0
  },
  "quiz": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4059,6 +4291,7 @@
   "writes_unread": 0
  },
  "quote-check": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4074,6 +4307,7 @@
   "writes_unread": 0
  },
  "quotes": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4089,6 +4323,7 @@
   "writes_unread": 0
  },
  "reading-level": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4106,6 +4341,7 @@
   "writes_unread": 0
  },
  "reading-log": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4121,6 +4357,7 @@
   "writes_unread": 0
  },
  "readings": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -4136,6 +4373,7 @@
   "writes_unread": 0
  },
  "readme": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4158,6 +4396,7 @@
   "writes_unread": 0
  },
  "readwise": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv",
@@ -4176,6 +4415,7 @@
   "writes_unread": 0
  },
  "ready": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4194,6 +4434,7 @@
   "writes_unread": 0
  },
  "red-on-main": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4211,6 +4452,7 @@
   "writes_unread": 0
  },
  "reddit": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv",
@@ -4229,6 +4471,7 @@
   "writes_unread": 0
  },
  "renewals": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4244,6 +4487,7 @@
   "writes_unread": 0
  },
  "repo-digest": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4259,6 +4503,7 @@
   "writes_unread": 0
  },
  "repo-pile": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4279,6 +4524,7 @@
   "writes_unread": 0
  },
  "restack": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4296,6 +4542,7 @@
   "writes_unread": 0
  },
  "restack-open": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4311,6 +4558,7 @@
   "writes_unread": 0
  },
  "restore-drill": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4328,6 +4576,7 @@
   "writes_unread": 0
  },
  "ris": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".ris, .enw",
@@ -4347,6 +4596,7 @@
   "writes_unread": 0
  },
  "risky-code": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4362,6 +4612,7 @@
   "writes_unread": 0
  },
  "ro-crate": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4381,6 +4632,7 @@
   "writes_unread": 0
  },
  "route": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4396,6 +4648,7 @@
   "writes_unread": 0
  },
  "rss-out": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4411,6 +4664,7 @@
   "writes_unread": 0
  },
  "rst": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".rst, .rest",
@@ -4431,6 +4685,7 @@
   "writes_unread": 0
  },
  "rtf": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".rtf",
@@ -4449,6 +4704,7 @@
   "writes_unread": 0
  },
  "rules": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4469,6 +4725,7 @@
   "writes_unread": 0
  },
  "said": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4484,6 +4741,7 @@
   "writes_unread": 0
  },
  "same-way": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4499,6 +4757,7 @@
   "writes_unread": 0
  },
  "sarif": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".sarif",
@@ -4517,6 +4776,7 @@
   "writes_unread": 0
  },
  "say": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4534,6 +4794,7 @@
   "writes_unread": 0
  },
  "say-check": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4549,6 +4810,7 @@
   "writes_unread": 0
  },
  "sbom": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -4567,6 +4829,7 @@
   "writes_unread": 0
  },
  "scan": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4582,6 +4845,7 @@
   "writes_unread": 0
  },
  "screenplay": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".fountain, .fdx",
@@ -4600,6 +4864,7 @@
   "writes_unread": 0
  },
  "scrub": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4617,6 +4882,7 @@
   "writes_unread": 0
  },
  "secrets-audit": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4632,6 +4898,7 @@
   "writes_unread": 0
  },
  "sent-log": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4652,6 +4919,7 @@
   "writes_unread": 0
  },
  "serve": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4669,6 +4937,7 @@
   "writes_unread": 0
  },
  "session-cost": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4687,6 +4956,7 @@
   "writes_unread": 0
  },
  "session-seal": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4709,6 +4979,7 @@
   "writes_unread": 0
  },
  "share": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4734,6 +5005,7 @@
   "writes_unread": 0
  },
  "shell": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4749,6 +5021,7 @@
   "writes_unread": 0
  },
  "shell-history": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".bash_history, .zsh_history, fish_history",
@@ -4766,6 +5039,7 @@
   "writes_unread": 0
  },
  "shortcuts": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".url, .webloc, .desktop",
@@ -4785,6 +5059,7 @@
   "writes_unread": 0
  },
  "similar": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4802,6 +5077,7 @@
   "writes_unread": 0
  },
  "skim": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4817,6 +5093,7 @@
   "writes_unread": 0
  },
  "slack": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".zip",
@@ -4835,6 +5112,7 @@
   "writes_unread": 0
  },
  "slow-tests": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4854,6 +5132,7 @@
   "writes_unread": 0
  },
  "snapshot": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "none",
@@ -4874,6 +5153,7 @@
   "writes_unread": 0
  },
  "sort": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4891,6 +5171,7 @@
   "writes_unread": 0
  },
  "sort-ask": {
+  "bites": true,
   "card": {
    "output": "report, suggestions",
    "reads": null,
@@ -4908,6 +5189,7 @@
   "writes_unread": 0
  },
  "stack": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4926,6 +5208,7 @@
   "writes_unread": 0
  },
  "stack-bridges": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4941,6 +5224,7 @@
   "writes_unread": 0
  },
  "stack-row": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4960,6 +5244,7 @@
   "writes_unread": 0
  },
  "stack-share": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -4975,6 +5260,7 @@
   "writes_unread": 0
  },
  "stale": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -4990,6 +5276,7 @@
   "writes_unread": 0
  },
  "start": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5007,6 +5294,7 @@
   "writes_unread": 0
  },
  "starter-words": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5022,6 +5310,7 @@
   "writes_unread": 0
  },
  "strava": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".csv, .gpx, .tcx, .fit, .gz",
@@ -5046,6 +5335,7 @@
   "writes_unread": 0
  },
  "subscriptions": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5065,6 +5355,7 @@
   "writes_unread": 0
  },
  "subtitles": {
+  "bites": false,
   "card": {
    "output": "mirror",
    "reads": ".vtt, .srt",
@@ -5085,6 +5376,7 @@
   "writes_unread": 0
  },
  "surprise": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5102,6 +5394,7 @@
   "writes_unread": 0
  },
  "syllabus": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5117,6 +5410,7 @@
   "writes_unread": 0
  },
  "symptoms": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -5132,6 +5426,7 @@
   "writes_unread": 0
  },
  "synonyms": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5147,6 +5442,7 @@
   "writes_unread": 0
  },
  "takeout": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json, .html",
@@ -5168,6 +5464,7 @@
   "writes_unread": 0
  },
  "tarot": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5187,6 +5484,7 @@
   "writes_unread": 0
  },
  "test-impact": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5205,6 +5503,7 @@
   "writes_unread": 0
  },
  "test-shards": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5222,6 +5521,7 @@
   "writes_unread": 0
  },
  "text": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".txt, .text",
@@ -5242,6 +5542,7 @@
   "writes_unread": 0
  },
  "texts": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".xml",
@@ -5260,6 +5561,7 @@
   "writes_unread": 0
  },
  "thesis": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -5275,6 +5577,7 @@
   "writes_unread": 0
  },
  "three-two-one": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5290,6 +5593,7 @@
   "writes_unread": 0
  },
  "timeline": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5305,6 +5609,7 @@
   "writes_unread": 0
  },
  "tip-pin": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5320,6 +5625,7 @@
   "writes_unread": 0
  },
  "todo": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -5335,6 +5641,7 @@
   "writes_unread": 0
  },
  "transcript-redact": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5350,6 +5657,7 @@
   "writes_unread": 0
  },
  "translate": {
+  "bites": true,
   "card": {
    "output": "suggestions",
    "reads": null,
@@ -5367,6 +5675,7 @@
   "writes_unread": 0
  },
  "trello": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -5385,6 +5694,7 @@
   "writes_unread": 0
  },
  "typos": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5400,6 +5710,7 @@
   "writes_unread": 0
  },
  "typosquat": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5415,6 +5726,7 @@
   "writes_unread": 0
  },
  "vim": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5430,6 +5742,7 @@
   "writes_unread": 0
  },
  "vscode": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5445,6 +5758,7 @@
   "writes_unread": 0
  },
  "wallabag": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".json",
@@ -5463,6 +5777,7 @@
   "writes_unread": 0
  },
  "warc": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".warc, .wacz",
@@ -5482,6 +5797,7 @@
   "writes_unread": 0
  },
  "warranties": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5497,6 +5813,7 @@
   "writes_unread": 0
  },
  "wayback": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5512,6 +5829,7 @@
   "writes_unread": 0
  },
  "weakest-link": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5527,6 +5845,7 @@
   "writes_unread": 0
  },
  "web-pages": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".html, .htm, .mhtml, .mht",
@@ -5548,6 +5867,7 @@
   "writes_unread": 0
  },
  "webarchive": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".webarchive",
@@ -5565,6 +5885,7 @@
   "writes_unread": 0
  },
  "weights-card": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5580,6 +5901,7 @@
   "writes_unread": 0
  },
  "weights-pin": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5595,6 +5917,7 @@
   "writes_unread": 0
  },
  "why-not": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -5610,6 +5933,7 @@
   "writes_unread": 0
  },
  "windsurf": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5625,6 +5949,7 @@
   "writes_unread": 0
  },
  "words-ar": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5640,6 +5965,7 @@
   "writes_unread": 0
  },
  "words-cy": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5655,6 +5981,7 @@
   "writes_unread": 0
  },
  "words-de": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5670,6 +5997,7 @@
   "writes_unread": 0
  },
  "words-es": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5685,6 +6013,7 @@
   "writes_unread": 0
  },
  "words-fr": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5700,6 +6029,7 @@
   "writes_unread": 0
  },
  "words-it": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5715,6 +6045,7 @@
   "writes_unread": 0
  },
  "words-nl": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5730,6 +6061,7 @@
   "writes_unread": 0
  },
  "words-pl": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5745,6 +6077,7 @@
   "writes_unread": 0
  },
  "words-pt": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5760,6 +6093,7 @@
   "writes_unread": 0
  },
  "words-ru": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5775,6 +6109,7 @@
   "writes_unread": 0
  },
  "words-sv": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5790,6 +6125,7 @@
   "writes_unread": 0
  },
  "words-tlh": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5805,6 +6141,7 @@
   "writes_unread": 0
  },
  "words-tr": {
+  "bites": true,
   "card": {
    "output": null,
    "reads": null,
@@ -5820,6 +6157,7 @@
   "writes_unread": 0
  },
  "x-archive": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": ".js",
@@ -5838,6 +6176,7 @@
   "writes_unread": 0
  },
  "xref": {
+  "bites": false,
   "card": {
    "output": "report",
    "reads": null,
@@ -5856,6 +6195,7 @@
   "writes_unread": 0
  },
  "zed": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": null,
@@ -5871,6 +6211,7 @@
   "writes_unread": 0
  },
  "zotero": {
+  "bites": false,
   "card": {
    "output": null,
    "reads": "zotero.sqlite",

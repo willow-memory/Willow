@@ -134,10 +134,17 @@ def applies(card: dict, pile_kinds: dict) -> bool:
 
 # ── bridges ──────────────────────────────────────────────────────────────────
 def bridge_map(manifest: dict) -> dict[str, set[str]]:
-    """{taker: givers}: frozen in the grid's manifest from code and cards."""
+    """{taker: givers}: frozen in the grid's manifest from code and cards,
+    the record bridges with them (every reader of the record after any step
+    that adds rows to it)."""
     out: dict[str, set[str]] = {}
     for b in manifest.get("bridges", []):
         out.setdefault(b["to"], set()).add(b["from"])
+    record = manifest.get("record_bridges", {})
+    for reader in record.get("readers", []):
+        out.setdefault(reader, set()).update(
+            g for g in record.get("givers", []) if g != reader
+        )
     return out
 
 

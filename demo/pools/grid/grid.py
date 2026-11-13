@@ -34,6 +34,16 @@ A bridge is frozen here, before any run, from code and cards: B takes a kind
 of record row that A writes (the static reading), or B's card names A in
 uses:, looks-for: or hands:. A run tests it; a run doesn't make one.
 
+A record bridge is the third kind, frozen the same way: a step whose code
+reads the record at all (the static reading's reads_record) is reached by
+any step that adds a row to it (its code writes a kind, appends one whose
+kind it can't read, or asks for a bite, since the kernel writes a bite row
+for each; or its own command line is a bite). It
+is too wide to give each pair a stack of its own, so it is kept apart in
+the manifest's record_bridges, as two lists: the null reads it as it reads
+the others, and a step that changes in a stack with nothing but this to
+reach it is expected, not a broken null.
+
 Steps keep COMMANDS' `{box}`, `{pile}` and `{tmp}`, each step's `{tmp}` its
 own folder under it. `fill` writes a stack for one pile: `{pile}` and `{tmp}`
 filled in, each step's folder made under TMP; `{box}` is stack.py's.
@@ -119,6 +129,18 @@ def bridges(card: dict[str, dict], static: dict, have: set[str]) -> list[dict]:
         if a in have and b in have:
             pairs.setdefault((a, b), []).append(why)
     return [{"from": a, "to": b, "by": whys} for (a, b), whys in sorted(pairs.items())]
+
+
+def record_bridges(static: dict, step: dict[str, list[str]]) -> dict:
+    """The record's readers and the steps that add rows to it, each with a
+    step: by the static reading, or a step whose own command line bites."""
+    readers = sorted(
+        n for n, s in static.items() if n in step and s.get("reads_record")
+    )
+    givers = sorted(n for n in step if "bite" in step[n] or any(
+        static.get(n, {}).get(k) for k in ("writes", "writes_unread", "bites")))  # fmt: skip
+    why = "record: a reader of the record, after a step that adds rows to it"
+    return {"by": why, "readers": readers, "givers": givers}
 
 
 def slug(text: str) -> str:
@@ -216,7 +238,9 @@ def do_write(to: Path) -> int:
     near = {
         n: v.get("near", []) for n, v in json.loads(WEEK.read_text())["worked"].items()
     }
-    links = bridges(card, json.loads(STATIC.read_text()), set(step))
+    static = json.loads(STATIC.read_text())
+    links = bridges(card, static, set(step))
+    record = record_bridges(static, step)
     rows = grid(plan, card, step, near, links)
     (to / "stacks").mkdir(parents=True)
     for row in rows:
@@ -241,12 +265,14 @@ def do_write(to: Path) -> int:
                   for n, a in step.items()},
         "no_step": sorted(n for n in card if n not in step),
         "bridges": links,
+        "record_bridges": record,
         "ways": ways,
         "stacks": rows,
     }  # fmt: skip
     text = json.dumps(manifest, indent=1, sort_keys=True) + "\n"
     (to / "manifest.json").write_text(text, encoding="utf-8")
-    print(f"wrote {len(rows)} stacks of {len(step)} steps, {len(links)} bridges; "
+    print(f"wrote {len(rows)} stacks of {len(step)} steps, {len(links)} bridges, "
+          f"{len(record['readers'])} record readers after {len(record['givers'])} row adders; "
           f"manifest {sha(text.encode())}")  # fmt: skip
     for way, n in ways.items():
         print(f"  {way:12} {n}")

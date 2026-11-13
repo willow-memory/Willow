@@ -163,3 +163,25 @@ def test_a_bad_command_line_or_a_full_folder_is_refused(tmp_path):
     (tmp_path / "full" / "x").write_text("x")
     got = run("write", "--to", tmp_path / "full")
     assert got.returncode == 2 and "isn't an empty folder" in got.stderr
+
+
+def test_record_bridges_reach_each_reader_from_any_step_that_adds_rows(made):
+    _, m = made
+    rec, static = m["record_bridges"], json.loads(grid.STATIC.read_text())
+    assert rec["by"].startswith("record:")
+    assert rec["readers"] == sorted(
+        n for n in m["steps"] if static.get(n, {}).get("reads_record")
+    )
+    for n in rec["givers"]:
+        s = static.get(n, {})
+        assert (
+            "bite" in m["steps"][n]["args"]
+            or s.get("writes")
+            or s.get("writes_unread")
+            or s.get("bites")
+        ), n
+    # the ten the trace saw change in the stack of all 351 read the record
+    for n in "again cloudevents forecasts game-master nightstand predict prov sent-log three-two-one".split():
+        assert n in rec["readers"], n
+    # too wide for stacks of their own: the bridge rows are the bridges'
+    assert sum(r["way"] == "bridge" for r in m["stacks"]) == len(m["bridges"])
