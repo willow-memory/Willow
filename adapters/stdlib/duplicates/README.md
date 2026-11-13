@@ -3,7 +3,7 @@ section: Finding things
 line: Passages that say the same thing in two files, and which one is newer.
 source: new
 added: 2026-10-27
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

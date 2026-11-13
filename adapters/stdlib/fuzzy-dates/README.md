@@ -3,7 +3,7 @@ section: Finding things
 line: Dates that admit doubt ('about 1880', 'sometime in March') read and kept with their doubt, in EDTF.
 source: new
 added: 2026-10-27
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
