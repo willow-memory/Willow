@@ -20,7 +20,7 @@ and the game master's calls are yours: this never makes one.
     python adapters/stdlib/game-master/game_master.py --box DIR act Weird --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR ask    --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR settle --world night.json
-    python adapters/stdlib/game-master/game_master.py --box DIR offer bo "A guest walks in" --world night.json
+    python adapters/stdlib/game-master/game_master.py --box DIR offer bo "A guest walks in" --as guest --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR check
 
 **An action beat** is rolled with `act STAT`: dice's own `2d6` roll (a `roll`
@@ -48,6 +48,15 @@ an offer sits beside the story's path, never on it, so the dice and the
 beats are the same with it or without. The next `settle` reads the answer
 back and writes a `table-heard` row for each offer you have sealed or
 declined. Only a seal makes it canon. `status` lists the offers waiting.
+
+**The story can turn on an offer.** Nobody can name ahead of time what a
+player will bring, so a world names the kinds of offer it turns on,
+`"offers": ["guest"]`, and a player's offer can say which it is, `--as
+guest`. A beat with `"when": {"offered": "guest", "is": ["sealed"]}` is
+played only if, when the story reaches it, your last answer to a guest
+offered was a seal; `declined` and `none` (no guest answered yet) go the
+other ways. What the story reached is fixed by the rows: an answer written
+after a beat was passed by doesn't put it back.
 
 **A world** is a JSON file:
 

@@ -945,3 +945,121 @@ def test_check_finds_an_answer_no_offer_or_seal_stands_behind(t, how):
         says = "an offer answered twice"
     got = t.run("check")
     assert got.returncode == 2 and says in got.stderr
+
+
+# ── a beat that turns on what the table offered ─────────────────────────────
+def guested() -> dict:
+    """Ana opens the gate (always strong), then the story turns on whether a
+    guest the table offered was sealed."""
+    w = copy.deepcopy(WORLD)
+    w["characters"][0]["stats"] = {"Grit": 10}
+    w["characters"][1]["seat"] = False
+    w["offers"] = ["guest"]
+    w["scenes"] = [{"id": "s1", "title": "Dusk", "place": "bridge", "opening": ["The light goes."],
+        "beats": [
+            {"id": "gate", "kind": "action", "prompt": "Ana opens the gate.", "suggests": "Grit", "outcomes": outcomes("gate")},
+            {"id": "welcome", "kind": "action", "prompt": "Ana welcomes the table's guest.", "suggests": "Grit",
+             "when": {"offered": "guest", "is": ["sealed"]}, "outcomes": outcomes("welcome")},
+            {"id": "alone", "kind": "action", "prompt": "Ana goes on alone.", "suggests": "Grit",
+             "when": {"offered": "guest", "is": ["none", "declined"]}, "outcomes": outcomes("alone")},
+        ]}]  # fmt: skip
+    return w
+
+
+def test_with_no_guest_offered_the_story_goes_the_none_way(tmp_path):
+    t = Table(tmp_path, guested())
+    t.run("open")
+    t.run("act", "Grit")
+    t.run("act", "Grit")
+    assert played(t) == ["s1::gate", "s1::alone"] and t.run("check").returncode == 0
+
+
+def test_a_guest_sealed_before_the_story_reaches_it_turns_the_story(tmp_path):
+    t = Table(tmp_path, guested())
+    t.run("open")
+    got = t.run("offer", "ana", "Old Vell comes too.", "--as", "guest")
+    assert got.returncode == 42 and offers(t)[-1]["as"] == "guest"
+    assert t.run("act", "Grit").returncode == 0  # the gate: the offer waits beside it
+    t.k("seal", offers(t)[-1]["subject"])
+    assert "you sealed it" in t.run("settle").stdout and heard(t)[-1]["as"] == "guest"
+    assert "Ana welcomes the table's guest" in t.run("status").stdout
+    t.run("act", "Grit")
+    assert played(t) == ["s1::gate", "s1::welcome"]
+    assert (
+        t.run("check").returncode == 0 and t.run("check", world=False).returncode == 0
+    )
+
+
+def test_a_guest_declined_goes_the_other_way(tmp_path):
+    t = Table(tmp_path, guested())
+    t.run("open")
+    t.run("offer", "ana", "A dragon comes too.", "--as", "guest")
+    t.k("decline", offers(t)[-1]["subject"])
+    t.run("settle")
+    t.run("act", "Grit")
+    t.run("act", "Grit")
+    assert played(t) == ["s1::gate", "s1::alone"] and t.run("check").returncode == 0
+
+
+def test_a_guest_sealed_after_the_story_passed_is_not_played_back(tmp_path):
+    """What the story reached is fixed by the rows: an answer written after
+    a beat was passed by doesn't put it back."""
+    t = Table(tmp_path, guested())
+    t.run("open")
+    t.run("offer", "ana", "Old Vell comes too.", "--as", "guest")
+    t.run("act", "Grit")
+    t.run("act", "Grit")  # alone: nothing was sealed yet
+    t.k("seal", offers(t)[-1]["subject"])
+    t.run("settle")
+    assert played(t) == ["s1::gate", "s1::alone"]
+    assert "finished" in t.run("status").stdout and t.run("check").returncode == 0
+
+
+def test_an_offer_as_a_kind_the_world_doesnt_name_is_refused(tmp_path):
+    t = Table(tmp_path, guested())
+    t.run("open")
+    got = t.run("offer", "ana", "Old Vell comes too.", "--as", "twist")
+    assert got.returncode == 2 and "isn't a kind of offer this world turns on (it names: guest)" in got.stderr  # fmt: skip
+    plain = Table(tmp_path / "plain")
+    plain.run("open")
+    assert "(it names: none)" in plain.run("offer", "ana", "x", "--as", "guest").stderr
+
+
+def test_check_finds_an_offers_kind_changed_after(tmp_path):
+    t = Table(tmp_path, guested())
+    t.run("open")
+    t.run("offer", "ana", "Old Vell comes too.", "--as", "guest")
+    o = offers(t)[-1]
+    t.k("seal", o["subject"])
+    t.forge(gm.HEARD, game=o["game"], subject=o["subject"], by="ana", verdict="sealed",
+            ruling_row=[r for r in t.rows() if r["kind"] == "seal"][-1]["n"])  # fmt: skip
+    assert (
+        "the answer says its offer was a None, the offer says 'guest'"
+        in t.run("check").stderr
+    )
+
+
+def test_check_finds_a_beat_played_on_a_guest_nobody_sealed(tmp_path):
+    t = Table(tmp_path, guested())
+    t.run("open")
+    t.run("act", "Grit")
+    game = [r for r in t.rows() if r["kind"] == gm.OPEN][0]["n"]
+    t.forge(game=game, beat_kind="action", scene="s1", beat="welcome")
+    assert "not the beat the world has at place 1" in t.run("check").stderr
+
+
+@pytest.mark.parametrize(
+    "change, says",
+    [
+        (lambda w: w.__setitem__("offers", ["guest", "guest"]), "none repeated"),
+        (lambda w: w.__setitem__("offers", "guest"), "world.offers"),
+        (lambda w: w["scenes"][0]["beats"][1]["when"].__setitem__("offered", "twist"), "is not one of world.offers"),
+        (lambda w: w["scenes"][0]["beats"][1]["when"].__setitem__("is", ["strong"]), "an offer comes out sealed, declined, none"),
+        (lambda w: w["scenes"][0]["beats"][1]["when"].__setitem__("is", []), "an offer comes out"),
+    ],
+)  # fmt: skip
+def test_an_offered_when_that_isnt_one_is_refused(change, says):
+    w = guested()
+    change(w)
+    with pytest.raises(gm.WorldError, match=says):
+        gm.validate(w)

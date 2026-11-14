@@ -102,7 +102,7 @@ each with the want it answers:
 ## A session, played by code
 
     python demo/game-box/session.py --table DIR --world clockwork-cellar
-    python demo/game-box/session.py --table DIR --world clockwork-cellar offer pell "A guest comes down the stair"
+    python demo/game-box/session.py --table DIR --world clockwork-cellar offer pell "A guest comes down the stair" --as guest
     python demo/game-box/session.py --table DIR canon
 
 `session.py` is the GM's bookkeeping with no model in it. It rolls each
@@ -119,6 +119,11 @@ the GM's seal, and the story goes on while the GM thinks it over: an offer
 sits beside the story's path, so the dice and the beats are the same with it
 or without. Once the GM seals or declines it, the next run writes the answer
 down before it plays on. A sealed offer is canon that night.
+
+**The story turns on it.** The cellar names one kind of offer it turns on,
+`"offers": ["guest"]`. An offer made `--as guest` and sealed before the
+story's end gets a beat of its own: Brann asks the guest the table brought
+what they came down here for. With no guest sealed, that beat never comes.
 
 `canon` is the table's memory of what it decided. It lists every ruling
 sealed on the record whose seal still holds, and every one declined. It
@@ -150,8 +155,9 @@ the test, the test standing in for the GM:
   answered.
 - **A guest invented on the night.** Pell's player brings Old Vell down
   the stair mid-session; the story plays on while it waits; once sealed it
-  is in canon, marked as Pell's offer. One declined is canon as a no, and
-  only a seated character can offer.
+  is in canon, marked as Pell's offer. Sealed as a guest, the story gives
+  the guest a beat; with none, it doesn't. One declined is canon as a no,
+  and only a seated character can offer.
 - **Canon is the seals.** A ruling declined shows as a no. Asking the
   record about a scene not played yet serves nothing from the worlds.
 
@@ -184,8 +190,6 @@ Each is fixed, and its own tests now hold it.
 - **An AI game master.** A model proposing beats, rulings and its own
   offers on loopback, the GM sealing them. `session.py` is the bookkeeping
   it would sit on, and `offer` is the door it would come through.
-- **An offer that changes the path.** An offer is canon, but no beat yet
-  turns on it: a `when` names an earlier beat, not an offer.
 - **A monster's numbers drifting between pages.** No card reads it yet; it
   is an idea on willow's list, `sheet-drift`.
 - **Asking canon in your own words.** The kernel serves a sealed answer to

@@ -438,3 +438,36 @@ def test_an_offer_is_a_seated_characters(t):
     t.session()
     got = t.session("offer", "cogwen", "Cogwen was a person once.")
     assert got.returncode == 2 and "isn't a seated character" in got.stderr
+
+
+def test_a_guest_sealed_as_a_guest_gets_a_beat_of_their_own(t):
+    """The cellar turns on a guest the table offered: sealed before the
+    story's end, Brann asks the guest what they came down here for."""
+    t.open()
+    t.session()
+    got = t.session("offer", "pell", VELL, "--as", "guest")
+    assert got.returncode == 42
+    t.seal([r for r in t.rows() if r["kind"] == "table-offer"][-1]["subject"])
+    assert t.night().returncode == 0
+    assert t.beats()[-1].startswith("stranger:")
+    last = [r for r in t.rows() if r["kind"] == "table-beat"][-1]
+    world = json.loads((t.dir / "worlds" / "clockwork-cellar.json").read_text())
+    stranger = next(b for b in world["scenes"][1]["beats"] if b["id"] == "stranger")
+    assert (
+        last["character"] == "brann"
+        and last["text"] == stranger["outcomes"][last["band"]]
+    )
+    assert "every one holds" in t.check().stdout
+
+
+def test_with_no_guest_offered_the_cellar_has_no_stranger(t):
+    t.open()
+    t.night()
+    assert not any(b.startswith("stranger:") for b in t.beats())
+
+
+def test_an_offer_as_a_kind_the_cellar_doesnt_turn_on_is_refused(t):
+    t.open()
+    t.session()
+    got = t.session("offer", "pell", VELL, "--as", "twist")
+    assert got.returncode == 2 and "(it names: guest)" in got.stderr

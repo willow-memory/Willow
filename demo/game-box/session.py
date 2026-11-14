@@ -1,7 +1,7 @@
 """session.py: a session at the table played by code, as far as it goes without the person. Python 3.9+.
 
     python demo/game-box/session.py --table DIR [--world NAME] [--now TS]
-    python demo/game-box/session.py --table DIR [--world NAME] offer CHARACTER "FACT"
+    python demo/game-box/session.py --table DIR [--world NAME] offer CHARACTER "FACT" [--as KIND]
     python demo/game-box/session.py --table DIR canon
 
 The game master's bookkeeping, done by code: every action beat is rolled for
@@ -125,8 +125,10 @@ def answered(box: Path, rows: list[dict], game: dict) -> bool:
     return any(gm.ruling(box, rows, o["subject"])[0] in ("sealed", "declined") for o in gm.unheard(game))  # fmt: skip
 
 
-def offer(box: Path, world_file: Path, now: str, who: str, fact: str) -> int:
-    done = step(box, world_file, now, "offer", who, fact)
+def offer(box: Path, world_file: Path, now: str, who: str, fact: str, kind: str = "") -> int:  # fmt: skip
+    done = step(
+        box, world_file, now, "offer", who, fact, *(["--as", kind] if kind else [])
+    )
     print((done.stdout or done.stderr).rstrip(), file=sys.stdout if done.stdout else sys.stderr)  # fmt: skip
     return done.returncode
 
@@ -178,7 +180,7 @@ def play(box: Path, world_file: Path, now: str) -> int:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--table", "--world", "--now"):
+        if a in ("--table", "--world", "--now", "--as"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -197,9 +199,7 @@ def main(argv: list[str]) -> int:
     if not world_file.exists():
         return fail(f"no world {world_file.stem!r} in {world_file.parent}")
     if args:
-        return offer(
-            box, world_file, opts.get("--now") or kernel.now(), args[1], args[2]
-        )
+        return offer(box, world_file, opts.get("--now") or kernel.now(), args[1], args[2], opts.get("--as", ""))  # fmt: skip
     return play(box, world_file, opts.get("--now") or kernel.now())
 
 

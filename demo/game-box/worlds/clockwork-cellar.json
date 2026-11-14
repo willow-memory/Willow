@@ -8,6 +8,9 @@
   "Heart",
   "Weird"
  ],
+ "offers": [
+  "guest"
+ ],
  "base_stat": 1,
  "characters": [
   {
@@ -187,6 +190,24 @@
      "proposes": {
       "fact": "Prince Aldric is free, and owes Juno a riddle.",
       "proposed_by": "aldric"
+     }
+    },
+    {
+     "id": "stranger",
+     "kind": "action",
+     "by": "brann",
+     "prompt": "Brann asks the guest the table brought what they came down here for.",
+     "suggests": "Heart",
+     "when": {
+      "offered": "guest",
+      "is": [
+       "sealed"
+      ]
+     },
+     "outcomes": {
+      "strong": "The guest tells them, and it's the start of the next story.",
+      "weak": "The guest tells them half of it, and keeps the rest.",
+      "miss": "The guest smiles, and says they'll know soon enough."
      }
     }
    ]
