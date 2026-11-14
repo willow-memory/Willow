@@ -255,3 +255,16 @@ def test_a_suggestion_passed_twice_in_an_older_record_waits_once(tmp_path):
                      bite_row=held["bite_row"])  # fmt: skip
     doc = dg.digest(b, TODAY)
     assert [w["answer"] for w in doc["waiting"]["items"]] == ["30 October"]
+
+
+def test_a_long_place_is_cut_to_sixty_columns_and_the_rest_line_up_there():
+    """A subject is 73 characters; the column it sets is held to 60, so a
+    short place beside it is padded to 60, not to the subject."""
+    subj = "proposal:" + "a" * 64
+    doc = {"addon": "digest", "state": "populated", "said": "1 waiting",
+           "groups": [{"name": "Waiting for you",
+                       "rows": [{"where": subj, "what": "Six."},
+                                {"where": "notes.md:1", "what": "Seven."}]}]}  # fmt: skip
+    lines = dg.report_text(doc).splitlines()
+    assert lines[2] == f"  {subj}  Six."
+    assert lines[3] == "  notes.md:1" + " " * 50 + "  Seven."
