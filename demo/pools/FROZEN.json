@@ -6,7 +6,7 @@
  "files": {
   "demo/pools/truth/rules.json": "bd9701cf018ee62e5ba2986731bdb2a516bdf675334ea77275e1c71e3b595532",
   "demo/pools/truth/truth.py": "4a6556c5c3a121cf215246c1647e4abdedf6630974129791b56908908485ac47",
-  "demo/pools/trace/trace.py": "98a94b654a19910fb6ca1e395106602c2fd339b572f460c03259451ad78d8f9e",
+  "demo/pools/trace/trace.py": "01f1a7bebfb3604a9f0c5956338ea90603099dcdba2cd368bcc3b731c801268c",
   "demo/pools/grid/grid.py": "6a995794322588bd3017f3b0d1a033d956cf212899c8b798e3344f432d1f2dd9",
   "demo/pools/grid/plan.json": "1c5c5ca66869f515a4a6c63fcd13b6976bd6cb9782e06936a2b2f0287f68f43a",
   "demo/pools/static/static.py": "03afb89de5eabdfba4b958283589e44408e79632f9af615e36c83394337e5423",
@@ -173,6 +173,16 @@
    },
    "now": {
     "demo/pools/trace/trace.py": "98a94b654a19910fb6ca1e395106602c2fd339b572f460c03259451ad78d8f9e"
+   }
+  },
+  {
+   "frozen": "2026-11-14",
+   "why": "The run memory counts the box's file list among every remembered step's reads, since asking whether a file is there is a read no audit event names (Rattle models it as one). It makes reuse stricter, never looser: the fifth freeze's runs stand. Measured on climate-almanac: 49% saved, every reused row the plain run's.",
+   "was": {
+    "demo/pools/trace/trace.py": "98a94b654a19910fb6ca1e395106602c2fd339b572f460c03259451ad78d8f9e"
+   },
+   "now": {
+    "demo/pools/trace/trace.py": "01f1a7bebfb3604a9f0c5956338ea90603099dcdba2cd368bcc3b731c801268c"
    }
   }
  ]
