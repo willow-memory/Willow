@@ -696,6 +696,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "connect": ("connect.py", ["--box", "{box}", "--first", "no-such-file.txt:1", "--second", "no-such-file.txt:2", "--host", "127.0.0.1:9"]),
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),
+    "crazy-eights": ("crazy_eights.py", ["--box", "{box}", "new"]),
     "cursor": ("cursor.py", ["--box", "{box}"]),
     "daily-word": ("daily_word.py", ["--box", "{box}", "today", *NOW]),
     "debts": ("debts.py", ["--box", "{box}"]),

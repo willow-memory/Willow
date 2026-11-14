@@ -1965,6 +1965,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="checkers"></a>[**checkers**](adapters/stdlib/checkers/) \
   Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
   *new* `no-install` `offline` `rows` `draw` · near: catgrid, game-master, life
+- <a id="crazy-eights"></a>[**crazy-eights**](adapters/stdlib/crazy-eights/) \
+  Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
+  *new* `no-install` `offline` `seeded` `tip` · near: tarot, life, catgrid
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: quiz, surprise, serve

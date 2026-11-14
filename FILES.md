@@ -1608,6 +1608,10 @@ willow/
 │   │   │   ├── checkers.py   checkers (English draughts) played on the record, the table's ruler sealing a draw
 │   │   │   ├── test_checkers.py
 │   │   │   └── README.md     its card
+│   │   ├── crazy-eights/
+│   │   │   ├── crazy_eights.py Crazy Eights played on the record, hands open, the deal seeded
+│   │   │   ├── test_crazy_eights.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1644,15 +1648,15 @@ willow/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quiz/
+
+```
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
 │   │   │   ├── test_quiz.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from tarot/
-
-```
 │   │   ├── tarot/
 │   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
 │   │   │   ├── test_tarot.py
