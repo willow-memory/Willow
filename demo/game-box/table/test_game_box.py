@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]  # the box: this test sits in table/
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402

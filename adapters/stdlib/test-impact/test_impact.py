@@ -201,7 +201,14 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
             "tests:adapters",
         ]  # the contract's share
         + ["tests:adapters"] * n
-        + ["tests:docs", "tests:ui", "demo:stack", "mutants:changed"]
+        + [
+            "tests:docs",
+            "tests:ui",
+            "demo:game-box",
+            "demo:game-box-end",
+            "demo:stack",
+            "mutants:changed",
+        ]
     )
     narrow, own = (
         "WILLOW_ONLY=changed pytest",

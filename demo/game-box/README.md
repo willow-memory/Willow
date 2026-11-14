@@ -233,7 +233,7 @@ what the GM wrote.
 
 ## What the tests hold
 
-[test_game_box.py](test_game_box.py) plays it through, with a key made for
+[table/test_game_box.py](table/test_game_box.py) plays it through, with a key made for
 the test, the test standing in for the GM:
 
 - **Opening seals nothing.** Seven proposals and no seal. The key is outside

@@ -2223,6 +2223,8 @@ willow/
 │   │   │       ├── 2026-11-07.md Session, 7 November 2026
 │   │   │       └── 2026-11-14.md Session, 14 November 2026
 │   │   ├── check.md          the table's own check
+│   │   ├── end/
+│   │   │   └── test_end.py
 │   │   ├── gm-end.md         the game master's end of the night
 │   │   ├── gm-stack.md       the game master's prep sheet
 │   │   ├── gm-words.txt
@@ -2233,14 +2235,14 @@ willow/
 │   │   ├── session.py        a session at the table played by code, as far as it goes without the person
 │   │   ├── stories/
 │   │   │   └── wasp-nest.md  The Wasp Nest
+│   │   ├── table/
+│   │   │   └── test_game_box.py
 │   │   ├── worlds/
 │   │   │   ├── aetheris.json
 │   │   │   ├── clockwork-cellar.json
 │   │   │   ├── hasbeen.json
 │   │   │   ├── ironworks.json
 │   │   │   └── lantern-fair.json
-│   │   ├── test_end.py
-│   │   ├── test_game_box.py
 │   │   └── README.md         The game box
 │   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
