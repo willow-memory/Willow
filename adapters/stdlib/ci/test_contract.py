@@ -667,6 +667,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "assistant-scores": ("assistant_scores.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
+    "backgammon": ("backgammon.py", ["--box", "{box}", "new"]),
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "badge": ("badge.py", ["--box", "{box}", "--to", "{tmp}/badge.svg"]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),

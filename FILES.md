@@ -1596,6 +1596,10 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
+│   │   ├── backgammon/
+│   │   │   ├── backgammon.py backgammon played on the record, the dice thrown by dice
+│   │   │   ├── test_backgammon.py
+│   │   │   └── README.md     its card
 │   │   ├── catgrid/
 │   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
 │   │   │   ├── test_catgrid.py
