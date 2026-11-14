@@ -290,8 +290,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # a pull request checks main's commit out beside its own, to stand on
-          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+          # a pull request checks main's commit out beside its own, to stand
+          # on: all history there (0), one commit elsewhere. Written this way
+          # round because 0 is false to an expression: `pr && 0 || 1` is 1
+          fetch-depth: ${{ github.event_name != 'pull_request' && 1 || 0 }}
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
