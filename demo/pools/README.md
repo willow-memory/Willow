@@ -209,6 +209,58 @@ were; the new ones are [truth/changes.py](truth/changes.py).
   to kinds, and no word is kept. The maintainer's idea, from the willows-grove repository's
   one-script design, "Matching when the wording isn't exact".
 
+## The second report: phase 7 on willow and willows-grove (2026-11-14)
+
+The seventh freeze's grid, two notebooks a pile on Kaggle, measured by
+changes.py as the ninth freeze has it. Two of changes.py's pieces were
+written after these rows were read, and say so: readers grouped by the
+writers that move them (the eighth freeze), and the two faults below (the
+ninth). Names are as at the frozen commit; since then add-ons were renamed
+(`adapters/renamed.json`), and the new name follows in brackets where it
+changed.
+
+**Fired, against an empty pile:** 161 of 357 steps on willow, 113 on the
+grove. The first count of firing that tells two piles apart.
+
+**Bridges held:** the taker changed in 3 of 402 bridge stacks, and the
+second step in 0 of 1,946 no-bridge pairs (one-sided Fisher p 0.005). The
+three: openai-compatible then sent-log on willow, and dice [play-dice] then
+game-master on both. So nearly every bridge the code reading and the cards
+draw carries nothing; the few that do carry rows.
+
+**Readers, grouped by the writers that move them** (1,966 kind stacks, 222
+moved their reader):
+
+| Moved by | Readers |
+|---|---|
+| any writer put before it: it reads the record as a whole | box-health, cloudevents, forecasts, nightstand, predict [forecast-ask], prov, three-two-one |
+| a bite: llm-cli, predict [forecast-ask], session-seal | sent-log, serve [approved-only] |
+| a session: session-seal | assistant-scores, digest, hook-compact, hook-start |
+| a roll: dice [play-dice] | game-master |
+
+The groups are the same on both piles but one: on the grove, a bite from
+llm-cli or predict moved neither sent-log nor serve, and session-seal's
+did. The bites' shapes were the same on both piles; predict's answer named
+14 places in willow and none in the grove. The steps joined by any change
+make one group of 27, since a reader of the whole record joins every
+writer to every other: the connected groups say nothing here, and the
+grouping by writers is what replaces them.
+
+**Two faults in the measure, found in the controls and fixed stricter:**
+
+- **A timeout was counted as a change.** On the grove ocr took 27 to 80
+  seconds alone and hit the 120-second limit in 22 stacks; two of those were
+  no-bridge pairs, counted as changed. A row that timed out is now held to
+  nothing.
+- **Unsteady was decided a notebook at a time.** handover's single stack
+  ran in one of willow's two notebooks, where it differs from handover alone:
+  handover reads the run it is in, so any company moves it. In the other
+  notebook it was held, and stack then handover (a bridge) and karakeep then
+  handover (a pair) counted. A step unsteady in any of a pile's runs is now
+  unsteady in all of them.
+
+Before the fixes: bridges 5 of 404, controls 4 of 1,950, p 0.010.
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and
