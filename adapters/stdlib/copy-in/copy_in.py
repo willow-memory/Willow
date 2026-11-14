@@ -12,10 +12,11 @@ before is copied to DIR/<its path> and logged in DIR/copied-in.jsonl, one
 line a copy: its path in FOLDER, where it went in DIR, its size and its
 sha256. The copy is read back and must hash the same, or it is said.
 
-**The log is the memory.** A file whose sha256 is in the log is "already
-in" and not copied again, wherever it sits in FOLDER and whether or not its
-copy is still in DIR: what you deleted from DIR stays deleted. Files with
-the same bytes twice in FOLDER are copied once.
+**The log is the memory.** A file is its path in FOLDER and its bytes: one
+whose path and sha256 are in the log is "already in" and not copied again,
+whether or not its copy is still in DIR, so what you deleted from DIR stays
+deleted. The same bytes at two paths are two files, and both come in; a file
+moved on the other device comes in at its new path.
 
 **Nothing is deleted, nothing replaced.** A file gone from FOLDER is left
 in DIR. A file with new bytes at a path DIR already holds (it changed on the
@@ -98,13 +99,13 @@ def skipped_by(path: str, skip: list[str]) -> bool:
     )
 
 
-def logged(dst: Path) -> dict[str, str] | None:
-    """{sha256: where it went} from DIR's log; None when a line isn't one
-    this wrote."""
+def logged(dst: Path) -> set[tuple[str, str]] | None:
+    """{(path in FOLDER, sha256)} from DIR's log; None when a line isn't
+    one this wrote."""
     log = dst / LOG
     if not log.is_file():
-        return {}
-    out: dict[str, str] = {}
+        return set()
+    out: set[tuple[str, str]] = set()
     for line in log.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
@@ -115,10 +116,10 @@ def logged(dst: Path) -> dict[str, str] | None:
         if (
             not isinstance(row, dict)
             or not isinstance(row.get("sha256"), str)
-            or not isinstance(row.get("to"), str)
+            or not isinstance(row.get("from"), str)
         ):
             return None
-        out.setdefault(row["sha256"], row["to"])
+        out.add((row["from"], row["sha256"]))
     return out
 
 
@@ -157,7 +158,7 @@ def free(dst: Path, rel: str, taken: set[str]) -> str:
         n += 1
 
 
-def copy_in(src: Path, dst: Path, skip: list[str], dry: bool, known: dict) -> dict:
+def copy_in(src: Path, dst: Path, skip: list[str], dry: bool, known: set) -> dict:
     found, links = files(src)
     copied: list = []
     there: list = []
@@ -165,7 +166,6 @@ def copy_in(src: Path, dst: Path, skip: list[str], dry: bool, known: dict) -> di
     unread: list = []
     unchecked: list = []
     already = skipped = 0
-    seen: dict[str, str] = {}  # sha256 -> path in FOLDER, this run
     taken: set[str] = set()  # DIR paths a dry run would have used
     lines: list = []
     for rel in found:
@@ -178,13 +178,9 @@ def copy_in(src: Path, dst: Path, skip: list[str], dry: bool, known: dict) -> di
         except OSError as e:
             unread.append((rel, f"couldn't be read: {type(e).__name__}"))
             continue
-        if digest in known:
+        if (rel, digest) in known:
             already += 1
             continue
-        if digest in seen:
-            there.append((rel, f"the same bytes as {seen[digest]}, copied once"))
-            continue
-        seen[digest] = rel
         target = dst / rel
         if target.is_file() and sha(target) == digest:
             there.append((rel, "already there, now logged"))

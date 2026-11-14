@@ -1,5 +1,6 @@
 """copy-in: a new file is copied and logged with its hash; the log keeps a
-file from coming in twice, even once deleted from DIR; nothing is deleted
+file (its path and its bytes) from coming in twice, even once deleted from
+DIR; the same bytes at two paths are two files; nothing is deleted
 or replaced, a changed file goes beside the first; --dry-run writes
 nothing; --json is the same report; a bad command line is refused."""
 
@@ -67,14 +68,17 @@ def test_a_second_run_copies_nothing_and_a_deleted_copy_stays_deleted(tmp_path):
     assert len(log(dst)) == 2
 
 
-def test_a_file_moved_on_the_other_device_is_already_in(tmp_path):
+def test_a_file_moved_on_the_other_device_comes_in_at_its_new_path(tmp_path):
     src = phone(tmp_path, {"a.txt": "one"})
     dst = tmp_path / "phone"
     run("--from", str(src), "--to", str(dst))
     (src / "a.txt").rename(src / "moved.txt")
     got = run("--from", str(src), "--to", str(dst))
-    assert "copied 0 new files, 1 already in" in got.stdout
-    assert not (dst / "moved.txt").exists()
+    assert "copied 1 new files, 0 already in" in got.stdout
+    assert (dst / "moved.txt").read_text() == "one"
+    assert (dst / "a.txt").read_text() == "one"  # the old copy stays
+    again = run("--from", str(src), "--to", str(dst))
+    assert "copied 0 new files, 1 already in" in again.stdout
 
 
 def test_a_changed_file_goes_beside_the_first_and_neither_is_replaced(tmp_path):
@@ -106,14 +110,14 @@ def test_a_file_gone_from_the_folder_is_left_in_dir(tmp_path):
     assert (dst / "a.txt").read_text() == "one"
 
 
-def test_the_same_bytes_twice_are_copied_once(tmp_path):
-    src = phone(tmp_path, {"a.txt": "same", "b/a copy.txt": "same"})
+def test_the_same_bytes_at_two_paths_are_two_files_both_copied(tmp_path):
+    src = phone(tmp_path, {"run-1/machine.json": "same", "run-2/machine.json": "same"})
     dst = tmp_path / "phone"
     got = run("--from", str(src), "--to", str(dst))
-    assert "copied 1 new files" in got.stdout
-    assert "the same bytes as a.txt, copied once" in got.stdout
-    assert not (dst / "b").exists()
-    assert len(log(dst)) == 1
+    assert "copied 2 new files" in got.stdout
+    assert (dst / "run-1/machine.json").read_text() == "same"
+    assert (dst / "run-2/machine.json").read_text() == "same"
+    assert [r["from"] for r in log(dst)] == ["run-1/machine.json", "run-2/machine.json"]
 
 
 def test_the_same_file_already_there_unlogged_is_logged_not_copied(tmp_path):

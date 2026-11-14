@@ -29,10 +29,11 @@ device has new files; only what DIR hasn't had comes in.
 
 **The log is the memory.** Each copy is a line of `<DIR>/copied-in.jsonl`:
 its path in FOLDER, where it went in DIR, its size and its SHA-256. A file
-whose hash is in the log is "already in", wherever it sits in FOLDER, so a
-file moved on the phone isn't copied twice, and one you deleted from DIR
-stays deleted. The same bytes twice in FOLDER come in once. Every copy is
-read back and must hash the same.
+is its path and its bytes: one whose path and hash are in the log is
+"already in", so one you deleted from DIR stays deleted. The same bytes at
+two paths are two files (a folder of runs keeps each run's own copy), and a
+file moved on the phone comes in at its new path, the old copy kept. Every
+copy is read back and must hash the same.
 
 **Nothing is deleted, nothing replaced.** A file gone from FOLDER stays in
 DIR. New bytes at a path DIR already holds (the file changed on the phone,
