@@ -119,6 +119,15 @@ the steps' own unsteadiness in company, not the memory's. The more of a
 stack's steps a run has seen before, the more is saved: all-but-one, the
 row that costs most, repeats almost every step.
 
+**What a check caught, on Kaggle.** The willow pile's first Phase A ran
+from 23:43 to 01:02 UTC. Of its 114 checks, one differed: syllabus,
+whose every read was as remembered, printed otherwise. It counts days from
+today, and the clock is a read no audit event names; midnight had passed.
+The memory had reused its row from before midnight five more times after.
+So a remembered step is now good for the UTC day it ran on only, and that
+run's rows are not used. A step that depends on the time more finely than
+a day shows as unsteady in stage 0's two runs, and is never remembered.
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and

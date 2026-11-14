@@ -312,3 +312,19 @@ def test_the_memory_is_refused_inside_the_repository_or_off_a_stack(tmp_path):
     )
     assert trace.main(["stack", "--grid", str(grid), "--stack", "a", *base, "--work", str(tmp_path / "w3"),
                        "--check", "0.5"]) == 2  # fmt: skip
+
+
+def test_nothing_remembered_on_one_day_is_reused_on_the_next(tmp_path, monkeypatch):
+    """syllabus counts days from today, and the clock is a read no audit event
+    names: on Kaggle a run that crossed midnight reused yesterday's row."""
+    pile_at(tmp_path)
+    grid = _memo_grid(tmp_path, {"a": ["markdown"], "b": ["markdown"]})
+    memo = ["--memo", str(tmp_path / "m"), "--check", "0"]
+    monkeypatch.setattr(trace, "today", lambda: "2026-11-13")
+    first = _memo_run(tmp_path, grid, ["a", "b"], "w1", *memo)
+    assert [r["memo"] for r in first] == ["ran", "reused"]
+    monkeypatch.setattr(trace, "today", lambda: "2026-11-14")
+    second = _memo_run(tmp_path, grid, ["a", "b"], "w2", *memo)
+    assert [r["memo"] for r in second] == ["ran", "reused"], (
+        "the new day runs it again, then remembers"
+    )

@@ -53,7 +53,8 @@ the step came.
 
 `--memo DIR` is the run memory: a step whose every read is as it was the
 last time it ran is not run again, and its row and the files it left are
-taken from that time. What a step reads is said by memo/sitecustomize.py,
+taken from that time, on the same day (UTC) only: the clock is an input
+nothing can see read, and a step may count days from today. What a step reads is said by memo/sitecustomize.py,
 which the step runs under before the guard: each file it opened to read,
 each folder it listed, each database it connected to, as a hash of what
 was there. A read of the pile, the box or the stack's scratch folders
@@ -372,9 +373,16 @@ def _box_state(box: Path) -> list:
                   if p.is_file() and p.name != "record.jsonl")  # fmt: skip
 
 
+def today() -> str:
+    """The day, UTC, that a remembered step is good for: the clock is an input
+    no audit event names (syllabus counts days from today), so nothing
+    remembered on one day is reused on the next."""
+    return time.strftime("%Y-%m-%d", time.gmtime())
+
+
 class Memo:
     """Steps remembered on one pile: each time a step ran, what it read and
-    what came of it, the files it left kept by their hash."""
+    what came of it, the files it left kept by their hash, and the day."""
 
     def __init__(self, folder: Path) -> None:
         self.folder = folder
@@ -387,22 +395,27 @@ class Memo:
                 self.seen.setdefault(one["step"], []).append(one)
 
     def find(self, step: str, roots: dict[str, Path]) -> dict | None:
+        day = today()
         for one in self.seen.get(step, []):
-            if all(_digest(roots[role] / rel, "list" if event == "list" else "open") == want
+            if one.get("day") == day and all(_digest(roots[role] / rel, "list" if event == "list" else "open") == want
                    for key, want in one["reads"].items()
                    for event, role, rel in [key.split(" ", 2)]):  # fmt: skip
                 return one
         return None
 
     def keep(self, step: str, reads: dict, row: dict, mine: Path) -> None:
-        if any(one["reads"] == reads for one in self.seen.get(step, [])):
+        day = today()
+        if any(
+            one["reads"] == reads and one.get("day") == day
+            for one in self.seen.get(step, [])
+        ):
             return
         files = {}
         for p in sorted(x for x in mine.rglob("*") if x.is_file()):
             data = p.read_bytes()
             files[p.relative_to(mine).as_posix()] = blob = sha(data)
             (self.folder / "blobs" / blob).write_bytes(data)
-        one = {"step": step, "reads": reads, "row": {k: row[k] for k in row if k != "memo"},
+        one = {"step": step, "day": day, "reads": reads, "row": {k: row[k] for k in row if k != "memo"},
                "files": files}  # fmt: skip
         self.seen.setdefault(step, []).append(one)
         with self.path.open("a", encoding="utf-8") as f:
