@@ -3,7 +3,7 @@ section: For maintainers
 line: What willow's repo needs from GitHub, kept in one folder so it can be taken away.
 source: box
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to list the open pull requests and open yours
 role: repo

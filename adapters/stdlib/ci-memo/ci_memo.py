@@ -2,7 +2,7 @@
 
     python adapters/stdlib/ci-memo/ci_memo.py keys [GATE ...] [--repo DIR]
     python adapters/stdlib/ci-memo/ci_memo.py pin  --box DIR [--box DIR ...] --to FILE [--repo DIR]
-    python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--repo DIR] [--bare] [PART|GATE ...]
+    python adapters/stdlib/ci-memo/ci_memo.py plan --pin FILE [--repo DIR] [--bare | --standing] [PART|GATE ...]
 
 A full `ci.py run` re-checks every add-on on every change, though most gates
 read none of what changed. Each gate's verdict is a function of the bytes it
@@ -22,6 +22,8 @@ SHA-256, sorted, as ci.py hashes the whole tree), and memoizes:
   for you to run. `--bare` prints only their names, for `ci.py run $(...)`.
   Parts or gates named after it, as ci.py names them, narrow the plan to
   those (`plan --pin FILE mutants`); a name ci.py doesn't know is refused.
+  `--standing` prints, on one line, the gates that stand instead, for a
+  job that runs the rest of a part with ci.py's `--without`.
 
 A verdict that stands is the old run's, not a new pass: the same bytes gave
 it, and the pin says which bytes. Three parts are never memoized, because
@@ -44,6 +46,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -55,6 +58,12 @@ CI = Path(__file__).resolve().parents[1] / "ci" / "ci.py"
 spec = importlib.util.spec_from_file_location("willow_ci_for_memo", CI)
 ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
+
+spec = importlib.util.spec_from_file_location(
+    "willow_reach_for_memo", CI.parent / "reach.py"
+)
+reach = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(reach)
 
 ROOT = Path(__file__).resolve().parents[3]
 #: parts whose verdicts reach past the tree, where no hash holds
@@ -114,7 +123,7 @@ def commands_mark(root: Path, files: list[str]) -> str:
     return hashlib.sha256("\n".join(lines).encode()).hexdigest()
 
 
-def inputs(gate: str, files: list[str]) -> list[str]:
+def inputs(gate: str, files: list[str], root: Path = ROOT) -> list[str]:
     """The files a gate's verdict can depend on, each reach drawn wide of the
     truth, never narrow. A gate with no reach drawn here, a repo tool's
     mutants (their tests read the whole tree), and a rule that finds its
@@ -128,6 +137,18 @@ def inputs(gate: str, files: list[str]) -> list[str]:
         return ["kernel.py"]
     if gate == "tests:kernel":
         return ["kernel.py", "test_kernel.py"] + under("vectors/", files)
+    got = re.fullmatch(r"tests:adapters-(\d+)", gate)
+    if got:
+        # a chunk of add-ons' tests: what each can read (reach.py), which the
+        # guard holds them to; one drawn wide makes the chunk the whole tree
+        part = ci.adapter_parts(root)[int(got.group(1)) - 1]
+        prefixes: set = set()
+        for test in part:
+            r = reach.reach(str(root), "stdlib/" + test.split("/")[2])
+            if r is None:
+                return list(files)
+            prefixes |= set(r)
+        return [f for f in files if reach.within(f, sorted(prefixes))]
     if part == "mutants" and name not in REPO_TOOLS:
         own = under(f"adapters/stdlib/{name}/", files)
         if own:
@@ -160,7 +181,7 @@ def keyed(names: list[str], root: Path) -> list[tuple[str, str, str, int]]:
     for part, gate in every:
         if names and gate not in names:
             continue
-        paths = inputs(gate, files)
+        paths = inputs(gate, files, root)
         real = [p for p in paths if p != "<commands>"]
         h = hashlib.sha256(key_of(real, seen).encode())
         if "<commands>" in paths:
@@ -229,7 +250,9 @@ def do_pin(boxes: list[Path], to: Path, root: Path) -> int:
     return kernel.ALIVE
 
 
-def do_plan(pin: Path, root: Path, bare: bool, names: list[str]) -> int:
+def do_plan(
+    pin: Path, root: Path, bare: bool, names: list[str], standing: bool = False
+) -> int:
     try:
         page = json.loads(pin.read_text(encoding="utf-8"))
         held, pinned_py = page["gates"], page["python"]
@@ -254,6 +277,10 @@ def do_plan(pin: Path, root: Path, bare: bool, names: list[str]) -> int:
             run.append((gate, "inputs changed"))
         else:
             stand.append((gate, held[gate]["state"], held[gate].get("why")))
+    if standing:
+        # the gates that stand, one line: a job runs the rest with --without
+        print(" ".join(g for g, *_ in stand))
+        return kernel.ALIVE
     if bare:
         print(" ".join(g for g, _ in run))
         return kernel.ESCALATE if run else kernel.ALIVE
@@ -280,7 +307,7 @@ def main(argv: list[str]) -> int:
             opts[a] = boxes[-1]
         elif a in ("--to", "--repo", "--pin"):
             opts[a] = next(it, "")
-        elif a == "--bare":
+        elif a in ("--bare", "--standing"):
             opts[a] = "yes"
         else:
             args.append(a)
@@ -303,7 +330,9 @@ def main(argv: list[str]) -> int:
             return do_keys(args, root)
         if verb == "pin":
             return do_pin([Path(b) for b in boxes], Path(opts["--to"]), root)
-        return do_plan(Path(opts["--pin"]), root, "--bare" in opts, args)
+        return do_plan(
+            Path(opts["--pin"]), root, "--bare" in opts, args, "--standing" in opts
+        )
     except Refused as e:
         print(f"refused: {e}", file=sys.stderr)
         return kernel.REFUSED
