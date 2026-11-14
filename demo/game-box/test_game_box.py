@@ -541,7 +541,7 @@ def test_ideas_are_dealt_from_the_box_again_from_the_same_seed(t):
 def test_a_story_written_as_markdown_is_a_world_game_master_plays(t):
     t.open()
     made = py(HERE / "author.py", t.dir / "stories" / "wasp-nest.md", "--to", t.dir / "worlds" / "wasp-nest.json")  # fmt: skip
-    assert made.returncode == 0 and "The Wasp Nest, 2 scenes, 6 beats" in made.stdout
+    assert made.returncode == 0 and "The Wasp Nest, 2 scenes, 7 beats" in made.stdout
     got = t.night(world="wasp-nest")
     assert got.returncode == 0 and "The Wasp Nest, played to its end" in got.stdout
     played = [b.split(":")[0] for b in t.beats()]
@@ -587,3 +587,31 @@ def test_the_tables_own_worlds_play_in_the_box(t, name):
     t.open()
     got = t.night(world=name)
     assert got.returncode == 0 and "played to its end" in got.stdout, got.stderr
+
+
+def test_the_next_chapter_carries_what_the_last_one_made_true(t):
+    """Played after a cellar whose prince the GM sealed free, the wasp nest
+    opens with him coming to watch; with no cellar played, it never does."""
+    t.open()
+    f = t.dir / "worlds" / "clockwork-cellar.json"
+    w = json.loads(f.read_text())
+    next(c for c in w["characters"] if c["id"] == "brann")["stats"]["Heart"] = (
+        10  # the riddle is answered
+    )
+    f.write_text(json.dumps(w))
+    assert t.night().returncode == 0
+    assert "Prince Aldric is free" in t.session("canon").stdout
+    py(
+        HERE / "author.py",
+        t.dir / "stories" / "wasp-nest.md",
+        "--to",
+        t.dir / "worlds" / "wasp-nest.json",
+    )
+    assert t.night(world="wasp-nest").returncode == 0
+    nest = [
+        r["beat"]
+        for r in t.rows()
+        if r["kind"] == "table-beat" and r["scene"] == "up-into-the-ceiling"
+    ]
+    assert nest[0] == "prince"
+    assert "every one holds" in t.check().stdout

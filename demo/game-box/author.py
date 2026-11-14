@@ -3,7 +3,10 @@
     python demo/game-box/author.py STORY.md [--to WORLD.json]
 
 For writing between sessions: a new story, or the next chapter of one, in
-plain headings and `key: value` lines, the way the binder is written. It
+plain headings and `key: value` lines, the way the binder is written. It is
+the shape story-timeline's `export-story` writes a timeline out in, so a
+story can be written in story-timeline, the writer's workbench, and played
+here; a comment line, as the export's first, is skipped. It
 prints the world as JSON, or writes it to WORLD.json (never over a file
 that is there), and every world it makes is game-master's own, checked by
 game-master's `validate`. A line it can't read is refused with its number.
@@ -32,7 +35,9 @@ The shape, in order:
     kind: action                        (or: decision)
     by: juno                            (whose beat it is; optional)
     suggests: Wit                       (an action's approach)
-    when: up::climb is weak, miss       (or: when: offered guest is sealed)
+    when: up::climb is weak, miss       (or: offered guest is sealed;
+                                         or: sealed clockwork-cellar::room::free is sealed,
+                                         a ruling in an earlier chapter)
     - strong: what happens
     - weak: what happens
     - miss: what happens
@@ -61,6 +66,7 @@ CHARACTER = re.compile(r"^- ([a-z0-9-]+):\s*(.+)$")
 SCENE = re.compile(r"^## Scene ([a-z0-9-]+):\s*(.+?)\s*@\s*([a-z0-9-]+)$")
 BEAT_WHEN = re.compile(r"^([a-z0-9-]+::[a-z0-9-]+) is (.+)$")
 OFFER_WHEN = re.compile(r"^offered ([a-z0-9-]+) is (.+)$")
+SEALED_WHEN = re.compile(r"^sealed ([a-z0-9-]+::[a-z0-9-]+::[a-z0-9-]+) is (.+)$")
 
 
 class StoryError(ValueError):
@@ -93,12 +99,15 @@ def character(cid: str, text: str, at: int) -> dict:
 
 
 def when_of(text: str, at: int) -> dict:
+    if m := SEALED_WHEN.match(text):
+        return {"sealed": m.group(1), "is": listed(m.group(2))}
     if m := OFFER_WHEN.match(text):
         return {"offered": m.group(1), "is": listed(m.group(2))}
     if m := BEAT_WHEN.match(text):
         return {"beat": m.group(1), "is": listed(m.group(2))}
     raise StoryError(
-        f"line {at}: when is `scene::beat is strong, weak` or `offered KIND is sealed`"
+        f"line {at}: when is `scene::beat is strong, weak`, `offered KIND is sealed`"
+        " or `sealed story::scene::beat is sealed`"
     )
 
 
@@ -108,7 +117,7 @@ def read(text: str) -> dict:
     section, scene, beat = "head", None, None
     for at, raw in enumerate(text.splitlines(), 1):
         line = raw.strip()
-        if not line:
+        if not line or (line.startswith("<!--") and line.endswith("-->")):
             continue
         if line.startswith("# ") and section == "head" and "title" not in world:
             world["title"] = line[2:].strip()

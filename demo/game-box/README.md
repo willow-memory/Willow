@@ -24,8 +24,8 @@ the box is what will ship on its own, from Die-Namic.
 | [gm-end.md](gm-end.md) | the end of the night: the GM's handwritten pages read in, the night compiled, sealed as one, backed up | stack, with [ocr](../../adapters/deps/ocr/) reading the pages |
 | [sample-scans/](sample-scans/) | a made-up photo of a fifth night's handwritten page | ocr |
 | [ideas.py](ideas.py) | between sessions: story seeds dealt from the box's own words, what was set up and never played, what's still open | [oracle-text](../../adapters/stdlib/oracle-text/), [surprise](../../adapters/stdlib/surprise/) |
-| [stories/](stories/), [author.py](author.py) | stories written as markdown, the way the binder is: [the wasp nest](stories/wasp-nest.md), the cellar's next chapter | author.py makes them worlds; game-master checks and plays them |
-| [worlds/](worlds/) | two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice | [game-master](../../adapters/stdlib/game-master/), rolling with [dice](../../adapters/stdlib/dice/) |
+| [stories/](stories/), [author.py](author.py) | stories written in story-timeline, the writer's workbench in the SAFE App Store, and exported as markdown: [the wasp nest](stories/wasp-nest.md), the cellar's next chapter | author.py makes them worlds; game-master checks and plays them |
+| [worlds/](worlds/) | the box's two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice; and the three the-table authored in the store, [Aetheris](worlds/aetheris.json), [Hasbeen](worlds/hasbeen.json) and [Ironworks](worlds/ironworks.json), as they are | [game-master](../../adapters/stdlib/game-master/), rolling with [dice](../../adapters/stdlib/dice/) |
 | checkers, a logic grid | games played straight onto the record | [checkers](../../adapters/stdlib/checkers/), [catgrid](../../adapters/stdlib/catgrid/) |
 | [check.md](check.md) | the table's own check: every game played again, every house rule's standing | stack |
 | [open_table.py](open_table.py) | the box's code: lays a box, and runs its prep sheet and its check | the kernel and the add-ons above |
@@ -165,13 +165,19 @@ wasps, before the fifth night), every promise still open, and one passage
 the GM wrote and may have forgotten, drawn by surprise. Nothing here is
 canon or handed in: an idea the GM likes goes into the binder, or a story.
 
-**Stories written as markdown.** A new story, or the next chapter of one,
-in headings and `key: value` lines (the shape is in author.py), made into a
-world by `author.py` and checked by game-master. [The wasp nest](stories/wasp-nest.md)
+**Stories written in story-timeline.** The writer's workbench in the SAFE
+App Store holds the story: a writing project, a timeline, its characters
+and places, scene entries, and beat entries after each scene, a beat's
+details as the entry's own fields. `export-story` writes the timeline out
+as markdown (`promote.py export-story --timeline ID --to FILE`), and
+`author.py` makes that a world, checked by game-master. [The wasp nest](stories/wasp-nest.md)
 picks the cellar up a week on: the springs lead up into a nest where Old
 Vell's lamp may be; the wasps come out only if the climb goes badly; the
 table's guest, if one was sealed, has seen Cogwen's machine before; and it
-ends on "what is Cogwen building?". A line author.py can't read is refused
+ends on "what is Cogwen building?". It is the next chapter, and it
+carries the last one: it opens with Prince Aldric coming to watch only if
+the GM sealed him free in the cellar (`when: sealed
+clockwork-cellar::room::free is sealed`). A line author.py can't read is refused
 with its number, and a world game-master wouldn't play with game-master's
 reason.
 
