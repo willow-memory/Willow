@@ -1,0 +1,52 @@
+{
+ "note": "Real sources, kept by address, time and SHA-256, never their text. Fetch again with sources.py; a hash that differs means the page changed.",
+ "sources": [
+  {
+   "file": "crs-rs20695.html",
+   "url": "https://www.everycrsreport.com/reports/RS20695.html",
+   "fetched": "2026-11-12T10:43:18Z",
+   "bytes": 30306,
+   "sha256": "15e9069d613c5d6f72076bc38a5710a9c09df872f97595e1e022ca78630d14e7",
+   "used_for": "Small Business Job Creation Act of 1996 scheduled the credit's phase-out and repeal in 2005 (claim C5)"
+  },
+  {
+   "file": "nber-w23681.html",
+   "url": "https://www.nber.org/papers/w23681",
+   "fetched": "2026-11-12T10:43:18Z",
+   "bytes": 92101,
+   "sha256": "897ae6531c9d0e4e3b322c19e9df38013f5b66af3e84aae1975bddcea5dc98fd",
+   "used_for": "Context for Section 936 and PROMESA; not used by a claim until read"
+  },
+  {
+   "file": "nbc-luma-2021.html",
+   "url": "https://www.nbcnews.com/news/latino/puerto-rico-private-company-takes-power-utility-service-rcna1091",
+   "fetched": "2026-11-12T10:43:19Z",
+   "bytes": 374067,
+   "sha256": "e12c5025ec2171b3e84ad8c9fab3dfea9358408a3a28d248ee3b44bd78b61359",
+   "used_for": "LUMA takes over the grid, June 2021 (claim C3)"
+  },
+  {
+   "file": "wikipedia-prepa.html",
+   "url": "https://en.wikipedia.org/wiki/Puerto_Rico_Electric_Power_Authority",
+   "fetched": "2026-11-12T10:43:21Z",
+   "bytes": 465457,
+   "sha256": "aaa0d08e31417affb778945ba83aecce96986aa07016171171a1270651751d57",
+   "used_for": "Context on PREPA; not used by a claim"
+  },
+  {
+   "file": "nsf-award-2305699.json",
+   "url": "https://api.nsf.gov/services/v1/awards/2305699.json",
+   "fetched": "2026-11-12T10:43:21Z",
+   "bytes": 10089,
+   "sha256": "5149cbf84b0ccc9426b8cb46db0d045190959cbe4d7d8e77cfef28eee3da9d32",
+   "used_for": "NSF Engines - Type 1, 05/15/2023 to 04/30/2025, $999,903 (claim C1)"
+  }
+ ],
+ "not_fetched": [
+  {
+   "url": "https://www.nbcnewyork.com/news/business/money-report/five-years-after-hurricane-maria-puerto-ricos-power-grid-is-still-costly-and-unreliable/3918649/",
+   "name": "nbcny-five-years-after-maria.html",
+   "why": "the transfer was cut off twice (IncompleteRead); no claim depends on it"
+  }
+ ]
+}
