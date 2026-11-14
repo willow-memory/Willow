@@ -3,7 +3,7 @@ section: Play
 line: A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.
 source: bot
 added: 2026-11-01
-version: 0.2.0
+version: 0.2.1
 writes: record
 network: none
 role: tools

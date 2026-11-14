@@ -3,7 +3,7 @@ section: Play
 line: Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools
