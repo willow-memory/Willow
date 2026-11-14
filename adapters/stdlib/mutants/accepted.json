@@ -2,8 +2,14 @@
   "agents-md-check": {
     "00b8e1df6074": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
+  "all-passages": {
+    "32622b64e069": "The cap that stands for every passage when no --top is given: 10**9 and 11**9 both exceed any pile's passages, so either serves the same list."
+  },
   "assistant-scores": {
     "37337c7fbb46": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+  },
+  "batch-ask": {
+    "07d00d17c34c": "The floor under the passage count when averaging lengths: it differs only with one passage, where the average scales every score alike and only the order, which one passage can't change, is returned."
   },
   "clauses": {
     "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
@@ -35,6 +41,9 @@
   "restack-open": {
     "2007109c09fd": "How much of git's own message a refusal quotes: any length names the same git failure, and only a message longer than 200 characters would read differently."
   },
+  "run-answer": {
+    "21deb2a9f8c4": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+  },
   "secrets-audit": {
     "245feee800fc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
@@ -49,6 +58,9 @@
   },
   "typosquat": {
     "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged."
+  },
+  "unpinned": {
+    "0c539d7b4204": "Which of --box and --from were given: of two options, exactly one given and exactly one not given are the same test, and the source is read from the options themselves after."
   },
   "why-not": {
     "0a2392676768": "The 1 caps how many times \"A passage\" is made lower case in the line that says how many words a passage has to hold; that line holds the phrase once, so any cap of one or more gives the same words."
