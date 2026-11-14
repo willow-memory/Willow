@@ -20,6 +20,7 @@ and the game master's calls are yours: this never makes one.
     python adapters/stdlib/game-master/game_master.py --box DIR act Weird --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR ask    --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR settle --world night.json
+    python adapters/stdlib/game-master/game_master.py --box DIR offer bo "A guest walks in" --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR check
 
 **An action beat** is rolled with `act STAT`: dice's own `2d6` roll (a `roll`
@@ -38,6 +39,15 @@ moves, and nothing here can answer for you: a name, a seal made with another
 key, a seal over some other proposal or another game's, or a proposal file
 changed after you sealed it, moves nothing. A no moves the story on too;
 what it records is the no.
+
+**An offer** is what a player brings to the table on the night, in their
+own words: "a guest walks in", "the toll-man has a twin". `offer CHARACTER
+"FACT"` hands it in as that seated character's, through the kernel's
+`bite` and `propose` like a ruling, and the story goes on while it waits:
+an offer sits beside the story's path, never on it, so the dice and the
+beats are the same with it or without. The next `settle` reads the answer
+back and writes a `table-heard` row for each offer you have sealed or
+declined. Only a seal makes it canon. `status` lists the offers waiting.
 
 **A world** is a JSON file:
 
@@ -75,7 +85,9 @@ decline of yours stands behind. Given `--world` it also checks the order
 of beats, whose turn it was, the stat and the line against the world.
 
 Rows: `table-open` (the world's id and hash), `table-ask` (the proposal's
-subject), `table-beat` (a roll's result, or a ruling), and the `roll`,
+subject), `table-beat` (a roll's result, or a ruling), `table-offer` (what a player
+offered, in their words, and its subject), `table-heard` (your answer to
+it), and the `roll`,
 `bite` and `proposal` rows of dice and the kernel. Exit codes, the kernel's:
 0 done, 42 waiting on your seal, 2 refused.
 

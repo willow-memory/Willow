@@ -1961,7 +1961,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `rows` `seeded` · near: life, game-master, hook-replay
 - <a id="checkers"></a>[**checkers**](adapters/stdlib/checkers/) \
   Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
-  *new* `no-install` `offline` `rows` `draw` · near: catgrid, life, game-master
+  *new* `no-install` `offline` `rows` `draw` · near: catgrid, game-master, life
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: quiz, surprise, serve

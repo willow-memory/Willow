@@ -387,3 +387,54 @@ def test_prep_flags_a_week_missed(t):
     line = next(x for x in log.splitlines() if x.startswith("07 gaps: exit"))
     assert line.startswith("07 gaps: exit 0") and line.endswith("flagged"), line
     assert "GAP       2026-11-14 to 2026-12-12" in page
+
+
+# ── a guest invented on the night ────────────────────────────────────────────
+VELL = "A guest comes down the stair: Old Vell from the lantern fair, looking for her lost lamp."
+
+
+def test_a_guest_offered_on_the_night_is_canon_the_night_its_sealed(t):
+    t.open()
+    assert t.session().returncode == 42  # stair, gears, then the button waits
+    got = t.session("offer", "pell", VELL)
+    assert got.returncode == 42 and "Pell offers: " + VELL in got.stdout
+    offer = [r for r in t.rows() if r["kind"] == "table-offer"][-1]
+    assert "Old Vell" not in t.session("canon").stdout  # waiting is not canon
+    t.seal(offer["subject"])
+    played = t.night()  # the button, the written guest, the riddle: the story goes on
+    assert played.returncode == 0, played.stderr
+    assert any(r["kind"] == "table-heard" and r["subject"] == offer["subject"] and r["verdict"] == "sealed"
+               for r in t.rows())  # fmt: skip
+    canon = t.session("canon").stdout
+    assert VELL + "  [offered by pell]" in canon.split("what it said no to:")[0]
+    assert "The red button is bait" in canon
+    assert "every one holds" in t.check().stdout
+
+
+def test_an_offer_waits_without_stopping_the_story(t):
+    t.open()
+    t.session()
+    t.session("offer", "juno", "The spring wasps wake when the cage opens.")
+    before = len(t.beats())
+    for subj in t.asked():  # the GM answers the story's rulings, not the offer
+        t.seal(subj)
+    assert t.session().returncode == 42 and len(t.beats()) > before
+    assert [r for r in t.rows() if r["kind"] == "table-offer"] and not [r for r in t.rows() if r["kind"] == "table-heard"]  # fmt: skip
+
+
+def test_an_offer_said_no_to_is_canon_as_a_no(t):
+    t.open()
+    t.session()
+    t.session("offer", "brann", "Brann's goats can talk.")
+    offer = [r for r in t.rows() if r["kind"] == "table-offer"][-1]
+    assert t.k("decline", offer["subject"]).returncode == 0
+    t.night()
+    canon = t.session("canon").stdout
+    assert "not: Brann's goats can talk.  [offered by brann]" in canon
+
+
+def test_an_offer_is_a_seated_characters(t):
+    t.open()
+    t.session()
+    got = t.session("offer", "cogwen", "Cogwen was a person once.")
+    assert got.returncode == 2 and "isn't a seated character" in got.stderr

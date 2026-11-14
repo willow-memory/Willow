@@ -102,6 +102,7 @@ each with the want it answers:
 ## A session, played by code
 
     python demo/game-box/session.py --table DIR --world clockwork-cellar
+    python demo/game-box/session.py --table DIR --world clockwork-cellar offer pell "A guest comes down the stair"
     python demo/game-box/session.py --table DIR canon
 
 `session.py` is the GM's bookkeeping with no model in it. It rolls each
@@ -110,6 +111,14 @@ the beat suggests, and hands each ruling in for the seal. Then it stops
 (exit 42) until the GM seals or declines. Run it again and it settles their
 answer and plays on. A whole night in the clockwork cellar, the box laid and
 three rulings sealed along the way, takes under two seconds.
+
+**What a player brings on the night.** `offer` is a player bringing
+something to the table as their character, in their own words: "a guest
+comes down the stair: Old Vell from the lantern fair". It is handed in for
+the GM's seal, and the story goes on while the GM thinks it over: an offer
+sits beside the story's path, so the dice and the beats are the same with it
+or without. Once the GM seals or declines it, the next run writes the answer
+down before it plays on. A sealed offer is canon that night.
 
 `canon` is the table's memory of what it decided. It lists every ruling
 sealed on the record whose seal still holds, and every one declined. It
@@ -139,6 +148,10 @@ the test, the test standing in for the GM:
   freeing is put to the GM; with one whose Brann never does, it never is.
   On every real night, canon says the prince is free only if a riddle was
   answered.
+- **A guest invented on the night.** Pell's player brings Old Vell down
+  the stair mid-session; the story plays on while it waits; once sealed it
+  is in canon, marked as Pell's offer. One declined is canon as a no, and
+  only a seated character can offer.
 - **Canon is the seals.** A ruling declined shows as a no. Asking the
   record about a scene not played yet serves nothing from the worlds.
 
@@ -168,14 +181,15 @@ Each is fixed, and its own tests now hold it.
 
 ## Not in the box yet
 
-- **An AI game master.** A model proposing beats and rulings on loopback,
-  the GM sealing them. `session.py` is the bookkeeping it would sit on.
+- **An AI game master.** A model proposing beats, rulings and its own
+  offers on loopback, the GM sealing them. `session.py` is the bookkeeping
+  it would sit on, and `offer` is the door it would come through.
+- **An offer that changes the path.** An offer is canon, but no beat yet
+  turns on it: a `when` names an earlier beat, not an offer.
 - **A monster's numbers drifting between pages.** No card reads it yet; it
   is an idea on willow's list, `sheet-drift`.
 - **Asking canon in your own words.** The kernel serves a sealed answer to
   the question it was sealed for, so "is the prince free?" finds nothing;
   `canon` lists what's true, but doesn't answer a question about it.
-- **A player's own guest.** The Lantern Man is written into the world ahead
-  of time. A guest a player thinks of at the table has no beat to ride in on.
 - **Games with hidden hands** (Liar's Dice, Hearts). Anyone at the table can
   read the record, so a hand dealt onto it is not hidden.

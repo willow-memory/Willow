@@ -6,6 +6,7 @@ person's rulings as rows on the record. Python 3.9+.
     python adapters/stdlib/game-master/game_master.py --box DIR act STAT --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR ask    --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR settle --world W.json [--now TS]
+    python adapters/stdlib/game-master/game_master.py --box DIR offer CHARACTER "FACT" --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR check [--world W.json]
 
 A world is a JSON file (see README.md): stats, characters, places, and scenes
@@ -25,6 +26,13 @@ then does `settle` read their proof back (kernel.sealed, kernel.declined,
 kernel.standing) and move on, writing a `table-beat` row that names the
 seal's row. A name, a proposal file that was changed after the seal, or a
 seal over a different beat or game moves nothing.
+
+An offer is what a player brings to the table on the night: "a guest walks
+in", "the prince has a twin". `offer CHARACTER "FACT"` hands it in, in the
+words given, as the seated character's, through the kernel's door like any
+ruling, and the story goes on while it waits: an offer is beside the
+story's path, never on it. The next `settle` reads the GM's seal or decline
+back and writes a `table-heard` row; only a seal makes it canon.
 
 `check` replays the record without the world file: every roll is thrown
 again from its seed (dice's check), every `table-beat` names the roll just
@@ -55,6 +63,10 @@ import odds  # noqa: E402
 KERNEL = HERE.parents[2] / "kernel.py"
 DICE = HERE.parent / "dice" / "dice.py"
 OPEN, ASK, BEAT = "table-open", "table-ask", "table-beat"
+OFFER, HEARD = (
+    "table-offer",
+    "table-heard",
+)  # a fact a player offers live, and the GM's answer
 WHO = "game-master"
 ROLL = "2d6"
 BANDS = (("strong", 10), ("weak", 7), ("miss", None))  # 10+, 7-9, 6-
@@ -252,14 +264,34 @@ def ruling(
 
 
 def games(rows: list[dict], world_id: str | None = None) -> list[dict]:
-    """Each game on the record: its open row, then its ask and beat rows."""
+    """Each game on the record: its open row, then its ask and beat rows, and
+    the offers made at the table and the GM's answers to them."""
     out = {}
+    lane = {ASK: "asks", BEAT: "beats", OFFER: "offers", HEARD: "heard"}
     for r in rows:
         if r["kind"] == OPEN and (world_id is None or r.get("world") == world_id):
-            out[r["n"]] = {"open": r, "asks": [], "beats": []}
-        elif r["kind"] in (ASK, BEAT) and r.get("game") in out:
-            out[r["game"]]["asks" if r["kind"] == ASK else "beats"].append(r)
+            out[r["n"]] = {
+                "open": r,
+                "asks": [],
+                "beats": [],
+                "offers": [],
+                "heard": [],
+            }
+        elif r["kind"] in lane and r.get("game") in out:
+            out[r["game"]][lane[r["kind"]]].append(r)
     return list(out.values())
+
+
+def unheard(game: dict) -> list[dict]:
+    """The offers the GM's answer isn't written for yet."""
+    done = {h.get("subject") for h in game.get("heard", [])}
+    return [o for o in game.get("offers", []) if o["subject"] not in done]
+
+
+def offer_proposal(world: dict, n: int, k: int, char: dict, fact: str) -> dict:
+    """What `offer` hands in: the same every time for this game, this offer."""
+    return {"path": f"game/{world['id']}/{n}/offer-{k}.txt", "data": fact, "cites": [],
+            "claim": f"{char['name']} offers this to the table in {world['title']} (game opened at row {n})"}  # fmt: skip
 
 
 def finished(game: dict, world: dict) -> bool:
@@ -354,6 +386,10 @@ def cmd_status(box: Path, world: dict) -> int:
     print(
         f"{line(world, game)}: {len(game['beats'])} of {most}{len(flat(world))} beats done"
     )
+    for off in unheard(game):
+        print(
+            f"offered by {off['by']}, waiting on your seal: {off['fact']} ({off['subject']})"
+        )
     if finished(game, world):
         print(f"finished: {tally(game)}")
         return kernel.ALIVE
@@ -409,6 +445,68 @@ def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
     return kernel.ALIVE
 
 
+def hand_in(box: Path, ts: str, question: str, prop: dict) -> tuple[str, str]:
+    """(the proposal's subject, "") once the kernel's own bite and propose
+    have taken it, or ("", why not)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        f = Path(tmp) / "proposal.jsonl"
+        f.write_text(json.dumps(prop) + "\n", encoding="utf-8")
+        for argv in (["bite", question], ["propose", "--file", str(f)]):
+            done = subprocess.run([sys.executable, str(KERNEL), argv[0], "--box", str(box), "--now", ts, *argv[1:]],
+                                  capture_output=True, text=True)  # fmt: skip
+            if done.returncode == kernel.REFUSED:
+                return "", f"the kernel's {argv[0]}: {done.stderr.strip()}"
+    subj = kernel.subject_of(prop)
+    if f"pass  {subj}" not in done.stdout:
+        return "", "the kernel's door refused the proposal: " + done.stdout.strip()
+    return subj, ""
+
+
+def cmd_offer(box: Path, world: dict, who: str, fact: str, ts: str) -> int:
+    rows, game, err = current(box, world)
+    if err:
+        return fail(err)
+    char = next((c for c in seated(world) if c["id"] == who), None)
+    if char is None:
+        return fail(f"{who!r} isn't a seated character: an offer is made by one of {', '.join(c['id'] for c in seated(world))}")  # fmt: skip
+    if not fact.strip():
+        return fail("an offer is a fact, in words")
+    n, k = game["open"]["n"], len(game["offers"])
+    prop = offer_proposal(world, n, k, char, fact)
+    subj, why = hand_in(box, ts, f"game-master {world['id']} offer {k} game {n}", prop)
+    if why:
+        return fail(why)
+    row = kernel.append(box, ts, OFFER, who=WHO, game=n, k=k, by=char["id"], fact=fact, subject=subj)  # fmt: skip
+    print(f"{char['name']} offers: {fact}")
+    print(
+        f"handed in as {subj} (row {row['n']}); the story goes on while it waits on you:"
+    )
+    print(f"  python kernel.py seal --box {box} {subj}      (yes)")
+    print(f"  python kernel.py decline --box {box} {subj}   (no)")
+    return kernel.ESCALATE
+
+
+def settle_offers(
+    box: Path, rows: list[dict], game: dict, ts: str
+) -> tuple[list[str], str]:
+    """(a line for each offer whose answer is now written, "") or ([], why
+    not): every offer the GM has sealed or declined gets its heard row."""
+    said = []
+    for o in unheard(game):
+        what, got = ruling(box, rows, o["subject"])
+        if what == "broken":
+            return (
+                said,
+                f"{o['subject']} was sealed, but its proposal file {got}; nothing moves",
+            )
+        if what == "open":
+            continue
+        row = kernel.append(box, ts, HEARD, who=WHO, game=game["open"]["n"], subject=o["subject"],
+                            by=o["by"], verdict=what, ruling_row=got["n"])  # fmt: skip
+        said.append(f"{o['by']}'s offer: you {what} it (row {got['n']}); recorded at row {row['n']}: {o['fact']}")  # fmt: skip
+    return said, ""
+
+
 def cmd_ask(box: Path, world: dict, ts: str) -> int:
     rows, game, err = current(box, world)
     if err:
@@ -423,18 +521,9 @@ def cmd_ask(box: Path, world: dict, ts: str) -> int:
     p, n = b["proposes"], game["open"]["n"]
     prop = {"path": f"game/{world['id']}/{n}/{sc['id']}-{b['id']}.txt", "data": p["fact"],
             "cites": [], "claim": f"{p['proposed_by']} proposes this at {sc['id']}::{b['id']} of {world['id']} (game opened at row {n}): {b['prompt']}"}  # fmt: skip
-    question = f"game-master {world['id']} {sc['id']}::{b['id']} game {n}"
-    with tempfile.TemporaryDirectory() as tmp:
-        f = Path(tmp) / "proposal.jsonl"
-        f.write_text(json.dumps(prop) + "\n", encoding="utf-8")
-        for argv in (["bite", question], ["propose", "--file", str(f)]):
-            done = subprocess.run([sys.executable, str(KERNEL), argv[0], "--box", str(box), "--now", ts, *argv[1:]],
-                                  capture_output=True, text=True)  # fmt: skip
-            if done.returncode == kernel.REFUSED:
-                return fail(f"the kernel's {argv[0]}: {done.stderr.strip()}")
-    subj = kernel.subject_of(prop)
-    if f"pass  {subj}" not in done.stdout:
-        return fail("the kernel's door refused the proposal: " + done.stdout.strip())
+    subj, why = hand_in(box, ts, f"game-master {world['id']} {sc['id']}::{b['id']} game {n}", prop)  # fmt: skip
+    if why:
+        return fail(why)
     row = kernel.append(box, ts, ASK, who=WHO, game=n, scene=sc["id"], beat=b["id"],
                         subject=subj, proposed_by=p["proposed_by"], fact=p["fact"])  # fmt: skip
     print(f"{p['proposed_by']} proposes: {p['fact']}")
@@ -448,10 +537,19 @@ def cmd_settle(box: Path, world: dict, ts: str) -> int:
     rows, game, err = current(box, world)
     if err:
         return fail(err)
+    said, why = settle_offers(box, rows, game, ts)
+    if why:
+        return fail(why)
+    if said:
+        print("\n".join(said))
+        return kernel.ALIVE
     if finished(game, world):
         return fail("the story is finished")
     sc, b, char = now_in(world, game)
     asked = [a for a in game["asks"] if (a["scene"], a["beat"]) == (sc["id"], b["id"])]
+    if (b["kind"] != "decision" or not asked) and unheard(game):
+        print(f"{len(unheard(game))} offer{'s' if len(unheard(game)) != 1 else ''} wait on your seal or your decline; nothing moves.")  # fmt: skip
+        return kernel.ESCALATE
     if b["kind"] != "decision" or not asked:
         return fail(f"beat {b['id']} has no proposal to settle; " + ("ask first" if b["kind"] == "decision" else "act on it"))  # fmt: skip
     subj = asked[-1]["subject"]
@@ -526,6 +624,40 @@ def check_game(
                 return f"{where}: the fact handed in isn't the world's"
         else:
             return f"{where}: neither an action nor a decision"
+    return check_offers(box, rows, game, world)
+
+
+def check_offers(
+    box: Path, rows: list[dict], game: dict, world: dict | None
+) -> str | None:
+    """Why this game's offers, or the GM's answers to them, don't hold, or None."""
+    n = game["open"]["n"]
+    for k, o in enumerate(game["offers"]):
+        where = f"row {o['n']}"
+        if o["n"] < n:
+            return f"{where}: before its game opened"
+        if not any(p["kind"] == "proposal" and p.get("subject") == o.get("subject")
+                   and p.get("verdict") == "pass" and p["n"] < o["n"] for p in rows):  # fmt: skip
+            return f"{where}: the kernel never passed the offer {o.get('subject')}"
+        if world is not None:
+            char = next((c for c in seated(world) if c["id"] == o.get("by")), None)
+            if char is None:
+                return f"{where}: an offer by {o.get('by')!r}, who isn't a seated character"
+            if o.get("k") != k or o.get("subject") != kernel.subject_of(offer_proposal(world, n, k, char, str(o.get("fact")))):  # fmt: skip
+                return f"{where}: not the offer its words and its place make"
+    answered = set()
+    for h in game["heard"]:
+        where = f"row {h['n']}"
+        if not any(
+            o["subject"] == h.get("subject") and o["n"] < h["n"] for o in game["offers"]
+        ):
+            return f"{where}: an answer to no offer made before it"
+        if h["subject"] in answered:
+            return f"{where}: an offer answered twice"
+        answered.add(h["subject"])
+        what, got = ruling(box, rows, h["subject"])
+        if what in ("open", "broken") or got["n"] != h.get("ruling_row") or h.get("verdict") != what or got["n"] >= h["n"]:  # fmt: skip
+            return f"{where}: no {h.get('verdict')} of {h['subject']} by the person's key stands behind it"  # fmt: skip
     return None
 
 
@@ -556,7 +688,8 @@ def main(argv: list[str]) -> int:
             args.append(a)
     verb = args[0] if args else ""
     shape = verb in ("open", "status", "ask", "settle", "check") and len(args) == 1
-    if not opts.get("--box") or not (shape or (verb == "act" and len(args) == 2)):
+    sized = (verb == "act" and len(args) == 2) or (verb == "offer" and len(args) == 3)
+    if not opts.get("--box") or not (shape or sized):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     if verb != "check" and not opts.get("--world"):
@@ -578,6 +711,8 @@ def main(argv: list[str]) -> int:
         return cmd_status(box, world)
     if verb == "act":
         return cmd_act(box, world, args[1], ts)
+    if verb == "offer":
+        return cmd_offer(box, world, args[1], args[2], ts)
     return (cmd_ask if verb == "ask" else cmd_settle)(box, world, ts)
 
 

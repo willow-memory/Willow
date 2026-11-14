@@ -1,6 +1,7 @@
 """session.py: a session at the table played by code, as far as it goes without the person. Python 3.9+.
 
     python demo/game-box/session.py --table DIR [--world NAME] [--now TS]
+    python demo/game-box/session.py --table DIR [--world NAME] offer CHARACTER "FACT"
     python demo/game-box/session.py --table DIR canon
 
 The game master's bookkeeping, done by code: every action beat is rolled for
@@ -14,6 +15,11 @@ sealed or declined, and the line each roll gave.
 A roll can turn the story: a beat with a `when` is played only if the beat
 it names came out its way, so a missed riddle leads somewhere a solved one
 doesn't. The rulings put to the person are the ones the story reached.
+
+`offer` is a player bringing something to the table on the night, as their
+character: "a guest walks in". It is handed in for the seal, and the story
+goes on while it waits. Once the GM seals or declines it, the next run
+writes their answer down before it plays on, and a sealed offer is canon.
 
 `canon` is the table's memory: every ruling sealed on this record whose seal
 still holds, in the order they were sealed, and every one declined. It reads
@@ -88,17 +94,19 @@ def canon(box: Path, worlds: Path) -> int:
     true, no = [], []
     for g in gm.games(rows):
         where = titles.get(g["open"].get("world"), g["open"].get("world"))
-        for a in g["asks"]:
+        said = [(a, a["fact"]) for a in g["asks"]]
+        said += [(o, f"{o['fact']}  [offered by {o['by']}]") for o in g["offers"]]
+        for a, fact in said:
             what, got = gm.ruling(box, rows, a["subject"])
             if what == "sealed":
                 true.append(
-                    (got["n"], f"  {a['fact']}   ({where}, sealed at row {got['n']})")
+                    (got["n"], f"  {fact}   ({where}, sealed at row {got['n']})")
                 )
             elif what == "declined":
                 no.append(
                     (
                         got["n"],
-                        f"  not: {a['fact']}   ({where}, declined at row {got['n']})",
+                        f"  not: {fact}   ({where}, declined at row {got['n']})",
                     )
                 )
     if not true and not no:
@@ -110,6 +118,17 @@ def canon(box: Path, worlds: Path) -> int:
         print("what it said no to:")
         print("\n".join(line for _, line in sorted(no)))
     return kernel.ALIVE
+
+
+def answered(box: Path, rows: list[dict], game: dict) -> bool:
+    """Whether the GM has sealed or declined an offer not yet written down."""
+    return any(gm.ruling(box, rows, o["subject"])[0] in ("sealed", "declined") for o in gm.unheard(game))  # fmt: skip
+
+
+def offer(box: Path, world_file: Path, now: str, who: str, fact: str) -> int:
+    done = step(box, world_file, now, "offer", who, fact)
+    print((done.stdout or done.stderr).rstrip(), file=sys.stdout if done.stdout else sys.stderr)  # fmt: skip
+    return done.returncode
 
 
 def play(box: Path, world_file: Path, now: str) -> int:
@@ -126,6 +145,12 @@ def play(box: Path, world_file: Path, now: str) -> int:
         rows, game, err = gm.current(box, world)
     if err:
         return fail(err)
+    if answered(box, rows, game):  # the GM answered an offer: write it down first
+        heard = step(box, world_file, now, "settle")
+        if heard.returncode == kernel.REFUSED:
+            return fail(heard.stderr.strip())
+        print(heard.stdout.rstrip())
+        rows, game, err = gm.current(box, world)
     while not gm.finished(game, world):
         sc, b, char = gm.now_in(world, game)
         if b["kind"] == "action":
@@ -157,7 +182,9 @@ def main(argv: list[str]) -> int:
             opts[a] = next(it, "")
         else:
             args.append(a)
-    if not opts.get("--table") or args not in ([], ["canon"]):
+    if not opts.get("--table") or not (
+        args in ([], ["canon"]) or (len(args) == 3 and args[0] == "offer")
+    ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     table = Path(opts["--table"])
@@ -169,6 +196,10 @@ def main(argv: list[str]) -> int:
         return canon(box, table / "worlds")
     if not world_file.exists():
         return fail(f"no world {world_file.stem!r} in {world_file.parent}")
+    if args:
+        return offer(
+            box, world_file, opts.get("--now") or kernel.now(), args[1], args[2]
+        )
     return play(box, world_file, opts.get("--now") or kernel.now())
 
 

@@ -817,3 +817,131 @@ def test_check_finds_a_beat_row_after_the_story_ended(tmp_path):
     )  # a beat past the end
     why = t.run("check")
     assert why.returncode == 2 and "not the beat the world has at place 4" in why.stderr
+
+
+# ── what a player offers at the table ────────────────────────────────────────
+GUEST = "A guest walks in: the Lantern Man, who answers only in riddles."
+
+
+def offers(t) -> list[dict]:
+    return [r for r in t.rows() if r["kind"] == gm.OFFER]
+
+
+def heard(t) -> list[dict]:
+    return [r for r in t.rows() if r["kind"] == gm.HEARD]
+
+
+def test_an_offer_is_handed_in_and_the_story_goes_on(t):
+    t.run("open")
+    got = t.run("offer", "bo", GUEST)
+    assert got.returncode == 42 and "Bo offers: " + GUEST in got.stdout
+    o = offers(t)[-1]
+    assert (o["by"], o["fact"], o["k"]) == ("bo", GUEST, 0)
+    assert any(
+        r["kind"] == "proposal" and r["subject"] == o["subject"] for r in t.rows()
+    )
+    assert "offered by bo, waiting on your seal" in t.run("status").stdout
+    assert (
+        t.run("act", "Grit").returncode == 0
+    )  # an offer is beside the path, not on it
+    assert t.run("check").returncode == 0
+    assert not [r for r in t.rows() if r["kind"] in ("seal", "decline")]
+
+
+def test_a_sealed_offer_is_heard_and_a_declined_one_too(t):
+    t.run("open")
+    t.run("offer", "bo", GUEST)
+    t.run("offer", "ana", "The toll-man has a twin.")
+    first, second = offers(t)
+    assert (first["k"], second["k"]) == (0, 1) and first["subject"] != second["subject"]
+    assert t.k("seal", first["subject"]).returncode == 0
+    got = t.run("settle")
+    assert got.returncode == 0 and "bo's offer: you sealed it" in got.stdout
+    assert t.k("decline", second["subject"]).returncode == 0
+    assert "ana's offer: you declined it" in t.run("settle").stdout
+    h = heard(t)
+    assert [(x["by"], x["verdict"]) for x in h] == [
+        ("bo", "sealed"),
+        ("ana", "declined"),
+    ]
+    assert h[0]["ruling_row"] == [r for r in t.rows() if r["kind"] == "seal"][0]["n"]
+    assert (
+        t.run("check").returncode == 0 and t.run("check", world=False).returncode == 0
+    )
+
+
+def test_settle_with_an_offer_unanswered_waits(t):
+    t.run("open")
+    t.run("offer", "bo", GUEST)
+    before = t.raw()
+    got = t.run("settle")
+    assert got.returncode == 42 and "1 offer wait on your seal" in got.stdout
+    t.forge("seal", subject=offers(t)[-1]["subject"], bite_key="0" * 64, proof="0" * 64)
+    assert (
+        t.run("settle").returncode == 42
+    )  # a seal without the key's proof moves nothing
+    assert not heard(t) and t.raw() != before  # only the forged row was added
+
+
+def test_an_offer_is_a_seated_characters_and_a_fact(t):
+    t.run("open")
+    for who, fact, says in (("cy", GUEST, "isn't a seated character"),
+                            ("nobody", GUEST, "isn't a seated character"),
+                            ("bo", "   ", "an offer is a fact")):  # fmt: skip
+        got = t.run("offer", who, fact)
+        assert got.returncode == 2 and says in got.stderr
+    assert not offers(t)
+    assert t.run("offer", "bo").returncode == 2  # no fact: not a command line
+
+
+def test_check_finds_an_offer_that_isnt_what_was_handed_in(t):
+    t.run("open")
+    game = [r for r in t.rows() if r["kind"] == gm.OPEN][0]["n"]
+    t.forge(
+        gm.OFFER, game=game, k=0, by="bo", fact=GUEST, subject="proposal:" + "0" * 64
+    )
+    assert "the kernel never passed the offer" in t.run("check").stderr
+
+
+def test_check_finds_an_offers_words_changed_after(t):
+    t.run("open")
+    t.run("offer", "bo", GUEST)
+    o = offers(t)[-1]
+    game = o["game"]
+    t2 = {
+        k: v
+        for k, v in o.items()
+        if k not in ("n", "hash", "prev", "ts", "kind", "who")
+    }
+    t.forge(gm.OFFER, **{**t2, "k": 1, "fact": "A dragon walks in."})
+    assert "not the offer its words and its place make" in t.run("check").stderr
+    assert (
+        t.run("check", world=False).returncode == 0
+    )  # without the world, its words aren't known
+    assert game == o["game"]
+
+
+@pytest.mark.parametrize("how", ["no offer", "twice", "wrong answer", "no seal"])
+def test_check_finds_an_answer_no_offer_or_seal_stands_behind(t, how):
+    t.run("open")
+    t.run("offer", "bo", GUEST)
+    o = offers(t)[-1]
+    answer = {"game": o["game"], "subject": o["subject"], "by": "bo"}
+    if how == "no offer":
+        t.forge(gm.HEARD, **{**answer, "subject": "proposal:" + "1" * 64}, verdict="sealed", ruling_row=1)  # fmt: skip
+        says = "an answer to no offer made before it"
+    elif how == "no seal":
+        t.forge(gm.HEARD, **answer, verdict="sealed", ruling_row=1)
+        says = "by the person's key stands behind it"
+    elif how == "wrong answer":  # the GM said no; the row says yes
+        t.k("decline", o["subject"])
+        no = [r for r in t.rows() if r["kind"] == "decline"][-1]["n"]
+        t.forge(gm.HEARD, **answer, verdict="sealed", ruling_row=no)
+        says = "no sealed of"
+    else:
+        t.k("decline", o["subject"])
+        t.run("settle")
+        t.forge(gm.HEARD, **answer, verdict="declined", ruling_row=heard(t)[-1]["ruling_row"])  # fmt: skip
+        says = "an offer answered twice"
+    got = t.run("check")
+    assert got.returncode == 2 and says in got.stderr
