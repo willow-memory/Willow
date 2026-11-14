@@ -6,8 +6,8 @@
  "files": {
   "demo/pools/truth/rules.json": "bd9701cf018ee62e5ba2986731bdb2a516bdf675334ea77275e1c71e3b595532",
   "demo/pools/truth/truth.py": "4a6556c5c3a121cf215246c1647e4abdedf6630974129791b56908908485ac47",
-  "demo/pools/trace/trace.py": "01f1a7bebfb3604a9f0c5956338ea90603099dcdba2cd368bcc3b731c801268c",
-  "demo/pools/grid/grid.py": "6a995794322588bd3017f3b0d1a033d956cf212899c8b798e3344f432d1f2dd9",
+  "demo/pools/trace/trace.py": "7ec329521d0de0eb3fc097ae2eb14a23dfb04b4de34dde00ff4946645d3a5125",
+  "demo/pools/grid/grid.py": "2b3e0dc1166ecb6209655397b7ec16c4740272c4a943fa433c130d6812550d1e",
   "demo/pools/grid/plan.json": "1c5c5ca66869f515a4a6c63fcd13b6976bd6cb9782e06936a2b2f0287f68f43a",
   "demo/pools/static/static.py": "03afb89de5eabdfba4b958283589e44408e79632f9af615e36c83394337e5423",
   "demo/pools/static/static.json": "a4f732375bc7a59e52765bb7419a3cecf3ec2f0093e495eb8db2f0933462565a",
@@ -16,20 +16,23 @@
   "adapters/stdlib/ci/test_contract.py": "c972fe6b9b316d1321a7c2b57c110cb61374bed5984a716c811f203c9e912c3d",
   "adapters/stdlib/readme/week.json": "e721c6a7e29360dac15e4506e803ab2568afc04619c8cb619beedfc42a0e72b4",
   "kernel.py": "953bb4ccc65f9fd013c31d6c9a2fa33e76acb3f37637dea0395969f0184a99da",
-  "demo/pools/trace/memo/sitecustomize.py": "82cb4b9a8cfa20a6dd011d276c21544e7c00b0020afa1fa511a981118a7c8449"
+  "demo/pools/trace/memo/sitecustomize.py": "82cb4b9a8cfa20a6dd011d276c21544e7c00b0020afa1fa511a981118a7c8449",
+  "demo/pools/truth/changes.py": "18052dad8430edc8df58c96deeb3bdd2d0ed6de23a5c008d8fde7fce021613f5"
  },
  "made": {
-  "grid manifest (grid.py write)": "7e99856a11fcee236bd1af95fecf8d87b8a4c7e6819652f87a87a9675a4a259e",
-  "no-bridge pairs (truth.py pairs)": "96382bea12e74e0d6f2cfb3ec732d18e351739f971bb42c5c41d7b11ea83debd",
+  "grid manifest (grid.py write)": "6d9472e782f36992d678fed3b74c6413d12c8b2f40accf9979a009792e2ebe45",
+  "no-bridge pairs (truth.py pairs)": "fa41fa09f4a00146a7d8783f99ac2445605812442f4f0597e74afcf0afcd50ac",
   "cards (truth.py cards)": "d4acd17699b225c102896f1cf4c2eac0bd6799d237a5978622f458add162a602"
  },
  "grid": {
-  "stacks": 1473,
+  "stacks": 2629,
   "steps": 357,
   "bridges": 207,
   "record_readers": 78,
   "record_givers": 53,
-  "no_bridge_stacks": 1000
+  "no_bridge_stacks": 1000,
+  "kind_stacks": 1156,
+  "kind_writers": 15
  },
  "piles": {
   "public, on Kaggle": {
@@ -183,6 +186,51 @@
    },
    "now": {
     "demo/pools/trace/trace.py": "01f1a7bebfb3604a9f0c5956338ea90603099dcdba2cd368bcc3b731c801268c"
+   }
+  },
+  {
+   "frozen": "2026-11-14",
+   "why": "What the first report taught, written after it and said so: the trace stamps each row's UTC day and keeps each added record row as a content group and a shape (the grove's hash groupings, rungs 1 and 2); the grid gains the kind stacks (stage 0's writer of each kind, then each reader of the record), read from stage 0's committed rows; changes.py measures against the same run's alone rows and an empty pile, bridges held against the no-bridge pairs, kinds, and pools. truth.py, the rules, the probes and the piles are as they were.",
+   "was": {
+    "files": {
+     "demo/pools/trace/trace.py": "01f1a7bebfb3604a9f0c5956338ea90603099dcdba2cd368bcc3b731c801268c",
+     "demo/pools/grid/grid.py": "6a995794322588bd3017f3b0d1a033d956cf212899c8b798e3344f432d1f2dd9"
+    },
+    "made": {
+     "grid manifest (grid.py write)": "7e99856a11fcee236bd1af95fecf8d87b8a4c7e6819652f87a87a9675a4a259e",
+     "no-bridge pairs (truth.py pairs)": "96382bea12e74e0d6f2cfb3ec732d18e351739f971bb42c5c41d7b11ea83debd",
+     "cards (truth.py cards)": "d4acd17699b225c102896f1cf4c2eac0bd6799d237a5978622f458add162a602"
+    },
+    "grid": {
+     "stacks": 1473,
+     "steps": 357,
+     "bridges": 207,
+     "record_readers": 78,
+     "record_givers": 53,
+     "no_bridge_stacks": 1000
+    }
+   },
+   "now": {
+    "files": {
+     "demo/pools/trace/trace.py": "7ec329521d0de0eb3fc097ae2eb14a23dfb04b4de34dde00ff4946645d3a5125",
+     "demo/pools/grid/grid.py": "2b3e0dc1166ecb6209655397b7ec16c4740272c4a943fa433c130d6812550d1e",
+     "demo/pools/truth/changes.py": "18052dad8430edc8df58c96deeb3bdd2d0ed6de23a5c008d8fde7fce021613f5"
+    },
+    "made": {
+     "grid manifest (grid.py write)": "6d9472e782f36992d678fed3b74c6413d12c8b2f40accf9979a009792e2ebe45",
+     "no-bridge pairs (truth.py pairs)": "fa41fa09f4a00146a7d8783f99ac2445605812442f4f0597e74afcf0afcd50ac",
+     "cards (truth.py cards)": "d4acd17699b225c102896f1cf4c2eac0bd6799d237a5978622f458add162a602"
+    },
+    "grid": {
+     "stacks": 2629,
+     "steps": 357,
+     "bridges": 207,
+     "record_readers": 78,
+     "record_givers": 53,
+     "no_bridge_stacks": 1000,
+     "kind_stacks": 1156,
+     "kind_writers": 15
+    }
    }
   }
  ]
