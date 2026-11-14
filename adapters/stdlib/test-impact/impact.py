@@ -420,8 +420,11 @@ def place(changed: list[str], graph: Graph) -> Plan:
             if py and not is_test(p) and name in targets and name not in plan.mutants:
                 plan.mutants.append(name)
         elif dep := deps_of(p):
-            plan.gate(f"deps:{dep}", p, f"add-on {dep} (deps)")
-            plan.gate(f"deps:{dep}@floor", p, f"add-on {dep} (deps)")
+            if (ROOT / "adapters" / "deps" / dep).is_dir():
+                plan.gate(f"deps:{dep}", p, f"add-on {dep} (deps)")
+                plan.gate(f"deps:{dep}@floor", p, f"add-on {dep} (deps)")
+            else:  # moved or removed: ci.py has no gate by that name now
+                plan.say(p, f"add-on {dep} (deps, removed)")
         elif p.startswith("constitution/"):
             plan.gate("tests:constitution", p, "constitution/")
             plan.gate("tests:coverage", p, "constitution/")

@@ -477,6 +477,16 @@ def test_a_removed_add_ons_contract_share_still_runs_and_its_mutants_do_not():
     assert plan.why[path] == ["add-on vanished (removed)"]
 
 
+def test_a_removed_deps_add_on_asks_for_no_gate_ci_doesnt_have():
+    g = imp.Graph(imp.repo_pythons())
+    path = "adapters/deps/van" + "ished/README.md"
+    plan = imp.place([path], g)
+    assert not any(k.startswith("deps:") for k in plan.gates)
+    assert plan.why[path] == ["add-on vanished (deps, removed)"]
+    kept = imp.place(["adapters/deps/pdf/README.md"], g)
+    assert {"deps:pdf", "deps:pdf@floor"} <= set(kept.gates)
+
+
 def test_a_test_the_gates_do_not_hold_widens():
     g = imp.Graph(imp.repo_pythons())
     g.users["zzz/test_orphan.py"] = set()
