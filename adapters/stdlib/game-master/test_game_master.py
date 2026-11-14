@@ -792,3 +792,28 @@ def test_a_beat_that_names_its_character_is_theirs_whatever_the_turn(tmp_path):
     w2["scenes"][0]["beats"][0]["by"] = "cy"  # not seated
     with pytest.raises(gm.WorldError, match="is not a seated character"):
         gm.validate(w2)
+
+
+def test_check_counts_one_beat_and_one_roll_as_one(t):
+    assert t.run("open").returncode == 0
+    t.run("act", "Grit")
+    chk = t.run("check")
+    assert chk.returncode == 0 and "1 game, 1 beat, 1 roll on the record" in chk.stdout
+
+
+def test_check_finds_a_beat_row_after_the_story_ended(tmp_path):
+    t = Table(tmp_path, branching(10))
+    t.run("open")
+    t.run("act", "Grit")
+    for _ in range(2):
+        t.run("ask")
+        t.k("seal", t.subject())
+        t.run("settle")
+    t.run("act", "Grit")
+    assert "finished" in t.run("status").stdout and t.run("check").returncode == 0
+    game = [r for r in t.rows() if r["kind"] == gm.OPEN][0]["n"]
+    t.forge(
+        game=game, beat_kind="action", scene="s2", beat="unpaid"
+    )  # a beat past the end
+    why = t.run("check")
+    assert why.returncode == 2 and "not the beat the world has at place 4" in why.stderr
