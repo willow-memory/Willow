@@ -1,0 +1,16 @@
+{
+ "pile": "willows-grove",
+ "freeze": "510b872c2512e07d8571cc6217480bae69f79b33",
+ "shape": "1ba942b50e2fcd1b649bfdbe45e75a7870be3cf17c499793a392fe5d6cb0d4a3",
+ "machine": {
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "cores": 4,
+  "avx512": false,
+  "python": "3.13.18"
+ },
+ "seconds": {
+  "a": 668.9,
+  "b": 668.0
+ },
+ "total_seconds": 1342.4
+}

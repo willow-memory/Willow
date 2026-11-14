@@ -21,6 +21,7 @@ probe list is kept under "probes"); `probes-timeline.txt` has them.
 | forge | 172 / 174 | 296 | 14 | 0 | 0 |
 | climate-almanac | 61 / 57 | 295 | 15 | 0 | 0 |
 | known-gaps | see run.json | 289 | 15 | 0 | 0 |
+| willows-grove (fourth freeze, 2026-11-14) | 669 / 668 | 296 | 15 | 0 | 0 |
 
 The probes, all as frozen: keyed-once 4 of 4 hit, controls 2 of 2 (not found:
 hurdat2 closed it); stray-quotes 4 of 4 missed, controls 3 of 3 hit (found);
