@@ -1,0 +1,1 @@
+`checkers`: checkers (English draughts) played on the record, every move a row and `check` playing each game again; the code holds the rules and never calls a draw, which ends a game only when the one who holds the key seals it

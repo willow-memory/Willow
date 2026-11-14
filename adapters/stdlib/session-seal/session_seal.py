@@ -1,6 +1,6 @@
 """session_seal.py: one seal at the end of a session, over all of it. Python 3.9+.
 
-    python adapters/stdlib/session-seal/session_seal.py --box DIR [--now TS]
+    python adapters/stdlib/session-seal/session_seal.py --box DIR [--now TS] [--json]
     python adapters/stdlib/session-seal/session_seal.py --box DIR check [--json]
 
 A session is the record's rows since the last one was bundled (from row 0,
@@ -19,7 +19,8 @@ says which rows it covers and its subject.
 bundle no longer matches the record row for row. It prints a report, as
 every report add-on does (adapters/stdlib/ci/README.md, the report
 contract), a group per state, and `--json` gives the same report as one
-JSON object. `check` as a function prints its own lines, as it always has.
+JSON object. Closing a session with `--json` gives its report too: what it
+bundled, and the one proposal waiting on the person's seal. `check` as a function prints its own lines, as it always has.
 
 Exit codes, the kernel's: 0 nothing waits (for `check`, every session
 sealed, or none yet: empty); 42 a session waits on the person's seal, or
@@ -83,11 +84,14 @@ def quiet(fn, *args) -> tuple[int, str]:
     return code, out.getvalue()
 
 
-def close(box: Path, ts: str) -> int:
+def close(box: Path, ts: str, as_json: bool = False) -> int:
     rows, _ = kernel.read(box / "record.jsonl")
     first = start(rows)
     if first >= len(rows):
-        print("Nothing since the last session; nothing to seal.")
+        if as_json:
+            say(report(NAME, "empty", "nothing since the last session; nothing to seal", []), True)  # fmt: skip
+        else:
+            print("Nothing since the last session; nothing to seal.")
         return kernel.ALIVE
     b = bundle(rows, first)
     ask = f"session {b['from']} to {b['to']}"
@@ -109,6 +113,11 @@ def close(box: Path, ts: str) -> int:
         return kernel.REFUSED
     row = kernel.append(box, ts, KIND, who="session-seal", subject=subj,
                         **{"from": b["from"], "to": b["to"]})  # fmt: skip
+    if as_json:  # the same, as the report a stack asks for
+        said = f"session rows {b['from']} to {b['to']}: {len(b['rows'])} rows, " + ", ".join(
+            f"{n} {t}" for t, n in b["came_of"].items())  # fmt: skip
+        say(report(NAME, "populated", said, [("waiting on your seal", [(f"row {row['n']}", subj)])]), True)  # fmt: skip
+        return kernel.ESCALATE
     print(f"session rows {b['from']} to {b['to']}: {len(b['rows'])} rows, "
           + ", ".join(f"{n} {t}" for t, n in b["came_of"].items()))  # fmt: skip
     print(f"waiting on your seal (row {row['n']}): {subj}")
@@ -218,11 +227,7 @@ def main(argv: list[str]) -> int:
             opts[a] = "yes"
         else:
             args.append(a)
-    if (
-        not opts.get("--box")
-        or args not in ([], ["check"])
-        or ("--json" in opts and args != ["check"])
-    ):
+    if not opts.get("--box") or args not in ([], ["check"]):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -237,7 +242,7 @@ def main(argv: list[str]) -> int:
         doc, code = check_report(box, rows)
         say(doc, "--json" in opts)
         return code
-    return close(box, opts.get("--now") or kernel.now())
+    return close(box, opts.get("--now") or kernel.now(), "--json" in opts)
 
 
 if __name__ == "__main__":

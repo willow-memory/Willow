@@ -226,7 +226,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
         *sorted([*(f"demo:{p}" for p in ci.people()), "demo:craft-assembly", "demo:five-repos",
-                 "demo:google-privacy-2026-10-16", "demo:known-gaps", "demo:novelty", "demo:ofrenda-frozen",
+                 "demo:game-box", "demo:game-box-end", "demo:google-privacy-2026-10-16", "demo:known-gaps", "demo:novelty", "demo:ofrenda-frozen",
                  "demo:php2shell", "demo:redteam", "demo:share", "demo:small-models", "demo:stack",
                  "demo:stewart-crossover-frozen", "demo:teodora-words",
                  *(g for g, _, _ in ci.demo_tests()[len(ci.DEMO_TESTS):])]),

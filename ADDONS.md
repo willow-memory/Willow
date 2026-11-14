@@ -1333,6 +1333,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="retire"></a>**retire** (idea) \
   Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
   *bot* `no-install` `offline` `aside` · near: assistant-scores, stale, datasette
+- <a id="sheet-drift"></a>**sheet-drift** (idea) \
+  A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side. \
+  *new* `no-install` `offline` `sheets` `drift` · near: pair-drift, contradictions, second-opinion
 - <a id="signed-commits"></a>**signed-commits** (idea) \
   Which commits are signed, and by whose key, checked on this machine against the keys you trust. \
   Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `trust` `commit` · near: provenance, pgp, sync
@@ -1935,6 +1938,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ## Play
 
+### Other readers
+
+
+#### Other readers: ideas, not built yet
+
+- <a id="game-baselines"></a>**game-baselines** (idea) \
+  A game's measured self-play results as lines, each with its count of games and the policy every seat played: a run, never an estimate. \
+  *new* `no-install` `offline` `play` `game` · near: game-master, weakest-link, steam
+
 ### What runs on your page
 
 - <a id="verse"></a>[**verse**](adapters/stdlib/verse/) \
@@ -1952,12 +1964,30 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Tools you run yourself
 
+- <a id="backgammon"></a>[**backgammon**](adapters/stdlib/backgammon/) \
+  Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored. \
+  Uses play-dice. *new* `no-install` `offline` `row` · near: game-master, quotes, nightstand
+- <a id="bureau"></a>[**bureau**](adapters/stdlib/bureau/) \
+  bureau, the Bureaucracy homage at UTETY, on the record: the deadlock proved, every visit a row, and Gerald's napkin the only way out. \
+  *new* `no-install` `offline` `row` `prov` · near: hook-replay, merkle, hook-pin
+- <a id="checkers"></a>[**checkers**](adapters/stdlib/checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
+  *new* `no-install` `offline` `draws` `played` · near: game-master, tic-tac-toe, rules
+- <a id="crazy-eights"></a>[**crazy-eights**](adapters/stdlib/crazy-eights/) \
+  Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
+  *new* `no-install` `offline` `tip` · near: game-master, nightstand, tip-pin
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: quiz, surprise, serve
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses play-dice, play-odds. *bot* `no-install` `offline` `rows` `dice` · near: life, dice5e, dice
+- <a id="hearts"></a>[**hearts**](adapters/stdlib/hearts/) \
+  Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
+  *new* `no-install` `offline` `tip` `game` · near: game-master, nightstand, tip-pin
+- <a id="liars-dice"></a>[**liars-dice**](adapters/stdlib/liars-dice/) \
+  Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give. \
+  Uses play-dice. *new* `no-install` `offline` `call` · near: game-master, nightstand, market-calls
 - <a id="oracle-text"></a>[**oracle-text**](adapters/stdlib/oracle-text/) \
   Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. \
   Uses play-tarot. *new* `no-install` `offline` `seeded` `branch` · near: hook-replay, ink-story, restack
@@ -1994,6 +2024,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="beacon"></a>**beacon** (idea) \
   Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. \
   Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `seeded` `draws` · near: tarot, oracle-text, dice
+- <a id="blind-deal"></a>**blind-deal** (idea) \
+  Cards or dice only one seat can read: each seat's share sealed to it, its hash on the record, opened when the hand ends and checked. \
+  Uses play-dice. *new* `no-install` `offline` `hash` `blind` · near: persona-card, weights-pin, tip-pin
 - <a id="chess-puzzle"></a>**chess-puzzle** (idea) \
   A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. \
   Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `drawn` `chess` · near: predict, daily-word, art-of-the-day
@@ -2041,13 +2074,13 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Needs Skyfield; MIT. *new* `needs-install` `offline` `far` `typos` · near: typos, real-sky, dialect
 - <a id="play-mastermind"></a>**play-mastermind** (idea) \
   Mastermind with the secret's hash at the open: each guess and score on the record. \
-  *new* `no-install` `offline` `score` `hash` · near: assistant-scores, game-master, secrets-audit
+  *new* `no-install` `offline` `score` `hash` · near: assistant-scores, secrets-audit, weather-bet
 - <a id="play-nim"></a>**play-nim** (idea) \
   Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. \
-  *new* `no-install` `offline` `row` `lost` · near: tic-tac-toe, cloudevents, game-master
+  *new* `no-install` `offline` `row` `lost` · near: tic-tac-toe, cloudevents, model-card
 - <a id="play-reversi"></a>**play-reversi** (idea) \
   Reversi as rows: every move, each flip following from the board. \
-  *new* `no-install` `offline` `row` `board` · near: tic-tac-toe, same-way, game-master
+  *new* `no-install` `offline` `row` `board` · near: tic-tac-toe, same-way, restack
 - <a id="play-sokoban"></a>**play-sokoban** (idea) \
   Sokoban levels and moves on the record, a solution checked by replaying it. \
   *new* `no-install` `offline` `level` `play` · near: hook-replay, tic-tac-toe, reading-level
@@ -2064,6 +2097,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="spurious"></a>**spurious** (idea) \
   Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. \
   *new* `no-install` `offline` `front` `joins` · near: front-page, ci-why, readme
+- <a id="table"></a>**table** (idea) \
+  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
+  *new* `no-install` `offline` `game` `play` · near: game-master, steam, prov
 - <a id="tic-tac-toe"></a>**tic-tac-toe** (idea) \
   Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. \
   *new* `no-install` `offline` `rows` `move` · near: reversi, catgrid, nim
@@ -2259,8 +2295,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses ci. *new* `no-install` `offline` `suite` `reach` · near: against, ci-memo, lesson-time
 - <a id="ways-live"></a>[**ways-live**](adapters/stdlib/ways-live/) \
   Each way-in add-on run through the real program it's for, a shell, an editor or an AI tool: works, fails, or not here. \
-  Uses mcp-lite, pipe. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `online` `tests` ·
-  near: mutants, github, ci
+  Uses mcp-lite, pipe. Goes online: only what the programs it starts reach on their own; it reaches nothing itself. *new* `no-install` `online` `fails`
+  `tests` · near: mutants, github, ci
 <!-- /willow:list -->
 
 Back to the [README](README.md).
