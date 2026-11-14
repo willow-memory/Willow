@@ -3,6 +3,7 @@
     python demo/game-box/session.py --table DIR [--world NAME] [--now TS]
     python demo/game-box/session.py --table DIR [--world NAME] offer CHARACTER "FACT" [--as KIND]
     python demo/game-box/session.py --table DIR canon
+    python demo/game-box/session.py --table DIR recap
 
 The game master's bookkeeping, done by code: every action beat is rolled for
 the character whose turn it is, leaning into the approach the beat suggests,
@@ -25,6 +26,13 @@ writes their answer down before it plays on, and a sealed offer is canon.
 still holds, in the order they were sealed, and every one declined. It reads
 only seals, never the worlds, so what it says is what the person made true.
 
+`recap` is "previously on...", for the start of the next session. Its first
+part is to read aloud: only what the table made true, the sealed canon,
+last session's first (a session ends where its session seal says), so
+nothing the table hasn't heard is said. Its second part is for the GM's
+eyes: the notes of the latest night, typed or scanned, each line cited, the
+promises made for next time, and what was said no to.
+
 NAME is a world in DIR/worlds (lantern-fair unless said). The story is
 opened if it isn't yet. This never seals, declines or reads the key, and
 writes only through game-master, which writes through dice and the kernel.
@@ -35,6 +43,7 @@ waits on the seal; 2 refused.
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -80,10 +89,11 @@ def recap(world: dict, game: dict) -> list[str]:
     return out
 
 
-def canon(box: Path, worlds: Path) -> int:
-    rows, breaks = kernel.read(box / "record.jsonl")
-    if breaks:
-        return fail("the record doesn't verify: " + "; ".join(breaks))
+def answers(
+    box: Path, rows: list[dict], worlds: Path
+) -> list[tuple[int, str, str, str]]:
+    """Every ruling and offer the GM has answered, as (the answer's row,
+    sealed or declined, the fact as handed in, which story), in row order."""
     titles = {}
     for f in sorted(worlds.glob("*.json")):
         try:
@@ -91,24 +101,25 @@ def canon(box: Path, worlds: Path) -> int:
         except gm.WorldError:
             continue
         titles[w["id"]] = w["title"]
-    true, no = [], []
+    out = []
     for g in gm.games(rows):
         where = titles.get(g["open"].get("world"), g["open"].get("world"))
         said = [(a, a["fact"]) for a in g["asks"]]
         said += [(o, f"{o['fact']}  [offered by {o['by']}]") for o in g["offers"]]
         for a, fact in said:
             what, got = gm.ruling(box, rows, a["subject"])
-            if what == "sealed":
-                true.append(
-                    (got["n"], f"  {fact}   ({where}, sealed at row {got['n']})")
-                )
-            elif what == "declined":
-                no.append(
-                    (
-                        got["n"],
-                        f"  not: {fact}   ({where}, declined at row {got['n']})",
-                    )
-                )
+            if what in ("sealed", "declined"):
+                out.append((got["n"], what, fact, where))
+    return sorted(out)
+
+
+def canon(box: Path, worlds: Path) -> int:
+    rows, breaks = kernel.read(box / "record.jsonl")
+    if breaks:
+        return fail("the record doesn't verify: " + "; ".join(breaks))
+    said = answers(box, rows, worlds)
+    true = [(n, f"  {fact}   ({where}, sealed at row {n})") for n, what, fact, where in said if what == "sealed"]  # fmt: skip
+    no = [(n, f"  not: {fact}   ({where}, declined at row {n})") for n, what, fact, where in said if what == "declined"]  # fmt: skip
     if not true and not no:
         print("nothing is canon at this table yet: nothing has been sealed")
         return kernel.ESCALATE
@@ -118,6 +129,78 @@ def canon(box: Path, worlds: Path) -> int:
         print("what it said no to:")
         print("\n".join(line for _, line in sorted(no)))
     return kernel.ALIVE
+
+
+DATED = re.compile(r"^(\d{4}-\d{2}-\d{2})")
+
+
+def last_notes(pile: Path) -> tuple[str, list[tuple[str, int, str]]]:
+    """(the latest date a notes file is named for, its lines as (path, line,
+    text)): typed and scanned alike, every file named by that date."""
+    dated = sorted((m.group(1), p) for p in pile.rglob("*") if p.is_file() and (m := DATED.match(p.name)))  # fmt: skip
+    if not dated:
+        return "", []
+    day = dated[-1][0]
+    lines = []
+    for d, p in dated:
+        if d == day:
+            rel = p.relative_to(pile).as_posix()
+            for i, text in enumerate(p.read_text(encoding="utf-8", errors="replace").splitlines(), 1):  # fmt: skip
+                if text.strip() and not text.lstrip().startswith("#"):
+                    lines.append((rel, i, text.strip()))
+    return day, lines
+
+
+def promised(pile: Path) -> list[tuple[str, int, str]]:
+    """Every line of the GM's notes that says next time, oldest file first."""
+    out = []
+    for p in sorted(pile.rglob("*")):
+        if p.is_file() and p.suffix in (".md", ".txt"):
+            for i, text in enumerate(p.read_text(encoding="utf-8", errors="replace").splitlines(), 1):  # fmt: skip
+                if "next time" in text.lower():
+                    out.append((p.relative_to(pile).as_posix(), i, text.strip()))
+    return out
+
+
+def previously(box: Path, table: Path) -> int:
+    rows, breaks = kernel.read(box / "record.jsonl")
+    if breaks:
+        return fail("the record doesn't verify: " + "; ".join(breaks))
+    said = answers(box, rows, table / "worlds")
+    true = [(n, fact) for n, what, fact, _ in said if what == "sealed"]
+    ended = [r for r in rows if r["kind"] == "session"]
+    print("# Previously on...\n")
+    print("## Read aloud: what the table made true\n")
+    if not true:
+        print("  Nothing yet: the table hasn't made anything true.")
+    elif not ended:
+        print("So far:")
+        print("\n".join(f"  - {fact}" for _, fact in true))
+    else:
+        lo, hi = ended[-1]["from"], ended[-1]["to"]
+        parts = (("Last time:", [f for n, f in true if lo <= n <= hi]),
+                 ("Before that:", [f for n, f in true if n < lo]),
+                 ("This time, so far:", [f for n, f in true if n > hi]))  # fmt: skip
+        for head, facts in parts:
+            if facts:
+                print(head)
+                print("\n".join(f"  - {f}" for f in facts))
+    print("\n## For the GM's eyes\n")
+    day, lines = last_notes(table / "pile")
+    if lines:
+        w = max(len(f"{p}:{i}") for p, i, _ in lines)
+        print(f"Your notes from {day}:")
+        print("\n".join(f"  {f'{p}:{i}':<{w}}  {t}" for p, i, t in lines))
+    promises = promised(table / "pile")
+    if promises:
+        w = max(len(f"{p}:{i}") for p, i, _ in promises)
+        print("Promised for next time:")
+        print("\n".join(f"  {f'{p}:{i}':<{w}}  {t}" for p, i, t in promises))
+    no = [fact for n, what, fact, _ in said if what == "declined"]
+    if no:
+        print("Said no to:")
+        print("\n".join(f"  - {f}" for f in no))
+    return kernel.ALIVE if true or lines else kernel.ESCALATE
 
 
 def answered(box: Path, rows: list[dict], game: dict) -> bool:
@@ -185,7 +268,7 @@ def main(argv: list[str]) -> int:
         else:
             args.append(a)
     if not opts.get("--table") or not (
-        args in ([], ["canon"]) or (len(args) == 3 and args[0] == "offer")
+        args in ([], ["canon"], ["recap"]) or (len(args) == 3 and args[0] == "offer")
     ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -194,6 +277,8 @@ def main(argv: list[str]) -> int:
     world_file = table / "worlds" / f"{opts.get('--world') or 'lantern-fair'}.json"
     if not (box / "kernel.json").exists():
         return fail(f"{table} isn't a table laid by open_table.py")
+    if args == ["recap"]:
+        return previously(box, table)
     if args == ["canon"]:
         return canon(box, table / "worlds")
     if not world_file.exists():

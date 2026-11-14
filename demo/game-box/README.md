@@ -128,6 +128,21 @@ cites the line tesseract read, not the page. The page is set in a
 handwriting-like font; real handwriting reads worse, and tesseract is made
 for print. A check for OCR damage is an idea on willow's list, `ocr-noise`.
 
+## Previously on...
+
+    python demo/game-box/session.py --table DIR recap
+
+For the start of the next session. It has two parts:
+
+- **Read aloud.** Only what the table made true, the sealed canon, so
+  nothing the table hasn't heard is said: last time first, then before that,
+  then anything sealed tonight so far. A session ends where its session seal
+  says, so the end of the night's seal is what makes "last time". An offer
+  says whose it was: `[offered by pell]`.
+- **For the GM's eyes.** The latest night's notes, typed or scanned, each
+  line cited; every promise made for next time; and what the table said no
+  to. The binder is the GM's, so none of it is read aloud.
+
 ## A session, played by code
 
     python demo/game-box/session.py --table DIR --world clockwork-cellar

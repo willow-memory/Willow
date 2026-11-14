@@ -471,3 +471,43 @@ def test_an_offer_as_a_kind_the_cellar_doesnt_turn_on_is_refused(t):
     t.session()
     got = t.session("offer", "pell", VELL, "--as", "twist")
     assert got.returncode == 2 and "(it names: guest)" in got.stderr
+
+
+# ── previously on ───────────────────────────────────────────────────────────
+def test_recap_before_anything_says_nothing_is_true_yet(t):
+    t.open()
+    got = t.session("recap")
+    assert "Nothing yet: the table hasn't made anything true." in got.stdout
+    assert "Your notes from 2026-11-14:" in got.stdout  # the GM's own notes still come
+
+
+def test_recap_reads_aloud_only_what_the_table_made_true_last_time_first(t):
+    t.open()
+    t.session()
+    t.session("offer", "pell", VELL, "--as", "guest")
+    for subj in t.asked() + [
+        r["subject"] for r in t.rows() if r["kind"] == "table-offer"
+    ]:
+        t.seal(subj)
+    t.session()  # the button ruling settled
+    assert (
+        py(STDLIB / "session-seal" / "session_seal.py", "--box", t.box, *NOW).returncode
+        == 42
+    )  # night one ends
+    t.night()
+    got = t.session("recap").stdout
+    aloud, gm_only = got.split("## For the GM's eyes")
+    last, rest = aloud.split("Last time:")[1].split("This time, so far:")
+    assert "The red button is bait" in last and VELL in last
+    assert "Prince Aldric is free" in rest
+    for secret in (
+        "Weakness",
+        "smoke",
+        "kids want it kept that way",
+    ):  # the binder is the GM's
+        assert secret not in aloud
+    assert "sessions/2026-11-14.md:5  Next time: where the springs go." in gm_only
+    assert (
+        "sessions/2026-10-24.md:5  Brann wanted to bring a friend. I said next time."
+        in gm_only
+    )

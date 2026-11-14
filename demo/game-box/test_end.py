@@ -94,3 +94,17 @@ def test_a_second_night_runs_in_its_own_folder(night):
     again = py(HERE / "open_table.py", "end", "--table", table)
     assert again.returncode in (0, 42), again.stderr
     assert (table / "end" / "002" / "springs.txt").is_file()
+
+
+def test_the_recap_after_the_night_gives_the_gm_tonights_handwritten_page(night):
+    table, _ = night
+    got = py(HERE / "session.py", "--table", table, "recap").stdout
+    gm_only = got.split("## For the GM's eyes")[1]
+    assert "Your notes from 2026-11-21:" in gm_only
+    cited = {line.split()[0]: " ".join(line.split()[1:]) for line in gm_only.splitlines() if line.startswith("  ")}  # fmt: skip
+    assert (
+        cited["scanned/2026-11-21.jpg.txt:3"]
+        == "Juno followed the springs. They go into the"
+    )
+    assert any(k.startswith("scanned/2026-11-21.jpg.txt:") and v == "Next time: what is Cogwen building"
+               for k, v in cited.items())  # fmt: skip
