@@ -148,6 +148,7 @@ def test_a_flagged_step_makes_the_stack_exit_42(tmp_path):
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 42, got.stdout + got.stderr
     assert "(exit 2)" in got.stdout  # the step's own refusal, surfaced and flagged
+    assert got.stdout.rstrip().endswith("1 of 1 steps flagged (exit 42).")
 
 
 def test_step_results_follow_the_add_ons_cards():
@@ -156,6 +157,11 @@ def test_step_results_follow_the_add_ons_cards():
     assert st.step_result("duplicates", 42) == (False, "none found")
     assert st.step_result("contradictions", 42) == (False, "none found")
     assert st.step_result("contradictions", 0) == (True, "flagged")
+    assert st.step_result("gaps", 42) == (
+        False,
+        "none found",
+    )  # no gap is the good news
+    assert st.step_result("gaps", 0) == (True, "flagged")  # a week skipped is the news
     assert st.step_result("export", 2) == (True, "exit 2")
 
 
@@ -201,7 +207,9 @@ def test_a_step_that_found_nothing_is_not_flagged(tmp_path):
     assert got.returncode == 0, got.stdout + got.stderr
     assert "(none found)" in got.stdout
     assert "1 of 1 steps flagged" not in got.stdout
-    assert "0 of 1 steps flagged" in got.stdout
+    assert got.stdout.rstrip().endswith(
+        "0 of 1 steps flagged (exit 0)."
+    )  # not 42: it exits 0
 
 
 def test_within_a_pool_the_tallest_step_comes_first(tmp_path):
@@ -892,3 +900,46 @@ def test_a_stack_line_with_a_backslash_that_would_be_dropped_is_refused(tmp_path
     assert "put that option in quotes" in got.stderr
     quoted = a_stack(tmp_path, '## p\n- light -- --box {box} --id "INV-\\d+"\n')
     assert run("--box", str(box), "--stack", str(quoted)).returncode == 0
+
+
+WRITE = """import sys
+from pathlib import Path
+
+argv = sys.argv[1:]
+to = Path(argv[argv.index("--to") + 1])
+if to.exists():
+    print("refused: " + str(to) + " exists", file=sys.stderr)
+    sys.exit(2)
+to.write_text("written\\n", encoding="utf-8")
+print("wrote " + to.name)
+if __name__ == "__main__":
+    sys.exit(0)
+"""
+
+
+def test_a_step_that_writes_a_file_writes_it_in_this_runs_folder(tmp_path):
+    """{run} is the run's own folder, so a stack that writes a file can run
+    every week: each run writes its own, and none is in another's way."""
+    box = a_box(tmp_path)
+    an_add_on("write", WRITE)
+    stack = a_stack(tmp_path, "## p\n- write -- --to {run}/notes.txt\n")
+    for week in ("one", "two"):
+        to = tmp_path / week
+        got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
+        assert got.returncode == 0, got.stdout + got.stderr
+        assert (to / "notes.txt").read_text() == "written\n"
+        assert "wrote notes.txt" in got.stdout
+    # the step is marked by what was written, not by where the run was kept
+    assert (
+        f"01 write: started ({st.mark('write', ['--to', '{run}/notes.txt'])})"
+        in (tmp_path / "two" / "00-stack.txt").read_text()
+    )
+
+
+def test_a_step_that_writes_in_the_run_needs_the_run_kept(tmp_path):
+    box = a_box(tmp_path)
+    an_add_on("write", WRITE)
+    got = run("--box", str(box), "--stack", str(a_stack(tmp_path, "## p\n- write -- --to {run}/notes.txt\n")))  # fmt: skip
+    assert got.returncode == 2
+    assert "step 1 (write) writes in {run}, the run's own folder" in got.stderr
+    assert "add --to FOLDER" in got.stderr

@@ -1326,6 +1326,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="retire"></a>**retire** (idea) \
   Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
   *bot* `no-install` `offline` `aside` · near: assistant-scores, stale, datasette
+- <a id="sheet-drift"></a>**sheet-drift** (idea) \
+  A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side. \
+  *new* `no-install` `offline` `sheets` `drift` · near: pair-drift, contradictions, second-opinion
 - <a id="signed-commits"></a>**signed-commits** (idea) \
   Which commits are signed, and by whose key, checked on this machine against the keys you trust. \
   Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `trust` `commit` · near: provenance, pgp, sync
@@ -1930,6 +1933,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ## Play
 
+### Other readers
+
+
+#### Other readers: ideas, not built yet
+
+- <a id="game-baselines"></a>**game-baselines** (idea) \
+  A game's measured self-play results as lines, each with its count of games and the policy every seat played: a run, never an estimate. \
+  *new* `no-install` `offline` `game` `measured` · near: weakest-link, life, game-master
+
 ### What runs on your page
 
 - <a id="pile-poetry"></a>[**pile-poetry**](adapters/stdlib/pile-poetry/) \
@@ -1947,9 +1959,21 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Tools you run yourself
 
+- <a id="backgammon"></a>[**backgammon**](adapters/stdlib/backgammon/) \
+  Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored. \
+  Uses dice. *new* `no-install` `offline` `rows` `dice` · near: dice, game-master, dice5e
+- <a id="bureau"></a>[**bureau**](adapters/stdlib/bureau/) \
+  bureau, the Bureaucracy homage at UTETY, on the record: the deadlock proved, every visit a row, and Gerald's napkin the only way out. \
+  *new* `no-install` `offline` `rows` `prov` · near: changed, life, catgrid
 - <a id="catgrid"></a>[**catgrid**](adapters/stdlib/catgrid/) \
   A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. \
   *new* `no-install` `offline` `rows` `seeded` · near: life, game-master, hook-replay
+- <a id="checkers"></a>[**checkers**](adapters/stdlib/checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
+  *new* `no-install` `offline` `rows` `draw` · near: catgrid, game-master, life
+- <a id="crazy-eights"></a>[**crazy-eights**](adapters/stdlib/crazy-eights/) \
+  Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
+  *new* `no-install` `offline` `seeded` `tip` · near: tarot, life, catgrid
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: quiz, surprise, serve
@@ -1962,9 +1986,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice, odds. *bot* `no-install` `offline` `rows` `dice` · near: life, dice5e, dice
+- <a id="hearts"></a>[**hearts**](adapters/stdlib/hearts/) \
+  Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
+  *new* `no-install` `offline` `seeded` `tip` · near: life, catgrid, tarot
 - <a id="horoscope"></a>[**horoscope**](adapters/stdlib/horoscope/) \
   A daily horoscope keyed on your name and the date: same name, same day, same reading, always. \
   *bot* `no-install` `offline` `daily` · near: daily-word, goodreads, gaps
+- <a id="liars-dice"></a>[**liars-dice**](adapters/stdlib/liars-dice/) \
+  Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give. \
+  Uses dice. *new* `no-install` `offline` `dice` `game` · near: game-master, life, tarot
 - <a id="life"></a>[**life**](adapters/stdlib/life/) \
   Conway's Game of Life as rows: a fully deterministic world on the record. \
   *bot* `no-install` `offline` `rows` `game` · near: catgrid, game-master, tarot
@@ -1989,6 +2019,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="beacon"></a>**beacon** (idea) \
   Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. \
   Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `seeded` `draws` · near: tarot, oracle-text, dice
+- <a id="blind-deal"></a>**blind-deal** (idea) \
+  Cards or dice only one seat can read: each seat's share sealed to it, its hash on the record, opened when the hand ends and checked. \
+  Uses dice. *new* `no-install` `offline` `hash` `end` · near: persona-card, tarot, weights-pin
 - <a id="chess-puzzle"></a>**chess-puzzle** (idea) \
   A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. \
   Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `drawn` `chess` · near: predict, daily-word, art-of-the-day
@@ -2059,6 +2092,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="spurious"></a>**spurious** (idea) \
   Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. \
   *new* `no-install` `offline` `front` `joins` · near: front-page, ci-why, readme
+- <a id="table"></a>**table** (idea) \
+  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
+  *new* `no-install` `offline` `game` `play` · near: life, catgrid, game-master
 - <a id="tic-tac-toe"></a>**tic-tac-toe** (idea) \
   Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. \
   *new* `no-install` `offline` `rows` `move` · near: reversi, catgrid, nim

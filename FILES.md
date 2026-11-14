@@ -1600,10 +1600,26 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
+│   │   ├── backgammon/
+│   │   │   ├── backgammon.py backgammon played on the record, the dice thrown by dice
+│   │   │   ├── test_backgammon.py
+│   │   │   └── README.md     its card
+│   │   ├── bureau/
+│   │   │   ├── bureau.py     bureau, the Bureaucracy homage at UTETY, played on the record
+│   │   │   ├── test_bureau.py
+│   │   │   └── README.md     its card
 │   │   ├── catgrid/
 │   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
 │   │   │   ├── test_catgrid.py
 │   │   │   └── README.md
+│   │   ├── checkers/
+│   │   │   ├── checkers.py   checkers (English draughts) played on the record, the table's ruler sealing a draw
+│   │   │   ├── test_checkers.py
+│   │   │   └── README.md     its card
+│   │   ├── crazy-eights/
+│   │   │   ├── crazy_eights.py Crazy Eights played on the record, hands open, the deal seeded
+│   │   │   ├── test_crazy_eights.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1620,14 +1636,27 @@ willow/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
 │   │   │   └── README.md
+│   │   ├── hearts/
+│   │   │   ├── hearts.py     Hearts played on the record, hands open, the deal seeded
+│   │   │   ├── test_hearts.py
+│   │   │   └── README.md     its card
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
 │   │   │   └── README.md
+│   │   ├── liars-dice/
+│   │   │   ├── liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
+│   │   │   ├── test_liars_dice.py
+│   │   │   └── README.md     its card
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
 │   │   │   ├── test_life.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from odds/
+
+```
 │   │   ├── odds/
 │   │   │   ├── odds.py       exact odds for any dice, as fractions
 │   │   │   ├── test_odds.py
@@ -2177,9 +2206,46 @@ willow/
 │   │       └── ways-in.md
 ```
 
-#### demo/, from google-privacy-2026-10-16/
+#### demo/, from game-box/
 
 ```
+│   ├── game-box/
+│   │   ├── author.py         a story written as markdown, made into a world game-master plays
+│   │   ├── binder/
+│   │   │   ├── house-rules.md House rules
+│   │   │   ├── monsters/
+│   │   │   │   ├── clockwork-hound.md Clockwork hound
+│   │   │   │   └── spring-wasps.md Spring wasps
+│   │   │   ├── people/
+│   │   │   │   ├── cogwen.md Cogwen
+│   │   │   │   └── lantern-man.md The Lantern Man
+│   │   │   └── sessions/
+│   │   │       ├── 2026-10-24.md Session, 24 October 2026
+│   │   │       ├── 2026-10-31.md Session, 31 October 2026
+│   │   │       ├── 2026-11-07.md Session, 7 November 2026
+│   │   │       └── 2026-11-14.md Session, 14 November 2026
+│   │   ├── check.md          the table's own check
+│   │   ├── end/
+│   │   │   └── test_end.py
+│   │   ├── gm-end.md         the game master's end of the night
+│   │   ├── gm-stack.md       the game master's prep sheet
+│   │   ├── gm-words.txt
+│   │   ├── ideas.py          story ideas between sessions, made from what's in the box
+│   │   ├── open_table.py     a game table set up from the box, with nothing sealed
+│   │   ├── sample-scans/
+│   │   │   └── 2026-11-21.jpg
+│   │   ├── session.py        a session at the table played by code, as far as it goes without the person
+│   │   ├── stories/
+│   │   │   └── wasp-nest.md  The Wasp Nest
+│   │   ├── table/
+│   │   │   └── test_game_box.py
+│   │   ├── worlds/
+│   │   │   ├── aetheris.json
+│   │   │   ├── clockwork-cellar.json
+│   │   │   ├── hasbeen.json
+│   │   │   ├── ironworks.json
+│   │   │   └── lantern-fair.json
+│   │   └── README.md         The game box
 │   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
@@ -2195,6 +2261,11 @@ willow/
 │   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
 │   │       ├── blind-claims.txt     the claims, reworded three ways, blind
 │   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+```
+
+#### demo/, from hollis/
+
+```
 │   ├── hollis/               built blind, by an agent that never saw the code
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md

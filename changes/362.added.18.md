@@ -1,0 +1,1 @@
+`liars-dice`: Liar's Dice on the record for four seats, every cup dice's own throw seeded by the record's tip and thrown straight before its round; raises, wild ones and every call counted as game-lab's rules count them

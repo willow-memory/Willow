@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.5.1
+version: 0.6.0
 writes: to
 network: none
 role: ways
@@ -111,6 +111,11 @@ refused before anything runs:
 A step whose earlier step kept nothing is not run, and the log and the page
 say so (`not run: step 1 (scan) kept nothing to hand on`); it is flagged,
 and the steps after it still run.
+
+A step that writes a file can name `{run}`, the folder the run is kept in,
+so each run writes its own and a file kept from last time is never in the
+way: `- timeline -- --box {box} --to {run}/springs.txt "springs"`. It too
+needs the run kept, and is refused before anything runs without `--to`.
 
 A backslash in a step's args has to sit inside quotes. Outside them the
 line is read the way a shell reads it, which drops the backslash without a

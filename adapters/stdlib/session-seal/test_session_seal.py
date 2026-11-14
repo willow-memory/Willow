@@ -208,7 +208,28 @@ def test_check_as_json_is_the_same_report_and_none_yet_is_empty(tmp_path):
     assert doc["groups"] == [{"name": "waiting on your seal", "rows": [
         {"where": "rows 0 to 1",
          "what": f"python kernel.py seal --box {box} {waiting_subject(box)}"}]}]  # fmt: skip
-    assert run("--box", str(box), "--json", *NOW).returncode == 2, "check alone"
+
+
+def test_closing_a_session_as_json_is_its_report(tmp_path):
+    """The card says `output: report`, so a stack asks every run for --json:
+    closing a session gives the report contract's shape too."""
+    box = make(tmp_path)
+    kernel("bite", "--box", str(box), "tomatoes sun", *NOW)
+    got = run("--box", str(box), "--json", *NOW)
+    doc = json.loads(got.stdout)
+    assert (
+        got.returncode == 42
+        and doc["addon"] == "session-seal"
+        and doc["state"] == "populated"
+    )
+    assert doc["said"].startswith("session rows 0 to 1: 2 rows, ")
+    [group] = doc["groups"]
+    assert group["name"] == "waiting on your seal"
+    assert group["rows"][0]["what"] == waiting_subject(box)
+    again = run(
+        "--box", str(box), "--json", *NOW
+    )  # nothing since: empty, and nothing proposed
+    assert again.returncode == 0 and json.loads(again.stdout)["state"] == "empty"
 
 
 def test_check_as_a_function_prints_its_own_lines(tmp_path):

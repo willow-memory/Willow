@@ -100,6 +100,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "blind-deal",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Cards or dice only one seat can read: each seat's share sealed to it, its hash on the record, opened when the hand ends and checked.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "uses": "dice",
+  "version": "0.0.1"
+ },
+ {
   "name": "bluesky",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -602,6 +614,17 @@
   "writes": "nothing",
   "network": "none",
   "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "game-baselines",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A game's measured self-play results as lines, each with its count of games and the policy every seat played: a run, never an estimate.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
   "version": "0.0.1"
  },
  {
@@ -1891,6 +1914,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "sheet-drift",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "sigmap",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -2098,6 +2132,17 @@
   "kind": "stdlib",
   "section": "Trust and proof",
   "line": "Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "table",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all.",
   "source": "new",
   "writes": "record",
   "network": "none",
