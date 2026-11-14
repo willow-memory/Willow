@@ -577,7 +577,7 @@ def main(argv: list[str]) -> int:
 
     doc = compose(ran, str(box))
     print(doc, end="")
-    print(f"\n{flagged} of {nsteps} steps flagged (exit 42).")
+    print(f"\n{flagged} of {nsteps} steps flagged (exit {worst}).")
     if run:
         run.say(f"done: {flagged} of {nsteps} steps flagged")
     return worst

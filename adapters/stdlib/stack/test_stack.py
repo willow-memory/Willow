@@ -148,6 +148,7 @@ def test_a_flagged_step_makes_the_stack_exit_42(tmp_path):
     got = run("--box", str(box), "--stack", str(stack))
     assert got.returncode == 42, got.stdout + got.stderr
     assert "(exit 2)" in got.stdout  # the step's own refusal, surfaced and flagged
+    assert got.stdout.rstrip().endswith("1 of 1 steps flagged (exit 42).")
 
 
 def test_step_results_follow_the_add_ons_cards():
@@ -201,7 +202,9 @@ def test_a_step_that_found_nothing_is_not_flagged(tmp_path):
     assert got.returncode == 0, got.stdout + got.stderr
     assert "(none found)" in got.stdout
     assert "1 of 1 steps flagged" not in got.stdout
-    assert "0 of 1 steps flagged" in got.stdout
+    assert got.stdout.rstrip().endswith(
+        "0 of 1 steps flagged (exit 0)."
+    )  # not 42: it exits 0
 
 
 def test_within_a_pool_the_tallest_step_comes_first(tmp_path):

@@ -2173,6 +2173,15 @@ willow/
 │   │       ├── proof.md
 │   │       ├── voice.md
 │   │       └── ways-in.md
+│   ├── game-box/
+│   │   ├── open_table.py     a game table set up from the box, with nothing sealed
+│   │   ├── table/
+│   │   │   ├── check.md      the table's own check
+│   │   │   ├── house-rules.md House rules
+│   │   │   └── worlds/
+│   │   │       └── lantern-fair.json
+│   │   ├── test_game_box.py
+│   │   └── README.md         The game box
 ```
 
 #### demo/, from google-privacy-2026-10-16/
