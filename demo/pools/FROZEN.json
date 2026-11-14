@@ -74,6 +74,12 @@
     "sources": "known_gaps.py's SOURCES, each by its whole SHA-256",
     "salt": "pools-2026-11-13-known-gaps",
     "shape": "cb7a503325bf8386dcccd40295e9846c69a551ce5689cbac687486dc2a8927a4"
+   },
+   "willows-grove": {
+    "repo": "willow-memory/willows-grove",
+    "commit": "9237cb9dda4188789b3e4931b658d2d762a437c7",
+    "salt": "pools-2026-11-13-willows-grove",
+    "shape": "1ba942b50e2fcd1b649bfdbe45e75a7870be3cf17c499793a392fe5d6cb0d4a3"
    }
   },
   "private, on the laptop only": {
@@ -145,6 +151,18 @@
    "now": {
     "demo/pools/trace/trace.py": "ca13933d50affc8c04b8047eed49081160f7c760becadce7761ea2171bf6afb3",
     "demo/pools/trace/memo/sitecustomize.py": "82cb4b9a8cfa20a6dd011d276c21544e7c00b0020afa1fa511a981118a7c8449"
+   }
+  },
+  {
+   "frozen": "2026-11-13",
+   "why": "A thirteenth pile: willows-grove, pinned to its main at 9237cb9d. The maintainer's idea: the boxes (the 13 x 13 rules cross table and the grids after it, all merged on the grove's main) piled and stacked like any pile, so the study's pools can be laid beside the schema built by hand. The maintainer widened the gate's exception to every public repo under willow-memory. No rule, threshold, probe, file, grid, pairs or cards changed, and no other pile; the runs of the third freeze stand.",
+   "added": {
+    "willows-grove": {
+     "repo": "willow-memory/willows-grove",
+     "commit": "9237cb9dda4188789b3e4931b658d2d762a437c7",
+     "salt": "pools-2026-11-13-willows-grove",
+     "shape": "1ba942b50e2fcd1b649bfdbe45e75a7870be3cf17c499793a392fe5d6cb0d4a3"
+    }
    }
   }
  ]
