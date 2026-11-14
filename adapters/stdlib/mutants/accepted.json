@@ -26,9 +26,6 @@
   "lesson-time": {
     "05dbd1b2d85d": "said_at's starting value is never read: a plan that states its time sets said_at to that line, and one that states none is skipped or shown as from --period, so the starting 0 changes no result."
   },
-  "many-boxes": {
-    "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
-  },
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },

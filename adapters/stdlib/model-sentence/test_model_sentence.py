@@ -234,7 +234,11 @@ def test_a_model_that_cant_be_asked_is_unreachable_and_says_why(boxes, ollama):
 def test_only_this_machine_is_ever_asked(boxes):
     for host in ("example.com", "example.com:11434", "http://10.0.0.5:11434",
                  "https://127.0.0.1:11434", "127.0.0.1.example.com"):  # fmt: skip
-        got = run("--boxes", boxes, "--host", host)
+        # refused before anything is sent, so a host let through fails at
+        # once here, not after the model's timeout below
+        with pytest.raises(sy.SayUnreachable, match="is not this machine"):
+            sy.ollama_base(host)
+        got = run("--boxes", boxes, "--host", host, "--timeout", "2")
         assert got.returncode == 42, host
         assert "is not this machine; not asked" in got.stdout, host
     with pytest.raises(sy.SayUnreachable):
