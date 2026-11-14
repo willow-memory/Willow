@@ -7,12 +7,12 @@ version: 0.1.0
 writes: record
 network: none
 role: tools
-uses: dice, odds
+uses: play-dice, play-odds
 -->
 # game-master
 
 A story played beat by beat, with every roll and every ruling a row on the
-record. The dice are [dice](../dice/)'s, the chances are [odds](../odds/)'s,
+record. The dice are [play-dice](../play-dice/)'s, the chances are [play-odds](../play-odds/)'s,
 and the game master's calls are yours: this never makes one.
 
     python adapters/stdlib/game-master/game_master.py --box DIR open   --world night.json

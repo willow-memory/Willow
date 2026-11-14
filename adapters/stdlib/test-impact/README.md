@@ -19,10 +19,10 @@ test. This says which ones a change can reach, and can run just those first.
 
     python adapters/stdlib/test-impact/impact.py plan --base origin/main
     python adapters/stdlib/test-impact/impact.py run  --base origin/main
-    python adapters/stdlib/test-impact/impact.py plan adapters/stdlib/stale/stale.py CHANGELOG.md
+    python adapters/stdlib/test-impact/impact.py plan adapters/stdlib/stale-answers/stale_answers.py CHANGELOG.md
 
     1 path(s) changed (1 by hand):
-      adapters/stdlib/stale/stale.py
+      adapters/stdlib/stale-answers/stale_answers.py
 
     Plan, in ci.py's gate names, cheapest and closest first:
       1. lint:check: ruff on 1 changed .py file(s)
@@ -30,7 +30,7 @@ test. This says which ones a change can reach, and can run just those first.
       3. tests:adapters: test_contract.py narrowed to stale
            WILLOW_ONLY=stale pytest adapters/stdlib/ci/test_contract.py
       4. tests:adapters: 1 test file(s) of the add-ons reached
-           pytest adapters/stdlib/stale/test_stale.py
+           pytest adapters/stdlib/stale-answers/test_stale_answers.py
       5. tests:docs: FILES.md, README counts, generated lists, citations
            pytest test_docs.py
       6. mutants:stale: break its code a few ways; its tests must notice

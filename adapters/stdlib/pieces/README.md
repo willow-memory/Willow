@@ -36,7 +36,7 @@ For other add-ons it offers three things:
 - `passages(pile)`: the same, one passage at a time;
 - `of_file(pile, path)`: one file's passages, and no other file read.
 
-[coming-up](../coming-up/), [stale](../stale/), [digest](../digest/) (through
+[coming-up](../coming-up/), [stale-answers](../stale-answers/), [digest](../digest/) (through
 those two) and [browse](../browse/) use it when it is beside them, and read
 the kernel's way when it isn't. Reading this way saves memory, not time:
 every file is still read, so on a big folder a question that needs all of it

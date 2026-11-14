@@ -50,7 +50,7 @@ shown; 42 the day is done, or the folder has no five-letter words to play;
 2 refused, a guess the folder doesn't hold among the refusals.
 
 **Uses:** the kernel's `read`, `append`, `chunks`, `words`, `FUNCTION` and
-`config`; willow-bot's seeded stream, as [dice](../dice/) throws it.
+`config`; willow-bot's seeded stream, as [play-dice](../play-dice/) throws it.
 
 **Never:** changes your files; writes a seal; shows the word while the day
 is open; spends a guess on a word the folder doesn't hold.

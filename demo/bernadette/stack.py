@@ -187,7 +187,7 @@ def ask(go: Run, box: Path, raw: Path) -> list[dict]:
     if empty:
         qs = go.to / "empty-questions.txt"
         qs.write_text("".join(f"{a['n']}\t{a['question']}\n" for a in empty))
-        lines = go("ask", STD / "scan" / "scan.py", "scan", "--index",
+        lines = go("ask", STD / "batch-ask" / "scan.py", "scan", "--index",
                    str(go.to / "index"), "--questions", str(qs), "--rank", "bm25",
                    "--top", "3")  # fmt: skip
         for line in lines.splitlines():
@@ -246,29 +246,29 @@ def run(to: Path, now: str, life: Path) -> int:
     go = Run(to, now, life)
     mirror = to / "pile"
     read(go, mirror)
-    go("start", STD / "start" / "start.py", "--pile", str(mirror), "--to",
+    go("start", STD / "first-run" / "first_run.py", "--pile", str(mirror), "--to",
        str(to / "willow"))  # fmt: skip
     box = to / "willow" / "box"
     go("start", KERNEL, "init", "--box", str(to / "raw"), "--pile", str(life),
        "--key", str(to / "raw.key"), "--now", now)  # fmt: skip
-    go("start", STD / "scan" / "scan.py", "index", "--from", str(mirror), "--to",
+    go("start", STD / "batch-ask" / "scan.py", "index", "--from", str(mirror), "--to",
        str(to / "index"))  # fmt: skip
     for script, *more in (
         (STD / "secrets-audit" / "secrets_audit.py",),
         (STD / "todo" / "todo.py",),
         (STD / "coming-up" / "coming_up.py", "--days", "30", "--now", now),
         (STD / "on-this-day" / "on_this_day.py", "--now", now),
-        (STD / "xref" / "xref.py",),
-        (STD / "changed" / "changed.py", "--now", now),
+        (STD / "ref-check" / "ref_check.py",),
+        (STD / "what-changed" / "what_changed.py", "--now", now),
     ):
         go("look", script, "--box", str(box), *more)
     asked = ask(go, box, to / "raw")
     served = "\n\n".join(t for a in asked for t in a.pop("text"))
     go("hide", STD / "privacy" / "privacy.py", "scrub", stdin=served)
     assist(go, box, asked)
-    go("view", STD / "again" / "again.py", "--box", str(box))
+    go("view", STD / "asked-again" / "asked_again.py", "--box", str(box))
     go("view", STD / "digest" / "digest.py", "--box", str(box), "--now", now)
-    go("view", STD / "history" / "history.py", "--box", str(box))
+    go("view", STD / "record-history" / "record_history.py", "--box", str(box))
     doc = {"now": now, "steps": go.steps, "asked": asked}
     (to / "stack.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
     report(doc)
@@ -285,9 +285,9 @@ def after(to: Path, now: str) -> int:
     go = Run(to, now)
     box = to / "willow" / "box"
     for part, script, *more in (
-        ("trust", STD / "stale" / "stale.py"),
-        ("trust", STD / "export" / "export.py", "--format", "md"),
-        ("trust", STD / "changed" / "changed.py", "--now", now),
+        ("trust", STD / "stale-answers" / "stale_answers.py"),
+        ("trust", STD / "export-answers" / "export_answers.py", "--format", "md"),
+        ("trust", STD / "what-changed" / "what_changed.py", "--now", now),
         ("trust", STD / "session-seal" / "session_seal.py", "--now", now),
         ("trust", STD / "session-seal" / "session_seal.py", "check"),
         ("trust", STD / "backup" / "backup.py", "--to", str(to / "backups"),

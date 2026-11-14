@@ -44,7 +44,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
 sys.path.insert(0, str(HERE.parent / "pile-gold"))
 sys.path.insert(0, str(HERE.parent / "pile-rank"))
-sys.path.insert(0, str(HERE.parent / "scan"))
+sys.path.insert(0, str(HERE.parent / "batch-ask"))
 import kernel  # noqa: E402
 import pile_gold  # noqa: E402
 import pile_rank  # noqa: E402

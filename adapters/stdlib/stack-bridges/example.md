@@ -10,12 +10,12 @@ folder and a folder a stack may write to.
 ## read once, then asked
 - code-comments -- mirror --from <pile> --to {box}-code
 - index-cache -- --from {box}-code --to <scratch>/kept/index
-- scan -- scan --index <scratch>/kept/index --questions <scratch>/questions.txt
-- glance -- --of {03} --questions <scratch>/questions.txt
+- batch-ask -- scan --index <scratch>/kept/index --questions <scratch>/questions.txt
+- batch-glance -- --of {03} --questions <scratch>/questions.txt
 
 ## kept, and checked
 - backup -- --box {box} --to <scratch>/usb
 - restore-drill -- --from <scratch>/usb/willow-backup.zip
 - three-two-one -- --box {box} --copy usb:<scratch>/usb/willow-backup.zip
 - fixity -- --box {box}
-- history -- --box {box}
+- record-history -- --box {box}

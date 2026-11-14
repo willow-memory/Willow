@@ -16,11 +16,11 @@ Assistants reach willow two ways:
 | Way | What the host gets | Where |
 |---|---|---|
 | **MCP** | tools it calls when it asks: `ask`, `suggest`, `waiting` | this add-on, and each thin wrapper over it |
-| **Prompt hook** | cited passages from your folder with each prompt, framed as data | [claude-code](../claude-code/); [hooks-elsewhere](../hooks-elsewhere/) for Gemini CLI, Codex and OpenCode |
+| **Prompt hook** | cited passages from your folder with each prompt, framed as data | [claude-code](../claude-code/); [hook-elsewhere](../hook-elsewhere/) for Gemini CLI, Codex and OpenCode |
 
 Cursor, Copilot and Windsurf are MCP-only for cited context: Cursor's
 `beforeSubmitPrompt` can continue or block a prompt, never inject passages
-([hooks-elsewhere](../hooks-elsewhere/) refuses `--host cursor` and names
+([hook-elsewhere](../hook-elsewhere/) refuses `--host cursor` and names
 this).
 
 Neither way can approve: every suggestion waits for your seal

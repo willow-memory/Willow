@@ -137,7 +137,7 @@ def test_each_system_gets_its_own_shells_quoting(monkeypatch):
     assert hk.command_line(argv) == '"/a b/python" x'
 
 
-BESIDE = (HERE.parent / "index-cache").is_dir() and (HERE.parent / "scan").is_dir()
+BESIDE = (HERE.parent / "index-cache").is_dir() and (HERE.parent / "batch-ask").is_dir()
 
 
 def test_alone_an_index_is_never_asked_and_setup_says_what_it_needs(tmp_path, capsys):

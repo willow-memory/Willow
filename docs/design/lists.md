@@ -23,7 +23,7 @@ Measured on main at #303:
 
 - Inside a code block nothing is a link: a path names a file, but no one
   can click to it.
-- A line holds a name, not a path: `├── ready.py` is found by a search, and
+- A line holds a name, not a path: `├── pr_ready.py` is found by a search, and
   its folder is however many `│` are in front of it, up the screen.
 - `adapters/` is about 1,500 of the lines, in one run, with no way to jump
   to one add-on's folder.

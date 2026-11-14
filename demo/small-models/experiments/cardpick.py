@@ -55,7 +55,7 @@ def build_pile():
     subprocess.run(
         [
             sys.executable,
-            str(ROOT / "adapters/stdlib/scan/scan.py"),
+            str(ROOT / "adapters/stdlib/batch-ask/scan.py"),
             "index",
             "--from",
             str(PILE),
@@ -73,7 +73,7 @@ def serve(needs, rank, top):
     got = subprocess.run(
         [
             sys.executable,
-            str(ROOT / "adapters/stdlib/scan/scan.py"),
+            str(ROOT / "adapters/stdlib/batch-ask/scan.py"),
             "scan",
             "--index",
             str(INDEX),

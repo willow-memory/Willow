@@ -208,7 +208,7 @@ def project_with(tmp_path, steps):
     return tmp_path
 
 
-GLANCE = "glance: populated, 4 questions\n## found nothing\n  float  floats that differ\n  float  floats that differ\n## held whole\n  a  b\n"
+GLANCE = "batch-glance: populated, 4 questions\n## found nothing\n  float  floats that differ\n  float  floats that differ\n## held whole\n  a  b\n"
 START = [
     ("code-comments", "mirror --from <pile> --to {box}-code", 0, "wrote 2 files"),
     ("scan", "scan --index x", 0, "{}"),
@@ -281,7 +281,7 @@ def test_a_rule_does_not_fire_on_what_it_was_not_written_for(tmp_path):
     clean = [
         START[0],
         START[1],
-        ("glance", "--of {02}", 0, "glance: populated\n## held whole\n  a  b\n"),
+        ("glance", "--of {02}", 0, "batch-glance: populated\n## held whole\n  a  b\n"),
     ]
     assert rules.next_step(project_with(tmp_path, clean))[0] is None
     assert rules.found_nothing(GLANCE) == ["floats that differ"]

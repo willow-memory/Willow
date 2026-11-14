@@ -33,7 +33,7 @@ ROLES = (
 #: the ways in, by where you'd be. The editor and assistant ones are filed
 #: under Assistants on their cards; as a role, they're ways in like the rest.
 WAYS = (
-    ("In your terminal", ("shell", "pipe", "plain", "start", "tui", "warm")),
+    ("In your terminal", ("shell", "pipe", "sentences", "first-run", "tui", "warm")),
     ("In your editor", ("vscode", "vim", "emacs", "jetbrains", "zed", "cursor",
                         "windsurf", "copilot", "obsidian")),
     ("With an AI assistant", ("claude-code", "codex-cli", "gemini-cli", "opencode",
@@ -43,7 +43,7 @@ WAYS = (
     ("From your phone, by voice or by email", ("telegram-bot", "email-ask",
                                                "home-assistant", "dictate", "wake-gate", "speak",
                                                "qr")),
-    ("Several add-ons at once", ("stack", "stack-share", "across")),
+    ("Several add-ons at once", ("stack", "stack-share", "many-boxes")),
 )  # fmt: skip
 WAY = {n: (i, h) for i, (h, ns) in enumerate(WAYS) for n in ns}
 #: the readers, by what the files come from: the second level under `reads`,
@@ -54,7 +54,7 @@ READERS = (
                                     "markdown", "asciidoc", "rst", "latex", "equations",
                                     "notation", "clauses", "books", "screenplay",
                                     "man-pages", "mediawiki", "bibtex", "ris", "zotero")),
-    ("Mail and chat", ("mail", "apple-mail", "chats", "texts", "discord", "irc", "matrix",
+    ("Mail and chat", ("mail", "apple-mail", "chats", "sms", "discord", "irc", "matrix",
                        "slack", "mastodon", "meta-archive", "x-archive", "reddit", "linkedin")),
     ("Notes, journals and saved pages", ("notes", "org", "day-one", "evernote", "google-keep",
                                          "joplin", "jrnl", "notion", "trello", "readwise",
@@ -68,8 +68,8 @@ READERS = (
                                         "almanac", "almanac-keep", "oakenscroll")),
     ("Code and data", ("code-comments", "codebase-memory", "dotfiles", "git-history",
                        "gh-json", "jira", "lockfiles", "manifests", "sarif", "sbom",
-                       "ci-logs", "logs", "shell-history", "agent-transcript", "ai-code-tracking", "cursor-chats",
-                       "corpus-lens", "csv-rows", "json-paths", "jupyter", "parallel",
+                       "build-logs", "logs", "shell-history", "agent-transcript", "ai-code-tracking", "cursor-chats",
+                       "corpus-lens", "csv-rows", "json-paths", "jupyter", "parallel-read",
                        "star-system", "hurdat2")),
     ("Media", ("photos", "subtitles", "musicxml", "chordpro")),
 )  # fmt: skip

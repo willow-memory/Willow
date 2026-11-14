@@ -180,7 +180,7 @@ def everything(tmp_path: Path) -> Path:
     stack_file(p, "b-full.md", [step("sort"), step("said"), step("todo")])
     c = ("--pile", "c")  # asked another way: another stack's steps, not a-work's
     was = [step("sort", "sorted\n", args=c), step("glance", "seen\n", args=c),
-           step("said", "said\n", args=c)]  # fmt: skip
+           step("who-said", "who_said\n", args=c)]  # fmt: skip
     stack_file(p, "c-start.md", [*was[:2], step("todo")])
     run_folder(p / "mine" / "run-start", was)
     return p
@@ -396,7 +396,11 @@ def test_a_file_a_stack_was_given_that_has_changed_is_said(tmp_path):
 
 def test_a_stack_whose_steps_are_not_what_its_run_ran_is_said(tmp_path):
     p = project(tmp_path)
-    was = [step("sort", "sorted\n"), step("glance", "seen\n"), step("said", "said\n")]
+    was = [
+        step("sort", "sorted\n"),
+        step("glance", "seen\n"),
+        step("who-said", "who_said\n"),
+    ]
     stack_file(p, "start.md", [*was[:2], step("todo")])
     run_folder(p / "mine" / "run-3", was)
     got = handover("--project", p)
@@ -534,8 +538,8 @@ def test_a_step_is_said_by_its_kept_report_before_its_output(tmp_path):
     ran = [
         step("todo", "todo: something else\n", kept=doc),
         step("sort", "sort: from its output\n", kept="{not json"),
-        step("glance", "glance: no said in it\n", kept={"state": "empty"}),
-        step("said", "said: no state in it\n", kept={"said": "x"}),
+        step("batch-glance", "batch_glance: no said in it\n", kept={"state": "empty"}),
+        step("who-said", "who_said: no state in it\n", kept={"said": "x"}),
     ]
     stack_file(p, "work.md", ran)
     run_folder(p / "mine" / "run-1", ran)
@@ -551,7 +555,9 @@ def test_a_step_with_no_report_is_said_by_its_first_line_that_is_not_blank(tmp_p
     p = project(tmp_path)
     ran = [
         step("sort", "\n   \n  435 files: 271 sorted  \nand more\n"),
-        step("glance", "glance: glance: 18 questions\n"),  # its name comes off once
+        step(
+            "batch-glance", "batch_glance: glance: 18 questions\n"
+        ),  # its name comes off once
         step("said", "sort: said by another\n"),  # another's name stays
         step("todo", "to do, todo: 3\n"),  # and only from the front
         step("amounts", "\n \n"),
@@ -588,7 +594,9 @@ def test_a_long_line_is_cut_at_a_word_and_one_that_fits_is_whole(tmp_path):
         step("glance", over + "\n"),
         step("said", one + "\n"),
         step("todo", "short\n", kept=long),
-        step("stale", "stale: " + fits + "\n"),  # measured with its name off
+        step(
+            "stale-answers", "stale_answers: " + fits + "\n"
+        ),  # measured with its name off
     ]
     stack_file(p, "work.md", ran)
     run_folder(p / "mine" / "run-1", ran)

@@ -45,7 +45,7 @@ from jobs import NAMES, PEOPLE, ROOT, SHARE, Jobs  # noqa: E402
 WASM = ROOT / "adapters" / "deps" / "wasm" / "wasm.py"
 WASI_PY = ROOT / "adapters" / "deps" / "wasi-python" / "wasi_py.py"
 SCRIPT = HERE / "count" / "count.py"  # the same count, for --engine wasi-python
-DP = ROOT / "adapters" / "deps" / "dp" / "dp.py"
+DP = ROOT / "adapters" / "deps" / "noised-count" / "noised_count.py"
 SUM = ROOT / "adapters" / "deps" / "secure-sum" / "secure_sum.py"
 MODULE = HERE / "count" / "count.wasm.b64"  # the module's bytes, as base64 text
 ASKED = ["walt", "aurelie", "tamsin", "harold"]

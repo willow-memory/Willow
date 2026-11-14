@@ -89,9 +89,12 @@ def test_run_narrow_leaves_everything_to_ci_and_still_runs_what_the_rest_reaches
     wide = "ruff.toml"
     assert imp.main(["run", "--narrow", wide]) == imp.kernel.ALIVE
     assert ran == [(True, True, ["tests:docs"])], "the docs' checks, always"
-    assert imp.main(["run", "--narrow", wide, "adapters/stdlib/dice/dice.py"]) == 0
+    assert (
+        imp.main(["run", "--narrow", wide, "adapters/stdlib/play-dice/play_dice.py"])
+        == 0
+    )
     assert ran[-1][:2] == (True, True) and "tests:adapters" in ran[-1][2]
-    assert imp.main(["run", "--narrow", "adapters/stdlib/dice/dice.py"]) == 0
+    assert imp.main(["run", "--narrow", "adapters/stdlib/play-dice/play_dice.py"]) == 0
     assert ran[-1][:2] == (False, False)
     assert imp.main(["run", wide]) == 0
     assert ran[-1][:2] == (True, False)
@@ -137,9 +140,9 @@ def test_a_ref_git_does_not_know_is_refused():
 def test_a_path_outside_the_repo_or_not_there_is_refused():
     out = cli("plan", "/etc/hostname")
     assert out.returncode == 2 and "outside the repo" in out.stderr
-    gone = cli("plan", "adapters/stdlib/changed/no_such_file.py")
+    gone = cli("plan", "adapters/stdlib/what-changed/no_such_file.py")
     assert gone.returncode == 2 and "never knew it" in gone.stderr
-    folder = cli("plan", "adapters/stdlib/changed")
+    folder = cli("plan", "adapters/stdlib/what-changed")
     assert folder.returncode == 2 and "is a folder" in folder.stderr
 
 
@@ -151,8 +154,8 @@ def test_no_difference_is_42_and_still_says_the_full_run_comes_after():
 
 
 def test_a_plan_is_the_same_bytes_twice_and_ends_with_the_full_run():
-    a = cli("plan", "adapters/stdlib/changed/changed.py")
-    b = cli("plan", "adapters/stdlib/changed/changed.py")
+    a = cli("plan", "adapters/stdlib/what-changed/what_changed.py")
+    b = cli("plan", "adapters/stdlib/what-changed/what_changed.py")
     assert a.returncode == 0 and a.stdout == b.stdout
     assert a.stdout.endswith(
         "This does not replace the full run: it still runs after, in CI, and here:\n"
@@ -165,24 +168,26 @@ def test_a_plan_is_the_same_bytes_twice_and_ends_with_the_full_run():
 def test_an_add_on_gets_its_tests_its_share_of_the_contract_its_docs_and_its_mutants(
     plan_of,
 ):
-    got = plan_of("adapters/stdlib/changed/changed.py").stdout
+    got = plan_of("adapters/stdlib/what-changed/what_changed.py").stdout
     # its own tests are in the plan, on a pytest line: alone, or with the
     # other test files that reach it (browse's do, since it reads changed)
     (own,) = [
-        ln for ln in got.splitlines() if "adapters/stdlib/changed/test_changed.py" in ln
+        ln
+        for ln in got.splitlines()
+        if "adapters/stdlib/what-changed/test_what_changed.py" in ln
     ]
     assert own.strip().startswith("pytest ")
     assert "WILLOW_ONLY=changed pytest adapters/stdlib/ci/test_contract.py" in got
     assert "pytest test_docs.py\n" in got
     assert "mutants:changed" in got and "mutants.py run changed" in got
-    assert "ruff check adapters/stdlib/changed/changed.py" in got
+    assert "ruff check adapters/stdlib/what-changed/what_changed.py" in got
     assert "mutants:stale" not in got and "WILLOW_ONLY=stale" not in got
     assert "test_docs_fires" not in got and "tests:strip" not in got
     assert "everything" not in got
 
 
 def test_the_steps_are_ordered_cheapest_first(plan_of):
-    got = plan_of("adapters/stdlib/changed/changed.py").stdout
+    got = plan_of("adapters/stdlib/what-changed/what_changed.py").stdout
     order = [g for g in gate_names(got)]
     # tests:ui: ui/canvas.py names stack.py, the runner it runs, and a file
     # named so is the stack demo's, which runs changed: by name, never less
@@ -205,7 +210,7 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
     )
     narrow, own = (
         "WILLOW_ONLY=changed pytest",
-        "adapters/stdlib/changed/test_changed.py",
+        "adapters/stdlib/what-changed/test_what_changed.py",
     )
     assert got.index(narrow) < got.index(own), (
         "the contract's share takes under a second"
@@ -213,8 +218,8 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
 
 
 def test_a_card_change_runs_the_tests_but_not_the_mutants(plan_of):
-    got = plan_of("adapters/stdlib/changed/README.md").stdout
-    assert "test_changed.py" in got and "WILLOW_ONLY=changed" in got
+    got = plan_of("adapters/stdlib/what-changed/README.md").stdout
+    assert "test_what_changed.py" in got and "WILLOW_ONLY=changed" in got
     assert "mutants" not in got and "ruff" not in got
 
 
@@ -263,11 +268,14 @@ def test_other_gates_are_named_in_ci_terms(plan_of):
 
 def test_the_stack_demo_and_every_add_on_it_runs_plan_its_gate(plan_of):
     """stack.py runs add-ons as processes, which the import graph can't see."""
-    assert imp.stacked() >= {"mail", "start", "mcp-lite", "session-seal", "pdf"}
+    assert imp.stacked() >= {"mail", "first-run", "mcp-lite", "session-seal", "pdf"}
     for path in ("demo/bernadette/STRIP.md", "adapters/stdlib/mail/mail.py",
-                 "adapters/deps/pdf/pdf.py", "adapters/stdlib/start/start.py"):  # fmt: skip
+                 "adapters/deps/pdf/pdf.py", "adapters/stdlib/first-run/first_run.py"):  # fmt: skip
         assert "demo:stack" in gate_names(plan_of(path).stdout), path
-    for path in ("adapters/stdlib/dice/dice.py", "adapters/stdlib/mail/README.md"):
+    for path in (
+        "adapters/stdlib/play-dice/play_dice.py",
+        "adapters/stdlib/mail/README.md",
+    ):
         assert "demo:stack" not in gate_names(plan_of(path).stdout), path
 
 
@@ -432,10 +440,13 @@ def test_on_this_repo_every_add_ons_script_comes_to_its_own_tests_by_the_graph_a
 
 def test_the_contract_is_never_reached_by_the_graph_alone():
     g = imp.Graph(imp.repo_pythons())
-    plan = imp.place(["adapters/stdlib/changed/changed.py"], g)
+    plan = imp.place(["adapters/stdlib/what-changed/what_changed.py"], g)
     assert not plan.contract_whole and imp.CONTRACT not in plan.own
     assert plan.narrow == ["changed"]
-    assert imp.CONTRACT in g.reach({"adapters/stdlib/changed/changed.py"}) or True
+    assert (
+        imp.CONTRACT in g.reach({"adapters/stdlib/what-changed/what_changed.py"})
+        or True
+    )
 
 
 # ── placing ──────────────────────────────────────────────────────────────────
@@ -444,7 +455,7 @@ def test_the_kernel_reaches_every_add_ons_tests_by_the_graph_too():
     reached = {t for t in g.reach({"kernel.py"}) if imp.is_test(t)}
     assert (
         "test_kernel.py" in reached
-        and "adapters/stdlib/changed/test_changed.py" in reached
+        and "adapters/stdlib/what-changed/test_what_changed.py" in reached
     )
     assert len(reached) > 50
 
@@ -462,8 +473,8 @@ def test_a_removed_add_ons_contract_share_still_runs_and_its_mutants_do_not():
 def test_a_test_the_gates_do_not_hold_widens():
     g = imp.Graph(imp.repo_pythons())
     g.users["zzz/test_orphan.py"] = set()
-    g.users["adapters/stdlib/changed/changed.py"].add("zzz/test_orphan.py")
-    plan = imp.place(["adapters/stdlib/changed/changed.py"], g)
+    g.users["adapters/stdlib/what-changed/what_changed.py"].add("zzz/test_orphan.py")
+    plan = imp.place(["adapters/stdlib/what-changed/what_changed.py"], g)
     assert plan.widen == ["couldn't place the test zzz/test_orphan.py"]
 
 
@@ -606,7 +617,7 @@ def test_the_reached_test_files_are_cut_into_parts_each_file_in_one():
     assert len(parts) == imp.PARTS
     files = [f for part in parts for f in part]
     assert sorted(files) == sorted(plan.own) and len(files) == len(set(files))
-    assert imp.parts_for(["adapters/stdlib/dice/test_dice.py"]) == 1, (
+    assert imp.parts_for(["adapters/stdlib/play-dice/test_play_dice.py"]) == 1, (
         "a quick file, one step"
     )
 

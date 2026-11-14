@@ -40,7 +40,7 @@
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },
   "pins": {
-    "1eb781c3ac07": "pins.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
+    "1eb781c3ac07": "unpinned.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
   },
   "red-on-main": {
     "3fe0b0e60f12": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."

@@ -66,7 +66,7 @@ backup: 6 of 6 killed, 0 accepted
 
 ── mutants:odds
 odds: 5 of 6 killed, 0 accepted
-  survived 0123456789ab  adapters/stdlib/odds/odds.py:40  compare: n > 0
+  survived 0123456789ab  adapters/stdlib/play-odds/play_odds.py:40  compare: n > 0
   couldn't run fedcba987654 (no tests collected)
 
 mutants:again      failing  (exit 2)
@@ -77,7 +77,7 @@ mutants:odds       failing  (exit 2)
 LINT_RED = """
 ── lint:check
 E402 Module level import not at top of file
-   --> adapters/stdlib/dice/dice.py:169:1
+   --> adapters/stdlib/play-dice/play_dice.py:169:1
     |
 167 | if __name__ == "__main__":
 168 |     raise SystemExit(main(sys.argv[1:]))
@@ -88,7 +88,7 @@ E402 Module level import not at top of file
 help: Move module level imports to top of file
 
 F401 [*] `os` imported but unused
-   --> adapters/stdlib/dice/dice.py:169:8
+   --> adapters/stdlib/play-dice/play_dice.py:169:8
     |
 169 | import os
     |        ^^
@@ -105,7 +105,7 @@ Found 2 errors.
 
 ── lint:format
 unformatted: File would be reformatted
-   --> adapters/stdlib/dice/dice.py:170:1
+   --> adapters/stdlib/play-dice/play_dice.py:170:1
     |
 169 | import os
     - x=1
@@ -168,7 +168,7 @@ def test_a_stale_or_surviving_mutant_names_the_line_to_act_on(tmp_path):
     out = got.stdout
     assert out.startswith("ci-why: 2 failing (mutants:again, mutants:odds); 2 blocks found")  # fmt: skip
     assert "stale 1b9ac0201051: accepted, but no longer made or no longer surviving; take it out of accepted.json" in out  # fmt: skip
-    assert "survived 0123456789ab  adapters/stdlib/odds/odds.py:40  compare: n > 0" in out  # fmt: skip
+    assert "survived 0123456789ab  adapters/stdlib/play-odds/play_odds.py:40  compare: n > 0" in out  # fmt: skip
     assert "couldn't run fedcba987654 (no tests collected)" in out
     assert "odds: 5 of 6 killed, 0 accepted" in out
     assert "backup" not in out
@@ -182,13 +182,13 @@ def test_ruff_gives_the_rule_the_place_the_line_and_the_format_diff(tmp_path):
         == """ci-why: 2 failing (lint:check, lint:format); 3 blocks found
 
 ── lint:check  failing  (exit 1)
-   adapters/stdlib/dice/dice.py:169  E402 Module level import not at top of file
+   adapters/stdlib/play-dice/play_dice.py:169  E402 Module level import not at top of file
       import os
-   adapters/stdlib/dice/dice.py:169  F401 [*] `os` imported but unused
+   adapters/stdlib/play-dice/play_dice.py:169  F401 [*] `os` imported but unused
       import os
 
 ── lint:format  failing  (exit 1)
-   adapters/stdlib/dice/dice.py:170  unformatted: File would be reformatted
+   adapters/stdlib/play-dice/play_dice.py:170  unformatted: File would be reformatted
       - x=1
       + x = 1
 """

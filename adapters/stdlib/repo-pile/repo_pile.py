@@ -261,7 +261,7 @@ def build(o: dict) -> int:
             return r.returncode
     else:
         say("box", "already made; its words list was set then")
-    say("changed", first(py(addon("changed"), "--box", box)))
+    say("changed", first(py(addon("what-changed"), "--box", box)))
     indexes = [("index-pile", pile)]
     if "--no-code-index" not in o:
         indexes.append(("index-code", base / "repos"))
@@ -318,10 +318,10 @@ def report(o: dict, base: Path) -> int:
     box, days = base / "box", o.get("--days", "7")
     steps = [
         ("digest", addon("digest"), ["--box", box, "--days", days]),
-        ("asked again", addon("again"), ["--box", box]),
-        ("stale", addon("stale"), ["--box", box]),
-        ("questions by day", addon("export"), ["--box", box, "--log"]),
-        ("history", addon("history"), ["--box", box, "--days", days]),
+        ("asked again", addon("asked-again"), ["--box", box]),
+        ("stale", addon("stale-answers"), ["--box", box]),
+        ("questions by day", addon("export-answers"), ["--box", box, "--log"]),
+        ("history", addon("record-history"), ["--box", box, "--days", days]),
         ("verify", STDLIB.parents[1] / "kernel.py", ["verify", "--box", box]),
     ]
     code = kernel.ALIVE
@@ -341,7 +341,7 @@ def check(base: Path) -> int:
     """The pile's health as counts: references that don't hold (xref), lines
     marked to do (todo), secrets in plain text (secrets-audit)."""
     box = base / "box"
-    refs = py(addon("xref"), "--box", box, "--json")  # its report: what it said
+    refs = py(addon("ref-check"), "--box", box, "--json")  # its report: what it said
     say("xref", json.loads(refs.stdout)["said"] if refs.stdout.strip() else first(refs))
     todo = py(addon("todo"), "--box", box, "--json")  # its report: a row a line
     marked = sum(len(g["rows"]) for g in json.loads(todo.stdout)["groups"])

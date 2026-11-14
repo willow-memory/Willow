@@ -44,14 +44,14 @@ is generated, and nothing is written into any repo.
 - duplicates -- --box {box}
 
 ## each repo indexed once
-- scan -- index --from <repos>/Willow --to <scratch>/index/willow
-- scan -- index --from <repos>/redential-cli --to <scratch>/index/redential-cli
-- scan -- index --from <repos>/socratic-fork --to <scratch>/index/socratic-fork
-- scan -- index --from <repos>/glapagos --to <scratch>/index/glapagos
-- scan -- index --from <repos>/NaturalConvDataSet-fork --to <scratch>/index/naturalconv
+- batch-ask -- index --from <repos>/Willow --to <scratch>/index/willow
+- batch-ask -- index --from <repos>/redential-cli --to <scratch>/index/redential-cli
+- batch-ask -- index --from <repos>/socratic-fork --to <scratch>/index/socratic-fork
+- batch-ask -- index --from <repos>/glapagos --to <scratch>/index/glapagos
+- batch-ask -- index --from <repos>/NaturalConvDataSet-fork --to <scratch>/index/naturalconv
 
 ## Willow's 192 unbuilt ideas, asked of the other four
-- scan -- scan --index <scratch>/index/redential-cli --index <scratch>/index/socratic-fork --index <scratch>/index/glapagos --index <scratch>/index/naturalconv --questions <scratch>/ideas.txt --top 2 --words <scratch>/five-words.txt
+- batch-ask -- scan --index <scratch>/index/redential-cli --index <scratch>/index/socratic-fork --index <scratch>/index/glapagos --index <scratch>/index/naturalconv --questions <scratch>/ideas.txt --top 2 --words <scratch>/five-words.txt
 
 ## what the other four say they need, asked of Willow
-- scan -- scan --index <scratch>/index/willow --questions <scratch>/needs.txt --top 3 --todo --words <scratch>/five-words.txt
+- batch-ask -- scan --index <scratch>/index/willow --questions <scratch>/needs.txt --top 3 --todo --words <scratch>/five-words.txt

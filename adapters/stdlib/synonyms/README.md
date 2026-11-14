@@ -63,7 +63,7 @@ note, after a `#`, saying why: your files hold none of the dictionary's
 words for it, or the dictionary has none. So the output can be read, cut
 down, and kept as it is. Nothing is written; add the lines you want to your
 own words list, the one named at `init`, or give them to
-[scan](../scan/) with its `--words`.
+[batch-ask](../batch-ask/) with its `--words`.
 
 **`--questions FILE`** reads every question in FILE (one a line, or a name,
 a tab and the question, as scan takes them) and looks each word up once.

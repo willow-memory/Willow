@@ -17,9 +17,9 @@ What a stranger could verify without trusting us.
 - ro-crate -- --box {box} --to <scratch>/proof/crate --licence Apache-2.0
 - in-toto -- --box {box} --to <scratch>/proof/intoto.jsonl
 - prov -- --box {box} --to <scratch>/proof/prov.json
-- ids -- --box {box} Willow/CONSTITUTION.md
+- world-ids -- --box {box} Willow/CONSTITUTION.md
 
 ## what the record says of itself
-- history -- --box {box}
-- export -- --box {box} --log
+- record-history -- --box {box}
+- export-answers -- --box {box} --log
 - box-health -- --box {box} --long

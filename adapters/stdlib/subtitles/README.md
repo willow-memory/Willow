@@ -43,7 +43,7 @@ Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused
 (FOLDER is not a folder, or MIRROR and FOLDER are inside one another).
 
 Point the kernel at MIRROR (`kernel.py init --pile MIRROR ...`) to ask
-questions of what was said; [said](../said/) then reads a voice-tagged line
+questions of what was said; [who-said](../who-said/) then reads a voice-tagged line
 as its speaker's quote.
 
 **Uses:** the kernel's exit codes; the mirror is for `chunks` to read.

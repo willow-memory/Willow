@@ -218,7 +218,7 @@ def code_deps(folder: Path) -> tuple[list[str], list[str]]:
                 named = re.findall(r"[\"']([a-z0-9-]+)[\"']", line.split("#")[0])
                 if named and HARD.search(
                     line
-                ):  # ROOT / "adapters" / "stdlib" / "scan": the last one
+                ):  # ROOT / "adapters" / "stdlib" / "batch-ask": the last one
                     hard.add(named[-1])
                 continue
             for groups in SOFT.findall(line):

@@ -162,7 +162,7 @@ Not settled, and to be talked through before anything is built:
   all waiting, and all were sealed. The kernel serves the first standing
   seal for a question, so the oldest draft answers where two shared one.
   The page had no way to show that, and has none now.
-- **A document, not a receipt.** [export](../../adapters/stdlib/export/)
+- **A document, not a receipt.** [export-answers](../../adapters/stdlib/export-answers/)
   prints every approved answer with its reason, its citations and its
   name: provenance. The document itself had to be put together by a script
   from the sealed lines. Export cannot yet print chosen answers, in an

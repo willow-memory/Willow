@@ -30,7 +30,7 @@ gets mcp-lite's three tools, plus one that drafts:
 
 **`draft` bites first.** Only the passages the kernel served go to the
 client's model, under the same rule [openai-compatible](../openai-compatible/)
-uses: answer only from them, cite each as [1], [2]. When nothing is served,
+uses: answer only from them, cite each as [1], [2]. When nothing is served, 
 the model is never asked. A reply whose brackets name no served passage is
 returned and proposed to no one. Asked at temperature 0.
 

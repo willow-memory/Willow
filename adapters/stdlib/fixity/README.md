@@ -27,7 +27,7 @@ says.
 
 A hash that changed with a newer mtime is an edit of yours. A hash that
 changed with the same or an older mtime is rot: the bytes moved and no
-edit did. [changed](../changed/) says what is new or gone since you last
+edit did. [what-changed](../what-changed/) says what is new or gone since you last
 looked; this one says which of those edits never happened.
 
 Exit codes, the kernel's: 0 the first check, or every file matches; 42

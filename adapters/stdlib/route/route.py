@@ -134,7 +134,7 @@ def kept(run: Path | None) -> dict[str, list[str]]:
 
 def where(step: str, found: dict[str, list[str]]) -> str:
     """Where a run kept a step's output; the ask's is the scan's or glance's."""
-    for name in [step] if step != "ask" else ["glance", "scan"]:
+    for name in [step] if step != "ask" else ["batch-glance", "scan"]:
         if name in found:
             return found[name][-1]
     return ""

@@ -3903,7 +3903,7 @@
   },
   "real-sky": {
    "near": [
-    "horoscope",
+    "play-horoscope",
     "horoscope-grades",
     "odds"
    ],

@@ -95,8 +95,8 @@ def repo(tmp_path):
     r = tmp_path / "repo"
     for rel in ("kernel.py", "adapters/stdlib/stack/stack.py", "adapters/stdlib/ci/changelog.py",
                 "adapters/stdlib/github/create_pr.py", "adapters/stdlib/github/README.md",
-                "adapters/stdlib/ready/ready.py", "adapters/stdlib/ready/steps.md",
-                "adapters/stdlib/ready/README.md"):  # fmt: skip
+                "adapters/stdlib/pr-ready/pr_ready.py", "adapters/stdlib/pr-ready/steps.md",
+                "adapters/stdlib/pr-ready/README.md"):  # fmt: skip
         (r / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / rel, r / rel)
     for name, writes in (("say", "made.txt"), ("against", "nothing")):
@@ -136,13 +136,13 @@ def steps(repo: Path, text: str) -> None:
 
 
 GREEN = """## made
-- say -- 0 made it make=made.txt
+- model-sentence -- 0 made it make=made.txt
 ## checked
-- say -- 0 all good
+- model-sentence -- 0 all good
 ## held
 - against -- 0 {open}
 ## after it opens
-- say -- 0 numbered {pr}
+- model-sentence -- 0 numbered {pr}
 """
 
 
@@ -459,7 +459,7 @@ def test_owner_and_name_come_from_origin_whatever_its_shape():
 
 def test_an_add_on_the_change_touches_has_its_cards_promises_in_the_body(repo):
     """Its writes and network, read from the card's header, not its body."""
-    say = repo / "adapters/stdlib/say/say.py"
+    say = repo / "adapters/stdlib/model-sentence/model_sentence.py"
     say.write_text(say.read_text(encoding="utf-8") + "# touched\n", encoding="utf-8")
     git(repo, "commit", "-q", "-am", "say: touched")
     steps(repo, GREEN)

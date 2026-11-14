@@ -11,7 +11,7 @@ role: ways
 # stack
 
 One document from a **stack of add-on steps** over a box. Where
-[`across`](../across/) runs one document add-on over many boxes, `stack` runs
+[`many-boxes`](../many-boxes/) runs one document add-on over many boxes, `stack` runs
 many heterogeneous steps over one box and composes what each prints — pooled,
 and ordered tallest-first. It is the input side of the serve layer in
 `docs/design/serve.md`: the operator's stack, before any seal.

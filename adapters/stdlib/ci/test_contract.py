@@ -192,6 +192,12 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "Made-Up Harbour (Ada Example)\n- Your Highlight on page 12 | Location 180 | "
         "Added on Sunday, 3 March 2024 10:15:22\n\nThe tide keeps its own calendar.\n"
         "==========\n").encode()}),
+    "build-logs": ("build_logs.py", {"run.log": (
+        b"2026-10-29T03:28:14.1000000Z ##[group]Run actions/checkout@v7\n2026-10-29T03:28:14.2000000Z with:\n2026-10-29T03:28:14.3000000Z ##[endgroup]\n"
+        b"2026-10-29T03:28:15.0000000Z ##[group]Run pytest\n2026-10-29T03:28:15.5000000Z \x1b[31mFAILED\x1b[0m tests/test_garden.py::test_sun - assert 5 == 6\n"
+        b"2026-10-29T03:28:16.0000000Z ===== 1 failed, 40 passed in 2.31s =====\n2026-10-29T03:28:17.0000000Z ##[error]Process completed with exit code 1.\n"
+        b"2026-10-29T03:28:18.0000000Z Post job cleanup.\n"
+    )}),
     "calendar": ("cal.py", {"home.ics": (
         "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:20261028T140000Z\r\n"
         "SUMMARY:Dentist\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n").encode()}),
@@ -201,12 +207,6 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     "chordpro": ("chordpro.py", {"estuary.cho": (
         b"{title: Down by the Estuary}\n{artist: Ada Example}\n{key: G}\n{capo: 2}\n# a comment\n\n{start_of_verse}\n"
         b"[G]Down by the [C]estuary the [D]tide comes [Em]in\n{end_of_verse}\n{soc}\nOh, the [G]water, the [D]water\n{eoc}\n"
-    )}),
-    "ci-logs": ("ci_logs.py", {"run.log": (
-        b"2026-10-29T03:28:14.1000000Z ##[group]Run actions/checkout@v7\n2026-10-29T03:28:14.2000000Z with:\n2026-10-29T03:28:14.3000000Z ##[endgroup]\n"
-        b"2026-10-29T03:28:15.0000000Z ##[group]Run pytest\n2026-10-29T03:28:15.5000000Z \x1b[31mFAILED\x1b[0m tests/test_garden.py::test_sun - assert 5 == 6\n"
-        b"2026-10-29T03:28:16.0000000Z ===== 1 failed, 40 passed in 2.31s =====\n2026-10-29T03:28:17.0000000Z ##[error]Process completed with exit code 1.\n"
-        b"2026-10-29T03:28:18.0000000Z Post job cleanup.\n"
     )}),
     "clauses": ("clauses.py", {"terms.html": (
         "<h1>Terms</h1><p>We keep your data. We delete it on request.</p>\n").encode()}),
@@ -559,6 +559,10 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
         "garden/2024-03-03.json": '[{"type":"message","subtype":"me_message","user":"U1","text":"waves","ts":"1709460000.0"}]',
         })
     )}),
+    "sms": ("sms.py", {"sms.xml": (
+        "<?xml version='1.0' encoding='UTF-8'?>\n<smses count=\"1\">\n"
+        "<sms address=\"+15550100\" date=\"1733213400000\" type=\"1\" "
+        "body=\"I can do 600 tonight\" contact_name=\"Dev Raman\" />\n</smses>\n").encode()}),
     "strava": ("strava.py", {
         "activities.csv": (
             b"Activity ID,Activity Date,Activity Name,Activity Type,Elapsed Time,Distance,Elapsed Time,Distance\n"
@@ -582,10 +586,6 @@ READERS: dict[str, tuple[str, dict[str, bytes]]] = {
     ).encode()}),
     "text": ("text.py", {"boiler.txt": b"\xff\xfe" + (
         "Boiler service\r\n\r\nServiced by Keane Heating on 12 March 2019.\r\n").encode("utf-16-le")}),
-    "texts": ("texts.py", {"sms.xml": (
-        "<?xml version='1.0' encoding='UTF-8'?>\n<smses count=\"1\">\n"
-        "<sms address=\"+15550100\" date=\"1733213400000\" type=\"1\" "
-        "body=\"I can do 600 tonight\" contact_name=\"Dev Raman\" />\n</smses>\n").encode()}),
     "trello": ("trello.py", {"garden.json": (
         b'{"name":"Garden","lists":[{"id":"l1","name":"To do"},{"id":"l2","name":"Done"},{"id":"l3","name":"Old","closed":true}],'
         b'"cards":[{"id":"c1","idList":"l1","name":"Stake the tomatoes","desc":"Use the  long canes.","due":"2024-03-09T12:00:00.000Z","labels":[{"name":"urgent"},{"name":""},{"name":"veg"}],"idChecklists":["k1"]},'
@@ -652,23 +652,24 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "a11y-check": ("a11y_check.py", ["--box", "{box}"]),
     "abbreviations": ("abbreviations.py", ["--box", "{box}", "tomatoes"]),
     "accents": ("accents.py", ["--box", "{box}", "tomatoes"]),
-    "across": ("across.py", ["--box", "{box}", "digest"]),
     "advisories": ("advisories.py", ["--box", "{box}"]),
-    "again": ("again.py", ["--box", "{box}"]),
     # no other pull request given: it stops before anything is read, nothing to check
     "against": ("against.py", ["check", "--base", "HEAD", "HEAD"]),
     "agents-md-check": ("agents_md_check.py", ["--box", "{box}"]),
     "ai-code-tracking": ("ai_code_tracking.py", ["mirror", "--from", "{pile}", "--to", "{tmp}"]),
     "aider": ("aider.py", ["--box", "{box}"]),
-    "all": ("all.py", ["--box", "{box}", "tomatoes"]),
+    "all-passages": ("all_passages.py", ["--box", "{box}", "tomatoes"]),
     "almanac-keep": ("keep.py", ["--catalog", "{pile}/catalog.json", "--id", "tides", "--to", "{tmp}/kept"]),
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
+    "approved-only": ("approved_only.py", ["scope", "--box", "{box}"]),
+    "asked-again": ("asked_again.py", ["--box", "{box}"]),
     "assistant-scores": ("assistant_scores.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "badge": ("badge.py", ["--box", "{box}", "--to", "{tmp}/badge.svg"]),
+    "batch-glance": ("batch_glance.py", ["--of", "adapters/stdlib/batch-glance/example-scanned.jsonl", "--questions", "adapters/stdlib/batch-glance/example-questions.txt"]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
     "box-health": ("box_health.py", ["--box", "{box}", *NOW]),
@@ -679,8 +680,6 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "calendar-out": ("calendar_out.py", ["--box", "{box}", "--to", "{tmp}/coming.ics", *NOW]),
     "capture": ("capture.py", ["--to", "{tmp}", "--type", "idea", "--tags", "garden,veg", *NOW, "Plant out the tomatoes."]),
     "car": ("car.py", ["--box", "{box}"]),
-    "catgrid": ("catgrid.py", ["--box", "{box}", "play", *NOW]),
-    "changed": ("changed.py", ["--box", "{box}", *NOW]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),
     "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
@@ -700,15 +699,14 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "debts": ("debts.py", ["--box", "{box}"]),
     "decisions": ("decisions.py", ["ask", "--box", "{box}", "tomatoes"]),
     "deep-links": ("deep_links.py", ["--box", "{box}"]),
-    "dice": ("dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
-    "dice5e": ("dice5e.py", ["--box", "{box}", "roll", "4d6kh3", *NOW]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "emacs": ("emacs.py", ["--box", "{box}"]),
-    "export": ("export.py", ["--box", "{box}"]),
+    "export-answers": ("export_answers.py", ["--box", "{box}"]),
     "fair-merge": ("fair_merge.py", ["--box", "{box}", "tomatoes"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
+    "first-run": ("first_run.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
     "fixity": ("fixity.py", ["--box", "{box}", *NOW]),
     "flashcards": ("flashcards.py", ["--box", "{box}", "due", *NOW]),
     "foia": ("foia.py", ["--box", "{box}"]),
@@ -724,13 +722,12 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "gather": ("gather.py", ["--from", "{pile}", "--to", "{tmp}/gathered"]),
     "gemini-cli": ("gemini_cli.py", ["--box", "{box}"]),
     "git-history": ("git_history.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/gh"]),
-    "glance": ("glance.py", ["--of", "adapters/stdlib/glance/example-scanned.jsonl", "--questions", "adapters/stdlib/glance/example-questions.txt"]),
     "gradebook": ("gradebook.py", ["--box", "{box}"]),
     "habits": ("habits.py", ["--box", "{box}"]),
     "handover": ("handover.py", ["--project", "{box}/.."]),
-    "history": ("history.py", ["--box", "{box}"]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
+    "hook-elsewhere": ("hook_elsewhere.py", ["list"]),
     "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
     "hook-fail-closed": ("hook_fail_closed.py", ["--hook", "true"]),
     "hook-feedback": ("hook_feedback.py", ["check", "--box", "{box}"]),
@@ -748,11 +745,8 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "hook-shell": ("hook_shell.py", ["split", "ls -la"]),
     "hook-start": ("hook_start.py", ["--box", "{box}", *NOW]),
     "hook-stop": ("hook_stop.py", ["check", "--box", "{box}", "--repo", "{tmp}"]),
-    "hooks-elsewhere": ("hooks_elsewhere.py", ["list"]),
-    "horoscope": ("horoscope.py", ["Ana", "--date", "2026-10-24"]),
     "hosts": ("hosts.py", ["list"]),
     "hours": ("hours.py", ["--box", "{box}"]),
-    "ids": ("ids.py", ["--box", "{box}"]),
     "in-toto": ("in_toto.py", ["--box", "{box}", "--to", "{tmp}/in-toto.jsonl"]),
     "index-cache": ("index_cache.py", ["--from", "{pile}", "--to", "{tmp}/ix"]),
     "install-scripts": ("install_scripts.py", ["--box", "{box}"]),
@@ -760,21 +754,18 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "invoices": ("invoices.py", ["--box", "{box}", "--id", "INV-\\d+"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
-    "kinds": ("kinds.py", ["count"]),
     "land": ("land.py", ["--of", "{pile}/sort.json", "--from", "{pile}", "--to", "{tmp}/landed", "--dry-run"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
     "licenses": ("licenses.py", ["--box", "{box}"]),
-    "life": ("life.py", ["--box", "{box}", "play", "--generations", "8", *NOW]),
-    "live": ("live.py", ["list"]),
     "livestock": ("livestock.py", ["--box", "{box}"]),
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                     "--model", "m", "tomatoes"]),
     "log-kit": ("log_kit.py", ["--box", "{box}", "--words", "tomatoes"]),
-    "look": ("look.py", ["tomatoes", "--box", "{box}"]),
     "make-it-so": ("make_it_so.py", ["plan", "--box", "{box}", "--to", "{tmp}/plan.json", "--cmd", "echo hi", "tomatoes"]),
+    "many-boxes": ("many_boxes.py", ["--box", "{box}", "digest"]),
     "market-calls": ("market_calls.py", ["score", "--box", "{box}"]),
     "mcp-lite": ("server.py", ["--box", "{box}"]),
     "mcp-sampling": ("mcp_sampling.py", ["--box", "{box}"]),
@@ -791,6 +782,10 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "model-exam": ("model_exam.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                    "--model", "m", "--questions", "{pile}/garden.md"]),
     "model-fit": ("model_fit.py", ["check", "--root", "{tmp}"]),
+    # nothing sealed for the question: nothing to mark, no server looked for
+    "model-quantized": ("model_quantized.py", ["--box", "{box}", "--questions", "{pile}/garden.md"]),
+    # a closed port on this machine: no model is asked, the say is unreachable, 42
+    "model-sentence": ("model_sentence.py", ["--boxes", "adapters/stdlib/sentence-check/example-boxes.json", "--host", "127.0.0.1:9"]),
     "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
     "mood": ("mood.py", ["--box", "{box}"]),
     "new-kinds": ("new_kinds.py", ["--from", "{pile}"]),
@@ -799,7 +794,6 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions", "{pile}/garden.md",
                     "--until", "2000-01-01T00:00:00Z"]),
     "nightstand": ("nightstand.py", ["--box", "{box}", "down", "tomatoes", *NOW]),
-    "odds": ("odds.py", ["2d6"]),
     "on-this-day": ("on_this_day.py", ["--box", "{box}", *NOW]),
     "openai-compatible": ("openai_compatible.py", ["ask", "--box", "{box}", "--url",
                           "http://127.0.0.1:9/v1", "--model", "m", "tomatoes"]),
@@ -808,7 +802,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "outdated": ("outdated.py", ["--box", "{box}"]),
     "package-contents": ("package_contents.py", ["--box", "{box}"]),
     "pair-drift": ("pair_drift.py", ["--box", "{box}"]),
-    "parallel": ("parallel.py", ["--reader", "notes", "--from", "{pile}", "--to", "{tmp}/pm"]),
+    "parallel-read": ("parallel_read.py", ["--reader", "notes", "--from", "{pile}", "--to", "{tmp}/pm"]),
     "people": ("people.py", ["--box", "{box}"]),
     "persona-card": ("persona_card.py", ["--box", "{box}", "--from", "{pile}/garden.md", *NOW]),
     "pets": ("pets.py", ["--box", "{box}"]),
@@ -816,35 +810,41 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "pii-audit": ("pii_audit.py", ["--box", "{box}"]),
     "pile-build": ("pile_build.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "pile-gold": ("pile_gold.py", ["--box", "{box}", "--questions", "{pile}/garden.md", *NOW]),
-    "pile-poetry": ("pile_poetry.py", ["--box", "{box}"]),
     "pile-rank": ("pile_rank.py", ["--from", "{pile}", "tomatoes"]),
     "pile-rungs": ("pile_rungs.py", ["--from", "{pile}", "tomatoes"]),
     "pile-serve": ("pile_serve.py", ["serve", "--from", "{pile}", "--to", "{tmp}/s", "--for", "0"]),
     "pile-store": ("pile_store.py", ["--from", "{pile}", "--to", "{tmp}/pile.sqlite"]),
     "pile-sweep": ("pile_sweep.py", ["--box", "{box}", "--questions", "{pile}/garden.md"]),
-    "pins": ("pins.py", ["--box", "{box}"]),
     "pipe": ("pipe.py", ["--box", "{box}", *NOW]),
-    "plain": ("plain.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
+    "play-catgrid": ("play_catgrid.py", ["--box", "{box}", "play", *NOW]),
+    "play-dice": ("play_dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
+    "play-dice5e": ("play_dice5e.py", ["--box", "{box}", "roll", "4d6kh3", *NOW]),
+    "play-horoscope": ("play_horoscope.py", ["Ana", "--date", "2026-10-24"]),
+    "play-life": ("play_life.py", ["--box", "{box}", "play", "--generations", "8", *NOW]),
+    "play-odds": ("play_odds.py", ["2d6"]),
+    "play-quiz": ("play_quiz.py", ["--box", "{box}", "ask", *NOW]),
+    "play-tarot": ("play_tarot.py", ["--box", "{box}", "draw", *NOW]),
     "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
-    "predict": ("predict.py", ["ask", "--box", "{box}", *NOW, "tomatoes"]),
+    # the steps it would run, read and listed: nothing of the repo's touched
+    "pr-ready": ("pr_ready.py", ["steps"]),
+    "forecast-ask": ("predict.py", ["ask", "--box", "{box}", *NOW, "tomatoes"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "profile": ("question_profile.py", ["--box", "{box}", "tomatoes"]),
     "projects": ("projects.py", ["--home", "{box}/.."]),
     "prov": ("prov.py", ["--box", "{box}", "--to", "{tmp}/prov.json"]),
-    # nothing sealed for the question: nothing to mark, no server looked for
-    "quantized": ("quantized.py", ["--box", "{box}", "--questions", "{pile}/garden.md"]),
-    "quiz": ("quiz.py", ["--box", "{box}", "ask", *NOW]),
     "quote-check": ("quote_check.py", ["--box", "{box}", "Tomatoes want sun"]),
     "quotes": ("quotes.py", ["--box", "{box}", "--in", "{pile}/garden.md"]),
+    "random-passage": ("random_passage.py", ["--box", "{box}", *NOW]),
     "reading-level": ("reading_level.py", ["--box", "{box}"]),
     "reading-log": ("reading_log.py", ["--box", "{box}"]),
     "readings": ("readings.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
-    # the steps it would run, read and listed: nothing of the repo's touched
-    "ready": ("ready.py", ["steps"]),
+    "record-history": ("record_history.py", ["--box", "{box}"]),
     "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
+    "ref-check": ("ref_check.py", ["--box", "{box}"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     "repo-digest": ("repo_digest.py", ["page"]),
+    "repo-kinds": ("repo_kinds.py", ["count"]),
     # a list naming no owner/repo builds nothing, before any clone: no network
     "repo-pile": ("repo_pile.py", ["build", "--to", "{tmp}/base", "--repos",
                                    "{pile}/garden.md", "--key", "{tmp}/base.key"]),
@@ -856,18 +856,16 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "route": ("route.py", ["tomatoes"]),
     "rss-out": ("rss_out.py", ["--box", "{box}", "--to", "{tmp}/feed.xml"]),
     "rules": ("rules.py", ["list", "--box", "{box}"]),
-    "said": ("said.py", ["--box", "{box}"]),
+    "run-answer": ("run_answer.py", ["tomatoes", "--box", "{box}"]),
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
-    # a closed port on this machine: no model is asked, the say is unreachable, 42
-    "say": ("say.py", ["--boxes", "adapters/stdlib/say-check/example-boxes.json", "--host", "127.0.0.1:9"]),
-    "say-check": ("say_check.py", ["--sentence", "PR 712 is waiting [b4], ratify the work order [b5].", "--boxes", "adapters/stdlib/say-check/example-boxes.json"]),
-    "scan": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
+    "batch-ask": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
     "sent-log": ("sent_log.py", ["--box", "{box}"]),
-    "serve": ("serve.py", ["scope", "--box", "{box}"]),
+    "sentence-check": ("sentence_check.py", ["--sentence", "PR 712 is waiting [b4], ratify the work order [b5].", "--boxes", "adapters/stdlib/sentence-check/example-boxes.json"]),
+    "sentences": ("sentences.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "session-cost": ("session_cost.py", ["--from", "{pile}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", *NOW]),
     "share": ("share.py", ["log", "--box", "{box}"]),
@@ -883,15 +881,12 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "stack-bridges": ("stack_bridges.py", ["--stack", "adapters/stdlib/stack-bridges/example.md"]),
     "stack-row": ("stack_row.py", ["--box", "{box}", "--run", "adapters/stdlib/stack-row/example-run", *NOW]),
     "stack-share": ("stack_share.py", ["--box", "{box}"]),
-    "stale": ("stale.py", ["--box", "{box}"]),
-    "start": ("start.py", ["--pile", "{pile}", "--to", "{tmp}/willow"]),
+    "stale-answers": ("stale_answers.py", ["--box", "{box}"]),
     "starter-words": ("starter.py", ["copy", "--to", "{tmp}/words.txt"]),
     "subscriptions": ("subscriptions.py", ["--box", "{box}"]),
-    "surprise": ("surprise.py", ["--box", "{box}", *NOW]),
     "syllabus": ("syllabus.py", ["--box", "{box}"]),
     "symptoms": ("symptoms.py", ["--box", "{box}", "tomatoes"]),
     "synonyms": ("synonyms.py", ["--box", "{box}", "--data", "{pile}", "tomatoes"]),
-    "tarot": ("tarot.py", ["--box", "{box}", "draw", *NOW]),
     "test-impact": ("impact.py", ["plan", "README.md"]),
     "test-shards": ("shards.py", ["--shards", "2", "--tests", "{pile}/garden.md"]),
     "thesis": ("thesis.py", ["--box", "{box}", "{pile}/garden.md"]),
@@ -905,17 +900,22 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "translate": ("translate.py", ["--box", "{box}", "--into", "Spanish", "tomatoes"]),
     "typos": ("typos.py", ["--box", "{box}", "tomatoes"]),
     "typosquat": ("typosquat.py", ["--box", "{box}"]),
+    "unpinned": ("unpinned.py", ["--box", "{box}"]),
+    "verse": ("verse.py", ["--box", "{box}"]),
     "vim": ("vim.py", ["--box", "{box}"]),
     "vscode": ("vscode.py", ["--box", "{box}"]),
     "warranties": ("warranties.py", ["--box", "{box}"]),
     "wayback": ("wayback.py", ["find", "--url", "https://example.org/", "--to", "{tmp}/w",
                                "--after", "20261016", "--before", "20261001"]),
+    "ways-live": ("ways_live.py", ["list"]),
     "weakest-link": ("weakest_link.py", ["--box", "{box}"]),
     "weights-card": ("weights_card.py", ["--from", "{pile}/m.gguf", "--to", "{tmp}/card.md"]),
     "weights-pin": ("weights_pin.py", ["--card", "{pile}/m.md", "--from", "{pile}/m.bin"]),
+    "what-changed": ("what_changed.py", ["--box", "{box}", *NOW]),
+    "who-said": ("who_said.py", ["--box", "{box}"]),
     "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
-    "xref": ("xref.py", ["--box", "{box}"]),
+    "world-ids": ("world_ids.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     # every language pack, from its folder: a new one is run here without a line of its own
     **{f"words-{c}": (f"words_{c}.py", ["bite", "--box", "{box}", *NOW, "tomatoes"])
@@ -1146,9 +1146,9 @@ def test_reaching_is_seen_however_it_is_spelled(tmp_path):
     folder = tmp_path / "probe"
     folder.mkdir()
     (folder / "README.md").write_text("<!-- willow-addon\nsection: Play\n-->\n")
-    for spelling in ('HERE.parent / "dice" / "dice.py"', 'STDLIB / "dice"',
-                     'Path(__file__).resolve().parents[1] / "dice"',
-                     'ROOT / "adapters" / "stdlib" / "dice"', 'sibling("dice", "dice")'):  # fmt: skip
+    for spelling in ('HERE.parent / "play-dice" / "play_dice.py"', 'STDLIB / "play-dice"',
+                     'Path(__file__).resolve().parents[1] / "play-dice"',
+                     'ROOT / "adapters" / "stdlib" / "play-dice"', 'sibling("play-dice", "play_dice")'):  # fmt: skip
         (folder / "probe.py").write_text(f"x = {spelling}\n")
         assert reached(folder) == {"dice"}, spelling
     (folder / "probe.py").write_text(
@@ -1201,7 +1201,7 @@ REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {
         ["report", "--from", "{pile}/ai-code-tracking.db"],
     ),
     "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
-    "predict": ("predict.py", ["score", "--box", "{box}"]),
+    "forecast-ask": ("predict.py", ["score", "--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", "check"]),
 }
 HEAD = re.compile(

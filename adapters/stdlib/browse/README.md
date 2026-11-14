@@ -8,7 +8,7 @@ writes: record
 network: loopback
 role: ways
 tags: everyday
-looks-for: boxes-here, digest, fair-merge, index-cache, look, pieces, projects, say, scan, stack, why-not, words-de, words-es, words-fr, words-pt
+looks-for: batch-ask, boxes-here, digest, fair-merge, index-cache, model-sentence, pieces, projects, run-answer, stack, why-not, words-de, words-es, words-fr, words-pt
 -->
 # browse
 
@@ -95,7 +95,7 @@ stops asking. It reads the folder only, and writes nothing, not the record.
 **A question goes to the step whose job it is.** With `--run FOLDER`, the
 ask box does one more thing. Your question is still the kernel's own
 `bite`, on the record, and its passages are still shown. Above them, the
-[look](../look/) add-on says what kind of question it is and shows what the
+[run-answer](../run-answer/) add-on says what kind of question it is and shows what the
 run's steps already found for that kind:
 
 - "who still owes me money" shows the lines the run's debts and invoices
@@ -148,7 +148,7 @@ a sentence from that model, under code's line:
   code's.
 - **It is given only what code said:** your line, and the same facts
   code's line was made from.
-- **The [say-check](../say-check/) add-on holds it to those facts.** A
+- **The [sentence-check](../sentence-check/) add-on holds it to those facts.** A
   sentence that keeps to them stands. One that adds a word or a number,
   or misquotes you, is struck: shown struck through, with what failed,
   and code's line above it stands.
@@ -159,7 +159,7 @@ a sentence from that model, under code's line:
   goes nowhere near your record.
 - **Small talk and the opening are code's alone.**
 
-The model is asked by the [say](../say/) add-on, on this machine only. A
+The model is asked by the [model-sentence](../model-sentence/) add-on, on this machine only. A
 model that can't be asked is said in a word, and nothing else changes.
 
 **Three panels.** Every page is laid out the same way:
@@ -203,7 +203,7 @@ folder that [index-cache](../index-cache/) keeps current, a question is
 answered from the index instead of by reading every file again. The answer
 is the kernel's own, passage for passage, and the ask is on your record the
 same way. When the index isn't current (a file changed since it was built),
-or the [scan](../scan/) or index-cache add-on isn't here, the kernel reads
+or the [batch-ask](../batch-ask/) or index-cache add-on isn't here, the kernel reads
 the folder as before.
 
 A passage is shown when it holds half your question's words, so it can
@@ -213,7 +213,7 @@ passage in your folder holds at all: "No passage in your folder holds:
 violin." That line is true without any ranking.
 
 **Other piles, beside your folder.** With `--beside INDEX`, once for each,
-other piles' indexes ([scan](../scan/) makes one) are asked the same
+other piles' indexes ([batch-ask](../batch-ask/) makes one) are asked the same
 question by fair-merge. What they hold is shown under your folder's answer
 in a box of its own, "Other piles, not your folder": each pile ranked alone
 and taking turns, a passage two piles hold shown once, and each pile's own

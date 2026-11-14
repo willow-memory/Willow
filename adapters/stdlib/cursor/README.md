@@ -29,7 +29,7 @@ There's no approve tool: approving stays `python kernel.py seal`, yours.
 Cursor's Agent hooks include `beforeSubmitPrompt`, but that event can only
 continue or block a prompt — there is no field for injected context — so
 cited passages stay MCP (this add-on), not a prompt hook.
-[hooks-elsewhere](../hooks-elsewhere/) refuses `--host cursor` for that
+[hook-elsewhere](../hook-elsewhere/) refuses `--host cursor` for that
 reason.
 
 **Source:** Cursor's own documentation for registering a stdio MCP server,

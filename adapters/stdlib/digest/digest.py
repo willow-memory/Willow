@@ -7,7 +7,7 @@ show, nothing (said as nothing), or couldn't look (said with why):
 
     Waiting for you     suggestions passed the kernel's door, not yet approved
     Gone stale          approved answers whose cited passage changed or went
-                        (the stale add-on's check)
+                        (the stale-answers add-on's check)
     Coming up           dates in your files in the next N days, 14 unless
                         --days says (the coming-up add-on's)
     Asked again         questions asked more than once that your folder
@@ -95,9 +95,9 @@ def waiting(box: Path, rows: list[dict]) -> dict:
 
 
 def gone_stale(box: Path) -> dict:
-    stale = sibling("stale", "stale")
+    stale = sibling("stale-answers", "stale_answers")
     if stale is None:
-        return section([], "the stale add-on isn't here")
+        return section([], "the stale-answers add-on isn't here")
     _, entries = stale.check(box)
     return section([e for e in entries if e.get("gone")])
 

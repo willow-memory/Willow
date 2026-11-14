@@ -116,7 +116,7 @@ total and nothing else (it needs Wasmtime, OpenDP and shamirs installed):
   takes it to their door with kart and runs it with wasm, over their folder
   read-only. The tools are the module's SHA-256, so they are the same on
   every machine.
-- **[dp](../../adapters/deps/dp/) noises it.** Each adds OpenDP's noise to
+- **[noised-count](../../adapters/deps/noised-count/) noises it.** Each adds OpenDP's noise to
   their two numbers, epsilon 1, and seals the noisy numbers, not the true
   ones.
 - **[secure-sum](../../adapters/deps/secure-sum/) totals it.** Each splits

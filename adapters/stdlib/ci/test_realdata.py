@@ -94,9 +94,11 @@ print("wrote")
 
 def test_a_mirror_line_the_kernel_would_cut_fails_the_reader(world):
     root, lives, _ = world
-    (root / "stdlib" / "plain").mkdir()
-    (root / "stdlib" / "plain" / "plain.py").write_text(READER)
-    contract = types.SimpleNamespace(COMMANDS={}, READERS={"plain": ("plain.py", {})})
+    (root / "stdlib" / "sentences").mkdir()
+    (root / "stdlib" / "sentences" / "sentences.py").write_text(READER)
+    contract = types.SimpleNamespace(
+        COMMANDS={}, READERS={"plain": ("sentences.py", {})}
+    )
     lines = "".join(f"message {i} with a few words in it\n" for i in range(40))
     (lives["ann"] / "chat.txt").write_text(lines)
     rows, held = rd.run(["plain"], lives, contract, root / "stdlib")
@@ -123,9 +125,11 @@ def test_long_lines_names_each_line_over_a_chunk(tmp_path):
 
 
 def test_a_reader_runs_mirror_over_the_folder():
-    contract = types.SimpleNamespace(COMMANDS={}, READERS={"plain": ("plain.py", {})})
+    contract = types.SimpleNamespace(
+        COMMANDS={}, READERS={"plain": ("sentences.py", {})}
+    )
     assert rd.row_of(contract, "plain") == (
-        "plain.py",
+        "sentences.py",
         ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"],
     )
     with pytest.raises(rd.Refused, match="no line in COMMANDS"):

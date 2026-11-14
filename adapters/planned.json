@@ -122,6 +122,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "box-heir",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "browser-model",
   "kind": "stdlib",
   "section": "Assistants",
@@ -153,7 +164,7 @@
   "writes": "nothing",
   "network": "none",
   "role": "tools",
-  "uses": "scan",
+  "uses": "batch-ask",
   "version": "0.0.1"
  },
  {
@@ -291,18 +302,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "compiled",
-  "kind": "deps",
-  "section": "For maintainers",
-  "line": "kernel.py compiled with mypyc for speed, held to the same vectors byte for byte.",
-  "source": "new",
-  "needs": "mypyc; MIT",
-  "writes": "nothing",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
   "name": "confluence",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -391,17 +390,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "crates",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "A Rust port of kernel.py on crates.io, held to the same vectors as the other four.",
-  "source": "new",
-  "writes": "to",
-  "network": "crates.io, to publish a release a maintainer tags",
-  "role": "makes",
-  "version": "0.0.1"
- },
- {
   "name": "crosswalk",
   "kind": "stdlib",
   "section": "Finding things",
@@ -410,17 +398,6 @@
   "writes": "to",
   "network": "none",
   "role": "makes",
-  "version": "0.0.1"
- },
- {
-  "name": "crowd",
-  "kind": "stdlib",
-  "section": "Keeping track",
-  "line": "You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored.",
-  "source": "new",
-  "writes": "record",
-  "network": "the market's public API, to read the question and its resolution",
-  "role": "tools",
   "version": "0.0.1"
  },
  {
@@ -527,17 +504,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "fight5e",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
   "name": "file-kind",
   "kind": "stdlib",
   "section": "Reading more kinds of files",
@@ -547,6 +513,28 @@
   "network": "none",
   "role": "tools",
   "from": "shape, https://github.com/wagtail/Willow, BSD-3-Clause",
+  "version": "0.0.1"
+ },
+ {
+  "name": "forecast-beacon",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score.",
+  "source": "bot",
+  "writes": "record",
+  "network": "api.drand.sh, to read a beacon round's randomness",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "forecast-crowd",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "You against the crowd: a prediction market's question copied into your ledger, your probability beside theirs, both scored.",
+  "source": "new",
+  "writes": "record",
+  "network": "the market's public API, to read the question and its resolution",
+  "role": "tools",
   "version": "0.0.1"
  },
  {
@@ -703,28 +691,6 @@
   "source": "new",
   "writes": "record",
   "network": "gutenberg.org, each book fetched once",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "handoff",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "A box handed to the person you name (an executor, a carer): read only, your seals kept, theirs their own.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "hanoi",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Towers of Hanoi as rows: each move, n discs in 2^n - 1.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
   "role": "tools",
   "version": "0.0.1"
  },
@@ -1035,40 +1001,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "lunatic",
-  "kind": "deps",
-  "section": "Play",
-  "line": "The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new.",
-  "source": "new",
-  "needs": "Skyfield; MIT",
-  "writes": "nothing",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "mastermind",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Mastermind with the secret's hash at the open: each guess and score on the record.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "maven",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The Java port on Maven Central, built from this repo and checked against the vectors.",
-  "source": "new",
-  "writes": "to",
-  "network": "Maven Central, to publish a release a maintainer tags",
-  "role": "makes",
-  "version": "0.0.1"
- },
- {
   "name": "mcp-by-hash",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1143,18 +1075,6 @@
   "source": "new",
   "writes": "record",
   "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "mirror",
-  "kind": "deps",
-  "section": "Trust and proof",
-  "line": "Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing.",
-  "source": "new",
-  "needs": "the git program; GPL, called not linked",
-  "writes": "nothing",
-  "network": "each mirror's git URL, to read its refs",
   "role": "tools",
   "version": "0.0.1"
  },
@@ -1261,23 +1181,12 @@
   "version": "0.0.1"
  },
  {
-  "name": "narrow",
+  "name": "next-question",
   "kind": "stdlib",
   "section": "Finding things",
   "line": "The question to ask you next: the one fact about what you're after that would cut what's left the most, with the count each answer leaves.",
   "source": "new",
   "writes": "nothing",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "nim",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0.",
-  "source": "new",
-  "writes": "record",
   "network": "none",
   "role": "tools",
   "version": "0.0.1"
@@ -1313,28 +1222,6 @@
   "writes": "nothing",
   "network": "none",
   "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "npm",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it.",
-  "source": "new",
-  "writes": "to",
-  "network": "registry.npmjs.org, to publish a release a maintainer tags",
-  "role": "makes",
-  "version": "0.0.1"
- },
- {
-  "name": "nuget",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The C# port on NuGet, built from this repo and checked against the vectors.",
-  "source": "new",
-  "writes": "to",
-  "network": "nuget.org, to publish a release a maintainer tags",
-  "role": "makes",
   "version": "0.0.1"
  },
  {
@@ -1461,6 +1348,84 @@
   "version": "0.0.1"
  },
  {
+  "name": "play-fight5e",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "play-hanoi",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Towers of Hanoi as rows: each move, n discs in 2^n - 1.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "play-lunatic",
+  "kind": "deps",
+  "section": "Play",
+  "line": "The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new.",
+  "source": "new",
+  "needs": "Skyfield; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "play-mastermind",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Mastermind with the secret's hash at the open: each guess and score on the record.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "play-nim",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "play-reversi",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Reversi as rows: every move, each flip following from the board.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "play-sokoban",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Sokoban levels and moves on the record, a solution checked by replaying it.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "pool-fit",
   "kind": "stdlib",
   "section": "Assistants",
@@ -1469,6 +1434,95 @@
   "writes": "nothing",
   "network": "loopback",
   "role": "suggests",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-crates",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A Rust port of kernel.py on crates.io, held to the same vectors as the other four.",
+  "source": "new",
+  "writes": "to",
+  "network": "crates.io, to publish a release a maintainer tags",
+  "role": "makes",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-maven",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The Java port on Maven Central, built from this repo and checked against the vectors.",
+  "source": "new",
+  "writes": "to",
+  "network": "Maven Central, to publish a release a maintainer tags",
+  "role": "makes",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-mypyc",
+  "kind": "deps",
+  "section": "For maintainers",
+  "line": "kernel.py compiled with mypyc for speed, held to the same vectors byte for byte.",
+  "source": "new",
+  "needs": "mypyc; MIT",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-npm",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The TypeScript port on npm, built from this repo, checked against the vectors, and published with provenance; npx runs it.",
+  "source": "new",
+  "writes": "to",
+  "network": "registry.npmjs.org, to publish a release a maintainer tags",
+  "role": "makes",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-nuget",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The C# port on NuGet, built from this repo and checked against the vectors.",
+  "source": "new",
+  "writes": "to",
+  "network": "nuget.org, to publish a release a maintainer tags",
+  "role": "makes",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-pypi",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors and attested; uvx and pipx run it.",
+  "source": "new",
+  "writes": "to",
+  "network": "upload.pypi.org, to publish a release a maintainer tags",
+  "role": "makes",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-pypy",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "The kernel and its tests run under PyPy too, and timed against CPython.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "port-swift",
+  "kind": "stdlib",
+  "section": "For maintainers",
+  "line": "A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
   "version": "0.0.1"
  },
  {
@@ -1492,17 +1546,6 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the comment",
   "role": "ways",
-  "version": "0.0.1"
- },
- {
-  "name": "predictions",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score.",
-  "source": "bot",
-  "writes": "record",
-  "network": "api.drand.sh, to read a beacon round's randomness",
-  "role": "tools",
   "version": "0.0.1"
  },
  {
@@ -1537,28 +1580,6 @@
   "needs": "sigstore; Apache-2.0",
   "writes": "nothing",
   "network": "the registry and Sigstore's log, to fetch the attestation",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "pypi",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors and attested; uvx and pipx run it.",
-  "source": "new",
-  "writes": "to",
-  "network": "upload.pypi.org, to publish a release a maintainer tags",
-  "role": "makes",
-  "version": "0.0.1"
- },
- {
-  "name": "pypy",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "The kernel and its tests run under PyPy too, and timed against CPython.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
   "role": "tools",
   "version": "0.0.1"
  },
@@ -1643,6 +1664,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "record-sync",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "reddit-api",
   "kind": "deps",
   "section": "Keeping track",
@@ -1700,6 +1732,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "repo-mirrors",
+  "kind": "deps",
+  "section": "Trust and proof",
+  "line": "Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing.",
+  "source": "new",
+  "needs": "the git program; GPL, called not linked",
+  "writes": "nothing",
+  "network": "each mirror's git URL, to read its refs",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "report",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -1739,17 +1783,6 @@
   "section": "Trust and proof",
   "line": "Proposes setting aside approved answers that no longer hold, each one gone only when you seal it.",
   "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "reversi",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Reversi as rows: every move, each flip following from the board.",
-  "source": "new",
   "writes": "record",
   "network": "none",
   "role": "tools",
@@ -1948,17 +1981,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "sokoban",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Sokoban levels and moves on the record, a solution checked by replaying it.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
   "name": "sourcehut",
   "kind": "stdlib",
   "section": "For maintainers",
@@ -2071,17 +2093,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "swift",
-  "kind": "stdlib",
-  "section": "For maintainers",
-  "line": "A Swift port of kernel.py for iPhone and Mac apps, held to the same vectors.",
-  "source": "new",
-  "writes": "nothing",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
   "name": "symbols",
   "kind": "deps",
   "section": "Finding things",
@@ -2089,17 +2100,6 @@
   "source": "new",
   "needs": "scip-python; MIT",
   "writes": "nothing",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "sync",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Your record kept on two devices through any synced folder, with the chain checked on each before it's trusted.",
-  "source": "new",
-  "writes": "record",
   "network": "none",
   "role": "tools",
   "version": "0.0.1"
@@ -2204,6 +2204,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "transcripts",
+  "kind": "deps",
+  "section": "Reading more kinds of files",
+  "line": "Dictation, calls and lectures transcribed into dated text.",
+  "source": "new",
+  "needs": "faster-whisper; MIT",
+  "writes": "to",
+  "network": "the model, downloaded once",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "trips",
   "kind": "stdlib",
   "section": "Keeping track",
@@ -2291,18 +2303,6 @@
   "writes": "to",
   "network": "none",
   "role": "words",
-  "version": "0.0.1"
- },
- {
-  "name": "voice",
-  "kind": "deps",
-  "section": "Reading more kinds of files",
-  "line": "Dictation, calls and lectures transcribed into dated text.",
-  "source": "new",
-  "needs": "faster-whisper; MIT",
-  "writes": "to",
-  "network": "the model, downloaded once",
-  "role": "reads",
   "version": "0.0.1"
  },
  {

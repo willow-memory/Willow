@@ -7,7 +7,7 @@ version: 0.2.0
 writes: nothing
 network: none
 role: tools
-uses: scan
+uses: batch-ask
 tags: pile
 -->
 # fair-merge

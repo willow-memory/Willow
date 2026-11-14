@@ -772,7 +772,7 @@ def test_a_step_that_printed_nothing_says_so_and_no_run_is_no_page(
 
 
 # ── a question goes to the steps whose job it is, and a miss says why ───────
-LOOK_HERE = (br.STDLIB / "look" / "look.py").is_file()
+LOOK_HERE = (br.STDLIB / "run-answer" / "run_answer.py").is_file()
 WHY_NOT_HERE = (br.STDLIB / "why-not" / "why_not.py").is_file()
 
 
@@ -785,7 +785,7 @@ def a_kept_run(tmp_path: Path, **steps: str) -> Path:
     return run
 
 
-@pytest.mark.skipif(not LOOK_HERE, reason="the look add-on isn't here")
+@pytest.mark.skipif(not LOOK_HERE, reason="the run-answer add-on isn't here")
 def test_a_question_a_step_answers_shows_that_steps_lines_above_your_files(tmp_path):
     run = a_kept_run(
         tmp_path, debts="Dana owes you $40 <soon>\n", invoices="overdue  Theatre\n"
@@ -809,7 +809,7 @@ def test_a_question_a_step_answers_shows_that_steps_lines_above_your_files(tmp_p
         s.close()
 
 
-@pytest.mark.skipif(not LOOK_HERE, reason="the look add-on isn't here")
+@pytest.mark.skipif(not LOOK_HERE, reason="the run-answer add-on isn't here")
 def test_a_step_the_run_lacks_is_said_and_a_thing_written_down_gets_no_card(tmp_path):
     run = a_kept_run(tmp_path, debts="Dana owes you $40\n")
     s = opened(make_box(tmp_path), run=run)
@@ -1053,7 +1053,7 @@ def scan_index(tmp_path: Path, name: str, **files: str) -> Path:
         (src / f"{f}.txt").write_text(text)
     at = tmp_path / name
     got = subprocess.run(
-        [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index", "--from", str(src), "--to", str(at)],
+        [sys.executable, str(br.STDLIB / "batch-ask" / "scan.py"), "index", "--from", str(src), "--to", str(at)],
         capture_output=True, text=True,
     )  # fmt: skip
     assert got.returncode == 0, got.stderr
@@ -1344,7 +1344,7 @@ def test_a_project_put_beside_the_open_one_is_asked_too_and_taken_away_again(tmp
         before = {p: p.read_bytes() for p in home.rglob("*") if p.is_file()}
         (home / "house" / "mine" / "notes.index").parent.mkdir(exist_ok=True)
         subprocess.run(
-            [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index",
+            [sys.executable, str(br.STDLIB / "batch-ask" / "scan.py"), "index",
              "--from", str(home / "house" / "pile"), "--to", str(home / "house" / "mine" / "notes.index")],
             capture_output=True, check=True,
         )  # fmt: skip
@@ -1375,7 +1375,7 @@ def test_only_another_project_under_home_goes_beside_and_switching_clears_it(tmp
     home = two_projects(tmp_path)
     for name in ("garden", "house"):
         subprocess.run(
-            [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index",
+            [sys.executable, str(br.STDLIB / "batch-ask" / "scan.py"), "index",
              "--from", str(home / name / "pile"), "--to", str(home / name / "ix")],
             capture_output=True, check=True,
         )  # fmt: skip
@@ -1412,7 +1412,7 @@ def test_a_home_that_isnt_there_is_refused_before_anything_listens(tmp_path, cap
 
 # ── a model's sentence about an answer, held to what code said ──────────────
 SAY_HERE = all((br.STDLIB / d / f).is_file()
-               for d, f in (("say", "say.py"), ("say-check", "say_check.py")))  # fmt: skip
+               for d, f in (("say", "model_sentence.py"), ("say-check", "sentence_check.py")))  # fmt: skip
 FACT = "Your files hold 1 passage for it; the first is at dentist.txt:1"
 
 
@@ -1486,7 +1486,7 @@ def test_a_model_that_cant_be_asked_is_said_and_codes_line_is_the_reply(tmp_path
         r, part = s.req("GET", "/say?turn=1")
         assert r.status == 200, "a voice that fails never takes the page with it"
         assert (
-            "<span class=why>not asked: the say add-on couldn&#x27;t: RuntimeError</span>"
+            "<span class=why>not asked: the model-sentence add-on couldn&#x27;t: RuntimeError</span>"
             in part
         )
         _, text = s.req("GET", "/")

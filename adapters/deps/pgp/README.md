@@ -17,7 +17,7 @@ An export or a report, signed with your own PGP key, so anyone with your
 public key can check it came from you and hasn't changed.
 
     pip install -r adapters/deps/pgp/requirements.txt
-    python adapters/stdlib/export/export.py --box DIR > answers.md
+    python adapters/stdlib/export-answers/export_answers.py --box DIR > answers.md
     python adapters/deps/pgp/pgp.py sign answers.md --to answers.md.asc [--key ID]
     python adapters/deps/pgp/pgp.py verify answers.md answers.md.asc
 

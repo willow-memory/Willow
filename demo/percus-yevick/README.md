@@ -670,3 +670,14 @@ How they are reported:
 STACK, WORK and OUT.json are outside the repo. The pipeline records the
 SHA-256 of the kernel, scan, the three readers, score.py and steps.json with
 its rows.
+
+## Renamed after the freeze (2026-11-13)
+
+After this study froze, scan was renamed batch-ask and predict forecast-ask
+([adapters/renamed.json](../../adapters/renamed.json)). scan.py and
+predict.py moved with their folders unchanged, byte for byte, so the
+freezes' hashes of them still hold. The frozen files still name the old
+folders and are left as they were. Its tests read the tools where they are
+now, through [demo/renamed.py](../renamed.py); nothing a rule, a question or
+a result rests on changed. To re-run the study's own scripts by hand, check
+out 87228252, the commit of its last freeze.

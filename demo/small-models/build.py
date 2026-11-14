@@ -18,7 +18,7 @@ The pile, under DIR/pile, is made by willow's own add-ons:
 Then `kernel.py init` makes DIR/box over the pile, with a key of its own at
 DIR/box.key. Ask it with plain:
 
-    python adapters/stdlib/plain/plain.py bite --box DIR/box "which model told the secret"
+    python adapters/stdlib/sentences/sentences.py bite --box DIR/box "which model told the secret"
 
 Nothing here goes online, and nothing is written outside DIR.
 

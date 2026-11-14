@@ -7,7 +7,7 @@ version: 0.1.0
 writes: nothing
 network: none
 role: repo
-uses: kinds
+uses: repo-kinds
 output: report
 runs-in: repo
 -->
@@ -47,7 +47,7 @@ found by whoever happened to run the tool that knew. This is that page.
 |---|---|---|
 | a ring in what uses what | add-ons whose cards each name the other in `uses`, with the add-ons that rest on the ring | a ring has no order to build in: the two come together or not at all, or one of the lines is wrong |
 | uses one that isn't here | a `uses` line naming no built add-on | build it, or take the name off |
-| nothing declares | files with no kind, by folder, as [kinds](../kinds/) counts them | a declaration, where the file's subject lives |
+| nothing declares | files with no kind, by folder, as [repo-kinds](../repo-kinds/) counts them | a declaration, where the file's subject lives |
 | ideas waiting | the ideas list, by section | to build, or to leave: an idea is a seed, not a fault |
 | entries waiting | changelog entries not yet in a release | the next release folds them in |
 
@@ -83,7 +83,7 @@ refused.
 
 **Needs:** the git program (GPL, called, not linked), through kinds.
 
-**Uses:** the kernel's exit codes; the kinds add-on's `census`, `tracked`
+**Uses:** the kernel's exit codes; the repo-kinds add-on's `census`, `tracked`
 and `folder_of`.
 
 **Never:** writes anything, reads the key, or goes online.

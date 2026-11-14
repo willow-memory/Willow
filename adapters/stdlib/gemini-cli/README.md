@@ -17,7 +17,7 @@ own folder and hands in suggestions for you to approve, through
 [GEMINI.md](../../../GEMINI.md) tells Gemini CLI to read
 [AGENTS.md](../../../AGENTS.md) (Gemini has no `@` import), so the agent
 rules stay one copy. The prompt-hook way in is
-[hooks-elsewhere](../hooks-elsewhere/) (`setup --host gemini-cli`).
+[hook-elsewhere](../hook-elsewhere/) (`setup --host gemini-cli`).
 
     python adapters/stdlib/gemini-cli/gemini_cli.py --box DIR
 
@@ -33,7 +33,7 @@ There's no approve tool: approving stays `python kernel.py seal`, yours.
 
 Gemini CLI starts no MCP server in a folder you haven't trusted: until you
 say yes when it asks, `gemini mcp list` shows willow as Disabled.
-[live](../live/) runs it in a trusted folder and sees it connect.
+[ways-live](../ways-live/) runs it in a trusted folder and sees it connect.
 
 **Source:** Google's Gemini CLI's own documentation for registering a stdio MCP server,
 as it stood on 2026-10-24. If Google's Gemini CLI moves the file or renames a key,

@@ -11,8 +11,8 @@ deals the answers out in turns, so a large repo can't bury a small one.
 ## what the code still owes
 - todo -- --box {box}
 - risky-code -- --box {box}
-- xref -- --box {box}
-- pins -- --box {box}
+- ref-check -- --box {box}
+- unpinned -- --box {box}
 - install-scripts -- --box {box}
 
 ## what shouldn't be sitting in plain files

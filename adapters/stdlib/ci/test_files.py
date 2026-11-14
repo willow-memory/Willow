@@ -207,14 +207,14 @@ def test_what_a_file_says_of_itself(scratch):
     put(scratch, "adapters/stdlib/x/x.py", '"""x.py: the x thing. Python 3.9+."""\n')
     put(scratch, "adapters/stdlib/x/README.md", "# x\n")
     put(scratch, "docs/a.md", "intro\n\n# A Title\n")
-    put(scratch, "plain.py", "print(1)\n")
+    put(scratch, "sentences.py", "print(1)\n")
     put(scratch, "broken.py", "def (\n")
     assert files.describe(scratch, "adapters/stdlib/x/x.py") == "the x thing"
     assert files.describe(scratch, "adapters/stdlib/x/README.md") == "its card"
     assert files.describe(scratch, "docs/a.md") == "A Title"
     assert files.describe(scratch, "adapters/stdlib/x/test_x.py") == ""
     assert (
-        files.describe(scratch, "plain.py")
+        files.describe(scratch, "sentences.py")
         == files.describe(scratch, "broken.py")
         == ""
     )

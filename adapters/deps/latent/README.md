@@ -9,11 +9,11 @@ floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13
 writes: nothing
 network: none
 role: tools
-uses: scan
+uses: batch-ask
 -->
 # latent
 
-Rank a [scan](../../stdlib/scan/) index's passages by meaning instead of by
+Rank a [batch-ask](../../stdlib/batch-ask/) index's passages by meaning instead of by
 words.
 
     python adapters/deps/latent/latent.py rank --index INDEX \

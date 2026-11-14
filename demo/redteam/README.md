@@ -99,3 +99,14 @@ both frozen and checked by the test. The one deliberate narrow spot:
 `secrets-audit` flags one of four planted credentials, by design; the breadth
 of code findings comes from `risky-code`, not from it. The composition scans
 as novel against the idea pile and every existing demo.
+
+## Renamed after the freeze (2026-11-13)
+
+After this study froze, pins was renamed unpinned
+([adapters/renamed.json](../../adapters/renamed.json)). Its script was
+renamed with it (unpinned.py), so recon.py, which names pins/pins.py, can't
+find it where it looks. The frozen files still name the old folders and are
+left as they were. Its tests read the tools where they are now, through
+[demo/renamed.py](../renamed.py); nothing a rule, a question or a result
+rests on changed. To re-run the study's own scripts by hand, check out
+3b5f7dd4, the commit of its last freeze.

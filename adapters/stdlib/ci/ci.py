@@ -685,11 +685,11 @@ def adapter_tests(base: Path = ROOT) -> list[str]:
     )
 
 
-LIVE = ROOT / "adapters" / "stdlib" / "live" / "live.py"
+LIVE = ROOT / "adapters" / "stdlib" / "ways-live" / "ways_live.py"
 
 
 def live_needs() -> dict[str, tuple[str, ...]]:
-    """Each of live.py's checks and the programs it names, as `live.py list`
+    """Each of ways_live.py's checks and the programs it names, as `ways_live.py list`
     prints them ("vim  needs vim  ...")."""
     got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
     out = {}
@@ -701,7 +701,7 @@ def live_needs() -> dict[str, tuple[str, ...]]:
 
 
 def live_check(name: str):
-    """One of live.py's checks: its program run on the lines its add-on
+    """One of ways_live.py's checks: its program run on the lines its add-on
     prints. A program that isn't installed is unreachable, never a pass."""
 
     def gate() -> tuple[str, str, str | None]:
@@ -722,7 +722,7 @@ def live_check(name: str):
 
 
 def live_checks() -> list[str]:
-    """live.py's checks, by name, as `live.py list` prints them."""
+    """ways_live.py's checks, by name, as `ways_live.py list` prints them."""
     got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
     return [line.split()[0] for line in got.stdout.splitlines() if line.strip()]
 

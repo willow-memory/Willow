@@ -7,7 +7,7 @@ version: 0.1.0
 writes: nothing
 network: none
 role: tools
-uses: tarot
+uses: play-tarot
 -->
 # oracle-text
 
@@ -39,7 +39,7 @@ reading, so `#who#` says the same animal again. Text that is none of those is
 kept as written. With no `--grammar`, a small grammar of its own is used.
 
 **Every branch is picked by willow's seeded stream** (sha256-stream version 1, the
-one [tarot](../tarot/) deals from): SHA-256 over the seed and a counter, and
+one [play-tarot](../play-tarot/) deals from): SHA-256 over the seed and a counter, and
 `below(k)` by rejection. The reading numbered i is made from the seed
 `TEXT:oracle:i` alone, so the same seed, grammar and number give the same
 reading on any machine, and a reading can be made again to check it. Nothing is

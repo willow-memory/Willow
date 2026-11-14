@@ -14,7 +14,7 @@ Reading, in order, behind this:
   — the box, the rules that bind every phase.
 - [willows-grove: one-box four-pieces-join](https://github.com/willow-memory/willows-grove/blob/main/docs/design/one-box/four-pieces-join.md)
   — one script, serve, one hook, one key, and what one-box adds to serve.
-- [willow-bot: the first cut of serve](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/serve.py)
+- [willow-bot: the first cut of serve](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/approved_only.py)
   — serve as it stands in the bot.
 
 ## The one guarantee
@@ -82,7 +82,7 @@ same object from two sides:
   the lone `--`. `pgp`, `git`, a content step, the pile itself: the stack
   doesn't fix the set, and serve doesn't care which add-on produced a part,
   only that the part carries its receipt and trust label. This is the same
-  move the new [`across`](../../adapters/stdlib/across/) add-on already makes
+  move the new [`many-boxes`](../../adapters/stdlib/many-boxes/) add-on already makes
   — run add-ons and compose what they print — only here the steps are
   heterogeneous and one of them is the seal check.
 

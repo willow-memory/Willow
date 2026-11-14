@@ -8,11 +8,11 @@ writes: to
 network: none
 role: makes
 tags: index
-uses: scan
+uses: batch-ask
 -->
 # index-cache
 
-[`scan`](../scan/) indexes a folder once so questions are fast; on a big folder
+[`batch-ask`](../batch-ask/) indexes a folder once so questions are fast; on a big folder
 that first read is the slow step. But a folder usually hasn't changed since last
 time, and then the index already on disk is still the right one. `index-cache`
 keeps a small manifest beside the index — each read file's path and the

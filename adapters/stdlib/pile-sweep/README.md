@@ -8,7 +8,7 @@ writes: nothing
 network: none
 role: tools
 tags: pile
-uses: pile-gold, pile-rank, scan
+uses: batch-ask, pile-gold, pile-rank
 -->
 # pile-sweep
 

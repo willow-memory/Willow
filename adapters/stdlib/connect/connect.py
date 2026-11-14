@@ -40,7 +40,7 @@ said as the model's, and yours to judge.
 --pairs FILE is many pairs, one a line: two places with a tab between
 them. Blank lines and lines that start with # are skipped.
 
-The model is Ollama's, on this machine only, asked as the say add-on asks
+The model is Ollama's, on this machine only, asked as the model-sentence add-on asks
 it; any other address is not asked. --model is the tag (llama3.2:3b).
 
 It reads the two files and asks the model on this machine. It writes
@@ -272,7 +272,7 @@ def main(argv: list[str], ask=None) -> int:
             print(f"refused: {x!r} isn't a place: a file, a colon, a line", file=sys.stderr)  # fmt: skip
             return kernel.REFUSED
     model = opts.get("--model", MODEL)
-    say = sibling("say", "say")
+    say = sibling("model-sentence", "model_sentence")
     if ask is None:
         # about four characters a token, and room to finish a sentence
         ask = say.ollama_say(model, opts.get("--host"), timeout, most=chars // 3 + 40)

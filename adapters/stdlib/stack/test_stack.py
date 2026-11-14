@@ -141,6 +141,22 @@ def test_an_unknown_add_on_is_refused_and_names_it(tmp_path):
     assert got.returncode == 2 and "nope add-on isn't here" in got.stderr
 
 
+def test_a_step_named_by_an_add_ons_old_name_runs_the_new_one_and_says_so(tmp_path):
+    box = a_box(tmp_path)
+    (STACK.parents[2] / "renamed.json").write_text(
+        json.dumps({"names": {"weighty": "heavy"}})
+    )
+    stack = a_stack(tmp_path, "## p\n- weighty -- --box {box}\n")
+    got = run("--box", str(box), "--stack", str(stack))
+    assert got.returncode == 0, got.stderr
+    assert "heavy line 5" in got.stdout
+    assert "weighty is now called heavy: ran heavy" in got.stderr
+    stack = a_stack(tmp_path, "## p\n- nope -- --box {box}\n")
+    assert (
+        "nope add-on isn't here" in run("--box", str(box), "--stack", str(stack)).stderr
+    )
+
+
 def test_a_flagged_step_makes_the_stack_exit_42(tmp_path):
     box = a_box(tmp_path)
     # the box is real, but the step points one level below it, which is not one
@@ -152,7 +168,7 @@ def test_a_flagged_step_makes_the_stack_exit_42(tmp_path):
 
 def test_step_results_follow_the_add_ons_cards():
     assert st.step_result("amounts", 42) == (False, "none found")
-    assert st.step_result("said", 42) == (False, "none found")
+    assert st.step_result("who-said", 42) == (False, "none found")
     assert st.step_result("duplicates", 42) == (False, "none found")
     assert st.step_result("contradictions", 42) == (False, "none found")
     assert st.step_result("contradictions", 0) == (True, "flagged")

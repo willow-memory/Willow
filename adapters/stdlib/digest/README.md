@@ -8,7 +8,7 @@ writes: nothing
 network: none
 role: page
 tags: everyday
-looks-for: coming-up, stale
+looks-for: coming-up, stale-answers
 output: report
 -->
 # digest
@@ -38,13 +38,13 @@ same report as one JSON object. A suggestion's where is its whole subject
 | Section | What it lists |
 |---|---|
 | Waiting for you | Suggestions that passed the kernel's door and wait for your approval, each with its why and the line that approves it |
-| Gone stale | Approved answers whose cited passage changed or went (the [stale](../stale/) add-on's check) |
+| Gone stale | Approved answers whose cited passage changed or went (the [stale-answers](../stale-answers/) add-on's check) |
 | Coming up | Dates in your files in the next N days, 14 unless `--days` says (the [coming-up](../coming-up/) add-on's) |
 | Asked again | Questions asked more than once that your folder never answered. Counted, not shown, because the record keeps no words. A words list may help. |
 
 Each section is in one of three states, never collapsed into one another:
 something to show, a group of rows; nothing, left out; or couldn't look,
-said with why on the first line (for instance, when the stale add-on was
+said with why on the first line (for instance, when the stale-answers add-on was
 deleted). The rest still show. Nothing anywhere is `empty`, said as "nothing
 waits on you"; nothing found but a section it couldn't look at is
 `unreachable`, not empty.

@@ -77,6 +77,7 @@ willow/
 ├── adapters/                 add-ons built on top of kernel.py
 │   ├── README.md             the rules every add-on follows
 │   ├── planned.json          the add-ons not built yet, as this README lists them
+│   ├── renamed.json          add-ons renamed, old name to new: a stack naming an old one runs the new
 │   ├── stdlib/               add-ons that need nothing beyond Python
 ```
 
@@ -205,10 +206,10 @@ willow/
 │   │   │   ├── slack.py   a Slack export as dated lines of messages
 │   │   │   ├── test_slack.py
 │   │   │   └── README.md
-│   │   ├── texts/
-│   │   │   ├── texts.py      Android and iPhone text backups and call logs, a dated line a message
-│   │   │   ├── test_texts.py
-│   │   │   └── README.md
+│   │   ├── sms/
+│   │   │   ├── sms.py        phone text messages and calls, mirrored as one dated line per message
+│   │   │   ├── test_sms.py
+│   │   │   └── README.md     its card
 │   │   ├── x-archive/
 │   │   │   ├── x_archive.py   your X posts and messages as dated lines
 │   │   │   ├── test_x_archive.py
@@ -394,10 +395,10 @@ willow/
 │   │   │   ├── ai_code_tracking.py Which code Cursor's AI wrote, from its tracking database
 │   │   │   ├── test_ai_code_tracking.py
 │   │   │   └── README.md     its card
-│   │   ├── ci-logs/
-│   │   │   ├── ci_logs.py   a CI run log as its failing steps
-│   │   │   ├── test_ci_logs.py
-│   │   │   └── README.md
+│   │   ├── build-logs/
+│   │   │   ├── build_logs.py CI run logs you downloaded: each failing step as a passage
+│   │   │   ├── test_build_logs.py
+│   │   │   └── README.md     its card
 │   │   ├── code-comments/
 │   │   │   ├── code_comments.py   a source file's comments on the lines they were on
 │   │   │   ├── test_code_comments.py
@@ -459,10 +460,10 @@ willow/
 │   │   │   ├── logs.py   system and web server logs as dated lines
 │   │   │   ├── test_logs.py
 │   │   │   └── README.md
-│   │   ├── parallel/
-│   │   │   ├── parallel.py   a reader run over several folders at once, across cores, into one mirror
-│   │   │   ├── test_parallel.py
-│   │   │   └── README.md
+│   │   ├── parallel-read/
+│   │   │   ├── parallel_read.py run a reader over several folders at once, across cores. 3.9+
+│   │   │   ├── test_parallel_read.py
+│   │   │   └── README.md     its card
 │   │   ├── sarif/
 │   │   │   ├── sarif.py   scanner findings by file and line
 │   │   │   ├── test_sarif.py
@@ -535,18 +536,18 @@ willow/
 │   │   │   ├── people.py     everyone the files name, by what they do with a name, and each one's every mention
 │   │   │   ├── test_people.py
 │   │   │   └── README.md
+│   │   ├── random-passage/
+│   │   │   ├── random_passage.py one passage from your folder, drawn at random, and replayable
+│   │   │   ├── test_random_passage.py
+│   │   │   └── README.md     its card
 │   │   ├── reading-level/
 │   │   │   ├── reading_level.py  how hard each file reads: Flesch by the book, counted as written, easiest first
 │   │   │   ├── test_reading_level.py
 │   │   │   └── README.md
-│   │   ├── said/
-│   │   │   ├── said.py       who said what, read by shape (a chat's stamp, a speech verb, quotation marks), dated
-│   │   │   ├── test_said.py
-│   │   │   └── README.md
-│   │   ├── surprise/
-│   │   │   ├── surprise.py   one passage drawn by a seeded stream, replayable
-│   │   │   ├── test_surprise.py
-│   │   │   └── README.md
+│   │   ├── who-said/
+│   │   │   ├── who_said.py   your files' quotes, gathered into a dated timeline of who said what
+│   │   │   ├── test_who_said.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: Finding things: Models that suggest answers
@@ -561,6 +562,10 @@ willow/
 ### adapters/stdlib/: Finding things: What it makes for elsewhere
 
 ```
+│   │   ├── batch-ask/
+│   │   │   ├── scan.py       index a folder once, then ask it many questions, fast
+│   │   │   ├── test_scan.py
+│   │   │   └── README.md     its card
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py
@@ -581,19 +586,21 @@ willow/
 │   │   │   ├── pile_store.py  a folder's passages in one SQLite file, each repeat once, used only while it matches
 │   │   │   ├── test_pile_store.py
 │   │   │   └── README.md
-│   │   ├── scan/
-│   │   │   ├── scan.py       indexes a folder once, then asks it a list of questions, the kernel's way
-│   │   │   ├── test_scan.py  holds its answers to the kernel's, every ranking vector included
-│   │   │   └── README.md
 ```
 
 ### adapters/stdlib/: Finding things: Tools you run yourself
 
 ```
-│   │   ├── all/
-│   │   │   ├── all.py        every passage that holds a question, in the kernel's order
-│   │   │   ├── test_all.py
-│   │   │   └── README.md
+│   │   ├── all-passages/
+│   │   │   ├── all_passages.py every passage that holds your question, ranked, not just the top three
+│   │   │   ├── test_all_passages.py
+│   │   │   └── README.md     its card
+│   │   ├── batch-glance/
+│   │   │   ├── batch_glance.py what a scan found, a line a question
+│   │   │   ├── example-questions.txt
+│   │   │   ├── example-scanned.jsonl
+│   │   │   ├── test_batch_glance.py
+│   │   │   └── README.md     its card
 │   │   ├── codeowners/
 │   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
 │   │   │   ├── test_codeowners.py
@@ -610,19 +617,9 @@ willow/
 │   │   │   ├── first_mention.py  when the files first mention something: the earliest dated line that holds every word
 │   │   │   ├── test_first_mention.py
 │   │   │   └── README.md
-│   │   ├── glance/
-│   │   │   ├── example-questions.txt
-│   │   │   ├── example-scanned.jsonl
-│   │   │   ├── glance.py     What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks
-│   │   │   ├── test_glance.py
-│   │   │   └── README.md     its card
 │   │   ├── land/
 │   │   │   ├── land.py       The files sort placed, copied (never moved) into a folder per category, each copy logged with its hash
 │   │   │   ├── test_land.py
-│   │   │   └── README.md     its card
-│   │   ├── look/
-│   │   │   ├── look.py       One question sent to the step whose job it is, and answered by the lines that step's kept run holds; your own notes by the kernel
-│   │   │   ├── test_look.py
 │   │   │   └── README.md     its card
 │   │   ├── misquote/
 │   │   │   ├── misquote.py   a quote almost in your files: the closest passage, and what differs
@@ -644,15 +641,15 @@ willow/
 │   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
 │   │   │   ├── test_pile_rungs.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from pile-sweep/
-
-```
 │   │   ├── pile-sweep/
 │   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
 │   │   │   ├── test_pile_sweep.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from quote-check/
+
+```
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
@@ -670,6 +667,10 @@ willow/
 │   │   │   ├── rules.py      a rules file sealed section by section; the kernel then answers 'rule NAME' word for word
 │   │   │   ├── test_rules.py
 │   │   │   └── README.md
+│   │   ├── run-answer/
+│   │   │   ├── run_answer.py one question, answered by the step whose job it is
+│   │   │   ├── test_run_answer.py
+│   │   │   └── README.md     its card
 │   │   ├── sort/
 │   │   │   ├── sort.py       your files sorted into your own categories, by the phrases you gave each
 │   │   │   ├── test_sort.py
@@ -770,10 +771,10 @@ willow/
 ### adapters/stdlib/: Keeping track: What runs on your page
 
 ```
-│   │   ├── again/
-│   │   │   ├── again.py      the questions you keep asking, counted from the record
-│   │   │   ├── test_again.py
-│   │   │   └── README.md
+│   │   ├── asked-again/
+│   │   │   ├── asked_again.py the questions you keep asking, counted from the record
+│   │   │   ├── test_asked_again.py
+│   │   │   └── README.md     its card
 │   │   ├── attendance/
 │   │   │   ├── attendance.py   who was there, by person or by week
 │   │   │   ├── test_attendance.py
@@ -922,6 +923,10 @@ willow/
 │   │   │   ├── flashcards.py  sealed approvals as cards, scheduled by FSRS-5 replayed from review rows
 │   │   │   ├── test_flashcards.py
 │   │   │   └── README.md
+│   │   ├── forecast-ask/
+│   │   │   ├── predict.py    what a question will come to, written down before it is asked,
+│   │   │   ├── test_predict.py
+│   │   │   └── README.md     its card
 │   │   ├── forecasts/
 │   │   │   ├── forecasts.py  a wager before the outcome, settled by your seal, scored by Brier
 │   │   │   ├── test_forecasts.py
@@ -949,10 +954,6 @@ willow/
 │   │   ├── nightstand/
 │   │   │   ├── nightstand.py  things set down, one bite picked up: one in hand, a bite every time, nothing deleted
 │   │   │   ├── test_nightstand.py
-│   │   │   └── README.md
-│   │   ├── predict/
-│   │   │   ├── predict.py    what a question will come to, on the record before it is asked, graded after
-│   │   │   ├── test_predict.py
 │   │   │   └── README.md
 │   │   ├── projects/
 │   │   │   ├── projects.py   Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to
@@ -984,29 +985,17 @@ willow/
 │   │   │   ├── box_health.py   a box's health in one line: the chain, approvals, files it can't read, the words list, and the last out row
 │   │   │   ├── test_box_health.py
 │   │   │   └── README.md
-│   │   ├── changed/
-│   │   │   ├── changed.py    what's new, edited or deleted since the last check, as fingerprint rows
-│   │   │   ├── test_changed.py
-│   │   │   └── README.md
 │   │   ├── contradictions/
 │   │   │   ├── contradictions.py  two lines saying the same thing with a different date or amount, side by side
 │   │   │   ├── test_contradictions.py
 │   │   │   └── README.md
-│   │   ├── export/
-│   │   │   ├── export.py     approved answers and the question log, as Markdown or CSV
-│   │   │   ├── test_export.py
-│   │   │   └── README.md
+│   │   ├── export-answers/
+│   │   │   ├── export_answers.py your approved answers, and your question log, as Markdown or CSV
+│   │   │   ├── test_export_answers.py
+│   │   │   └── README.md     its card
 │   │   ├── fixity/
 │   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
 │   │   │   ├── test_fixity.py
-│   │   │   └── README.md
-│   │   ├── history/
-│   │   │   ├── history.py    your record in plain sentences, places and counts, never the words
-│   │   │   ├── test_history.py
-│   │   │   └── README.md
-│   │   ├── ids/
-│   │   │   ├── ids.py        each file and passage by its Software Heritage ID and one-chunk IPFS CID
-│   │   │   ├── test_ids.py
 │   │   │   └── README.md
 │   │   ├── licenses/
 │   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
@@ -1016,29 +1005,41 @@ willow/
 │   │   │   ├── pair_drift.py   figures a summary says that its full text does not
 │   │   │   ├── test_pair_drift.py
 │   │   │   └── README.md
-│   │   ├── stale/
-│   │   │   ├── stale.py      approved answers whose cited passage changed or went
-│   │   │   ├── test_stale.py
-│   │   │   └── README.md
+│   │   ├── record-history/
+│   │   │   ├── record_history.py your record, in plain sentences
+│   │   │   ├── test_record_history.py
+│   │   │   └── README.md     its card
+│   │   ├── ref-check/
+│   │   │   ├── ref_check.py  every reference in your files, checked
+│   │   │   ├── test_ref_check.py
+│   │   │   └── README.md     its card
+│   │   ├── stale-answers/
+│   │   │   ├── stale_answers.py approved answers whose cited passage has changed or gone
+│   │   │   ├── test_stale_answers.py
+│   │   │   └── README.md     its card
 │   │   ├── weakest-link/
 │   │   │   ├── weakest_link.py  each approved answer worth its weakest cited input: measured, fitted, assumed or unmarked
 │   │   │   ├── test_weakest_link.py
 │   │   │   └── README.md
-│   │   ├── xref/
-│   │   │   ├── xref.py       each link and file:line in your files checked, still there
-│   │   │   ├── test_xref.py
-│   │   │   └── README.md
+│   │   ├── what-changed/
+│   │   │   ├── what_changed.py what's new, edited or gone in your folder since the last check
+│   │   │   ├── test_what_changed.py
+│   │   │   └── README.md     its card
+│   │   ├── world-ids/
+│   │   │   ├── world_ids.py  each file and passage by the names the rest of the world uses
+│   │   │   ├── test_world_ids.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: Trust and proof: Checking a model before you trust it
 
 ```
-│   │   ├── say-check/
+│   │   ├── sentence-check/
 │   │   │   ├── example-boxes.json two boxes to try it on, the ones its card shows
-│   │   │   ├── LICENSE-willows-grove the licence of the project its checks came from
-│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
-│   │   │   ├── say_check.py  a sentence said about your boxes, held to them by four checks
-│   │   │   ├── test_say_check.py
+│   │   │   ├── LICENSE-willows-grove
+│   │   │   ├── NOTICE
+│   │   │   ├── sentence_check.py a sentence said about your boxes, checked by code
+│   │   │   ├── test_sentence_check.py
 │   │   │   └── README.md     its card
 ```
 
@@ -1264,24 +1265,24 @@ willow/
 │   │   │   ├── model_fit.py  the memory, CPU, GPUs and NPUs this machine has, and where a model of a given size fits
 │   │   │   ├── test_model_fit.py
 │   │   │   └── README.md
+│   │   ├── model-quantized/
+│   │   │   ├── model_quantized.py the smallest local model that still gets your own questions right
+│   │   │   ├── test_model_quantized.py
+│   │   │   └── README.md     its card
+│   │   ├── model-sentence/
+│   │   │   ├── LICENSE-willows-grove
+│   │   │   ├── model_sentence.py one sentence a model on this machine says about your boxes
+│   │   │   ├── NOTICE
+│   │   │   ├── test_model_sentence.py
+│   │   │   └── README.md     its card
 │   │   ├── model-shelf/
 │   │   │   ├── model_shelf.py  every model on this machine, from each runtime's own folder, with its quantization and hash
 │   │   │   ├── test_model_shelf.py
-│   │   │   └── README.md
-│   │   ├── quantized/
-│   │   │   ├── quantized.py  the smallest local model that still passes your sealed questions
-│   │   │   ├── test_quantized.py
 │   │   │   └── README.md
 │   │   ├── same-way/
 │   │   │   ├── same_way.py  a local model asked each question several times, and how often its answer flips
 │   │   │   ├── test_same_way.py
 │   │   │   └── README.md
-│   │   ├── say/
-│   │   │   ├── LICENSE-willows-grove the licence of the project its prompt came from
-│   │   │   ├── NOTICE        what was taken from willows-grove, and what was changed
-│   │   │   ├── say.py        one sentence a model on this machine says about your boxes, struck when it adds to them
-│   │   │   ├── test_say.py
-│   │   │   └── README.md     its card
 │   │   ├── weights-card/
 │   │   │   ├── weights_card.py  a model card from a GGUF or safetensors file's own header, with the file's SHA-256
 │   │   │   ├── test_weights_card.py
@@ -1345,10 +1346,18 @@ willow/
 ### adapters/stdlib/: Assistants: What guards it
 
 ```
+│   │   ├── approved-only/
+│   │   │   ├── approved_only.py the one markdown file a model reads -- only the scope a human
+│   │   │   ├── test_approved_only.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-compact/
 │   │   │   ├── hook_compact.py   what the record holds open, before a summary
 │   │   │   ├── test_hook_compact.py
 │   │   │   └── README.md
+│   │   ├── hook-elsewhere/
+│   │   │   ├── hook_elsewhere.py the prompt hook for Gemini CLI, Codex and OpenCode,
+│   │   │   ├── test_hook_elsewhere.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-errors/
 │   │   │   ├── hook_errors.py each failed command kept as a row, so the third time it fails it's named, not retried blind
 │   │   │   ├── test_hook_errors.py
@@ -1389,6 +1398,11 @@ willow/
 │   │   │   ├── hook_read_first.py refuses an edit to a file the assistant hasn't read this session, or that changed since
 │   │   │   ├── test_hook_read_first.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from hook-replay/
+
+```
 │   │   ├── hook-replay/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py
@@ -1397,11 +1411,6 @@ willow/
 │   │   │   ├── hook_shell.py   a command split as the shell splits it, quotes, variables and chains included, before a rule judges it
 │   │   │   ├── test_hook_shell.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from hook-start/
-
-```
 │   │   ├── hook-start/
 │   │   │   ├── hook_start.py   a SessionStart hook that tells the assistant what waits on the person, read the way digest reads it
 │   │   │   ├── test_hook_start.py
@@ -1409,14 +1418,6 @@ willow/
 │   │   ├── hook-stop/
 │   │   │   ├── hook_stop.py   a Stop hook: the record verifies and the work is committed
 │   │   │   ├── test_hook_stop.py
-│   │   │   └── README.md
-│   │   ├── hooks-elsewhere/
-│   │   │   ├── hooks_elsewhere.py The prompt hook for Gemini CLI, Codex and opencode, wherever they take hooks, held to Claude Code's answer byte for byte
-│   │   │   ├── test_hooks_elsewhere.py
-│   │   │   └── README.md     its card
-│   │   ├── serve/
-│   │   │   ├── serve.py       the one markdown file a model reads: only a human-sealed scope, pooled, peaks first, by unguessable ids
-│   │   │   ├── test_serve.py
 │   │   │   └── README.md
 ```
 
@@ -1450,21 +1451,21 @@ willow/
 ### adapters/stdlib/: Ways to use it: In your terminal
 
 ```
+│   │   ├── first-run/
+│   │   │   ├── first_run.py  willow set up in one step
+│   │   │   ├── test_first_run.py
+│   │   │   └── README.md     its card
 │   │   ├── pipe/
 │   │   │   ├── pipe.py           questions in, one answer a line out: JSON lines, or grep's file:line: text
 │   │   │   ├── test_pipe.py
 │   │   │   └── README.md
-│   │   ├── plain/
-│   │   │   ├── plain.py      the kernel's answer as sentences
-│   │   │   ├── test_plain.py
-│   │   │   └── README.md
+│   │   ├── sentences/
+│   │   │   ├── sentences.py  the kernel's answer as sentences instead of JSON
+│   │   │   ├── test_sentences.py
+│   │   │   └── README.md     its card
 │   │   ├── shell/
 │   │   │   ├── shell.py          a willow command and tab completion for bash, zsh, fish, PowerShell and cmd
 │   │   │   ├── test_shell.py
-│   │   │   └── README.md
-│   │   ├── start/
-│   │   │   ├── start.py      set up in one step: the box, the key and the starter words, then what next
-│   │   │   ├── test_start.py
 │   │   │   └── README.md
 ```
 
@@ -1506,10 +1507,10 @@ willow/
 ### adapters/stdlib/: Ways to use it: Several add-ons at once
 
 ```
-│   │   ├── across/
-│   │   │   ├── across.py     one document across several boxes: each box's digest, export, timeline or readings, composed
-│   │   │   ├── test_across.py
-│   │   │   └── README.md
+│   │   ├── many-boxes/
+│   │   │   ├── many_boxes.py one document across several boxes, not just one
+│   │   │   ├── test_many_boxes.py
+│   │   │   └── README.md     its card
 │   │   ├── stack/
 │   │   │   ├── stack.py       one document from a stack of add-on steps over a box, pooled and peaks-first
 │   │   │   ├── test_stack.py
@@ -1600,59 +1601,59 @@ willow/
 ### adapters/stdlib/: Play: What runs on your page
 
 ```
-│   │   ├── pile-poetry/
-│   │   │   ├── pile_poetry.py   verse from your own word pairs
-│   │   │   ├── test_pile_poetry.py
-│   │   │   └── README.md
+│   │   ├── verse/
+│   │   │   ├── verse.py      verse from the word pairs your own files use most, in your
+│   │   │   ├── test_verse.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
-│   │   ├── catgrid/
-│   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
-│   │   │   ├── test_catgrid.py
-│   │   │   └── README.md
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
-│   │   │   └── README.md
-│   │   ├── dice/
-│   │   │   ├── dice.py       dice rolled on the record, seeded by its tip; check throws every roll again
-│   │   │   ├── test_dice.py
-│   │   │   └── README.md
-│   │   ├── dice5e/
-│   │   │   ├── dice5e.py     4d6kh3, adv and dis on the record, seeded as dice is; check throws every roll again
-│   │   │   ├── test_dice5e.py
 │   │   │   └── README.md
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
 │   │   │   └── README.md
-│   │   ├── horoscope/
-│   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
-│   │   │   ├── test_horoscope.py
-│   │   │   └── README.md
-│   │   ├── life/
-│   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
-│   │   │   ├── test_life.py
-│   │   │   └── README.md
-│   │   ├── odds/
-│   │   │   ├── odds.py       exact odds for any dice, as fractions
-│   │   │   ├── test_odds.py
-│   │   │   └── README.md
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
 │   │   │   └── README.md
-│   │   ├── quiz/
-│   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
-│   │   │   ├── test_quiz.py
-│   │   │   └── README.md
-│   │   ├── tarot/
-│   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
-│   │   │   ├── test_tarot.py
-│   │   │   └── README.md
+│   │   ├── play-catgrid/
+│   │   │   ├── play_catgrid.py a cat in every row, column and colour region, played on the record
+│   │   │   ├── test_play_catgrid.py
+│   │   │   └── README.md     its card
+│   │   ├── play-dice/
+│   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
+│   │   │   ├── test_play_dice.py
+│   │   │   └── README.md     its card
+│   │   ├── play-dice5e/
+│   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
+│   │   │   ├── test_play_dice5e.py
+│   │   │   └── README.md     its card
+│   │   ├── play-horoscope/
+│   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
+│   │   │   ├── test_play_horoscope.py
+│   │   │   └── README.md     its card
+│   │   ├── play-life/
+│   │   │   ├── play_life.py  Conway's Game of Life, played on the record
+│   │   │   ├── test_play_life.py
+│   │   │   └── README.md     its card
+│   │   ├── play-odds/
+│   │   │   ├── play_odds.py  exact odds for a roll of the dice, as fractions
+│   │   │   ├── test_play_odds.py
+│   │   │   └── README.md     its card
+│   │   ├── play-quiz/
+│   │   │   ├── play_quiz.py  a passage of your own files with a word missing, on the record
+│   │   │   ├── test_play_quiz.py
+│   │   │   └── README.md     its card
+│   │   ├── play-tarot/
+│   │   │   ├── play_tarot.py a seeded tarot draw on the record, replayable by anyone with it
+│   │   │   ├── test_play_tarot.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: For maintainers: What runs on your page
@@ -1662,10 +1663,10 @@ willow/
 │   │   │   ├── agents_md_check.py   the commands and paths AGENTS.md, CLAUDE.md, GEMINI.md or copilot-instructions.md name that the repo no longer has
 │   │   │   ├── test_agents_md_check.py
 │   │   │   └── README.md
-│   │   ├── pins/
-│   │   │   ├── pins.py       version ranges in package.json or requirements.txt that no lockfile pins
-│   │   │   ├── test_pins.py
-│   │   │   └── README.md
+│   │   ├── unpinned/
+│   │   │   ├── unpinned.py   the dependencies your manifests declare as a version range that no
+│   │   │   ├── test_unpinned.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: For maintainers: Tools you run yourself
@@ -1779,14 +1780,11 @@ willow/
 │   │   │   ├── test_create_pr.py
 │   │   │   ├── test_github.py
 │   │   │   └── README.md     its card: and .github/ belongs to it
-│   │   ├── kinds/
-│   │   │   ├── kinds.py      every file of this repo sorted by what it is, and the ones nothing declares
-│   │   │   ├── test_kinds.py
+│   │   ├── pr-ready/
+│   │   │   ├── pr_ready.py   a branch made ready for its pull request, on no host
+│   │   │   ├── steps.md      ready: the steps before a pull request opens, and after
+│   │   │   ├── test_pr_ready.py
 │   │   │   └── README.md     its card
-│   │   ├── live/
-│   │   │   ├── live.py       each way-in add-on run through its real program: works, fails, or not here
-│   │   │   ├── test_live.py
-│   │   │   └── README.md
 │   │   ├── readme/
 │   │   │   ├── groups.py     every add-on's place, the one grouping the UI and the lists share
 │   │   │   ├── readme.py     builds this README's generated sections from the cards
@@ -1794,11 +1792,6 @@ willow/
 │   │   │   ├── test_groups.py
 │   │   │   ├── test_readme.py
 │   │   │   └── README.md     its card: sections, the draw, what it reads
-│   │   ├── ready/
-│   │   │   ├── ready.py      a pull request's steps run in order, their tidy committed, its body written and its fragment named, on no host
-│   │   │   ├── steps.md      the steps ready runs before a pull request opens and after, as a stack
-│   │   │   ├── test_ready.py
-│   │   │   └── README.md     its card
 │   │   ├── red-on-main/
 │   │   │   ├── red_on_main.py A pull request's failing checks held to main's last run: red there too is not the pull request's, green there is
 │   │   │   ├── test_red_on_main.py
@@ -1806,6 +1799,10 @@ willow/
 │   │   ├── repo-digest/
 │   │   │   ├── repo_digest.py what this repo needs from you, and the order its add-ons build in
 │   │   │   ├── test_repo_digest.py
+│   │   │   └── README.md     its card
+│   │   ├── repo-kinds/
+│   │   │   ├── repo_kinds.py every file of this repo sorted by what it is, and the ones nothing declares
+│   │   │   ├── test_repo_kinds.py
 │   │   │   └── README.md     its card
 │   │   ├── restack/
 │   │   │   ├── restack.py    your branches back on top of main, the repo's own conflicts settled
@@ -1823,210 +1820,214 @@ willow/
 │   │   │   ├── skim.py       a made list held to how a person reads it: a heading a screen, a line a look, a name to jump to
 │   │   │   ├── test_skim.py
 │   │   │   └── README.md     its card
+│   │   ├── test-impact/
+│   │   │   ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
+│   │   │   ├── test_impact.py
+│   │   │   └── README.md
 ```
 
-#### adapters/stdlib/, from test-impact/
+#### adapters/stdlib/, from ways-live/
 
 ```
-│   │   └── test-impact/
-│   │       ├── impact.py     which of this repo's checks a change can reach, closest first, in ci's gate names
-│   │       ├── test_impact.py
-│   │       └── README.md
-│   └── deps/                 add-ons that need something installed
-│       ├── README.md         what one must declare: pins, floors, licences, network
-│       ├── code-shape/
-│       │   ├── code_shape.py  code by its shape through ast-grep, each match checked against the kernel's passages
-│       │   ├── requirements.txt  ast-grep-cli, pinned
-│       │   ├── requirements-floor.txt  ast-grep-cli at its floor, also tested
-│       │   ├── test_code_shape.py
-│       │   └── README.md
-│       ├── dialect/
-│       │   ├── dialect.py    the words you use far more than the world does, against wordfreq's counts
-│       │   ├── requirements.txt  wordfreq, pinned
-│       │   ├── requirements-floor.txt  wordfreq at its floor, also tested
-│       │   ├── test_dialect.py
-│       │   └── README.md
-│       ├── dialect-dates/
-│       │   ├── dialect_dates.py the words your folder uses far more than the world does, dated by first and last appearance
-│       │   ├── requirements-floor.txt
-│       │   ├── requirements.txt
-│       │   ├── test_dialect_dates.py
-│       │   └── README.md     its card
-│       ├── dp/
-│       │   ├── dp.py         noise on a count before it leaves, by OpenDP, so one person's number
-│       │   ├── requirements-floor.txt
-│       │   ├── requirements.txt
-│       │   ├── test_dp.py
-│       │   └── README.md     its card
-│       ├── fast-tests/
-│       │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
-│       │   ├── requirements.txt  pytest-xdist, pinned
-│       │   ├── requirements-floor.txt  pytest-xdist at its floor, also tested
-│       │   ├── test_fast_tests.py
-│       │   └── README.md
-│       ├── forge/
-│       │   ├── requirements.txt  forge-play, pinned
-│       │   ├── requirements-floor.txt  forge-play at its floor, also tested
-│       │   ├── suggest.py    a sentence in, the add-ons it names or means out, as a report and as a plan the Forge resolves
-│       │   ├── test_suggest.py
-│       │   └── README.md
-│       ├── in-process/
-│       │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
-│       │   ├── in_process.py  suggestions from a GGUF model loaded in this process through llama-cpp-python, nothing listening
-│       │   ├── requirements.txt  llama-cpp-python, pinned
-│       │   ├── requirements-floor.txt  llama-cpp-python at its floor, also tested
-│       │   ├── test_in_process.py
-│       │   └── README.md
-│       ├── kart/
-│       │   ├── kart.py       a job someone sent you, run in Kartikeya's sandbox over your folder read-only, once you seal it
-│       │   ├── requirements.txt  kartikeya, pinned
-│       │   ├── requirements-floor.txt  kartikeya at its floor, also tested
-│       │   ├── test_kart.py  the sandbox probed from inside, the seals at both doors, and the Johnson folders
-│       │   └── README.md
+│   │   └── ways-live/
+│   │       ├── ways_live.py  each way-in add-on run through the real program it's for
+│   │       ├── test_ways_live.py
+│   │       └── README.md     its card
+│   ├── deps/                 add-ons that need something installed
+│   │   ├── README.md         what one must declare: pins, floors, licences, network
+│   │   ├── code-shape/
+│   │   │   ├── code_shape.py  code by its shape through ast-grep, each match checked against the kernel's passages
+│   │   │   ├── requirements.txt  ast-grep-cli, pinned
+│   │   │   ├── requirements-floor.txt  ast-grep-cli at its floor, also tested
+│   │   │   ├── test_code_shape.py
+│   │   │   └── README.md
+│   │   ├── dialect/
+│   │   │   ├── dialect.py    the words you use far more than the world does, against wordfreq's counts
+│   │   │   ├── requirements.txt  wordfreq, pinned
+│   │   │   ├── requirements-floor.txt  wordfreq at its floor, also tested
+│   │   │   ├── test_dialect.py
+│   │   │   └── README.md
+│   │   ├── dialect-dates/
+│   │   │   ├── dialect_dates.py the words your folder uses far more than the world does, dated by first and last appearance
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── test_dialect_dates.py
+│   │   │   └── README.md     its card
+│   │   ├── fast-tests/
+│   │   │   ├── fast_tests.py  the test suite across every core with pytest-xdist, in a fraction of the time
+│   │   │   ├── requirements.txt  pytest-xdist, pinned
+│   │   │   ├── requirements-floor.txt  pytest-xdist at its floor, also tested
+│   │   │   ├── test_fast_tests.py
+│   │   │   └── README.md
+│   │   ├── forge/
+│   │   │   ├── requirements.txt  forge-play, pinned
+│   │   │   ├── requirements-floor.txt  forge-play at its floor, also tested
+│   │   │   ├── suggest.py    a sentence in, the add-ons it names or means out, as a report and as a plan the Forge resolves
+│   │   │   ├── test_suggest.py
+│   │   │   └── README.md
+│   │   ├── in-process/
+│   │   │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
+│   │   │   ├── in_process.py  suggestions from a GGUF model loaded in this process through llama-cpp-python, nothing listening
+│   │   │   ├── requirements.txt  llama-cpp-python, pinned
+│   │   │   ├── requirements-floor.txt  llama-cpp-python at its floor, also tested
+│   │   │   ├── test_in_process.py
+│   │   │   └── README.md
+│   │   ├── kart/
+│   │   │   ├── kart.py       a job someone sent you, run in Kartikeya's sandbox over your folder read-only, once you seal it
+│   │   │   ├── requirements.txt  kartikeya, pinned
+│   │   │   ├── requirements-floor.txt  kartikeya at its floor, also tested
+│   │   │   ├── test_kart.py  the sandbox probed from inside, the seals at both doors, and the Johnson folders
+│   │   │   └── README.md
+│   │   ├── latent/
+│   │   │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
+│   │   │   ├── requirements.txt  numpy, pinned
+│   │   │   ├── requirements-floor.txt  numpy at its floor, also tested
+│   │   │   ├── test_latent.py
+│   │   │   └── README.md
 ```
 
-#### adapters/deps/, from latent/
+#### adapters/deps/, from llm-cli/
 
 ```
-│       ├── latent/
-│       │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
-│       │   ├── requirements.txt  numpy, pinned
-│       │   ├── requirements-floor.txt  numpy at its floor, also tested
-│       │   ├── test_latent.py
-│       │   └── README.md
-│       ├── llm-cli/
-│       │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
-│       │   ├── requirements.txt  llm, pinned
-│       │   ├── requirements-floor.txt  llm at its floor, also tested
-│       │   ├── test_llm_cli.py
-│       │   └── README.md     its card
-│       ├── manifests/
-│       │   ├── manifests.py  Compose services and Kubernetes objects, a passage each; secrets by name only
-│       │   ├── requirements.txt  PyYAML, pinned
-│       │   ├── requirements-floor.txt  PyYAML at its floor, also tested
-│       │   ├── test_manifests.py
-│       │   └── README.md
-│       ├── mcp/
-│       │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
-│       │   ├── requirements.txt  mcp, pinned
-│       │   ├── requirements-floor.txt  mcp at its floor, also tested
-│       │   ├── test_mcp_server.py
-│       │   └── README.md
-│       ├── ocr/
-│       │   ├── ocr.py        text out of pictures and scanned PDF pages, read by tesseract
-│       │   ├── requirements.txt  Pillow and pypdf, pinned
-│       │   ├── requirements-floor.txt  Pillow and pypdf at their floors, also tested
-│       │   ├── test_ocr.py
-│       │   └── README.md
-│       ├── pdf/
-│       │   ├── pdf.py        text out of PDFs, a headed paragraph a page
-│       │   ├── requirements.txt  pypdf, pinned
-│       │   ├── requirements-floor.txt  pypdf at its floor, also tested
-│       │   ├── test_pdf.py
-│       │   └── README.md
-│       ├── pgp/
-│       │   ├── pgp.py        signs a file with your own gpg key, and checks a signature
-│       │   ├── requirements.txt  python-gnupg, pinned
-│       │   ├── requirements-floor.txt  python-gnupg at its floor, also tested
-│       │   ├── test_pgp.py
-│       │   └── README.md
-│       ├── photos/
-│       │   ├── photos.py     when and where each photo was taken, from its EXIF
-│       │   ├── requirements.txt  Pillow, pinned
-│       │   ├── requirements-floor.txt  Pillow at its floor, also tested
-│       │   ├── test_photos.py
-│       │   └── README.md
-│       ├── record-sql/
-│       │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
-│       │   ├── requirements.txt  duckdb, pinned
-│       │   ├── requirements-floor.txt  duckdb at its floor, also tested
-│       │   ├── test_record_sql.py
-│       │   └── README.md
+│   │   ├── llm-cli/
+│   │   │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
+│   │   │   ├── requirements.txt  llm, pinned
+│   │   │   ├── requirements-floor.txt  llm at its floor, also tested
+│   │   │   ├── test_llm_cli.py
+│   │   │   └── README.md     its card
+│   │   ├── manifests/
+│   │   │   ├── manifests.py  Compose services and Kubernetes objects, a passage each; secrets by name only
+│   │   │   ├── requirements.txt  PyYAML, pinned
+│   │   │   ├── requirements-floor.txt  PyYAML at its floor, also tested
+│   │   │   ├── test_manifests.py
+│   │   │   └── README.md
+│   │   ├── mcp/
+│   │   │   ├── server.py     your folder for any MCP client: ask and suggest, never approve
+│   │   │   ├── requirements.txt  mcp, pinned
+│   │   │   ├── requirements-floor.txt  mcp at its floor, also tested
+│   │   │   ├── test_mcp_server.py
+│   │   │   └── README.md
+│   │   ├── noised-count/
+│   │   │   ├── noised_count.py noise on a count before it leaves, by OpenDP, so one person's number
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── test_noised_count.py
+│   │   │   └── README.md     its card
+│   │   ├── ocr/
+│   │   │   ├── ocr.py        text out of pictures and scanned PDF pages, read by tesseract
+│   │   │   ├── requirements.txt  Pillow and pypdf, pinned
+│   │   │   ├── requirements-floor.txt  Pillow and pypdf at their floors, also tested
+│   │   │   ├── test_ocr.py
+│   │   │   └── README.md
+│   │   ├── pdf/
+│   │   │   ├── pdf.py        text out of PDFs, a headed paragraph a page
+│   │   │   ├── requirements.txt  pypdf, pinned
+│   │   │   ├── requirements-floor.txt  pypdf at its floor, also tested
+│   │   │   ├── test_pdf.py
+│   │   │   └── README.md
+│   │   ├── pgp/
+│   │   │   ├── pgp.py        signs a file with your own gpg key, and checks a signature
+│   │   │   ├── requirements.txt  python-gnupg, pinned
+│   │   │   ├── requirements-floor.txt  python-gnupg at its floor, also tested
+│   │   │   ├── test_pgp.py
+│   │   │   └── README.md
+│   │   ├── photos/
+│   │   │   ├── photos.py     when and where each photo was taken, from its EXIF
+│   │   │   ├── requirements.txt  Pillow, pinned
+│   │   │   ├── requirements-floor.txt  Pillow at its floor, also tested
+│   │   │   ├── test_photos.py
+│   │   │   └── README.md
+│   │   ├── record-sql/
+│   │   │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
+│   │   │   ├── requirements.txt  duckdb, pinned
+│   │   │   ├── requirements-floor.txt  duckdb at its floor, also tested
+│   │   │   ├── test_record_sql.py
+│   │   │   └── README.md
 ```
 
 #### adapters/deps/, from ripgrep/
 
 ```
-│       ├── ripgrep/
-│       │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
-│       │   ├── requirements.txt  ripgrep, pinned
-│       │   ├── requirements-floor.txt  ripgrep at its floor, also tested
-│       │   ├── test_ripgrep.py
-│       │   └── README.md
-│       ├── robinhood/
-│       │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
-│       │   ├── requirements-floor.txt
-│       │   ├── requirements.txt
-│       │   ├── robinhood.py  your Robinhood account as dated files, read through Robinhood's own MCP server, never traded on
-│       │   ├── stack.md      your Robinhood account, read back
-│       │   ├── test_robinhood.py
-│       │   └── README.md     its card
-│       ├── secure-sum/
-│       │   ├── requirements-floor.txt
-│       │   ├── requirements.txt
-│       │   ├── secure_sum.py a total of everyone's counts, in which no one's own count is
-│       │   ├── test_secure_sum.py
-│       │   └── README.md     its card
-│       ├── sheets/
-│       │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
-│       │   ├── requirements.txt  openpyxl, pinned
-│       │   ├── requirements-floor.txt  openpyxl at its floor, also tested
-│       │   ├── test_sheets.py
-│       │   └── README.md
-│       ├── star-system/
-│       │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
-│       │   ├── requirements.txt  numpy, pinned
-│       │   ├── requirements-floor.txt  numpy at its floor, also tested
-│       │   ├── test_star_system.py
-│       │   ├── README.md
-│       │   └── example_repo/   a minimal stand-in checkout so the tests need no network
-│       │       └── simulations/
-│       │           ├── __init__.py
-│       │           └── star_system/
-│       │               ├── __init__.py
-│       │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
-│       │               ├── data.py    a tiny stand-in catalog
-│       │               ├── initialization.py the stand-in's setup: the start it builds, kept so it can be named
-│       │               └── persistence.py the stand-in's names for itself, and its digest of a setup
-│       ├── static-search/
-│       │   ├── static_search.py  approved answers as a static site, searched by Pagefind
-│       │   ├── requirements.txt  pagefind and pagefind-bin, pinned
-│       │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
-│       │   ├── test_static_search.py
-│       │   └── README.md
-│       ├── stems/
-│       │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
-│       │   ├── requirements.txt  snowballstemmer, pinned
-│       │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
-│       │   ├── test_stems.py
-│       │   └── README.md
+│   │   ├── ripgrep/
+│   │   │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
+│   │   │   ├── requirements.txt  ripgrep, pinned
+│   │   │   ├── requirements-floor.txt  ripgrep at its floor, also tested
+│   │   │   ├── test_ripgrep.py
+│   │   │   └── README.md
+│   │   ├── robinhood/
+│   │   │   ├── fake_robinhood.py A stand-in for Robinhood's MCP server, on this machine, for the tests
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── robinhood.py  your Robinhood account as dated files, read through Robinhood's own MCP server, never traded on
+│   │   │   ├── stack.md      your Robinhood account, read back
+│   │   │   ├── test_robinhood.py
+│   │   │   └── README.md     its card
+│   │   ├── secure-sum/
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── secure_sum.py a total of everyone's counts, in which no one's own count is
+│   │   │   ├── test_secure_sum.py
+│   │   │   └── README.md     its card
+│   │   ├── sheets/
+│   │   │   ├── sheets.py     spreadsheets as shown: number formats, formulas and notes kept
+│   │   │   ├── requirements.txt  openpyxl, pinned
+│   │   │   ├── requirements-floor.txt  openpyxl at its floor, also tested
+│   │   │   ├── test_sheets.py
+│   │   │   └── README.md
+│   │   ├── star-system/
+│   │   │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
+│   │   │   ├── requirements.txt  numpy, pinned
+│   │   │   ├── requirements-floor.txt  numpy at its floor, also tested
+│   │   │   ├── test_star_system.py
+│   │   │   ├── README.md
+│   │   │   └── example_repo/   a minimal stand-in checkout so the tests need no network
+│   │   │       └── simulations/
+│   │   │           ├── __init__.py
+│   │   │           └── star_system/
+│   │   │               ├── __init__.py
+│   │   │               ├── core.py    a plain velocity-Verlet stand-in, not the real integrator
+│   │   │               ├── data.py    a tiny stand-in catalog
+│   │   │               ├── initialization.py the stand-in's setup: the start it builds, kept so it can be named
+│   │   │               └── persistence.py the stand-in's names for itself, and its digest of a setup
+│   │   ├── static-search/
+│   │   │   ├── static_search.py  approved answers as a static site, searched by Pagefind
+│   │   │   ├── requirements.txt  pagefind and pagefind-bin, pinned
+│   │   │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
+│   │   │   ├── test_static_search.py
+│   │   │   └── README.md
+│   │   ├── stems/
+│   │   │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
+│   │   │   ├── requirements.txt  snowballstemmer, pinned
+│   │   │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
+│   │   │   ├── test_stems.py
+│   │   │   └── README.md
 ```
 
 #### adapters/deps/, from wake-gate/
 
 ```
-│       ├── wake-gate/
-│       │   ├── LICENSE-openWakeWord
-│       │   ├── LICENSE-willow-mcp
-│       │   ├── NOTICE
-│       │   ├── NOTICE-willow-mcp
-│       │   ├── requirements-floor.txt
-│       │   ├── requirements.txt
-│       │   ├── wake_gate.py  ask out loud only after a wake word you chose
-│       │   ├── test_wake_gate.py
-│       │   └── README.md     its card
-│       ├── wasi-python/
-│       │   ├── requirements-floor.txt
-│       │   ├── requirements.txt
-│       │   ├── wasi_py.py    a job someone sent you, as a Python script, run on wasi-python's
-│       │   ├── test_wasi_py.py
-│       │   └── README.md     its card
-│       └── wasm/
-│           ├── requirements-floor.txt
-│           ├── requirements.txt
-│           ├── wasm.py       a job someone sent you, as WebAssembly, run by Wasmtime over your
-│           ├── test_wasm.py
-│           └── README.md     its card
+│   │   ├── wake-gate/
+│   │   │   ├── LICENSE-openWakeWord
+│   │   │   ├── LICENSE-willow-mcp
+│   │   │   ├── NOTICE
+│   │   │   ├── NOTICE-willow-mcp
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── wake_gate.py  ask out loud only after a wake word you chose
+│   │   │   ├── test_wake_gate.py
+│   │   │   └── README.md     its card
+│   │   ├── wasi-python/
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── wasi_py.py    a job someone sent you, as a Python script, run on wasi-python's
+│   │   │   ├── test_wasi_py.py
+│   │   │   └── README.md     its card
+│   │   └── wasm/
+│   │       ├── requirements-floor.txt
+│   │       ├── requirements.txt
+│   │       ├── wasm.py       a job someone sent you, as WebAssembly, run by Wasmtime over your
+│   │       ├── test_wasm.py
+│   │       └── README.md     its card
 ```
 
 ## ports/
@@ -2481,6 +2482,7 @@ willow/
 │   │       └── node_modules/
 │   │           └── evil-pkg/
 │   │               └── package.json  a postinstall that pipes a remote script to a shell
+│   ├── renamed.py            a study's frozen code, run where the add-ons are now
 ```
 
 #### demo/, from shared-runs/

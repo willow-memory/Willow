@@ -168,7 +168,7 @@ SECTIONS = [
      " [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites"
      " your passages at each prompt where the host allows it"
      " ([claude-code](adapters/stdlib/claude-code/);"
-     " [hooks-elsewhere](adapters/stdlib/hooks-elsewhere/) for the rest)."),
+     " [hook-elsewhere](adapters/stdlib/hook-elsewhere/) for the rest)."),
     ("Ways to use it", ""),
     ("Play", ""),
     ("For maintainers", ""),
@@ -194,11 +194,11 @@ EXAMPLES = {
     "Finding things": ["on-this-day", "quote-check"],
     "Your own words": ["nicknames", "abbreviations"],
     "Keeping track": ["coming-up", "subscriptions"],
-    "Trust and proof": ["stale", "tip-pin"],
+    "Trust and proof": ["stale-answers", "tip-pin"],
     "Privacy and safety": ["privacy", "secrets-audit"],
     "Assistants": ["claude-code", "mcp"],
     "Ways to use it": ["browse", "print"],
-    "Play": ["quiz", "life"],
+    "Play": ["play-quiz", "play-life"],
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
 FIELDS = {"section", "line", "source", "writes", "network", "role", "version"}
@@ -294,6 +294,12 @@ def card(folder: Path) -> dict:
     return fields
 
 
+def old_names() -> dict:
+    """Add-ons renamed, old name to new: adapters/renamed.json."""
+    f = ADAPTERS / "renamed.json"
+    return json.loads(f.read_text(encoding="utf-8"))["names"] if f.is_file() else {}
+
+
 def addons() -> list[dict]:
     """Every add-on, built and planned, each checked; refused on the first
     that doesn't hold together."""
@@ -312,10 +318,13 @@ def addons() -> list[dict]:
             raise Refused(f"{entry['name']} is built, and still in planned.json")
         out.append({**entry, "built": False})
     seen = set()
+    gone = old_names()
     for a in out:
         where = a.get("path") or f"planned.json: {a.get('name')}"
         if not NAME.fullmatch(str(a.get("name", ""))):
             raise Refused(f"{where}: a name is lowercase words joined by -")
+        if a["name"] in gone:
+            raise Refused(f"{where}: {a['name']} was renamed {gone[a['name']]} (adapters/renamed.json); an old name isn't used again, so a stack naming it still finds what it meant")  # fmt: skip
         if a["name"] in seen:
             raise Refused(f"{a['name']} is listed twice")
         seen.add(a["name"])

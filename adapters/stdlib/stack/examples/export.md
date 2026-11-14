@@ -8,9 +8,9 @@ they can read without trusting the one who made it. Make the folder first
     python adapters/stdlib/stack/stack.py --box DIR --stack adapters/stdlib/stack/examples/export.md
 
 ## what the record says of itself
-- history -- --box {box}
-- export -- --box {box}
-- export -- --box {box} --log
+- record-history -- --box {box}
+- export-answers -- --box {box}
+- export-answers -- --box {box} --log
 - box-health -- --box {box} --long
 
 ## the hashes a stranger can check

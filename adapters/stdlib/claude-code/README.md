@@ -9,7 +9,7 @@ network: none
 hands: the passages served for each prompt, to Claude Code's model
 role: ways
 uses: mcp-lite
-looks-for: index-cache, scan
+looks-for: batch-ask, index-cache
 -->
 # claude-code
 
@@ -36,7 +36,7 @@ file and line. MCP tools are the other way; `setup` prints both.
 
 **A big folder:** the kernel reads every file at every prompt, so on tens
 of thousands of files a prompt waits half a minute. Name
-[scan](../scan/)'s index of the folder and the hook answers from it, in a
+[batch-ask](../batch-ask/)'s index of the folder and the hook answers from it, in a
 few seconds, with the same passages and the same row on the record:
 
     python adapters/stdlib/claude-code/hook.py setup --box DIR --index INDEX

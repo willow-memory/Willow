@@ -33,7 +33,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "scan"))
+sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "batch-ask"))
 import kernel  # noqa: E402
 import scan  # noqa: E402
 

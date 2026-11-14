@@ -162,7 +162,7 @@ def test_what_an_add_on_uses_comes_with_it_and_the_cards_say_it(site):
     cv, call = site
     pieces = call("GET", "/tok/api/pieces")[1]
     assert pieces["debts"]["hard"] == ["amounts"]  # its card's uses
-    assert set(pieces["digest"]["soft"]) == {"coming-up", "stale"}  # looks-for
+    assert set(pieces["digest"]["soft"]) == {"coming-up", "stale-answers"}  # looks-for
     assert pieces["ci"]["runs_in"] == "repo"
     assert pieces["vim"]["tags"][:2] == [
         "no-install",
@@ -303,7 +303,7 @@ def test_a_piece_both_asked_for_and_leaned_on_is_added_once(tmp_path, capsys):
     assert assemble.add(["coming-up", "not-an-add-on"], to, None) == assemble.REFUSED
     assert sorted(p.name for p in stdlib.iterdir()) == before
     # a folder left by an older crash is named, not a traceback
-    (stdlib / "stale").mkdir()
+    (stdlib / "stale-answers").mkdir()
     assert assemble.add(["stale"], to, None) == assemble.REFUSED
     assert "not on STACK.json" in capsys.readouterr().err
 

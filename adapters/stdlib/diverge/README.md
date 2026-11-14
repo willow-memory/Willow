@@ -32,7 +32,7 @@ Each side is a folder or a `.zip`. It narrows level by level:
 
 Hidden folders are left out, as the kernel leaves them out. A key is never
 read: a file that a box's kernel.json names as its key is skipped if it
-sits inside what's compared (as [start](../start/) puts it, beside the box).
+sits inside what's compared (as [first-run](../first-run/) puts it, beside the box).
 "The same" means every file, byte for byte.
 
 **Where it comes from:** [willow-bot's diverge](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/diverge.py), which finds where two

@@ -37,7 +37,7 @@ your door with `kart.py take`, which puts it there as a proposal of yours,
 waiting on your seal. `run` runs only a job you sealed, and refuses one
 asking for the network. What it printed is proposed as an answer of yours,
 waiting on your seal, under kart/results/ with the claim kart's results
-carry, so `kart gather` adds them, and [dp](../dp/) and
+carry, so `kart gather` adds them, and [noised-count](../noised-count/) and
 [secure-sum](../secure-sum/) take them as they take kart's.
 
 **What it sees.** The script runs as `python -c`, `{pile}` in it being

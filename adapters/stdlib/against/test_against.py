@@ -24,7 +24,9 @@ ENV = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
 
 CONTRACT = "adapters/stdlib/ci/test_contract.py"
 CARD = "<!-- willow-addon\nsection: Play\nline: {line}\nsource: new\n-->\n# {name}\n"
-CONTRACT_TEXT = 'COMMANDS = {\n    "dice": ("dice.py", ["roll"]),\n}\nREADERS = {}\n'
+CONTRACT_TEXT = (
+    'COMMANDS = {\n    "dice": ("play_dice.py", ["roll"]),\n}\nREADERS = {}\n'
+)
 FILES_TEXT = (
     "willow/\n├── kernel.py    it\n├── adapters/\n│   ├── stdlib/\n"
     "│   │   ├── dice/\n│   │   │   └── README.md\n│   └── planned.json\n└── CHANGELOG.md\n"
@@ -37,7 +39,7 @@ BASE = {
     CONTRACT: CONTRACT_TEXT,
     "adapters/planned.json": "[]\n",
     "adapters/stdlib/ci/ci.py": "def gates():\n    return 1\n",
-    "adapters/stdlib/dice/README.md": CARD.format(name="dice", line="Rolls dice."),
+    "adapters/stdlib/play-dice/README.md": CARD.format(name="dice", line="Rolls dice."),
 }
 
 
@@ -212,7 +214,7 @@ def test_both_taking_the_same_idea_off_planned_json_is_not_a_duplicate(repo):
 
 
 def test_the_same_commands_key_added_by_both_is_a_duplicate(repo):
-    row = '    "dice": ("dice.py", ["roll"]),\n'
+    row = '    "dice": ("play_dice.py", ["roll"]),\n'
     mine = CONTRACT_TEXT.replace(row, row + '    "sort": ("sort.py", ["a"]),\n')
     theirs = CONTRACT_TEXT.replace(row, row + '    "sort": ("sort.py", ["b"]),\n')
     branch(repo, "mine", {CONTRACT: mine})
@@ -224,7 +226,7 @@ def test_the_same_commands_key_added_by_both_is_a_duplicate(repo):
 
 
 def test_different_commands_keys_pass(repo):
-    row = '    "dice": ("dice.py", ["roll"]),\n'
+    row = '    "dice": ("play_dice.py", ["roll"]),\n'
     branch(repo, "mine", {CONTRACT: CONTRACT_TEXT.replace(row, row + '    "a": ("a.py", []),\n')})  # fmt: skip
     branch(repo, "pr/12", {CONTRACT: CONTRACT_TEXT.replace(row, row + '    "b": ("b.py", []),\n')})  # fmt: skip
     assert check(repo, "mine", "pr/12").returncode == 0

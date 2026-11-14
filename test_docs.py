@@ -183,7 +183,7 @@ ELSEWHERE = {
         ".ci-record/": "made by `ci.py run`, ignored by git",
         ".ci-record.key": "made by `ci.py run`, ignored by git",
     },
-    "adapters/stdlib/surprise/README.md": {
+    "adapters/stdlib/random-passage/README.md": {
         "sha256-stream/v1": "the name of willow-bot's stream generator, not a file",
     },
     "adapters/README.md": {
@@ -192,7 +192,7 @@ ELSEWHERE = {
     },
     "CHANGELOG.md": {
         "adapters/stdlib/github/create_pr.md": "where create_pr's steps were, in an entry"
-        " changelog.py won't let change; they're adapters/stdlib/ready/steps.md now",
+        " changelog.py won't let change; they're adapters/stdlib/pr-ready/steps.md now",
     },
     "CONSTITUTION.md": {
         "CASEBOOK.md": "willows-grove's: its cases name people and files, so not here",

@@ -29,8 +29,20 @@ def test_every_source_hashes_to_its_frozen_value():
         assert got == want, rel
 
 
+#: recon.py, frozen, names its add-ons as they were; pins is unpinned now. The
+#: pass is run with each add-on read where it is (demo/renamed.py).
+RECON = (
+    "import sys; sys.path[:0] = [{demo!r}, {here!r}]; import renamed, recon; "
+    "recon.PASS = [(a, b, renamed.now(c), d) for a, b, c, d in recon.PASS]; "
+    "raise SystemExit(recon.main([]))"
+)
+
+
 def test_the_pass_surfaces_every_planted_weakness():
-    got = run(HERE / "recon.py")
+    got = subprocess.run(
+        [sys.executable, "-c", RECON.format(demo=str(HERE.parent), here=str(HERE))],
+        capture_output=True, text=True,
+    )  # fmt: skip
     assert got.returncode == 0, got.stdout + got.stderr
     out = got.stdout
     for section, needles in FROZEN["expect"].items():

@@ -24,7 +24,7 @@ Each approved answer is `<SITE>/answers/<N>.html`: the answer, the reason its
 suggestion gave, the passages it cited and where, and the day you approved
 it. `<SITE>/index.html` is the search and a list of them all. Only approvals
 that prove under your key are written (the kernel's `sealed` and
-`standing`), as the export add-on does: a forged one never is, and one whose
+`standing`), as the export-answers add-on does: a forged one never is, and one whose
 proposal file has changed since is left out and said.
 
 **Served, not opened as a file.** The pages load only their own files and

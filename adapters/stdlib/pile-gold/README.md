@@ -8,7 +8,7 @@ writes: record
 network: none
 role: tools
 tags: pile
-uses: pile-rank, scan
+uses: batch-ask, pile-rank
 -->
 # pile-gold
 
@@ -23,7 +23,7 @@ its top five.
 
 The record keeps no words, only each question's key, so the questions come
 from FILE: one a line, optionally `name<TAB>question`, blank and `#` lines
-skipped, as [scan](../scan/) reads them. A question is matched to its seals
+skipped, as [batch-ask](../batch-ask/) reads them. A question is matched to its seals
 by `kernel.bite_key`, so "When is the BOILER serviced?" finds the seal made
 for "when is the boiler serviced".
 

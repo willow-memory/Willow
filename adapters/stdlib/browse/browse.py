@@ -45,7 +45,7 @@ plain and what the page says back marked as code's, one line made from
 what the boxes under it hold. No model is asked. A question asked before
 says when it was first asked. The stream is kept only while the page runs.
 
-With --say MODEL (an Ollama tag on this machine, as the say add-on asks
+With --say MODEL (an Ollama tag on this machine, as the model-sentence add-on asks
 it), a model also says each answer in a sentence of its own, under code's
 line and marked with the model's name. The say-check add-on holds that
 sentence to what code said: one that adds a word or a number is struck,
@@ -53,7 +53,7 @@ shown struck through with what failed, and code's line stands.
 
 Asking is the kernel's own `bite`, and approving is its own `seal`, so
 both are on the record exactly as if typed. With --run, a question is also
-sent to the steps whose job it is (the look add-on): "who still owes me
+sent to the steps whose job it is (the run-answer add-on): "who still owes me
 money" shows what the run's debts and invoices steps found, above your
 files' own passages. A question that finds nothing is given the why-not
 add-on's reasons. With --lang, a question goes
@@ -425,7 +425,7 @@ def turn_html(at: str, you: str, say: str, again: str, boxes, opened: bool, mode
 
 
 def model_html(got: dict) -> str:
-    """A model's sentence about a turn's boxes, as the say add-on gave it:
+    """A model's sentence about a turn's boxes, as the model-sentence add-on gave it:
     marked with the model's name, never as code's. One that held to the
     boxes stands, its tags taken out for reading. One that failed a check
     is struck through, with what failed, and code's line above it stands.
@@ -1089,14 +1089,14 @@ class Willow:
         return "".join(out)
 
     def from_run(self, question: str) -> tuple[str, bool, str]:
-        """(What the kept run already holds for a question, as the look add-on
+        """(What the kept run already holds for a question, as the run-answer add-on
         finds it: the lines of the steps whose job its kind is; whether a
         step answered; look's one line, to say.) The kernel's own answer is
         the page's, below, so look's note that it left the ask is dropped; a
         step it couldn't answer from is still said."""
         if self.run is None:
             return "", False, ""
-        _, doc = report_of("look", "look", question, "--run", str(self.run))
+        _, doc = report_of("run-answer", "run_answer", question, "--run", str(self.run))
         if doc is None:
             return "", False, ""
         groups = []
@@ -1132,7 +1132,7 @@ class Willow:
 
     def say(self, turn_id: str) -> str:
         """A model's sentence about one turn's boxes, asked once and kept
-        with the turn: the say add-on asks a model on this machine and holds
+        with the turn: the model-sentence add-on asks a model on this machine and holds
         the sentence to the boxes. The boxes are what code's own line was
         made from, so the model is given nothing code didn't say."""
         turn = next((t for t in self.turns if str(t.get("id")) == turn_id), None)
@@ -1141,14 +1141,17 @@ class Willow:
         if "model" not in turn:
             boxes = [{"id": f"b{n}", "text": f} for n, f in enumerate(turn["facts"], 1)]
             try:
-                mod = sibling("say", "say")
+                mod = sibling("model-sentence", "model_sentence")
                 got = (
                     mod.said(boxes, turn["you"], None, self.sayer, self.say_model)
                     if mod is not None
-                    else {"state": "unreachable", "why": "the say add-on isn't here"}
+                    else {
+                        "state": "unreachable",
+                        "why": "the model-sentence add-on isn't here",
+                    }
                 )
             except Exception as e:  # noqa: BLE001 - a voice that fails never takes the page with it
-                got = {"state": "unreachable", "why": f"the say add-on couldn't: {type(e).__name__}"}  # fmt: skip
+                got = {"state": "unreachable", "why": f"the model-sentence add-on couldn't: {type(e).__name__}"}  # fmt: skip
             turn["model"] = {"model": self.say_model, **got}
         return model_html(turn["model"])
 

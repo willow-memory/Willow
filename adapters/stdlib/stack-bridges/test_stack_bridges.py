@@ -41,9 +41,9 @@ STACK = """# a stack
 ## read
 - code-comments -- mirror --from PILE --to {box}-code
 - index-cache -- --from {box}-code --to S/kept/index
-- scan -- scan --index S/kept/index --questions S/q.txt
+- batch-ask -- scan --index S/kept/index --questions S/q.txt
 ## look
-- glance -- --of {03} --questions S/q.txt
+- batch-glance -- --of {03} --questions S/q.txt
 - star-system -- --repo R --to S/out/a/star.md
 - diverge -- S/out/a S/out/b
 - backup -- --box {box} --to S/usb
@@ -364,10 +364,12 @@ def test_the_record_makes_a_step_deeper_and_is_said_beside_what_else_it_takes(tm
 def test_whether_an_add_on_writes_the_record_is_read_off_its_card():
     assert (
         stack_bridges.writes_record("fixity") is True
-        and stack_bridges.writes_record("glance") is False
+        and stack_bridges.writes_record("batch-glance") is False
     )
     assert stack_bridges.writes_record("backup") is False, (
         "it writes to a place, not the record"
     )
     assert stack_bridges.writes_record("no-such-add-on") is None
-    assert stack_bridges.writes_record("dp") is True, "an add-on in deps has a card too"
+    assert stack_bridges.writes_record("noised-count") is True, (
+        "an add-on in deps has a card too"
+    )

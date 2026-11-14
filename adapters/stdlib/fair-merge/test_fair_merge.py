@@ -155,7 +155,7 @@ def test_it_writes_nothing_not_even_a_record_row(tmp_path):
     assert {q: q.read_bytes() for q in tmp_path.rglob("*") if q.is_file()} == before
 
 
-SCAN = HERE.parent / "scan" / "scan.py"
+SCAN = HERE.parent / "batch-ask" / "scan.py"
 
 
 def index(tmp_path: Path, folder: Path, name: str) -> Path:
