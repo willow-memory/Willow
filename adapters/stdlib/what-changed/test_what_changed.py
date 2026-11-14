@@ -4,6 +4,7 @@ the folder's state rebuilt from the record alone; never a file's words."""
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -125,3 +126,29 @@ def test_one_file_on_the_first_check_is_said_as_one(tmp_path):
     (pile / "scan.pdf").unlink()
     got = run("--box", str(b), "--now", "2026-10-20T09:12:00Z")
     assert got.returncode == 0 and "First check: 1 file fingerprinted." in got.stdout
+
+
+def test_a_big_file_is_read_a_mebibyte_at_a_time(tmp_path, monkeypatch):
+    """The card's promise: no read holds more than a MiB of a file."""
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    big = bytes(range(256)) * (5 * 4096 + 7)  # 5 MiB and a little
+    (pile / "big.bin").write_bytes(big)
+    asked = []
+    opened = Path.open
+
+    def counting(self, *a, **k):
+        f = opened(self, *a, **k)
+        read = f.read
+
+        def one(n=-1):
+            asked.append(n)
+            return read(n)
+
+        f.read = one
+        return f
+
+    monkeypatch.setattr(Path, "open", counting)
+    assert ch.fingerprints(pile) == {"big.bin": hashlib.sha256(big).hexdigest()}
+    assert asked and all(0 < n <= 1 << 20 for n in asked)
+    assert "a mebibyte at a time" in " ".join((HERE / "README.md").read_text().split())

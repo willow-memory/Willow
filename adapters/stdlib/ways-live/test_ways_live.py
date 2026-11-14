@@ -122,6 +122,17 @@ def test_claude_codes_hook_serves_passages_and_its_add_line_runs(fakes):
     assert live.one("claude") == (live.WORKS, "")
 
 
+def test_the_card_says_the_clock_and_the_quote_the_code_keeps():
+    """The README's 120 seconds and 200 characters are the code's."""
+    card = " ".join((HERE / "README.md").read_text().split())
+    assert f"after {live.TIMEOUT} seconds" in card
+    said = "".join(f"{i % 10}" for i in range(500)) + " END"
+    why = live.has(said, "missing")
+    assert "last 200 characters" in card
+    assert why == f"didn't say 'missing': {said[-200:]}"
+    assert live.lines(said, "missing") == f"no line 'missing': {said[-200:]}"
+
+
 def test_a_program_that_hangs_fails_by_the_clock(fakes, monkeypatch):
     (fakes / "codex").write_text(f"#!{sys.executable}\nimport time; time.sleep(5)\n")
     monkeypatch.setattr(live, "TIMEOUT", 1)

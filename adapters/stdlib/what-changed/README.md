@@ -22,6 +22,7 @@ What's new, edited or gone in your folder since you last looked.
 
 Each check goes on the record as one `what-changed` row, through the kernel's own
 `append`. The row keeps paths and SHA-256 fingerprints, never what a file says.
+A file is read a mebibyte at a time, so a big one is never held whole.
 
 - **The first check** lists every file and its fingerprint (any file not in a hidden folder; a PDF too).
 - **Each later check** keeps only what's new, edited or deleted since the one before.
