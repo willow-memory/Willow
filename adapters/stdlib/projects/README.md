@@ -3,7 +3,7 @@ section: Keeping track
 line: Every project under one folder: its records, its stacks, and each stack's runs, so you can see what there is to go back to.
 source: new
 added: 2026-11-10
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools
