@@ -309,7 +309,7 @@ def check(rows: list[dict]) -> tuple[int, str | None]:
                 if r.get("result") != result or r.get("points", 0) != points:
                     return (
                         held,
-                        f"{where}: the board says {result}, the row says {r.get('result')}",
+                        f"{where}: the board says {result}, {points} points; the row says {r.get('result')}, {r.get('points', 0)} points",
                     )
                 side, faces = other(side), None
             elif r["kind"] == RESIGN:

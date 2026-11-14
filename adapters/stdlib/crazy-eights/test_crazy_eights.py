@@ -161,6 +161,20 @@ def test_what_isnt_a_card_is_refused(text):
         c8.card_of(text)
 
 
+def test_the_stream_is_sha256_stream_v1():
+    """sha256 over the seed and an 8-byte big-endian counter, first 4 bytes."""
+    import hashlib
+
+    s = c8.Stream(b"tip")
+    want = [
+        int.from_bytes(
+            hashlib.sha256(b"tip" + n.to_bytes(8, "big")).digest()[:4], "big"
+        )
+        for n in range(3)
+    ]
+    assert [s.u32() for _ in range(3)] == want
+
+
 # ── the record ───────────────────────────────────────────────────────────────
 def test_new_deals_from_the_record_tip(t):
     got = t.run("new")

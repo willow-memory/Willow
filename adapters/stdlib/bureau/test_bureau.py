@@ -146,6 +146,30 @@ def test_what_isnt_a_move_is_refused():
         b.apply(s, "go queue")
 
 
+@pytest.mark.parametrize(
+    "seed, first, threshold",
+    [(0, [270369, 67634689, 2647435461], 6), (1, [1361127282, 3424972597, 1770954068], 3),
+     (42, [3035016215, 1307305989, 763453040], 8), (4471, [3799149155, 1224073852, 1677270017], 8)],
+)  # fmt: skip
+def test_xorshift32_is_bureaus_own(seed, first, threshold):
+    """What apps/bureau/bureau/rng.py gives, so engine.js plays the same game."""
+    r = b.Rng(seed)
+    assert [r.u32() for _ in range(3)] == first
+    assert b.Goo(seed=seed)._threshold == threshold
+
+
+def test_a_grape_restarts_the_wait():
+    for seed in range(200):
+        goo = b.Goo(seed=seed)
+        while goo.spend_surprise():
+            pass
+        for _ in range(60):
+            if goo.tick() is b.Napkin.GRAPE:
+                assert goo.dwell == 0
+                return
+    raise AssertionError("no seed reached a grape")
+
+
 # ── the record ───────────────────────────────────────────────────────────────
 def test_new_seeds_the_game_from_the_record_tip(t):
     got = t.run("new")

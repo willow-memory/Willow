@@ -123,6 +123,12 @@ def test_the_endings_are_one_two_and_three():
     assert bg.ending(gammon, "white") == ("white won a gammon", 2)
     back = board({}, {20: 1, 6: 14}, woff=15, boff=0)
     assert bg.ending(back, "white") == ("white won a backgammon", 3)
+    on_19 = board(
+        {}, {19: 1, 6: 14}, woff=15, boff=0
+    )  # the winner's 6 point: still home
+    assert bg.ending(on_19, "white") == ("white won a backgammon", 3)
+    on_18 = board({}, {18: 1, 6: 14}, woff=15, boff=0)  # just outside the winner's home
+    assert bg.ending(on_18, "white") == ("white won a gammon", 2)
     on_bar = board({}, {6: 14}, bbar=1, woff=15, boff=0)
     assert bg.ending(on_bar, "white") == ("white won a backgammon", 3)
     assert bg.ending(board(bg.START, bg.START), "white") == ("on", 0)
@@ -233,6 +239,32 @@ def test_check_finds_a_move_the_throw_doesnt_allow(t):
     got = t.run("check")
     assert got.returncode == 2 and "isn't a turn" in got.stderr
     assert "don't hold" in t.run("show").stderr
+
+
+def test_check_finds_a_move_whose_points_the_board_doesnt_give(t):
+    t.run("new")
+    st = t.state()
+    turn = bg.written(bg.turns(st["board"], st["to_move"], st["faces"])[0][0])
+    t.forge(
+        bg.MOVE, game=t.game(), side=st["to_move"], move=turn, result="on", points=1
+    )
+    got = t.run("check")
+    assert (
+        got.returncode == 2
+        and "the board says on, 0 points; the row says on, 1 points" in got.stderr
+    )
+
+
+def test_the_opening_says_again_on_a_tie_and_only_then(t):
+    import re
+
+    got = t.run("new")
+    throws = re.findall(
+        r"opening throw: white (\d), black (\d)(   \(a tie: again\))?", got.stdout
+    )
+    o = [r for r in t.rows() if r["kind"] == bg.OPEN][-1]
+    assert len(throws) == len(o["rolls"])
+    assert all(bool(tag) == (w == b) for w, b, tag in throws)
 
 
 def test_check_finds_a_move_by_the_wrong_side_or_before_a_throw(t):

@@ -71,6 +71,7 @@ class Table:
             card = h.legal(g.hands[s], g.trick, g.broken, g.tricks == 0)[0]
             got = self.run("play", h.name(card))
             assert got.returncode == 0, got.stderr
+            self.said = got.stdout
 
 
 @pytest.fixture
@@ -138,6 +139,20 @@ def test_the_lowest_score_wins_once_a_seat_is_on_100():
     assert g.result() == "east won"
 
 
+def test_the_stream_is_sha256_stream_v1():
+    """sha256 over the seed and an 8-byte big-endian counter, first 4 bytes."""
+    import hashlib
+
+    s = h.Stream(b"tip")
+    want = [
+        int.from_bytes(
+            hashlib.sha256(b"tip" + n.to_bytes(8, "big")).digest()[:4], "big"
+        )
+        for n in range(3)
+    ]
+    assert [s.u32() for _ in range(3)] == want
+
+
 # ── the record ───────────────────────────────────────────────────────────────
 def test_new_deals_the_first_hand_from_the_record_tip(t):
     got = t.run("new")
@@ -193,6 +208,7 @@ def test_a_hand_played_out_is_scored_and_the_next_dealt(t):
     assert g.phase == "deal" and sum(g.scores) in (26, 78)
     assert t.rows()[-1]["scores"] == g.scores
     assert "hand 2 to deal: deal" in t.run("show").stdout
+    assert f"hand 1 scored {g.last}" in t.said
     assert t.run("play", "2C").returncode == 2
     got = t.run("deal")
     assert got.returncode == 0 and "pass right" in got.stdout
