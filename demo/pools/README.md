@@ -128,6 +128,18 @@ So a remembered step is now good for the UTC day it ran on only, and that
 run's rows are not used. A step that depends on the time more finely than
 a day shows as unsteady in stage 0's two runs, and is never remembered.
 
+**Held to the research.** Read against build systems research (*Build
+Systems à la Carte*, Mokhov, Mitchell and Peyton Jones, 2018; Rattle, Spall,
+Mitchell and Tobin-Hochstadt, 2020), the memory is a constructive trace
+with dependencies found by tracing, as Rattle's are. Rattle counts asking
+whether a file is there as a read, and Python names no audit event for it,
+so every remembered step now carries the box's list of files among its
+reads. On the same climate-almanac stacks that took the reuse from 1,319
+steps to 1,180, and the step time saved from 53% to 49%; every reused row
+was still the run without the memory's, and 60 of 60 checks matched. The
+stronger answer to the clock, the field's `SOURCE_DATE_EPOCH`, is a kernel
+change, for the maintainer.
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and

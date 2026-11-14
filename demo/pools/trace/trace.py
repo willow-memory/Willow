@@ -57,7 +57,8 @@ taken from that time, on the same day (UTC) only: the clock is an input
 nothing can see read, and a step may count days from today. What a step reads is said by memo/sitecustomize.py,
 which the step runs under before the guard: each file it opened to read,
 each folder it listed, each database it connected to, as a hash of what
-was there. A read of the pile, the box or the stack's scratch folders
+was there, and the box's list of files, since asking whether a file is
+there is a read no audit event names. A read of the pile, the box or the stack's scratch folders
 counts; one of the step's own folder, the code, or anything else on the
 machine (the same for every step of one run) does not. A step is never
 remembered when it added a row to the record (the record chains, so a
@@ -327,6 +328,11 @@ def _digest(path: Path, event: str) -> str:
     """What was at a path: its bytes' hash, its names' hash for a folder
     listed, or "absent"."""
     try:
+        if event == "tree":
+            names = sorted(
+                p.relative_to(path).as_posix() for p in path.rglob("*") if p.is_file()
+            )
+            return sha("\0".join(names).encode())
         if event == "list":
             return sha("\0".join(sorted(os.listdir(path))).encode())
         return sha(path.read_bytes()) if path.is_file() else "absent"
@@ -397,7 +403,7 @@ class Memo:
     def find(self, step: str, roots: dict[str, Path]) -> dict | None:
         day = today()
         for one in self.seen.get(step, []):
-            if one.get("day") == day and all(_digest(roots[role] / rel, "list" if event == "list" else "open") == want
+            if one.get("day") == day and all(_digest(roots[role] / rel, event if event in ("list", "tree") else "open") == want
                    for key, want in one["reads"].items()
                    for event, role, rel in [key.split(" ", 2)]):  # fmt: skip
                 return one
@@ -478,6 +484,11 @@ def run_stack(grid: Path, ids: list[str], pile: Path, name: str, salt: str, work
                                 row[k] == kept["row"][k] for k in SAME
                             )
                         reads = _reads(log, roots, mine)
+                        if reads is not None:
+                            # asking whether a file is there is a read no audit
+                            # event names (Rattle models it as one): the box's
+                            # file list stands in for it
+                            reads["tree box ."] = _digest(roots["box"], "tree")
                         if (step not in never and reads is not None and not row["rows"]
                                 and row["exit"] is not None and not row["timed_out"]
                                 and not row["breaches"] and _box_state(here / "box") == box_was):  # fmt: skip

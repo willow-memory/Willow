@@ -328,3 +328,29 @@ def test_nothing_remembered_on_one_day_is_reused_on_the_next(tmp_path, monkeypat
     assert [r["memo"] for r in second] == ["ran", "reused"], (
         "the new day runs it again, then remembers"
     )
+
+
+def test_a_remembered_step_is_not_reused_when_the_boxs_files_are_not_as_they_were(
+    tmp_path,
+):
+    """Asking whether a file is there is a read Python's audit events don't
+    name; the box's file list stands in for it in every remembered step."""
+    pile_at(tmp_path)
+    grid = _memo_grid(tmp_path, {"a": ["markdown"], "b": ["markdown"]})
+    rows = _memo_run(
+        tmp_path, grid, ["a"], "w1", "--memo", str(tmp_path / "m"), "--check", "0"
+    )
+    kept = [
+        json.loads(x) for x in (tmp_path / "m" / "memo.jsonl").read_text().splitlines()
+    ]
+    assert rows[0]["memo"] == "ran" and "tree box ." in kept[0]["reads"]
+    memo = trace.Memo(tmp_path / "m")
+    box = tmp_path / "box"
+    box.mkdir()
+    roots = {"pile": tmp_path / "pile", "box": box, "tmp": tmp_path / "t"}
+    (roots["tmp"]).mkdir()
+    one = dict(kept[0], reads={"tree box .": trace._digest(box, "tree")})
+    memo.seen["markdown"] = [one]
+    assert memo.find("markdown", roots) is one
+    (box / "new.json").write_text("{}")
+    assert memo.find("markdown", roots) is None
