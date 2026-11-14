@@ -18,8 +18,11 @@ SCRIPT = str(HERE / "copy_in.py")
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:
+    """The script on a command line. Every run finishes: a handful of files
+    takes well under a second, so one still going after 30 s is stuck (a
+    name never found free, say), and fails here rather than at CI's cap."""
     return subprocess.run(
-        [sys.executable, SCRIPT, *argv], capture_output=True, text=True
+        [sys.executable, SCRIPT, *argv], capture_output=True, text=True, timeout=30
     )
 
 
