@@ -163,11 +163,28 @@ class Canvas:
         self.kernel = assemble.load_kernel(self.stack)
         self.folders = folders
         self.similar = self._load_similar()
+        self.new_kinds = self._load("new-kinds", "new_kinds.py", "trial")
         self.job = None
         self.browsers = []
         self._search = None
         self.lock = threading.Lock()
         self._pieces = None
+
+    def _load(self, name: str, script: str, needs: str):
+        """An add-on of the willow this stack came from, as a module; None
+        when that willow hasn't one, or an older one without `needs`."""
+        path = self.willow / "adapters" / "stdlib" / name / script
+        if not path.is_file():
+            return None
+        spec = importlib.util.spec_from_file_location(
+            "willow_" + name.replace("-", "_"), path
+        )
+        mod = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(mod)
+        except Exception:  # an older willow: said in the page as nothing tried
+            return None
+        return mod if hasattr(mod, needs) else None
 
     def _load_similar(self):
         """willow's similar add-on, from the willow this stack came from: its
@@ -468,7 +485,7 @@ class Canvas:
         if not f["ok"]:
             return f
         k, root = self.kernel, Path(f["path"])
-        read, hidden, kinds = 0, 0, {}
+        read, hidden, kinds, readable = 0, 0, {}, {}
         for p in root.rglob("*"):
             rel = p.relative_to(root)
             if not p.is_file():
@@ -488,6 +505,7 @@ class Canvas:
                     else:
                         raw.decode("utf-8")
                         read += 1
+                        readable.setdefault(ext, []).append(p)
                         continue
             except UnicodeDecodeError:
                 why = "text in another encoding than UTF-8"
@@ -501,8 +519,36 @@ class Canvas:
         for c in cant:
             c["readers"] = self.readers_for(c["kind"])
             c["text"] = c["kind"] in TEXT_KINDS
+        better = []
+        for ext, files in sorted(readable.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+            took = self.tried(ext, files)
+            if took["fits"] or took["any"]:
+                better.append({"kind": ext, "files": len(files),
+                               **took})  # fmt: skip
         return {"ok": True, "path": f["path"], "read": read, "passages": passages,
-                "hidden": hidden, "cant": cant}  # fmt: skip
+                "hidden": hidden, "cant": cant, "better": better}  # fmt: skip
+
+    def tried(self, ext: str, files: list[Path]) -> dict:
+        """For a kind the kernel reads as it is (.json, .csv, .jsonl): the
+        readers that take some of these files, by the new-kinds add-on's
+        trial. Each built reader whose card says it reads the kind runs its
+        own `mirror` on copies of a few of them, beside a file of the kind
+        with nothing in it: `fits` took some of yours and not that, `any`
+        took that too. Counts only, never a file's name or a line of it."""
+        none = {"tried": 0, "fits": [], "any": []}
+        nk = self.new_kinds
+        if nk is None or not ext.startswith("."):
+            return none
+        ps = self.pieces()
+        scripts = {}
+        for n, p in ps.items():
+            if (p["state"] == "built" and p["role"] == "reads"
+                    and p.get("network") == "none" and ext in p.get("reads", [])):  # fmt: skip
+                m = nk.main_of(self.willow / "adapters" / (p["kind"] or "stdlib") / n)
+                if m:
+                    scripts[n] = m
+        t = nk.trial(ext, files, scripts)
+        return {"tried": t["tried"], "fits": t["fits"][:4], "any": t["any"][:4]}
 
     def readers_for(self, ext: str) -> list[str]:
         """Reader add-ons that read a kind of file, as their cards' `reads`

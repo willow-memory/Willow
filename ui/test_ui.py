@@ -127,6 +127,37 @@ def test_the_kernels_baseline_is_counts_and_kinds_and_nothing_of_the_files(
     assert call("GET", f"/tok/api/baseline?path={tmp_path / 'nope'}")[1]["ok"] is False
 
 
+def test_a_reader_is_offered_for_text_it_knows_the_shape_of(
+    site, tmp_path, monkeypatch
+):
+    """The kernel reads .json as it is, so no reader is needed to read it;
+    but mastodon knows an outbox's shape, and is offered for it by trying
+    it on the file, not by the extension. json-paths takes any .json, even
+    the nonsense it's tried on beside them, so it is `any`, not a fit."""
+    _, call = site
+    f = tmp_path / "posts"
+    f.mkdir()
+    (f / "outbox-SECRETNAME.json").write_text(json.dumps({
+        "type": "OrderedCollection", "orderedItems": [{"type": "Create",
+        "published": "2024-03-02T08:15:00Z", "object": {"type": "Note",
+        "content": "<p>Planted the BEANSTALK today.</p>"}}]}))  # fmt: skip
+    (f / "settings-OTHERNAME.json").write_text('{"theme": "WALRUS"}')
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(scratch))
+    status, b = call("GET", f"/tok/api/baseline?path={f}")
+    assert status == 200 and b["ok"] and b["cant"] == []
+    (j,) = [c for c in b["better"] if c["kind"] == ".json"]
+    assert (j["files"], j["tried"]) == (2, 2)
+    assert {"name": "mastodon", "took": 1} in j["fits"]
+    assert "json-paths" in [r["name"] for r in j["any"]]
+    assert "json-paths" not in [r["name"] for r in j["fits"]]
+    said = json.dumps(b)
+    for leak in ("SECRETNAME", "OTHERNAME", "BEANSTALK", "WALRUS", "outbox"):
+        assert leak not in said, leak
+    assert list(scratch.iterdir()) == []  # the copies tried are gone
+
+
 def test_what_an_add_on_uses_comes_with_it_and_the_cards_say_it(site):
     cv, call = site
     pieces = call("GET", "/tok/api/pieces")[1]
