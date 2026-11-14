@@ -8,17 +8,17 @@ writes: record
 network: none
 role: tools
 -->
-# crazy-eights
+# play-crazy-eights
 
 A hand of Crazy Eights for four seats, played face up, where nobody
 shuffles: the record's tip deals it.
 
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR new
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR show
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR play CARD [SUIT]
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR draw
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR pass
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR check
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR new
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR show
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR play CARD [SUIT]
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR draw
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR pass
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR check
 
 **The deal.** North, east, south and west, five cards each. The deck is
 shuffled from willow's seeded stream (sha256-stream v1, the one dice uses),

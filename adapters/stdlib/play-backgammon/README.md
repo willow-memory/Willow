@@ -9,17 +9,17 @@ network: none
 role: tools
 uses: play-dice
 -->
-# backgammon
+# play-backgammon
 
 A game of backgammon where every throw is a row nobody picked and every
 turn is checked against it.
 
-    python adapters/stdlib/backgammon/backgammon.py --box DIR new
-    python adapters/stdlib/backgammon/backgammon.py --box DIR show
-    python adapters/stdlib/backgammon/backgammon.py --box DIR roll
-    python adapters/stdlib/backgammon/backgammon.py --box DIR move "24/18 13/11"
-    python adapters/stdlib/backgammon/backgammon.py --box DIR resign
-    python adapters/stdlib/backgammon/backgammon.py --box DIR check
+    python adapters/stdlib/play-backgammon/play_backgammon.py --box DIR new
+    python adapters/stdlib/play-backgammon/play_backgammon.py --box DIR show
+    python adapters/stdlib/play-backgammon/play_backgammon.py --box DIR roll
+    python adapters/stdlib/play-backgammon/play_backgammon.py --box DIR move "24/18 13/11"
+    python adapters/stdlib/play-backgammon/play_backgammon.py --box DIR resign
+    python adapters/stdlib/play-backgammon/play_backgammon.py --box DIR check
 
 **The board.** White and black, fifteen checkers each, every point counted
 from the mover's own side: 24 is the far end, 1 to 6 is home. `new` throws

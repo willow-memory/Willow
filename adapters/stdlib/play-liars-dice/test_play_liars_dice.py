@@ -12,7 +12,7 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
-spec = importlib.util.spec_from_file_location("liars_dice", HERE / "liars_dice.py")
+spec = importlib.util.spec_from_file_location("liars_dice", HERE / "play_liars_dice.py")
 ld = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ld)
 kernel = ld.kernel
@@ -37,7 +37,7 @@ class Table:
                        capture_output=True, text=True, check=True)  # fmt: skip
 
     def run(self, *argv):
-        return subprocess.run([sys.executable, str(HERE / "liars_dice.py"), "--box", str(self.box), *argv, *NOW],
+        return subprocess.run([sys.executable, str(HERE / "play_liars_dice.py"), "--box", str(self.box), *argv, *NOW],
                               capture_output=True, text=True, check=False)  # fmt: skip
 
     def verify(self):
@@ -253,6 +253,6 @@ def test_check_finds_a_row_whose_game_was_never_opened(t):
 def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
     for argv in ((), ("bid",), ("bid", "3"), ("fly",), ("new", "x")):
         assert t.run(*argv).returncode == 2
-    got = subprocess.run([sys.executable, str(HERE / "liars_dice.py"), "--box", str(tmp_path / "none"), "new"],
+    got = subprocess.run([sys.executable, str(HERE / "play_liars_dice.py"), "--box", str(tmp_path / "none"), "new"],
                          capture_output=True, text=True, check=False)  # fmt: skip
     assert got.returncode == 2 and "not a kernel box" in got.stderr

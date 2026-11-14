@@ -1,12 +1,12 @@
-"""checkers.py: checkers (English draughts) played on the record, the table's ruler sealing a draw. Python 3.9+.
+"""play_checkers.py: checkers (English draughts) played on the record, the table's ruler sealing a draw. Python 3.9+.
 
-    python adapters/stdlib/checkers/checkers.py --box DIR new
-    python adapters/stdlib/checkers/checkers.py --box DIR show
-    python adapters/stdlib/checkers/checkers.py --box DIR move 11-15
-    python adapters/stdlib/checkers/checkers.py --box DIR resign
-    python adapters/stdlib/checkers/checkers.py --box DIR offer
-    python adapters/stdlib/checkers/checkers.py --box DIR settle
-    python adapters/stdlib/checkers/checkers.py --box DIR check
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR new
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR show
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR move 11-15
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR resign
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR offer
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR settle
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR check
 
 The code knows the rules, and only the rules: a move it refuses is not a move,
 and a side with no piece or no move left has lost. What the rules leave to the

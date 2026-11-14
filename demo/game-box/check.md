@@ -5,7 +5,7 @@ house rules is sealed. Run it with `open_table.py check`.
 
 ## the games
 - game-master -- --box {box} check
-- checkers -- --box {box} check
+- play-checkers -- --box {box} check
 - play-catgrid -- --box {box} check
 - play-dice -- --box {box} check
 

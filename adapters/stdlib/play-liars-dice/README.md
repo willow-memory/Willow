@@ -9,16 +9,16 @@ network: none
 role: tools
 uses: play-dice
 -->
-# liars-dice
+# play-liars-dice
 
 A game of Liar's Dice for four seats where every cup is a throw nobody
 picked, and every call is counted from it.
 
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR new
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR show
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR bid QUANTITY FACE
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR call
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR check
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR new
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR show
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR bid QUANTITY FACE
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR call
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR check
 
 **The cups.** North, east, south and west, five dice each. Each round every
 seat still in throws its cup, and each throw is [play-dice](../play-dice/)'s own roll

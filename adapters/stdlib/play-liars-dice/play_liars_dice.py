@@ -1,10 +1,10 @@
-"""liars_dice.py: Liar's Dice played on the record, cups lifted, every cup dice's own row. Python 3.9+.
+"""play_liars_dice.py: Liar's Dice played on the record, cups lifted, every cup dice's own row. Python 3.9+.
 
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR new
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR show
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR bid QUANTITY FACE
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR call
-    python adapters/stdlib/liars-dice/liars_dice.py --box DIR check
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR new
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR show
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR bid QUANTITY FACE
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR call
+    python adapters/stdlib/play-liars-dice/play_liars_dice.py --box DIR check
 
 Four seats, north, east, south and west, five dice each. Each round every
 seat still in throws its cup, and each throw is the dice add-on's own roll

@@ -8,20 +8,20 @@ writes: record
 network: none
 role: tools
 -->
-# bureau
+# play-bureau
 
 You attended a lecture you did not sign up for. The Office of Records will
 resolve the discrepancy on six documents and will happily tell you which
 six. Three of them have never been issued.
 
-    python adapters/stdlib/bureau/bureau.py --box DIR new
-    python adapters/stdlib/bureau/bureau.py --box DIR go OFFICE
-    python adapters/stdlib/bureau/bureau.py --box DIR hand OFFICE
-    python adapters/stdlib/bureau/bureau.py --box DIR wait
-    python adapters/stdlib/bureau/bureau.py --box DIR look
-    python adapters/stdlib/bureau/bureau.py --box DIR quit
-    python adapters/stdlib/bureau/bureau.py --box DIR prove
-    python adapters/stdlib/bureau/bureau.py --box DIR check
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR new
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR go OFFICE
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR hand OFFICE
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR wait
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR look
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR quit
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR prove
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR check
 
 **The building.** The offices are queue, pigeon, library, department, gate,
 stacks, records, gerald and hanz. `go` visits one, `hand` hands over what

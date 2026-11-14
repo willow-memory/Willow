@@ -12,7 +12,7 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
-spec = importlib.util.spec_from_file_location("checkers", HERE / "checkers.py")
+spec = importlib.util.spec_from_file_location("checkers", HERE / "play_checkers.py")
 ck = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ck)
 kernel = ck.kernel
@@ -38,7 +38,7 @@ class Table:
                               capture_output=True, text=True)  # fmt: skip
 
     def run(self, *argv: str):
-        return subprocess.run([sys.executable, str(HERE / "checkers.py"), "--box", str(self.box), *argv, *NOW],
+        return subprocess.run([sys.executable, str(HERE / "play_checkers.py"), "--box", str(self.box), *argv, *NOW],
                               capture_output=True, text=True)  # fmt: skip
 
     def rows(self) -> list[dict]:
@@ -461,8 +461,8 @@ def test_a_record_that_doesnt_verify_is_refused(t):
 def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
     for argv in ((), ("move",), ("move", "11-15", "15-19"), ("fly",), ("new", "x")):
         assert t.run(*argv).returncode == 2
-    got = subprocess.run([sys.executable, str(HERE / "checkers.py"), "--box", str(tmp_path / "none"), "new"],
+    got = subprocess.run([sys.executable, str(HERE / "play_checkers.py"), "--box", str(tmp_path / "none"), "new"],
                          capture_output=True, text=True)  # fmt: skip
     assert got.returncode == 2 and "not a kernel box" in got.stderr
-    got = subprocess.run([sys.executable, str(HERE / "checkers.py"), "new"], capture_output=True, text=True)  # fmt: skip
+    got = subprocess.run([sys.executable, str(HERE / "play_checkers.py"), "new"], capture_output=True, text=True)  # fmt: skip
     assert got.returncode == 2

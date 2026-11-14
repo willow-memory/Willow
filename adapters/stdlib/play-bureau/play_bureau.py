@@ -1,13 +1,13 @@
-"""bureau.py: bureau, the Bureaucracy homage at UTETY, played on the record. Python 3.9+.
+"""play_bureau.py: bureau, the Bureaucracy homage at UTETY, played on the record. Python 3.9+.
 
-    python adapters/stdlib/bureau/bureau.py --box DIR new
-    python adapters/stdlib/bureau/bureau.py --box DIR go OFFICE
-    python adapters/stdlib/bureau/bureau.py --box DIR hand OFFICE
-    python adapters/stdlib/bureau/bureau.py --box DIR wait
-    python adapters/stdlib/bureau/bureau.py --box DIR look
-    python adapters/stdlib/bureau/bureau.py --box DIR quit
-    python adapters/stdlib/bureau/bureau.py --box DIR prove
-    python adapters/stdlib/bureau/bureau.py --box DIR check
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR new
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR go OFFICE
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR hand OFFICE
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR wait
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR look
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR quit
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR prove
+    python adapters/stdlib/play-bureau/play_bureau.py --box DIR check
 
 You attended a lecture you did not sign up for, and the Office of Records
 would like that resolved. The offices are queue, pigeon, library,

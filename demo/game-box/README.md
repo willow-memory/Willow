@@ -26,7 +26,7 @@ the box is what will ship on its own, from Die-Namic.
 | [ideas.py](ideas.py) | between sessions: story seeds dealt from the box's own words, what was set up and never played, what's still open | [oracle-text](../../adapters/stdlib/oracle-text/), [random-passage](../../adapters/stdlib/random-passage/) |
 | [stories/](stories/), [author.py](author.py) | stories written in story-timeline, the writer's workbench in the SAFE App Store, and exported as markdown: [the wasp nest](stories/wasp-nest.md), the cellar's next chapter | author.py makes them worlds; game-master checks and plays them |
 | [worlds/](worlds/) | the box's two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice; and the three the-table authored in the store, [Aetheris](worlds/aetheris.json), [Hasbeen](worlds/hasbeen.json) and [Ironworks](worlds/ironworks.json), as they are | [game-master](../../adapters/stdlib/game-master/), rolling with [play-dice](../../adapters/stdlib/play-dice/) |
-| checkers, a logic grid | games played straight onto the record | [checkers](../../adapters/stdlib/checkers/), [play-catgrid](../../adapters/stdlib/play-catgrid/) |
+| checkers, a logic grid | games played straight onto the record | [play-checkers](../../adapters/stdlib/play-checkers/), [play-catgrid](../../adapters/stdlib/play-catgrid/) |
 | [check.md](check.md) | the table's own check: every game played again, every house rule's standing | stack |
 | [open_table.py](open_table.py) | the box's code: lays a box, and runs its prep sheet and its check | the kernel and the add-ons above |
 | [session.py](session.py) | the GM's bookkeeping, done by code: plays a story as far as it goes without the GM, and says what the table made true | game-master |
@@ -64,7 +64,7 @@ From there it's the kernel and the add-ons' own commands, on `DIR/record`:
   --box DIR/record Draws` gives the section back, word for word.
 - **The story.** `game_master.py act Grit`, `ask` and `settle`, or
   `session.py` to play it through.
-- **Checkers and the grid.** `checkers.py new`, `move 11-15`, `offer`,
+- **Checkers and the grid.** `play_checkers.py new`, `move 11-15`, `offer`,
   `settle`; `catgrid.py play`.
 
 ## The prep sheet

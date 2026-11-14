@@ -12,7 +12,7 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
-spec = importlib.util.spec_from_file_location("backgammon", HERE / "backgammon.py")
+spec = importlib.util.spec_from_file_location("backgammon", HERE / "play_backgammon.py")
 bg = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bg)
 kernel = bg.kernel
@@ -43,7 +43,7 @@ class Table:
                               capture_output=True, text=True, check=False)  # fmt: skip
 
     def run(self, *argv):
-        return subprocess.run([sys.executable, str(HERE / "backgammon.py"), "--box", str(self.box), *argv, *NOW],
+        return subprocess.run([sys.executable, str(HERE / "play_backgammon.py"), "--box", str(self.box), *argv, *NOW],
                               capture_output=True, text=True, check=False)  # fmt: skip
 
     def rows(self):
@@ -301,6 +301,15 @@ def test_check_finds_a_row_whose_game_was_never_opened(t):
 def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
     for argv in ((), ("move",), ("fly",), ("new", "x")):
         assert t.run(*argv).returncode == 2
-    got = subprocess.run([sys.executable, str(HERE / "backgammon.py"), "--box", str(tmp_path / "none"), "new"],
+    got = subprocess.run([sys.executable, str(HERE / "play_backgammon.py"), "--box", str(tmp_path / "none"), "new"],
                          capture_output=True, text=True, check=False)  # fmt: skip
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+def test_each_side_starts_with_fifteen_checkers_on_the_standard_points():
+    """The card's opening: two on the 24, five on the 13, three on the 8 and
+    five on the 6, fifteen in all, none on the bar or borne off."""
+    side = bg.new_side()
+    assert side == {"pts": {24: 2, 13: 5, 8: 3, 6: 5}, "bar": 0, "off": 0}
+    assert sum(side["pts"].values()) == 15
+    assert "fifteen checkers each" in (HERE / "README.md").read_text()

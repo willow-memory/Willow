@@ -1,11 +1,11 @@
-"""crazy_eights.py: Crazy Eights played on the record, hands open, the deal seeded. Python 3.9+.
+"""play_crazy_eights.py: Crazy Eights played on the record, hands open, the deal seeded. Python 3.9+.
 
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR new
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR show
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR play CARD [SUIT]
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR draw
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR pass
-    python adapters/stdlib/crazy-eights/crazy_eights.py --box DIR check
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR new
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR show
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR play CARD [SUIT]
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR draw
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR pass
+    python adapters/stdlib/play-crazy-eights/play_crazy_eights.py --box DIR check
 
 Four seats, north, east, south and west. The deck is shuffled from willow's
 seeded stream (sha256-stream v1), seeded by the record's tip: five cards to

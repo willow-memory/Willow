@@ -1,11 +1,11 @@
-"""hearts.py: Hearts played on the record, hands open, the deal seeded. Python 3.9+.
+"""play_hearts.py: Hearts played on the record, hands open, the deal seeded. Python 3.9+.
 
-    python adapters/stdlib/hearts/hearts.py --box DIR new
-    python adapters/stdlib/hearts/hearts.py --box DIR show
-    python adapters/stdlib/hearts/hearts.py --box DIR pass SEAT CARD CARD CARD
-    python adapters/stdlib/hearts/hearts.py --box DIR play CARD
-    python adapters/stdlib/hearts/hearts.py --box DIR deal
-    python adapters/stdlib/hearts/hearts.py --box DIR check
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR new
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR show
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR pass SEAT CARD CARD CARD
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR play CARD
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR deal
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR check
 
 Four seats, north, east, south and west, and the standard game. Each hand
 is dealt from willow's seeded stream (sha256-stream v1), seeded by the

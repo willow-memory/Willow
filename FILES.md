@@ -1609,22 +1609,6 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
-│   │   ├── backgammon/
-│   │   │   ├── backgammon.py backgammon played on the record, the dice thrown by dice
-│   │   │   ├── test_backgammon.py
-│   │   │   └── README.md     its card
-│   │   ├── bureau/
-│   │   │   ├── bureau.py     bureau, the Bureaucracy homage at UTETY, played on the record
-│   │   │   ├── test_bureau.py
-│   │   │   └── README.md     its card
-│   │   ├── checkers/
-│   │   │   ├── checkers.py   checkers (English draughts) played on the record, the table's ruler sealing a draw
-│   │   │   ├── test_checkers.py
-│   │   │   └── README.md     its card
-│   │   ├── crazy-eights/
-│   │   │   ├── crazy_eights.py Crazy Eights played on the record, hands open, the deal seeded
-│   │   │   ├── test_crazy_eights.py
-│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1633,21 +1617,29 @@ willow/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
 │   │   │   └── README.md
-│   │   ├── hearts/
-│   │   │   ├── hearts.py     Hearts played on the record, hands open, the deal seeded
-│   │   │   ├── test_hearts.py
-│   │   │   └── README.md     its card
-│   │   ├── liars-dice/
-│   │   │   ├── liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
-│   │   │   ├── test_liars_dice.py
-│   │   │   └── README.md     its card
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
 │   │   │   └── README.md
+│   │   ├── play-backgammon/
+│   │   │   ├── play_backgammon.py backgammon played on the record, the dice thrown by dice
+│   │   │   ├── test_play_backgammon.py
+│   │   │   └── README.md     its card
+│   │   ├── play-bureau/
+│   │   │   ├── play_bureau.py bureau, the Bureaucracy homage at UTETY, played on the record
+│   │   │   ├── test_play_bureau.py
+│   │   │   └── README.md     its card
 │   │   ├── play-catgrid/
 │   │   │   ├── play_catgrid.py a cat in every row, column and colour region, played on the record
 │   │   │   ├── test_play_catgrid.py
+│   │   │   └── README.md     its card
+│   │   ├── play-checkers/
+│   │   │   ├── play_checkers.py checkers (English draughts) played on the record, the table's ruler sealing a draw
+│   │   │   ├── test_play_checkers.py
+│   │   │   └── README.md     its card
+│   │   ├── play-crazy-eights/
+│   │   │   ├── play_crazy_eights.py Crazy Eights played on the record, hands open, the deal seeded
+│   │   │   ├── test_play_crazy_eights.py
 │   │   │   └── README.md     its card
 │   │   ├── play-dice/
 │   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
@@ -1657,9 +1649,17 @@ willow/
 │   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
 │   │   │   ├── test_play_dice5e.py
 │   │   │   └── README.md     its card
+│   │   ├── play-hearts/
+│   │   │   ├── play_hearts.py Hearts played on the record, hands open, the deal seeded
+│   │   │   ├── test_play_hearts.py
+│   │   │   └── README.md     its card
 │   │   ├── play-horoscope/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
+│   │   │   └── README.md     its card
+│   │   ├── play-liars-dice/
+│   │   │   ├── play_liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
+│   │   │   ├── test_play_liars_dice.py
 │   │   │   └── README.md     its card
 ```
 

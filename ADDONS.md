@@ -1964,45 +1964,45 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Tools you run yourself
 
-- <a id="backgammon"></a>[**backgammon**](adapters/stdlib/backgammon/) \
-  Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored. \
-  Uses play-dice. *new* `no-install` `offline` `row` · near: game-master, quotes, nightstand
-- <a id="bureau"></a>[**bureau**](adapters/stdlib/bureau/) \
-  bureau, the Bureaucracy homage at UTETY, on the record: the deadlock proved, every visit a row, and Gerald's napkin the only way out. \
-  *new* `no-install` `offline` `row` `prov` · near: hook-replay, merkle, hook-pin
-- <a id="checkers"></a>[**checkers**](adapters/stdlib/checkers/) \
-  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
-  *new* `no-install` `offline` `draws` `played` · near: game-master, tic-tac-toe, rules
-- <a id="crazy-eights"></a>[**crazy-eights**](adapters/stdlib/crazy-eights/) \
-  Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
-  *new* `no-install` `offline` `tip` · near: game-master, nightstand, tip-pin
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: quiz, surprise, serve
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses play-dice, play-odds. *bot* `no-install` `offline` `rows` `dice` · near: life, dice5e, dice
-- <a id="hearts"></a>[**hearts**](adapters/stdlib/hearts/) \
-  Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
-  *new* `no-install` `offline` `tip` `game` · near: game-master, nightstand, tip-pin
-- <a id="liars-dice"></a>[**liars-dice**](adapters/stdlib/liars-dice/) \
-  Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give. \
-  Uses play-dice. *new* `no-install` `offline` `call` · near: game-master, nightstand, market-calls
 - <a id="oracle-text"></a>[**oracle-text**](adapters/stdlib/oracle-text/) \
   Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. \
   Uses play-tarot. *new* `no-install` `offline` `seeded` `branch` · near: hook-replay, ink-story, restack
+- <a id="play-backgammon"></a>[**play-backgammon**](adapters/stdlib/play-backgammon/) \
+  Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored. \
+  Uses play-dice. *new* `no-install` `offline` `row` · near: game-master, quotes, nightstand
+- <a id="play-bureau"></a>[**play-bureau**](adapters/stdlib/play-bureau/) \
+  bureau, the Bureaucracy homage at UTETY, on the record: the deadlock proved, every visit a row, and Gerald's napkin the only way out. \
+  *new* `no-install` `offline` `row` `prov` · near: game-master, hook-replay, merkle
 - <a id="play-catgrid"></a>[**play-catgrid**](adapters/stdlib/play-catgrid/) \
   A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. \
   *new* `no-install` `offline` `row` `replayed` · near: game-master, hook-replay, contradictions
+- <a id="play-checkers"></a>[**play-checkers**](adapters/stdlib/play-checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
+  *new* `no-install` `offline` `draws` `play` · near: game-master, tic-tac-toe, rules
+- <a id="play-crazy-eights"></a>[**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
+  Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
+  *new* `no-install` `offline` `tip` · near: game-master, nightstand, tip-pin
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
   *bot* `no-install` `offline` `row` `roll` · near: game-master, session-seal, nightstand
 - <a id="play-dice5e"></a>[**play-dice5e**](adapters/stdlib/play-dice5e/) \
   Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. \
   Uses play-dice. *bot* `no-install` `offline` `row` `tabletop` · near: game-master, nightstand, ci
+- <a id="play-hearts"></a>[**play-hearts**](adapters/stdlib/play-hearts/) \
+  Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
+  *new* `no-install` `offline` `tip` `game` · near: game-master, nightstand, tip-pin
 - <a id="play-horoscope"></a>[**play-horoscope**](adapters/stdlib/play-horoscope/) \
   A daily horoscope keyed on your name and the date: same name, same day, same reading, always. \
   *bot* `no-install` `offline` `daily` · near: daily-word, goodreads, gaps
+- <a id="play-liars-dice"></a>[**play-liars-dice**](adapters/stdlib/play-liars-dice/) \
+  Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give. \
+  Uses play-dice. *new* `no-install` `offline` `call` · near: game-master, nightstand, market-calls
 - <a id="play-life"></a>[**play-life**](adapters/stdlib/play-life/) \
   Conway's Game of Life as rows: a fully deterministic world on the record. \
   *bot* `no-install` `offline` `row` `game` · near: game-master, ci, hook-replay

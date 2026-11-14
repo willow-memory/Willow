@@ -8,17 +8,17 @@ writes: record
 network: none
 role: tools
 -->
-# hearts
+# play-hearts
 
 A game of Hearts for four seats, played face up, where nobody shuffles: the
 record's tip deals every hand.
 
-    python adapters/stdlib/hearts/hearts.py --box DIR new
-    python adapters/stdlib/hearts/hearts.py --box DIR show
-    python adapters/stdlib/hearts/hearts.py --box DIR pass SEAT CARD CARD CARD
-    python adapters/stdlib/hearts/hearts.py --box DIR play CARD
-    python adapters/stdlib/hearts/hearts.py --box DIR deal
-    python adapters/stdlib/hearts/hearts.py --box DIR check
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR new
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR show
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR pass SEAT CARD CARD CARD
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR play CARD
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR deal
+    python adapters/stdlib/play-hearts/play_hearts.py --box DIR check
 
 **The deal.** North, east, south and west. Each hand is shuffled from
 willow's seeded stream (sha256-stream v1, the one dice uses), seeded by the

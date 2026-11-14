@@ -13,7 +13,7 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
-spec = importlib.util.spec_from_file_location("bureau_addon", HERE / "bureau.py")
+spec = importlib.util.spec_from_file_location("bureau_addon", HERE / "play_bureau.py")
 b = importlib.util.module_from_spec(spec)
 sys.modules["bureau_addon"] = b  # its dataclasses look their module up
 spec.loader.exec_module(b)
@@ -52,7 +52,7 @@ class Table:
                        capture_output=True, text=True, check=True)  # fmt: skip
 
     def run(self, *argv):
-        return subprocess.run([sys.executable, str(HERE / "bureau.py"), "--box", str(self.box), *argv, *NOW],
+        return subprocess.run([sys.executable, str(HERE / "play_bureau.py"), "--box", str(self.box), *argv, *NOW],
                               capture_output=True, text=True, check=False)  # fmt: skip
 
     def rows(self):
@@ -239,7 +239,7 @@ def test_nothing_is_played_before_a_game_is_opened(t):
 
 
 def test_prove_reads_no_box():
-    got = subprocess.run([sys.executable, str(HERE / "bureau.py"), "prove"], capture_output=True, text=True, check=False)  # fmt: skip
+    got = subprocess.run([sys.executable, str(HERE / "play_bureau.py"), "prove"], capture_output=True, text=True, check=False)  # fmt: skip
     assert (
         got.returncode == 0 and "deadlocked: True   looks winnable: True" in got.stdout
     )
@@ -267,6 +267,6 @@ def test_check_finds_a_row_whose_game_was_never_opened(t):
 def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
     for argv in ((), ("go",), ("go", "queue", "now"), ("fly",), ("new", "x")):
         assert t.run(*argv).returncode == 2
-    got = subprocess.run([sys.executable, str(HERE / "bureau.py"), "--box", str(tmp_path / "none"), "new"],
+    got = subprocess.run([sys.executable, str(HERE / "play_bureau.py"), "--box", str(tmp_path / "none"), "new"],
                          capture_output=True, text=True, check=False)  # fmt: skip
     assert got.returncode == 2 and "not a kernel box" in got.stderr

@@ -8,20 +8,20 @@ writes: record
 network: none
 role: tools
 -->
-# checkers
+# play-checkers
 
 A game of checkers, every move a row, so nobody can say a move was
 different. The code knows the rules and nothing more. What the rules leave
 to the people at the table is theirs, and the one who holds the box's key
 rules the table.
 
-    python adapters/stdlib/checkers/checkers.py --box DIR new
-    python adapters/stdlib/checkers/checkers.py --box DIR show
-    python adapters/stdlib/checkers/checkers.py --box DIR move 11-15
-    python adapters/stdlib/checkers/checkers.py --box DIR resign
-    python adapters/stdlib/checkers/checkers.py --box DIR offer
-    python adapters/stdlib/checkers/checkers.py --box DIR settle
-    python adapters/stdlib/checkers/checkers.py --box DIR check
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR new
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR show
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR move 11-15
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR resign
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR offer
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR settle
+    python adapters/stdlib/play-checkers/play_checkers.py --box DIR check
 
 **The rules** are English draughts (American checkers). The 32 dark squares
 are numbered as checkers notation numbers them: black on 1 to 12 moves
