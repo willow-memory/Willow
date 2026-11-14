@@ -1902,6 +1902,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "sheet-drift",
+  "kind": "stdlib",
+  "section": "Trust and proof",
+  "line": "A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "tools",
+  "version": "0.0.1"
+ },
+ {
   "name": "sigmap",
   "kind": "stdlib",
   "section": "Reading more kinds of files",

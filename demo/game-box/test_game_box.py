@@ -114,7 +114,11 @@ def test_open_lays_a_table_and_seals_nothing(t):
         if r["kind"] in ("seal", "decline") or r.get("who") == "human"
     ]
     assert t.key.exists() and not any(p.name == t.key.name for p in t.dir.rglob("*"))
-    assert sorted(p.name for p in t.pile.iterdir()) == ["check.md", "house-rules.md"]
+    assert sorted(p.name for p in t.pile.iterdir()) == ["house-rules.md", "monsters", "people", "sessions"]  # fmt: skip
+    assert (
+        t.dir / "words.txt"
+    ).stat().st_mode & 0o077 == 0  # the words list, owner-only, beside the pile
+    assert (t.dir / "check.md").is_file() and (t.dir / "gm-stack.md").is_file()
     assert sorted(p.name for p in (t.dir / "worlds").iterdir()) == ["clockwork-cellar.json", "lantern-fair.json"]  # fmt: skip
     assert t.k("verify").returncode == 0
 
@@ -198,7 +202,7 @@ def test_open_refuses_a_table_already_there_or_a_key_inside_it(t, tmp_path):
     got = t.open()
     assert got.returncode == 2 and "already there" in got.stderr
     inside = py(HERE / "open_table.py", "open", "--table", tmp_path / "t2", "--key", tmp_path / "t2" / "k", *NOW)  # fmt: skip
-    assert inside.returncode == 2 and "outside the table" in inside.stderr
+    assert inside.returncode == 2 and "outside the box" in inside.stderr
     assert not (tmp_path / "t2").exists()
 
 
@@ -210,8 +214,9 @@ def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
         ("open", "--table", str(tmp_path / "x")),
     ):
         assert py(HERE / "open_table.py", *argv).returncode == 2
-    got = py(HERE / "open_table.py", "check", "--table", tmp_path / "nowhere")
-    assert got.returncode == 2 and "isn't a table" in got.stderr
+    for page in ("check", "prep"):
+        got = py(HERE / "open_table.py", page, "--table", tmp_path / "nowhere")
+        assert got.returncode == 2 and "isn't a box" in got.stderr
 
 
 @pytest.mark.parametrize("name", ["lantern-fair", "clockwork-cellar"])
@@ -318,3 +323,67 @@ def test_a_session_refuses_what_isnt_a_table_or_a_world(t, tmp_path):
     assert got.returncode == 2 and "isn't a table" in got.stderr
     for argv in ((), ("--table", str(t.dir), "fly")):
         assert py(HERE / "session.py", *argv).returncode == 2
+
+
+# ── the game master's binder ─────────────────────────────────────────────────
+def served(t, q: str) -> list[str]:
+    return [s["where"] for s in json.loads(t.k("bite", q).stdout).get("served", [])]
+
+
+@pytest.mark.parametrize(
+    "question, first",
+    [
+        ("what are the clockwork hound's stats", "monsters/clockwork-hound.md:5"),
+        ("how much damage does the dog do", "monsters/clockwork-hound.md:5"),
+        ("how does cogwen talk", "people/cogwen.md:5"),
+    ],
+)
+def test_the_binder_answers_the_gm_in_their_own_words(t, question, first):
+    """The words list puts "stats" into grit, wit, hits; "dog" into hound."""
+    t.open()
+    assert served(t, question)[0] == first
+
+
+def test_the_words_list_finds_the_prince_by_his_title(t):
+    t.open()
+    assert "sessions/2026-11-07.md:3" in served(
+        t, "what does the prince want"
+    )  # "Prince Aldric asked for his goats back"
+
+
+def test_prep_runs_the_thirteen_steps_and_every_week_has_its_own_run(t):
+    t.open()
+    for week in ("001", "002"):
+        got = py(HERE / "open_table.py", "prep", "--table", t.dir)
+        assert got.returncode == 42, got.stderr  # the house rules wait on the seal
+        run = t.dir / "prep" / week
+        log = (run / "00-stack.txt").read_text()
+        assert log.rstrip().endswith("done: 3 of 13 steps flagged"), log
+        springs = (run / "springs.txt").read_text()
+        assert "Next time: where the springs go." in springs
+        assert "Juno pocketed one of Cogwen's springs" in springs
+        assert (
+            "Prince Aldric asked for his goats back" in (run / "prince.txt").read_text()
+        )
+    page = got.stdout
+    assert 'first mention of "lantern man": 2026-10-31' in page
+    assert "10+          7/12        58.33%" in page  # the hound's bite, 2d6+3
+    assert "No gaps in 1 log with a rhythm." in page
+    assert "the chain holds" in page
+
+
+def test_prep_flags_a_week_missed(t):
+    """gaps' 0 is a gap found: the page flags it, and a clean run it doesn't.
+    A weekly log's gap is more than three weeks with no session notes."""
+    t.open()
+    py(HERE / "open_table.py", "prep", "--table", t.dir)
+    log = (t.dir / "prep" / "001" / "00-stack.txt").read_text()
+    assert "07 gaps: exit 42, 4 lines\n" in log  # no gap, not flagged
+    (t.pile / "sessions" / "2026-12-12.md").write_text(
+        "# Session, 12 December 2026\n\nBack after four weeks off.\n"
+    )
+    page = py(HERE / "open_table.py", "prep", "--table", t.dir).stdout
+    log = (t.dir / "prep" / "002" / "00-stack.txt").read_text()
+    line = next(x for x in log.splitlines() if x.startswith("07 gaps: exit"))
+    assert line.startswith("07 gaps: exit 0") and line.endswith("flagged"), line
+    assert "GAP       2026-11-14 to 2026-12-12" in page

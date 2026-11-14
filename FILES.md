@@ -2180,6 +2180,7 @@ willow/
 ```
 │   ├── game-box/
 │   │   ├── binder/
+│   │   │   ├── house-rules.md House rules
 │   │   │   ├── monsters/
 │   │   │   │   ├── clockwork-hound.md Clockwork hound
 │   │   │   │   └── spring-wasps.md Spring wasps
@@ -2191,11 +2192,11 @@ willow/
 │   │   │       ├── 2026-10-31.md Session, 31 October 2026
 │   │   │       ├── 2026-11-07.md Session, 7 November 2026
 │   │   │       └── 2026-11-14.md Session, 14 November 2026
+│   │   ├── check.md          the table's own check
+│   │   ├── gm-stack.md       the game master's prep sheet
+│   │   ├── gm-words.txt
 │   │   ├── open_table.py     a game table set up from the box, with nothing sealed
 │   │   ├── session.py        a session at the table played by code, as far as it goes without the person
-│   │   ├── table/
-│   │   │   ├── check.md      the table's own check
-│   │   │   └── house-rules.md House rules
 │   │   ├── worlds/
 │   │   │   ├── clockwork-cellar.json
 │   │   │   └── lantern-fair.json

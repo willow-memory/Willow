@@ -1323,6 +1323,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="retire"></a>**retire** (idea) \
   Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
   *bot* `no-install` `offline` `aside` · near: assistant-scores, stale, datasette
+- <a id="sheet-drift"></a>**sheet-drift** (idea) \
+  A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side. \
+  *new* `no-install` `offline` `sheets` `drift` · near: pair-drift, contradictions, second-opinion
 - <a id="signed-commits"></a>**signed-commits** (idea) \
   Which commits are signed, and by whose key, checked on this machine against the keys you trust. \
   Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `trust` `commit` · near: provenance, pgp, sync
