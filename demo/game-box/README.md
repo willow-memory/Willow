@@ -21,6 +21,8 @@ the box is what will ship on its own, from Die-Namic.
 | [binder/](binder/) | the GM's binder, made up for this demo: [monsters](binder/monsters/) with their stats and weaknesses, [people](binder/people/), four nights of [session notes](binder/sessions/) named by their date, and the [house rules](binder/house-rules.md) | the kernel, every add-on that reads a pile, and [rules](../../adapters/stdlib/rules/) for the house rules |
 | [gm-words.txt](gm-words.txt) | the GM's words list: how they ask (`stats`, `damage`, `the prince`) put into the words the binder uses (`grit, hits`, `bite`, `aldric`) | the kernel, on every question |
 | [gm-stack.md](gm-stack.md) | the GM's prep sheet: thirteen steps, each with the want it answers | [stack](../../adapters/stdlib/stack/) |
+| [gm-end.md](gm-end.md) | the end of the night: the GM's handwritten pages read in, the night compiled, sealed as one, backed up | stack, with [ocr](../../adapters/deps/ocr/) reading the pages |
+| [sample-scans/](sample-scans/) | a made-up photo of a fifth night's handwritten page | ocr |
 | [worlds/](worlds/) | two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice | [game-master](../../adapters/stdlib/game-master/), rolling with [dice](../../adapters/stdlib/dice/) |
 | checkers, a logic grid | games played straight onto the record | [checkers](../../adapters/stdlib/checkers/), [catgrid](../../adapters/stdlib/catgrid/) |
 | [check.md](check.md) | the table's own check: every game played again, every house rule's standing | stack |
@@ -99,6 +101,33 @@ each with the want it answers:
 - **contradictions** reads dates and money, so a hound with six hits on one
   page and eight on another isn't one it can see. No card reads that yet.
 
+## The end of the night
+
+    python demo/game-box/open_table.py end --table DIR
+
+Photograph the night's handwritten pages and put them in `DIR/scans`, named
+by the date (`2026-11-21.jpg`). `end` runs [gm-end.md](gm-end.md), each
+night kept in `DIR/end/NNN`:
+
+| # | Want | Step |
+|---|---|---|
+| 1 | Read what I wrote by hand | `ocr mirror` into `DIR/pile/scanned`, where every question finds it |
+| 2 | What's new in my binder tonight? | `changed`, fingerprints on the record |
+| 3 | Where did the springs go tonight? | `timeline`, typed nights and scanned ones together |
+| 4 | What did I promise for next time? | `all "next time"` |
+| 5 | What's still waiting on me? | `digest` |
+| 6 | Tonight, in plain sentences | `history --days 1` |
+| 7 | Did every roll and ruling happen as recorded? | `game-master check` |
+| 8 | One seal over the whole night | `session-seal`, handed in for the GM |
+| 9 | A copy of tonight, checked | `backup` |
+| 10 | Where the record ended tonight | `tip-pin` |
+
+Then it prints what the table holds true. The sample page reads back word
+for word but one: "(?!)" comes out "(. 1)". OCR guesses, and the binder
+cites the line tesseract read, not the page. The page is set in a
+handwriting-like font; real handwriting reads worse, and tesseract is made
+for print. A check for OCR damage is an idea on willow's list, `ocr-noise`.
+
 ## A session, played by code
 
     python demo/game-box/session.py --table DIR --world clockwork-cellar
@@ -171,6 +200,9 @@ Each is fixed, and its own tests now hold it.
 - **stack flagged gaps upside down.** gaps exits 0 when it finds a gap and
   42 when it finds none, as contradictions does, but only contradictions
   was read that way: a clean week was flagged, and a missed one wasn't.
+- **session-seal refused the report its card promises.** Its card says
+  `output: report`, so a stack asks it for `--json`, and closing a session
+  refused `--json` ("check alone"). Closing now prints the report.
 - **stack had nowhere fresh for a step to write.** timeline never
   overwrites its file, so a prep sheet could run once. A step can now name
   `{run}`, the folder this run is kept in.

@@ -2193,13 +2193,17 @@ willow/
 │   │   │       ├── 2026-11-07.md Session, 7 November 2026
 │   │   │       └── 2026-11-14.md Session, 14 November 2026
 │   │   ├── check.md          the table's own check
+│   │   ├── gm-end.md         the game master's end of the night
 │   │   ├── gm-stack.md       the game master's prep sheet
 │   │   ├── gm-words.txt
 │   │   ├── open_table.py     a game table set up from the box, with nothing sealed
+│   │   ├── sample-scans/
+│   │   │   └── 2026-11-21.jpg
 │   │   ├── session.py        a session at the table played by code, as far as it goes without the person
 │   │   ├── worlds/
 │   │   │   ├── clockwork-cellar.json
 │   │   │   └── lantern-fair.json
+│   │   ├── test_end.py
 │   │   ├── test_game_box.py
 │   │   └── README.md         The game box
 │   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said

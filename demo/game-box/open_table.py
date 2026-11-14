@@ -2,6 +2,7 @@
 
     python demo/game-box/open_table.py open  --table DIR --key FILE [--now TS]
     python demo/game-box/open_table.py prep  --table DIR
+    python demo/game-box/open_table.py end   --table DIR
     python demo/game-box/open_table.py check --table DIR
 
 The box is the game master's binder. `open` lays a fresh one in DIR, which
@@ -26,7 +27,14 @@ person who holds the key.
 thirteen steps over the binder, the threads, what is owed the table, the
 dice and whether the record holds. Each run is kept in DIR/prep/NNN, so a
 step that writes a file writes it there, and last week's is never in the
-way. `check` runs the table's own check page,
+way. `end` closes the night with gm-end.md: photos of the GM's handwritten pages,
+put in DIR/scans, read by the ocr add-on (tesseract) into DIR/pile/scanned;
+then what changed in the binder, the threads and promises with tonight's
+page in them, what still waits, the night in plain sentences, one session
+seal handed in over it all, a checked backup and a pin of where the record
+ends, each run kept in DIR/end/NNN; and last, what the table holds true.
+
+`check` runs the table's own check page,
 check.md: every game on the record played again from its first row. Each
 then has the kernel verify the chain.
 
@@ -52,7 +60,8 @@ import kernel  # noqa: E402
 BINDER = HERE / "binder"
 WORDS = HERE / "gm-words.txt"
 WORLDS = HERE / "worlds"
-PAGES = {"prep": HERE / "gm-stack.md", "check": HERE / "check.md"}
+PAGES = {"prep": HERE / "gm-stack.md", "end": HERE / "gm-end.md", "check": HERE / "check.md"}  # fmt: skip
+SESSION = HERE / "session.py"
 STDLIB = ROOT / "adapters" / "stdlib"
 RULES = STDLIB / "rules" / "rules.py"
 GM = STDLIB / "game-master" / "game_master.py"
@@ -86,6 +95,9 @@ def cmd_open(table: Path, key: Path, now: str) -> int:
     table.mkdir(parents=True)
     shutil.copytree(BINDER, pile)
     shutil.copytree(WORLDS, table / "worlds")
+    (
+        table / "scans"
+    ).mkdir()  # photos of the GM's handwritten pages, read at the end of the night
     for name, page in PAGES.items():
         shutil.copy(page, table / page.name)
     shutil.copy(WORDS, words)
@@ -116,10 +128,11 @@ def cmd_page(table: Path, which: str) -> int:
     if not (box / "kernel.json").exists() or not page.exists():
         return fail(f"{table} isn't a box laid by open")
     keep = []
-    if (
-        which == "prep"
+    if which in (
+        "prep",
+        "end",
     ):  # each run kept in a folder of its own, for the steps that write
-        runs = table / "prep"
+        runs = table / which
         runs.mkdir(exist_ok=True)
         keep = ["--to", str(runs / f"{len(list(runs.iterdir())) + 1:03d}")]
     done = run(str(STACK), "--box", str(box), "--stack", str(page), *keep)
@@ -130,6 +143,9 @@ def cmd_page(table: Path, which: str) -> int:
     print(chain.stdout.rstrip())
     if chain.returncode != kernel.ALIVE:
         return fail(f"the chain: {(chain.stderr or chain.stdout).strip()}")
+    if which == "end":  # what the table made true, to close the night on
+        canon = run(str(SESSION), "--table", str(table), "canon")
+        print("\n## what the table holds true\n" + canon.stdout.rstrip())
     return done.returncode
 
 
@@ -140,7 +156,7 @@ def main(argv: list[str]) -> int:
             opts[a] = next(it, "")
         else:
             args.append(a)
-    if not opts.get("--table") or args not in (["open"], ["prep"], ["check"]):
+    if not opts.get("--table") or args not in (["open"], ["prep"], ["end"], ["check"]):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     table = Path(opts["--table"])
