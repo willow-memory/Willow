@@ -17,7 +17,7 @@
   "adapters/stdlib/readme/week.json": "e721c6a7e29360dac15e4506e803ab2568afc04619c8cb619beedfc42a0e72b4",
   "kernel.py": "953bb4ccc65f9fd013c31d6c9a2fa33e76acb3f37637dea0395969f0184a99da",
   "demo/pools/trace/memo/sitecustomize.py": "82cb4b9a8cfa20a6dd011d276c21544e7c00b0020afa1fa511a981118a7c8449",
-  "demo/pools/truth/changes.py": "18052dad8430edc8df58c96deeb3bdd2d0ed6de23a5c008d8fde7fce021613f5"
+  "demo/pools/truth/changes.py": "0c098fb36f544bef67c98bdb71391d8e95b960420a06e927f0feaa7782aebd98"
  },
  "made": {
   "grid manifest (grid.py write)": "6d9472e782f36992d678fed3b74c6413d12c8b2f40accf9979a009792e2ebe45",
@@ -231,6 +231,16 @@
      "kind_stacks": 1156,
      "kind_writers": 15
     }
+   }
+  },
+  {
+   "frozen": "2026-11-14",
+   "why": "Written after phase 7's grove result and said so: changes.py also names each reader's writers (the steps whose rows moved it) and groups readers by the writers they share, since a reader that any row moves joins every writer to every other and the connected groups came out as one. A reader moved by every writer put before it reads the record as a whole. What it measures otherwise is as it was; the phase 7 rows are read again, not run again.",
+   "was": {
+    "demo/pools/truth/changes.py": "18052dad8430edc8df58c96deeb3bdd2d0ed6de23a5c008d8fde7fce021613f5"
+   },
+   "now": {
+    "demo/pools/truth/changes.py": "0c098fb36f544bef67c98bdb71391d8e95b960420a06e927f0feaa7782aebd98"
    }
   }
  ]

@@ -23,7 +23,11 @@ report said were missing:
   of the rows the writer added (trace.py's row_groups), so a reader is tied
   to which rows moved it, not just their kind.
 - **Pools.** Steps joined when one changed the other, in a held bridge or a
-  kind stack: the connected groups.
+  kind stack: the connected groups. And, since a reader that any row moves
+  joins every writer to every other (seen on the grove, and so written after
+  it): each reader's writers, the steps whose rows moved it, and the readers
+  grouped by the writers they share. A reader moved by every writer that
+  was put before it reads the record as a whole.
 
 A step unsteady alone (it differs between its alone row and its single
 stack's) is never held to anything. Nor is a row from another UTC day than
@@ -155,6 +159,18 @@ def measure(runs: list[Path], grids: list[dict]) -> dict:
         per_pile[pile] = {"steps_alone": len(alone), "printed": len(printed), "fired": len(fired),
                           "fired_steps": fired, "unsteady": sorted(unsteady), "stack_runs_changed": moved}  # fmt: skip
     groups = _components(edges)
+    tried: dict = {}
+    by_writers: dict = {}
+    for k in kind_effects:
+        tried.setdefault(k["reader"], set()).add(k["writer"])
+        if k["changed"]:
+            by_writers.setdefault(k["reader"], set()).add(k["writer"])
+    readers = {r: {"writers": sorted(w), "tried": len(tried[r]), "whole_record": w == tried[r]}
+               for r, w in sorted(by_writers.items())}  # fmt: skip
+    shared: dict = {}
+    for r, v in readers.items():
+        key = "the whole record" if v["whole_record"] else ", ".join(v["writers"])
+        shared.setdefault(key, []).append(r)
     return {
         "about": "changes.py, written after the first report: the same run's baseline, fired against an empty pile, bridges held, kinds, pools",
         "piles": per_pile,
@@ -164,6 +180,8 @@ def measure(runs: list[Path], grids: list[dict]) -> dict:
         "bridges_beyond_controls_p": fisher_greater(bridge_c, bridge_n - bridge_c, ctrl_c, ctrl_n - ctrl_c) if bridge_n and ctrl_n else None,
         "kinds": kind_effects,
         "pools": groups,
+        "readers": readers,
+        "reader_groups": dict(sorted(shared.items())),
     }  # fmt: skip
 
 
@@ -224,6 +242,11 @@ def report(res: dict) -> str:
             f"  - `{w}` ({kinds or 'no rows'}) moved: "
             + ", ".join(f"`{r}` ({len(p)} piles)" for r, p in sorted(rs.items()))
         )
+    out += ["", "## Readers, grouped by the writers that move them", ""]
+    for key, rs in res.get("reader_groups", {}).items():
+        out.append(f"- moved by {key}: " + ", ".join(f"`{r}`" for r in rs))
+    if not res.get("reader_groups"):
+        out.append("- None.")
     out += ["", "## Pools: steps joined by a change one made in the other", ""]
     for g in res["pools"]:
         out.append(f"- {len(g)}: " + ", ".join(f"`{s}`" for s in g))

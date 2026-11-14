@@ -121,3 +121,12 @@ def test_a_row_from_another_day_than_its_baseline_is_held_to_nothing(tmp_path):
         "game-master ran after midnight: not held to yesterday's alone"
     )
     assert res["controls"]["stacks"] == 9
+
+
+def test_readers_are_grouped_by_the_writers_that_move_them(tmp_path):
+    res = ch.measure([_run(tmp_path)], [GRID, PAIRS])
+    assert res["readers"] == {
+        "serve": {"writers": ["quiz"], "tried": 2, "whole_record": False}
+    }
+    assert res["reader_groups"] == {"quiz": ["serve"]}
+    assert "- moved by quiz: `serve`" in ch.report(res)
