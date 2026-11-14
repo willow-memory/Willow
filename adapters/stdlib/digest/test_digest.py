@@ -243,3 +243,15 @@ def test_a_suggestion_you_declined_no_longer_waits(tmp_path):
     subj = dg.digest(b, TODAY)["waiting"]["items"][0]["subject"]
     assert k("decline", "--box", str(b), subj, *NOW).returncode == 0
     assert dg.digest(b, TODAY)["waiting"] == {"state": "empty", "items": []}
+
+
+def test_a_suggestion_passed_twice_in_an_older_record_waits_once(tmp_path):
+    """The kernel now refuses a re-proposal (CONST-V-11); a record from
+    before that may hold one subject passed twice, and it waits once."""
+    b = life(tmp_path)
+    rows = dg.kernel.read(b / "record.jsonl")[0]
+    held = next(r for r in rows if r.get("subject") in dg.kernel.waiting(b, rows))
+    dg.kernel.append(b, NOW[1], "proposal", subject=held["subject"], verdict="pass",
+                     bite_row=held["bite_row"])  # fmt: skip
+    doc = dg.digest(b, TODAY)
+    assert [w["answer"] for w in doc["waiting"]["items"]] == ["30 October"]

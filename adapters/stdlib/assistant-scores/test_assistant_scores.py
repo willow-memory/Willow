@@ -117,9 +117,16 @@ def test_only_a_suggestion_naming_no_assistant_is_populated_not_empty(tmp_path):
 
 
 def test_a_suggestion_proposed_twice_counts_once(tmp_path):
+    """The kernel refuses it the second time (CONST-V-11); a record from
+    before that, with the subject passed twice, is still one suggestion."""
     b = box(tmp_path)
     first = suggest(b, NONE, 0)
-    assert suggest(b, NONE, 0) == first
+    again = k("propose", "--box", b, "--file", b.parent / "s0.jsonl").stdout
+    assert again.startswith("refused  line 0: already waiting on your seal"), again
+    rows = sc.kernel.read(b / "record.jsonl")[0]
+    held = next(r for r in rows if r.get("subject") == first)
+    sc.kernel.append(b, NOW[1], "proposal", subject=first, verdict="pass",
+                     bite_row=held["bite_row"])  # fmt: skip
     assert "1 suggestion from 1 assistant" in run("--box", b).stdout
 
 

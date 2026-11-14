@@ -1652,3 +1652,21 @@ def test_with_no_list_no_box_elsewhere_is_listed_found_or_kept(site, tmp_path):
     assert br.main(["--box", str(b), "--no-open", "--boxes"]) == 2
     nope = tmp_path / "nope" / "k.json"
     assert br.main(["--box", str(b), "--boxes", str(nope), "--no-open"]) == 2
+
+
+def test_a_suggestion_passed_twice_in_an_older_record_is_owed_once(tmp_path):
+    """The kernel now refuses a re-proposal (CONST-V-11); a record from
+    before that may hold one subject passed twice, and it is owed once."""
+    b = make_box(tmp_path)
+    got = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)
+    row = {"path": "dentist.md", "data": "Tuesday at 3pm.",
+           "cites": [got["served"][0]["id"]], "claim": "the dentist note"}  # fmt: skip
+    (tmp_path / "r.jsonl").write_text(json.dumps(row) + "\n")
+    out = k("propose", "--box", str(b), "--file", str(tmp_path / "r.jsonl"), *NOW)
+    subj = out.stdout.split()[1]
+    held = next(
+        r for r in br.kernel.read(b / "record.jsonl")[0] if r.get("subject") == subj
+    )
+    br.kernel.append(b, NOW[1], "proposal", subject=subj, verdict="pass",
+                     bite_row=held["bite_row"])  # fmt: skip
+    assert br.Willow(b, None).owed() == ([subj], [])

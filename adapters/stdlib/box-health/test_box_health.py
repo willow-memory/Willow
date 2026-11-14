@@ -301,3 +301,18 @@ def test_several_breaks_are_counted_after_the_first(tmp_path):
     rec.write_text(rec.read_text().replace("2026-10-24", "2025-10-24"))
     got = run("--box", str(b), *NOW)
     assert got.returncode == 2 and "(and 2 more)" in got.stderr
+
+
+def test_a_suggestion_passed_twice_in_an_older_record_waits_once(tmp_path):
+    """The kernel now refuses a re-proposal (CONST-V-11); a record from
+    before that may hold one subject passed twice, and it waits once."""
+    b = box(tmp_path)
+    subj = propose(tmp_path, b)
+    held = next(
+        r for r in kernel.read(b / "record.jsonl")[0] if r.get("subject") == subj
+    )
+    kernel.append(b, NOW[1], "proposal", subject=subj, verdict="pass",
+                  bite_row=held["bite_row"])  # fmt: skip
+    got = run("--box", str(b), *NOW)
+    assert "1 suggestion waiting for you" in got.stdout
+    assert "0 approved, 1 waiting" in got.stdout

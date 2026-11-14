@@ -755,9 +755,7 @@ class Willow:
         rows, breaks = kernel.read(self.box / "record.jsonl")
         if breaks:
             return [], breaks
-        done = {**kernel.sealed(self.box, rows), **kernel.declined(self.box, rows)}
-        return [r["subject"] for r in rows if r["kind"] == "proposal"
-                and r.get("verdict") == "pass" and r["subject"] not in done], []  # fmt: skip
+        return list(kernel.waiting(self.box, rows)), []  # once a thing (CONST-V-11)
 
     def put_beside(self, name: str, off: bool = False) -> str | None:
         """Put another project under --home beside the one that is open, so
