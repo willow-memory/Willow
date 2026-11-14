@@ -2016,6 +2016,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="beacon"></a>**beacon** (idea) \
   Draws seeded by a public randomness beacon (drand), so nobody could have picked the result in advance. \
   Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `seeded` `draws` · near: tarot, oracle-text, dice
+- <a id="blind-deal"></a>**blind-deal** (idea) \
+  Cards or dice only one seat can read: each seat's share sealed to it, its hash on the record, opened when the hand ends and checked. \
+  Uses dice. *new* `no-install` `offline` `hash` `end` · near: persona-card, tarot, weights-pin
 - <a id="chess-puzzle"></a>**chess-puzzle** (idea) \
   A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. \
   Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `drawn` `chess` · near: predict, daily-word, art-of-the-day
@@ -2086,6 +2089,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="spurious"></a>**spurious** (idea) \
   Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. \
   *new* `no-install` `offline` `front` `joins` · near: front-page, ci-why, readme
+- <a id="table"></a>**table** (idea) \
+  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
+  *new* `no-install` `offline` `game` `play` · near: life, catgrid, game-master
 - <a id="tic-tac-toe"></a>**tic-tac-toe** (idea) \
   Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. \
   *new* `no-install` `offline` `rows` `move` · near: reversi, catgrid, nim
