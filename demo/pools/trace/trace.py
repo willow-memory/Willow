@@ -25,6 +25,7 @@ to ROWS:
     lines, out        how many lines it printed, and their SHA-256 with the
                       run's own folders and any time of day taken out, so
                       one step's output can be held to another run of it
+    day               the UTC day it ran on: a step may count days from today
     rows              the kinds of row it added to the record, each counted
     row_groups        each row it added as kind:hash of its content, the
                       chain's own fields out and the rest normalized (the
@@ -260,7 +261,7 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box: Path, tmp: 
         env["WILLOW_READ_LOG"] = str(reads)
     before = (box / "record.jsonl").read_text(encoding="utf-8").count("\n")
     had = {x for x in mine.rglob("*") if x.is_file()}
-    began, timed_out = time.perf_counter(), False
+    began, timed_out, day = time.perf_counter(), False, today()
     try:
         got = subprocess.run([sys.executable, str(script), *(a.format(**fill) for a in argv)],
                              stdin=subprocess.DEVNULL, capture_output=True, text=True, env=env,
@@ -306,7 +307,7 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box: Path, tmp: 
     return {
         "step": step, "card": card, "code": code_sha, "exit": code, "timed_out": timed_out,
         "seconds": seconds, "state": state.group(1) if state else None,
-        "lines": len(out.splitlines()), "out": sha(steady(out, fill, mine).encode()), "rows": dict(sorted(rows.items())), "row_groups": groups, "row_shapes": shapes,
+        "lines": len(out.splitlines()), "out": sha(steady(out, fill, mine).encode()), "rows": dict(sorted(rows.items())), "row_groups": groups, "row_shapes": shapes, "day": day,
         "wrote": dict(sorted(wrote.items())), "maps": maps,
         "places": sorted({salted(f"{f}\0{w}") for f, w, _ in seen}),
         "files": sorted({salted(f) for f, _, _ in seen}),

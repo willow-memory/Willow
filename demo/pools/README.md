@@ -179,6 +179,37 @@ maintainer's to decide, `SOURCE_DATE_EPOCH`), and measure what the stacks
 change, not what fires together. Both are written after reading this
 report, and will say so.
 
+## The seventh freeze: what the first report taught (written after it)
+
+Every piece here was written after reading the first report, and is held
+apart from what was frozen before it: truth.py's measures stand as they
+were; the new ones are [truth/changes.py](truth/changes.py).
+
+- **The baseline is the same run's.** Each notebook runs every step alone
+  on its pile first, and every stack is held to those rows: same day, same
+  machine. Each row carries the UTC day it ran on, and a row is held only
+  to an alone row of the same day, since midnight can fall inside a run.
+- **Fired means more than printed.** Each notebook also runs every step
+  alone on an empty pile; a step fired when it printed something other than
+  what it prints on nothing.
+- **What the stacks change:** bridges held (the taker changed when its
+  giver ran first) against the 1,000 no-bridge pairs, by a one-sided
+  Fisher exact test; and the pools, steps joined by a change one made in
+  the other.
+- **Kinds, one at a time.** A new way in the grid, `kind`: for each kind of
+  row a step wrote alone in stage 0 on the public piles, the step that wrote
+  it on the most piles, then each of the 78 readers of the record (1,156
+  stacks). The writers are read from stage 0's committed rows, a source in
+  the manifest.
+- **The grove's hash groupings, rungs 1 and 2.** The trace keeps each record
+  row a step added as a content group (the chain's own fields out, the
+  previous row's hash, the run's folders and the time normalized, the rest
+  hashed with the pile's salt) and as a shape (its field names, with one
+  salt for the study). Readers are tied to which rows moved them, not only
+  to kinds, and no word is kept. The maintainer's idea, from willows-grove
+  `docs/design/one-script/README.md`, "Matching when the wording isn't
+  exact".
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and

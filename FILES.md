@@ -2454,11 +2454,13 @@ willow/
 │   │   │   ├── trace.py      one add-on's command run on one pile under the guard, and one row of what was seen: not what its card says
 │   │   │   └── test_trace.py     a row says what was seen and keeps none of the pile's words; places are salted and mapped back
 │   │   ├── truth/            what the report may say, and only from the runs: the rules, the dry runs, the report
+│   │   │   ├── changes.py    what the stacks change, measured against the same run
 │   │   │   ├── rules.json    the pass rules and thresholds, for the freeze to hold
 │   │   │   ├── sample/       the planted dry run, kept so its report is made again byte for byte
 │   │   │   │   ├── planted.json  the measure's result on the planted rows
 │   │   │   │   └── planted.md    the report made from it
 │   │   │   ├── truth.py      what the pools study may say, and only from its runs
+│   │   │   ├── test_changes.py
 │   │   │   └── test_truth.py     each rule holds on rows made to test it, each shown to fail when broken, the report byte for byte
 │   │   ├── piles/
 │   │   │   ├── known_gaps.py the pools study's pile of known reader gaps, made from public

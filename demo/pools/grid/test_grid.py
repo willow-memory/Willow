@@ -185,3 +185,17 @@ def test_record_bridges_reach_each_reader_from_any_step_that_adds_rows(made):
         assert n in rec["readers"], n
     # too wide for stacks of their own: the bridge rows are the bridges'
     assert sum(r["way"] == "bridge" for r in m["stacks"]) == len(m["bridges"])
+
+
+def test_the_kind_stacks_are_a_stage_0_writer_then_each_reader_of_the_record(made):
+    _, m = made
+    kinds = [r for r in m["stacks"] if r["way"] == "kind"]
+    writers, readers = m["kind_writers"], set(m["record_bridges"]["readers"])
+    assert kinds and len(kinds) == sum(len(readers - {w}) for w in writers)
+    for r in kinds:
+        w, reader = r["steps"]
+        assert w in writers and reader in readers and reader != w
+    assert "stage0" in m["sources"], (
+        "the writers are read from stage 0's committed rows"
+    )
+    assert writers == grid.kind_writers(grid.STAGE0)

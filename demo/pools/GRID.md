@@ -39,7 +39,7 @@ repository (ci, github, mutants, readme, similar).
 
 ## What it writes, on willow-pool-test at 8125716 (main merged in, 2026-11-13)
 
-1,473 stacks of 357 steps, in half a second, the same bytes every time:
+1,473 stacks of 357 steps (2,629 with the kind stacks added after the first report), in half a second, the same bytes every time:
 
 | way | stacks | what each is |
 |---|---|---|
@@ -53,6 +53,7 @@ repository (ci, github, mutants, readme, similar).
 | random | 40 | ten seeded draws each of 3, 10, 30 and 100 steps: the control |
 | all | 4 | every step, in name order and in three running orders |
 | all-but-one | 357 | every step but one, for each |
+| kind | 1,156 | a step that wrote kinds of row alone in stage 0, then each of the 78 readers of the record (added after the first report, from stage 0's rows) |
 
 Over one pile that is 133,442 step runs, 127,092 of them in all-but-one.
 At 0.2 to 1 second a step, some 7 to 36 CPU hours a pile: all-but-one is

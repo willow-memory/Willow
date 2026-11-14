@@ -25,6 +25,9 @@ The ways, each a kind of row:
     random        seeded draws of each of random_sizes, random_draws of each
     all           every step, in name order and all_shuffles running orders
     all-but-one   every step but one, for each step
+    kind          a step that wrote kinds of row alone in stage 0, then each
+                  reader of the record: what each kind does to each reader
+                  (added after the first report, from stage 0's rows)
 
 A stack runs its steps in the order its file lists them (stack.py goes pool
 by pool, step by step; only the document it prints is sorted tallest
@@ -69,6 +72,7 @@ CONTRACT = ROOT / "adapters" / "stdlib" / "ci" / "test_contract.py"
 WEEK = ROOT / "adapters" / "stdlib" / "readme" / "week.json"
 STATIC = HERE.parent / "static" / "static.json"
 PLAN = HERE / "plan.json"
+STAGE0 = HERE.parent / "runs" / "stage0"
 HEADER = re.compile(r"\A<!-- willow-addon\n(.*?)\n-->", re.S)
 
 
@@ -143,6 +147,25 @@ def record_bridges(static: dict, step: dict[str, list[str]]) -> dict:
     return {"by": why, "readers": readers, "givers": givers}
 
 
+def kind_writers(stage0: Path) -> dict[str, list[str]]:
+    """{writer: the kinds it wrote}: for each kind of row a step wrote alone in
+    stage 0 on the public piles, the step that wrote it on the most piles
+    (the first by name on a tie). Read from the committed rows, so the
+    same rows give the same writers."""
+    counts: dict[str, dict[str, int]] = {}
+    for f in sorted(stage0.glob("*/rows-a.jsonl")):
+        for line in f.read_text(encoding="utf-8").splitlines():
+            r = json.loads(line)
+            for k in r.get("rows", {}):
+                counts.setdefault(k, {}).setdefault(r["step"], 0)
+                counts[k][r["step"]] += 1
+    out: dict[str, list[str]] = {}
+    for k, c in sorted(counts.items()):
+        w = sorted(c.items(), key=lambda x: (-x[1], x[0]))[0][0]
+        out.setdefault(w, []).append(k)
+    return out
+
+
 def slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
@@ -156,7 +179,13 @@ def stack_text(
 
 
 def grid(
-    plan: dict, card: dict, step: dict, near: dict, links: list[dict]
+    plan: dict,
+    card: dict,
+    step: dict,
+    near: dict,
+    links: list[dict],
+    writers: dict[str, list[str]] | None = None,
+    readers: list[str] | None = None,
 ) -> list[dict]:
     """Every row: {id, way, why, steps}, steps in running order."""
     have = sorted(step)
@@ -165,7 +194,7 @@ def grid(
     def add(way: str, key: str, why: str, members) -> None:
         order = [n for n in members if n in step]
         if order:
-            rid = f"{way}/{key if way == 'bridge' else slug(key)}"
+            rid = f"{way}/{key if way in ('bridge', 'kind') else slug(key)}"
             if any(r["id"] == rid for r in rows):
                 raise ValueError(f"two rows are {rid}")
             rows.append({"id": rid, "way": way, "why": why, "steps": order})
@@ -221,6 +250,11 @@ def grid(
         )
     for n in have:
         add("all-but-one", n, f"every step but {n}", [m for m in have if m != n])
+    for w, kinds in sorted((writers or {}).items()):
+        for r in readers or []:
+            if r != w and w in step and r in step:
+                add("kind", f"{w}--{r}", f"{w} writes {', '.join(kinds)} alone in stage 0; then {r} reads the record",
+                    [w, r])  # fmt: skip
     return rows
 
 
@@ -241,7 +275,8 @@ def do_write(to: Path) -> int:
     static = json.loads(STATIC.read_text())
     links = bridges(card, static, set(step))
     record = record_bridges(static, step)
-    rows = grid(plan, card, step, near, links)
+    writers = kind_writers(STAGE0)
+    rows = grid(plan, card, step, near, links, writers, record["readers"])
     (to / "stacks").mkdir(parents=True)
     for row in rows:
         path = to / "stacks" / f"{row['id']}.md"
@@ -257,6 +292,7 @@ def do_write(to: Path) -> int:
         ways[row["way"]] = ways.get(row["way"], 0) + 1
     manifest = {
         "sources": {"cards": sha(cards_bytes), "contract": sha(CONTRACT.read_bytes()),
+                    "stage0": sha(b"".join(f.read_bytes() for f in sorted(STAGE0.glob("*/rows-a.jsonl")))),
                     "week": sha(WEEK.read_bytes()), "static": sha(STATIC.read_bytes()),
                     "plan": sha(PLAN.read_bytes()), "grid": sha(Path(__file__).read_bytes())},
         "plan": plan,
@@ -265,6 +301,7 @@ def do_write(to: Path) -> int:
                   for n, a in step.items()},
         "no_step": sorted(n for n in card if n not in step),
         "bridges": links,
+        "kind_writers": writers,
         "record_bridges": record,
         "ways": ways,
         "stacks": rows,
