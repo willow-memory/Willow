@@ -3,7 +3,7 @@ section: Play
 line: Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools

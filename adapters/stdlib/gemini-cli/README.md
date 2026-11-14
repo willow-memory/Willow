@@ -3,7 +3,7 @@ section: Assistants
 line: Google's Gemini CLI asks your folder and hands in suggestions, through the mcp add-on.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: ways

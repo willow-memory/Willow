@@ -3,7 +3,7 @@ section: Play
 line: A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder.
 source: new
 added: 2026-10-27
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools

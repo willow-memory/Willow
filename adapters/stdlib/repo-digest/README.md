@@ -3,7 +3,7 @@ section: For maintainers
 line: One page of what this repo needs from you: files nothing declares, a ring in what add-ons use, ideas waiting, and the order they build in.
 source: new
 added: 2026-11-11
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: repo
