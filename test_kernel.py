@@ -1,4 +1,4 @@
-"""kernel.py, the smallest script for anyone: its twelve beats hold, the whole
+"""kernel.py, the smallest script for anyone: its thirteen beats hold, the whole
 loop runs on the command line, and what it serves is what its rules say."""
 
 from __future__ import annotations
@@ -29,15 +29,22 @@ def cli(*argv: str) -> subprocess.CompletedProcess:
 
 def test_its_twelve_beats_hold():
     p = cli("test")
-    assert p.returncode == 0 and "twelve beats held" in p.stdout, p.stderr
+    assert p.returncode == 0 and "thirteen beats held" in p.stdout, p.stderr
 
 
-#: For each beat Draft 0.16 added, a break planted in a copy of the kernel,
+#: For each beat Draft 0.16 and 0.17 added, a break planted in a copy of the kernel,
 #: and the beat that must catch it: a check that cannot fail is no check
 #: (CONST-IV-9). Each is the one promise its clause makes, broken.
 PLANTED = {
     # CONST-V-10: out offers a proposal the person declined
-    "# 7.": ('and r["subject"] not in no', ""),
+    "# 7.": ("and s not in no and", "and"),
+    # CONST-V-11: the door offers again what was sealed, declined or waits
+    "# 11./door": (
+        'why = offered(box, read(box / "record.jsonl")[0], subject_of(prop))',
+        "why = None",
+    ),
+    # CONST-V-11: what waits is counted once a row, not once a thing to decide
+    "# 11./once": ("out[s] = r", "out[f\"{s} {r['n']}\"] = r"),
     # CONST-IV-10: the order follows the process's hash seed
     "# 8.": ("key=lambda s: (-s[0],", "key=lambda s: (hash(s[2]) % 3, -s[0],"),
     # CONST-III-6: the core reaches for an add-on, quietly
@@ -72,7 +79,7 @@ def test_each_new_beat_fails_on_its_planted_break(tmp_path, beat):
     lines = broken.read_text(encoding="utf-8").split("\n")
     beats = [i for i, ln in enumerate(lines, 1) if re.match(r"\s*# \d+\. ", ln)]
     at = re.findall(rf'"{re.escape(str(broken))}", line (\d+)', p.stderr)[-1]
-    mine = next(i for i in beats if lines[i - 1].strip().startswith(beat))
+    mine = next(i for i in beats if lines[i - 1].strip().startswith(beat.split("/")[0]))
     after = [i for i in beats if i > mine]
     assert mine < int(at) < (after[0] if after else len(lines)), p.stderr
 
@@ -828,3 +835,54 @@ def test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0(tmp_path):
     got = cli("propose", *b, "--file", str(rows))
     assert "refused" in got.stdout
     assert got.returncode == 42
+
+
+def test_offered_once_counted_once(tmp_path):
+    """V.11 on the command line: a suggestion proposed again is refused at
+    the door, with why, whether it waits, was sealed or was declined; and a
+    record from before the door, with one subject passed twice, is counted
+    once (CONST-V-11)."""
+    pile, box, key = tmp_path / "pile", tmp_path / "box", tmp_path / "keys" / "me.key"
+    pile.mkdir()
+    (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    cli("init", *b, "--pile", str(pile), "--key", str(key))
+    got = cli("bite", *b, "when does the bus leave the square")
+    cite = json.loads(got.stdout)["served"][0]["id"]
+    rows = tmp_path / "rows.jsonl"
+    yes = {"path": "bus.md", "data": "Seven.", "cites": [cite], "claim": "notes.md"}
+    no = {**yes, "path": "ferry.md", "data": "Noon."}
+    wait = {**yes, "path": "tram.md", "data": "Eight."}
+    rows.write_text("".join(json.dumps(x) + "\n" for x in (yes, no, wait, wait)))
+    got = cli("propose", *b, "--file", str(rows))
+    said = got.stdout.splitlines()
+    assert got.returncode == 42 and said[3].startswith(
+        "refused  line 3: already waiting on your seal, row "
+    ), said
+    assert cli("seal", *b, k.subject_of(yes)).returncode == 0
+    assert cli("decline", *b, k.subject_of(no)).returncode == 0
+    sealed_file = box / "proposals" / f"{k.subject_of(yes)[9:]}.json"
+    before = sealed_file.read_text()
+    got = cli("bite", *b, "the bus from the square at seven")  # other words
+    assert cite in got.stdout
+    got = cli("propose", *b, "--file", str(rows))
+    said = got.stdout.splitlines()
+    assert [x.split(": ")[1].rsplit(" ", 1)[0] for x in said] == [
+        "you approved it at row",
+        "you declined it at row",
+        "already waiting on your seal, row",
+        "already waiting on your seal, row",
+    ], said
+    record = k.read(box / "record.jsonl")[0]
+    refused = [
+        r for r in record if r["kind"] == "proposal" and r["verdict"] == "refused"
+    ]
+    assert len(refused) == 5 and all(r["why"] for r in refused)
+    assert sealed_file.read_text() == before, "a refused one writes no file"
+    # a record from before the door: the same subject passed twice
+    first = next(r for r in record if r.get("subject") == k.subject_of(wait))
+    k.append(box, "2026-10-22T00:00:00Z", "proposal", subject=first["subject"],
+             verdict="pass", bite_row=first["bite_row"])  # fmt: skip
+    got = cli("out", *b)
+    assert got.returncode == 42 and got.stdout.count("waiting on your seal") == 1
+    assert "; 1 waiting" in got.stdout
