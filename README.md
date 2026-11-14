@@ -58,7 +58,7 @@ made-up beekeeper's six years of notes:
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the twelve beats held
+kernel: the thirteen beats held
 $ python demo/odile/make_life.py
 $ python kernel.py init --box odile-record --pile demo/odile/life --key odile.key
 $ python kernel.py bite --box odile-record "how are the bees"
@@ -233,6 +233,7 @@ willow's own.
 | Never stores your words | `CONST-VI-8` | `kernel.py test`: after the whole cycle, the log holds no word a question or a suggestion said |
 | Never gives a suggestion as an answer until it's approved | `CONST-0-1`, `CONST-0-2` | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
 | Never accepts a forged approval | `CONST-0-4` | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
+| Offers each suggestion once, and counts what waits on you once | `CONST-V-11` | `kernel.py test`: a suggestion you approved, declined or that already waits is refused when proposed again, with why; one passed twice in an older record is still one waiting |
 | Never offers again what you declined, or approves over it | `CONST-V-10` | `kernel.py test`: a decline that doesn't prove changes nothing; one that does ends the offer, and a seal after it is refused |
 | Never serves an approval for a question you didn't seal it for | `CONST-0-4` | `test_kernel.py`: a record rewritten and re-hashed can't change, strip or re-point the question a seal names |
 | Never writes past a change | `CONST-0-5` | `kernel.py test`: one edited field in one past line, and every command refuses |
@@ -319,7 +320,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,200 lines)
+├── kernel.py                 the whole program (about 1,250 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

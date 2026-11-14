@@ -8,7 +8,7 @@ The output shown is real.
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the twelve beats held
+kernel: the thirteen beats held
 ```
 
 `test` sets up a throwaway folder, runs every command, and checks twelve
