@@ -3,7 +3,7 @@ section: Play
 line: A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.
 source: bot
 added: 2026-11-01
-version: 0.1.0
+version: 0.2.0
 writes: record
 network: none
 role: tools
@@ -20,6 +20,7 @@ and the game master's calls are yours: this never makes one.
     python adapters/stdlib/game-master/game_master.py --box DIR act Weird --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR ask    --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR settle --world night.json
+    python adapters/stdlib/game-master/game_master.py --box DIR offer bo "A guest walks in" --as guest --world night.json
     python adapters/stdlib/game-master/game_master.py --box DIR check
 
 **An action beat** is rolled with `act STAT`: dice's own `2d6` roll (a `roll`
@@ -39,6 +40,31 @@ key, a seal over some other proposal or another game's, or a proposal file
 changed after you sealed it, moves nothing. A no moves the story on too;
 what it records is the no.
 
+**An offer** is what a player brings to the table on the night, in their
+own words: "a guest walks in", "the toll-man has a twin". `offer CHARACTER
+"FACT"` hands it in as that seated character's, through the kernel's
+`bite` and `propose` like a ruling, and the story goes on while it waits:
+an offer sits beside the story's path, never on it, so the dice and the
+beats are the same with it or without. The next `settle` reads the answer
+back and writes a `table-heard` row for each offer you have sealed or
+declined. Only a seal makes it canon. `status` lists the offers waiting.
+
+**The story can turn on an offer.** Nobody can name ahead of time what a
+player will bring, so a world names the kinds of offer it turns on,
+`"offers": ["guest"]`, and a player's offer can say which it is, `--as
+guest`. A beat with `"when": {"offered": "guest", "is": ["sealed"]}` is
+played only if, when the story reaches it, your last answer to a guest
+offered was a seal; `declined` and `none` (no guest answered yet) go the
+other ways. What the story reached is fixed by the rows: an answer written
+after a beat was passed by doesn't put it back.
+
+**A chapter can turn on an earlier one.** `"when": {"sealed":
+"toll-bridge::s1::d1", "is": ["sealed"]}` names a ruling in any story, as
+story::scene::beat, and the beat is played only if your last answer to it on
+this record, in any game of that story before the story reached the beat,
+was a seal; `declined` and `none` (never ruled) go the other ways. So the
+next chapter, a world of its own, carries what the last one made true.
+
 **A world** is a JSON file:
 
     { "id", "title", "setting", "stats": ["Grit", ...], "base_stat": 1,
@@ -51,7 +77,20 @@ what it records is the no.
             "proposes": { "fact", "proposed_by" } } ] }] }
 
 Stats are whole numbers; a stat missing from a sheet is `base_stat`. Seated
-characters take the beats in turn. A world that isn't this is refused, naming
+characters take the beats in turn.
+
+**A beat can name whose it is:** `"by": "CHARACTER"`, a seated
+character, takes that beat whatever the turn. Beats without one go round the
+seats in order.
+
+**A beat can turn on an earlier one.** A beat with
+`"when": {"beat": "SCENE::BEAT", "is": ["miss"]}` is played only if that
+earlier beat came out one of those ways: `strong`, `weak` or `miss` for an
+action, `sealed` or `declined` for a decision. Otherwise the story passes it
+by. So a missed roll can lead somewhere a strong one doesn't, and a ruling
+declined can take the story down another road. `status` then counts beats
+"of at most" the world's total, and `check` holds each row to the path the
+outcomes before it made. A world that isn't this is refused, naming
 where. The game records the world's SHA-256 when it opens, and refuses the
 file if it has changed since.
 
@@ -62,7 +101,9 @@ decline of yours stands behind. Given `--world` it also checks the order
 of beats, whose turn it was, the stat and the line against the world.
 
 Rows: `table-open` (the world's id and hash), `table-ask` (the proposal's
-subject), `table-beat` (a roll's result, or a ruling), and the `roll`,
+subject), `table-beat` (a roll's result, or a ruling), `table-offer` (what a player
+offered, in their words, and its subject), `table-heard` (your answer to
+it), and the `roll`,
 `bite` and `proposal` rows of dice and the kernel. Exit codes, the kernel's:
 0 done, 42 waiting on your seal, 2 refused.
 

@@ -1,0 +1,1 @@
+`ui`: "rule" and "rules" in a search now reach the rules card, where "I want the game rules" reached no card at all; and `game-baselines` is on the list of ideas: a game's measured self-play results, each with its count of games and the policy every seat played

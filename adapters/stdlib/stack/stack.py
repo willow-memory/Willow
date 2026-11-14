@@ -73,8 +73,11 @@ STDLIB = HERE.parent
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
-NONE_FOUND = {"amounts", "contradictions", "duplicates", "said"}
-FLAGS_ON_ALIVE = {"contradictions"}
+NONE_FOUND = {"amounts", "contradictions", "duplicates", "gaps", "said"}
+FLAGS_ON_ALIVE = {
+    "contradictions",
+    "gaps",
+}  # their 0 is something found: a gap, a contradiction
 
 
 def bare_backslash(argstr: str) -> bool:
@@ -192,6 +195,7 @@ def mark(name: str, args: list[str]) -> str:
 
 #: `{03}` or `{03.json}` in a step's args: an earlier step's kept output
 HANDS = re.compile(r"\{(\d+)(\.json)?\}")
+RUN = "{run}"  # the kept run's own folder, for a step that writes a file
 
 
 def hands(args: list[str]) -> list[tuple[int, bool]]:
@@ -204,6 +208,11 @@ def unhandable(flat: list, scripts: dict, kept: bool) -> str | None:
     """Why a stack's hand-ons can't be, or None: said before anything runs.
     `flat` is every step in the stack file's order."""
     for at, (name, args) in enumerate(flat, 1):
+        if not kept and any(RUN in a for a in args):
+            return (
+                f"step {at} ({name}) writes in {RUN}, the run's own folder; "
+                "that needs the run kept: add --to FOLDER"
+            )
         for n, as_json in hands(args):
             tag = f"{{{n:02d}{'.json' if as_json else ''}}}"
             if not kept:
@@ -549,6 +558,8 @@ def main(argv: list[str]) -> int:
                 live = run.start(nsteps, name, args, str(box)) if run else None
                 if hands(args):
                     args = run.handed(flat, args)[0]
+                if run:
+                    args = [a.replace(RUN, str(run.folder)) for a in args]
                 if report:
                     code, out = run_step(scripts[name], [*args, "--json"], str(box))
                     doc, out = as_report(code, out)
@@ -577,7 +588,7 @@ def main(argv: list[str]) -> int:
 
     doc = compose(ran, str(box))
     print(doc, end="")
-    print(f"\n{flagged} of {nsteps} steps flagged (exit 42).")
+    print(f"\n{flagged} of {nsteps} steps flagged (exit {worst}).")
     if run:
         run.say(f"done: {flagged} of {nsteps} steps flagged")
     return worst
