@@ -181,6 +181,25 @@ clockwork-cellar::room::free is sealed`). A line author.py can't read is refused
 with its number, and a world game-master wouldn't play with game-master's
 reason.
 
+## The play grows the world
+
+    python demo/game-box/session.py --table DIR export-canon --to canon.md
+    python promote.py import-canon canon.md --timeline ID      (in story-timeline)
+
+What the table made true goes back to the writer's timeline, the other half
+of the-table's StorySession design. `export-canon` writes every fact the GM
+sealed, as markdown, each with its seal (the proposal's hash and row) and
+where in play it came from: a story's beat, or "offered by pell as a
+guest". A ruling declined stays in the box. In story-timeline,
+`import-canon` puts each one on the timeline as a `fact` entry, promoted
+with its own `promote_to_timeline` and carrying that provenance; a fact
+already there is skipped, so each night's export adds only what's new. The
+writer then writes the next chapter knowing it; fact entries are the
+writer's chronology, and stay out of the stories the box plays.
+
+The GM seals; the writer promotes. Nothing goes onto the timeline until the
+writer runs the import.
+
 ## A session, played by code
 
     python demo/game-box/session.py --table DIR --world clockwork-cellar

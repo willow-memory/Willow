@@ -615,3 +615,34 @@ def test_the_next_chapter_carries_what_the_last_one_made_true(t):
     ]
     assert nest[0] == "prince"
     assert "every one holds" in t.check().stdout
+
+
+# ── the play grows the world ─────────────────────────────────────────────────
+def test_export_canon_writes_only_what_was_sealed_with_its_seal(t):
+    t.open()
+    assert t.session("export-canon").returncode == 42  # nothing sealed yet
+    t.session()
+    t.session("offer", "pell", VELL, "--as", "guest")
+    t.seal([r for r in t.rows() if r["kind"] == "table-offer"][-1]["subject"])
+    t.night(answer=lambda fact: "Lantern Man" not in fact)
+    to = t.dir / "canon.md"
+    got = t.session("export-canon", "--to", to)
+    assert got.returncode == 0
+    lines = to.read_text().splitlines()
+    assert (
+        lines[0]
+        == f"<!-- canon from a game box: record {t.rows()[0]['hash']}, "
+        + lines[0].split(", ")[1]
+    )
+    assert lines[1] == "# What the table made true"
+    facts = [ln[2:] for ln in lines if ln.startswith("- ")]
+    assert "The red button is bait: whoever leaves it alone wins the room." in facts
+    assert VELL in facts
+    assert not any("Lantern Man" in f for f in facts)  # declined: it stays in the box
+    seals = [ln.strip() for ln in lines if ln.startswith("  sealed: proposal:")]
+    assert len(seals) == len(facts)
+    assert any(
+        s.endswith("| clockwork-cellar, offered by pell as a guest") for s in seals
+    )
+    again = t.session("export-canon", "--to", to)
+    assert again.returncode == 2 and "never written over" in again.stderr

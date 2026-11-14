@@ -4,6 +4,7 @@
     python demo/game-box/session.py --table DIR [--world NAME] offer CHARACTER "FACT" [--as KIND]
     python demo/game-box/session.py --table DIR canon
     python demo/game-box/session.py --table DIR recap
+    python demo/game-box/session.py --table DIR export-canon [--to FILE]
 
 The game master's bookkeeping, done by code: every action beat is rolled for
 the character whose turn it is, leaning into the approach the beat suggests,
@@ -32,6 +33,11 @@ last session's first (a session ends where its session seal says), so
 nothing the table hasn't heard is said. Its second part is for the GM's
 eyes: the notes of the latest night, typed or scanned, each line cited, the
 promises made for next time, and what was said no to.
+
+`export-canon` is the play growing the world: every fact the GM sealed,
+as markdown, each with its seal (the proposal's hash and row) and where in
+play it came from, for story-timeline's `import-canon` to put on the
+writer's timeline. Only what was sealed goes; a declined ruling stays here.
 
 NAME is a world in DIR/worlds (lantern-fair unless said). The story is
 opened if it isn't yet. This never seals, declines or reads the key, and
@@ -111,6 +117,55 @@ def answers(
             if what in ("sealed", "declined"):
                 out.append((got["n"], what, fact, where))
     return sorted(out)
+
+
+def sealed_canon(box: Path, rows: list[dict]) -> list[dict]:
+    """Every fact the GM sealed on this record, with where it came from:
+    {fact, subject, row, from}, in the order they were sealed."""
+    out = []
+    for g in gm.games(rows):
+        story = g["open"].get("world")
+        said = [(a, f"{story}::{a['scene']}::{a['beat']}") for a in g["asks"]]
+        said += [(o, f"{story}, offered by {o['by']}" + (f" as a {o['as']}" if o.get("as") else "")) for o in g["offers"]]  # fmt: skip
+        for a, where in said:
+            what, got = gm.ruling(box, rows, a["subject"])
+            if what == "sealed":
+                out.append(
+                    {
+                        "fact": a["fact"],
+                        "subject": a["subject"],
+                        "row": got["n"],
+                        "from": where,
+                    }
+                )
+    return sorted(out, key=lambda f: f["row"])
+
+
+def export_canon(box: Path, to: str) -> int:
+    rows, breaks = kernel.read(box / "record.jsonl")
+    if breaks:
+        return fail("the record doesn't verify: " + "; ".join(breaks))
+    facts = sealed_canon(box, rows)
+    if not facts:
+        print("nothing sealed yet: no canon to export")
+        return kernel.ESCALATE
+    lines = [f"<!-- canon from a game box: record {rows[0]['hash']}, {len(rows)} rows -->",
+             "# What the table made true", ""]  # fmt: skip
+    for f in facts:
+        lines += [
+            f"- {f['fact']}",
+            f"  sealed: {f['subject']} | row {f['row']} | {f['from']}",
+        ]
+    text = "\n".join(lines) + "\n"
+    if not to:
+        print(text, end="")
+        return kernel.ALIVE
+    out = Path(to)
+    if out.exists():
+        return fail(f"{out} is there; canon is never written over")
+    out.write_text(text, encoding="utf-8")
+    print(f"wrote {out}: {len(facts)} sealed fact{'s' if len(facts) != 1 else ''}")
+    return kernel.ALIVE
 
 
 def canon(box: Path, worlds: Path) -> int:
@@ -263,12 +318,13 @@ def play(box: Path, world_file: Path, now: str) -> int:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--table", "--world", "--now", "--as"):
+        if a in ("--table", "--world", "--now", "--as", "--to"):
             opts[a] = next(it, "")
         else:
             args.append(a)
     if not opts.get("--table") or not (
-        args in ([], ["canon"], ["recap"]) or (len(args) == 3 and args[0] == "offer")
+        args in ([], ["canon"], ["recap"], ["export-canon"])
+        or (len(args) == 3 and args[0] == "offer")
     ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -279,6 +335,8 @@ def main(argv: list[str]) -> int:
         return fail(f"{table} isn't a table laid by open_table.py")
     if args == ["recap"]:
         return previously(box, table)
+    if args == ["export-canon"]:
+        return export_canon(box, opts.get("--to", ""))
     if args == ["canon"]:
         return canon(box, table / "worlds")
     if not world_file.exists():
