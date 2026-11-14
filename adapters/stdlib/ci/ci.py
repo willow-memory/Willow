@@ -709,8 +709,9 @@ DEMO_TESTS = (
     ("demo:five-repos", "demo/five-repos", ()),
     # the game box: the GM's binder, a session played by code, offers at the table
     ("demo:game-box", "demo/game-box/table", ()),
-    # the game box's end of the night, its handwritten page read by tesseract
-    ("demo:game-box-end", "demo/game-box/end", ("tesseract",)),
+    # the game box's end of the night: its handwritten page read where ocr can
+    # (tesseract and its requirements), and the night held either way
+    ("demo:game-box-end", "demo/game-box/end", ()),
     # the Google privacy study fetched its sources once; CI holds what it froze
     ("demo:google-privacy-2026-10-16", "demo/google-privacy-2026-10-16", ()),
     # the fleet's own known gaps asked of the code their fixes changed; the
