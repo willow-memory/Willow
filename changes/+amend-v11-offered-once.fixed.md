@@ -1,0 +1,1 @@
+`digest`, `projects`, `browse`: what waits on you is counted once, by the kernel's `waiting()`, where an older record holds one suggestion passed twice; `box-health` and `night-batch` count it the same way
