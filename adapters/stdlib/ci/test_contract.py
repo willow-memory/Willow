@@ -669,6 +669,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "baby-log": ("baby_log.py", ["--box", "{box}"]),
     "backup": ("backup.py", ["--box", "{box}", "--to", "{tmp}/backups", *NOW]),
     "badge": ("badge.py", ["--box", "{box}", "--to", "{tmp}/badge.svg"]),
+    "batch-ask": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "batch-glance": ("batch_glance.py", ["--of", "adapters/stdlib/batch-glance/example-scanned.jsonl", "--questions", "adapters/stdlib/batch-glance/example-questions.txt"]),
     "bench": ("bench.py", ["run", "--sizes", "20,40"]),
     "bot-venv": ("bot_venv.py", ["--venv", "{pile}"]),
@@ -712,6 +713,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "foia": ("foia.py", ["--box", "{box}"]),
     "folder-card": ("folder_card.py", ["--box", "{box}", "--to", "{tmp}/card.md"]),
     "food-log": ("food_log.py", ["--box", "{box}"]),
+    "forecast-ask": ("predict.py", ["ask", "--box", "{box}", *NOW, "tomatoes"]),
     "forecasts": ("forecasts.py", ["wager", "--box", "{box}", "--p", "0.7", *NOW,
                   "tomatoes"]),  # fmt: skip
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
@@ -827,7 +829,6 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "policy-watch": ("policy_watch.py", ["--url", "http://127.0.0.1:9/terms", "--to", "{tmp}/w"]),
     # the steps it would run, read and listed: nothing of the repo's touched
     "pr-ready": ("pr_ready.py", ["steps"]),
-    "forecast-ask": ("predict.py", ["ask", "--box", "{box}", *NOW, "tomatoes"]),
     "print": ("print.py", ["--box", "{box}", "--to", "{tmp}/page.html", *NOW, "tomatoes"]),
     "privacy": ("privacy.py", ["bite", "--box", "{box}", *NOW, "tomatoes"]),
     "profile": ("question_profile.py", ["--box", "{box}", "tomatoes"]),
@@ -860,7 +861,6 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # the question is the passage itself, an echo: nothing is asked, the port never reached
     "same-way": ("same_way.py", ["--box", "{box}", "--url", "http://127.0.0.1:9/v1",
                  "--model", "m", "--questions", "{pile}/garden.md"]),
-    "batch-ask": ("scan.py", ["index", "--from", "{pile}", "--to", "{tmp}/index"]),
     "scrub": ("scrub.py", ["--from", "{pile}/photo.png", "--to", "{tmp}/clean.png"]),
     "secrets-audit": ("secrets_audit.py", ["--box", "{box}"]),
     "sent-log": ("sent_log.py", ["--box", "{box}"]),
@@ -1150,11 +1150,11 @@ def test_reaching_is_seen_however_it_is_spelled(tmp_path):
                      'Path(__file__).resolve().parents[1] / "play-dice"',
                      'ROOT / "adapters" / "stdlib" / "play-dice"', 'sibling("play-dice", "play_dice")'):  # fmt: skip
         (folder / "probe.py").write_text(f"x = {spelling}\n")
-        assert reached(folder) == {"dice"}, spelling
+        assert reached(folder) == {"play-dice"}, spelling
     (folder / "probe.py").write_text(
-        "def addon(name):\n    return STDLIB / name / f'{name}.py'\n\n\nx = addon(\"dice\")\n"
+        "def addon(name):\n    return STDLIB / name / f'{name}.py'\n\n\nx = addon(\"play-dice\")\n"
     )
-    assert reached(folder) == {"dice"}, "found through a function of its own"
+    assert reached(folder) == {"play-dice"}, "found through a function of its own"
     (folder / "probe.py").write_text(
         'notes = self.root / "notes"  # a folder, not an add-on\n'
     )
@@ -1200,8 +1200,8 @@ REPORT_COMMANDS: dict[str, tuple[str, list[str]]] = {
         "ai_code_tracking.py",
         ["report", "--from", "{pile}/ai-code-tracking.db"],
     ),
-    "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
     "forecast-ask": ("predict.py", ["score", "--box", "{box}"]),
+    "forecasts": ("forecasts.py", ["score", "--box", "{box}"]),
     "session-seal": ("session_seal.py", ["--box", "{box}", "check"]),
 }
 HEAD = re.compile(
@@ -1212,6 +1212,12 @@ ROW = re.compile(r"  \S.*?  \S.*|  \S.*")
 
 def test_every_report_add_on_is_one_a_person_runs():
     assert REPORTS and set(REPORTS) <= set(COMMANDS), set(REPORTS) - set(COMMANDS)
+
+
+#: add-ons renamed with their script kept as a study froze it, byte for byte
+#: (adapters/renamed.json's kept_files): their report still says the old name
+_RENAMED = json.loads((ROOT / "adapters" / "renamed.json").read_text(encoding="utf-8"))
+KEPT_AS = {_RENAMED["names"][old]: old for old in _RENAMED.get("kept_files", [])}
 
 
 @pytest.mark.parametrize("files", ["plain", "findings"])
@@ -1240,7 +1246,9 @@ def test_every_report_keeps_the_report_contract(name, files, tmp_path):
     assert text.stdout.rstrip("\n") == STACK.report_text(doc), (
         "stack prints it the same"
     )
-    assert set(doc) == {"addon", "state", "said", "groups"} and doc["addon"] == name
+    assert set(doc) == {"addon", "state", "said", "groups"} and doc[
+        "addon"
+    ] == KEPT_AS.get(name, name)
     head, *body = text.stdout.rstrip("\n").splitlines()
     assert HEAD.fullmatch(head) and "\n" not in doc["said"], head
     rows = [r for g in doc["groups"] for r in g["rows"]]

@@ -508,7 +508,7 @@ willow/
 
 ```
 │   │   ├── new-kinds/
-│   │   │   ├── new_kinds.py  Kinds of file in your folders that no step of your stack reads yet, each with the readers that took some of them when tried on a few
+│   │   │   ├── new_kinds.py  kinds of file no step of your stack reads yet, with the readers that took some
 │   │   │   ├── test_new_kinds.py
 │   │   │   └── README.md     its card
 ```

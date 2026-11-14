@@ -177,9 +177,9 @@ def test_an_add_on_gets_its_tests_its_share_of_the_contract_its_docs_and_its_mut
         if "adapters/stdlib/what-changed/test_what_changed.py" in ln
     ]
     assert own.strip().startswith("pytest ")
-    assert "WILLOW_ONLY=changed pytest adapters/stdlib/ci/test_contract.py" in got
+    assert "WILLOW_ONLY=what-changed pytest adapters/stdlib/ci/test_contract.py" in got
     assert "pytest test_docs.py\n" in got
-    assert "mutants:changed" in got and "mutants.py run changed" in got
+    assert "mutants:what-changed" in got and "mutants.py run what-changed" in got
     assert "ruff check adapters/stdlib/what-changed/what_changed.py" in got
     assert "mutants:stale" not in got and "WILLOW_ONLY=stale" not in got
     assert "test_docs_fires" not in got and "tests:strip" not in got
@@ -206,10 +206,10 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
             "tests:adapters",
         ]  # the contract's share
         + ["tests:adapters"] * n
-        + ["tests:docs", "tests:ui", "demo:stack", "mutants:changed"]
+        + ["tests:docs", "tests:ui", "demo:stack", "mutants:what-changed"]
     )
     narrow, own = (
-        "WILLOW_ONLY=changed pytest",
+        "WILLOW_ONLY=what-changed pytest",
         "adapters/stdlib/what-changed/test_what_changed.py",
     )
     assert got.index(narrow) < got.index(own), (
@@ -219,7 +219,7 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
 
 def test_a_card_change_runs_the_tests_but_not_the_mutants(plan_of):
     got = plan_of("adapters/stdlib/what-changed/README.md").stdout
-    assert "test_what_changed.py" in got and "WILLOW_ONLY=changed" in got
+    assert "test_what_changed.py" in got and "WILLOW_ONLY=what-changed" in got
     assert "mutants" not in got and "ruff" not in got
 
 
@@ -442,7 +442,7 @@ def test_the_contract_is_never_reached_by_the_graph_alone():
     g = imp.Graph(imp.repo_pythons())
     plan = imp.place(["adapters/stdlib/what-changed/what_changed.py"], g)
     assert not plan.contract_whole and imp.CONTRACT not in plan.own
-    assert plan.narrow == ["changed"]
+    assert plan.narrow == ["what-changed"]
     assert (
         imp.CONTRACT in g.reach({"adapters/stdlib/what-changed/what_changed.py"})
         or True

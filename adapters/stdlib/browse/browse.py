@@ -159,7 +159,7 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
     index-cache isn't here, the index isn't current for the box's folder by
     index-cache's manifest, or the box's words list can't be read (the
     kernel's bite then says why)."""
-    cache, scan = sibling("index-cache", "index_cache"), sibling("scan", "scan")
+    cache, scan = sibling("index-cache", "index_cache"), sibling("batch-ask", "scan")
     if cache is None or scan is None:
         return None
     cfg = kernel.config(box)
@@ -195,7 +195,7 @@ def lacking(box: Path, text: str, at: Path) -> list[str]:
     as the kernel holds a word, with the box's words list; none when
     fair-merge or scan isn't here, or the index or the list can't be read."""
     fair = sibling("fair-merge", "fair_merge")
-    if fair is None or sibling("scan", "scan") is None:
+    if fair is None or sibling("batch-ask", "scan") is None:
         return []
     cfg, alias = kernel.config(box), {}
     try:
@@ -1162,7 +1162,7 @@ class Willow:
         of it is your folder's answer. ("", "") with no pile beside, or
         when fair-merge isn't here."""
         fair = sibling("fair-merge", "fair_merge")
-        if fair is None or sibling("scan", "scan") is None:
+        if fair is None or sibling("batch-ask", "scan") is None:
             return "", ""
         piles = [(i.name, i) for i in self.beside]
         piles += [(f"{n}: {i.name}", i) for n, found in self.joined.items() for i in found]  # fmt: skip

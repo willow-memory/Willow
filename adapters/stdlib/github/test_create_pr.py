@@ -136,13 +136,13 @@ def steps(repo: Path, text: str) -> None:
 
 
 GREEN = """## made
-- model-sentence -- 0 made it make=made.txt
+- say -- 0 made it make=made.txt
 ## checked
-- model-sentence -- 0 all good
+- say -- 0 all good
 ## held
 - against -- 0 {open}
 ## after it opens
-- model-sentence -- 0 numbered {pr}
+- say -- 0 numbered {pr}
 """
 
 
@@ -459,7 +459,7 @@ def test_owner_and_name_come_from_origin_whatever_its_shape():
 
 def test_an_add_on_the_change_touches_has_its_cards_promises_in_the_body(repo):
     """Its writes and network, read from the card's header, not its body."""
-    say = repo / "adapters/stdlib/model-sentence/model_sentence.py"
+    say = repo / "adapters/stdlib/say/say.py"
     say.write_text(say.read_text(encoding="utf-8") + "# touched\n", encoding="utf-8")
     git(repo, "commit", "-q", "-am", "say: touched")
     steps(repo, GREEN)

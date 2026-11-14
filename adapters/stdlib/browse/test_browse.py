@@ -1000,7 +1000,7 @@ def test_the_script_is_the_file_beside_browse_and_needs_this_starts_cookie(site)
 # ── an index, when one is given and current ─────────────────────────────────
 INDEX_HERE = all(
     (br.STDLIB / d / f).is_file()
-    for d, f in (("scan", "scan.py"), ("index-cache", "index_cache.py"))
+    for d, f in (("batch-ask", "scan.py"), ("index-cache", "index_cache.py"))
 )
 
 
@@ -1043,7 +1043,7 @@ def test_an_index_that_isnt_there_is_refused_before_anything_listens(tmp_path, c
     assert br.main(["--box", str(b), "--index"]) == 2
 
 
-FAIR_HERE = all((br.STDLIB / n).is_dir() for n in ("fair-merge", "scan"))
+FAIR_HERE = all((br.STDLIB / n).is_dir() for n in ("fair-merge", "batch-ask"))
 
 
 def scan_index(tmp_path: Path, name: str, **files: str) -> Path:

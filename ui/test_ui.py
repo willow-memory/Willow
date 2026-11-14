@@ -263,12 +263,12 @@ def test_only_a_piece_that_makes_a_page_runs_as_a_step(site, tmp_path):
         {"title": "watch", "steps": [{"name": "digest"}, {"name": "browse"}]},
         {"title": "assistants", "steps": [{"name": "claude-code"}, {"name": "stack"}]},
         {"title": "read", "steps": [{"name": "office"}]},
-        {"title": "scores", "steps": [{"name": "predict", "args": "score --box {box}"}]},
+        {"title": "scores", "steps": [{"name": "forecast-ask", "args": "score --box {box}"}]},
     ]}  # fmt: skip
     arr, why = cv.arrangement(pick)
     assert why == ""
     steps = {s["name"]: s["args"] for ln in arr["lanes"] for s in ln["steps"]}
-    assert steps == {"digest": "--box {box}", "predict": "score --box {box}"}
+    assert steps == {"digest": "--box {box}", "forecast-ask": "score --box {box}"}
     assert arr["kept"] == ["browse", "claude-code", "stack", "office"]
     assert {"browse", "claude-code", "stack", "office"} <= set(arr["pieces"])
     assert "## read" not in arr["stack_md"]  # a lane left empty isn't there
@@ -304,7 +304,7 @@ def test_a_piece_both_asked_for_and_leaned_on_is_added_once(tmp_path, capsys):
     assert sorted(p.name for p in stdlib.iterdir()) == before
     # a folder left by an older crash is named, not a traceback
     (stdlib / "stale-answers").mkdir()
-    assert assemble.add(["stale"], to, None) == assemble.REFUSED
+    assert assemble.add(["stale-answers"], to, None) == assemble.REFUSED
     assert "not on STACK.json" in capsys.readouterr().err
 
 

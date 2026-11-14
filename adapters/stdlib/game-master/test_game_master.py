@@ -17,7 +17,7 @@ KERNEL = HERE.parents[2] / "kernel.py"
 spec = importlib.util.spec_from_file_location("game_master", HERE / "game_master.py")
 gm = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gm)
-kernel, dice, odds = gm.kernel, gm.dice, gm.odds
+kernel, dice, odds = gm.kernel, gm.play_dice, gm.play_odds
 NOW = ["--now", "2026-11-01T09:00:00Z"]
 
 

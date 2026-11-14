@@ -1,4 +1,4 @@
-"""new_kinds.py: kinds of file in your folders that no step of your stack reads yet, each with the readers that took some of them when tried on a few. Python 3.9+.
+"""new_kinds.py: kinds of file no step of your stack reads yet, with the readers that took some. Python 3.9+.
 
     python adapters/stdlib/new-kinds/new_kinds.py --from FOLDER [--from FOLDER]... [--stack STACKFILE] [--leave .EXT[,.EXT]]... [--json]
 

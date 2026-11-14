@@ -94,11 +94,9 @@ print("wrote")
 
 def test_a_mirror_line_the_kernel_would_cut_fails_the_reader(world):
     root, lives, _ = world
-    (root / "stdlib" / "sentences").mkdir()
-    (root / "stdlib" / "sentences" / "sentences.py").write_text(READER)
-    contract = types.SimpleNamespace(
-        COMMANDS={}, READERS={"plain": ("sentences.py", {})}
-    )
+    (root / "stdlib" / "plain").mkdir()
+    (root / "stdlib" / "plain" / "plain.py").write_text(READER)
+    contract = types.SimpleNamespace(COMMANDS={}, READERS={"plain": ("plain.py", {})})
     lines = "".join(f"message {i} with a few words in it\n" for i in range(40))
     (lives["ann"] / "chat.txt").write_text(lines)
     rows, held = rd.run(["plain"], lives, contract, root / "stdlib")
@@ -125,11 +123,9 @@ def test_long_lines_names_each_line_over_a_chunk(tmp_path):
 
 
 def test_a_reader_runs_mirror_over_the_folder():
-    contract = types.SimpleNamespace(
-        COMMANDS={}, READERS={"plain": ("sentences.py", {})}
-    )
+    contract = types.SimpleNamespace(COMMANDS={}, READERS={"plain": ("plain.py", {})})
     assert rd.row_of(contract, "plain") == (
-        "sentences.py",
+        "plain.py",
         ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"],
     )
     with pytest.raises(rd.Refused, match="no line in COMMANDS"):
@@ -142,11 +138,11 @@ def test_base_finds_the_stdlib_add_ons_a_branch_changed():
 
 
 def test_a_real_add_on_on_the_real_demo_people_holds():
-    """dice, on every demo person's folder as make_life.py writes it."""
-    got = subprocess.run([sys.executable, str(HERE / "realdata.py"), "run", "dice"],
+    """play-dice, on every demo person's folder as make_life.py writes it."""
+    got = subprocess.run([sys.executable, str(HERE / "realdata.py"), "run", "play-dice"],
                          capture_output=True, text=True, timeout=300)  # fmt: skip
     assert got.returncode == 0, got.stdout + got.stderr
-    assert "dice on odile: held" in got.stdout
+    assert "play-dice on odile: held" in got.stdout
 
 
 @pytest.mark.parametrize("argv", [[], ["run"], ["go", "dice"], ["run", "--base"],

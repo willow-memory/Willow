@@ -70,7 +70,7 @@ USAGE = (
 )
 NEEDS = {
     "freeze": ({"--box", "--url", "--model", "--questions"}, {"--card", "--reasoning"}),
-    "asked-again": ({"--box", "--url", "--frozen"}, {"--card"}),
+    "again": ({"--box", "--url", "--frozen"}, {"--card"}),
 }
 FORMAT = "willow model-drift 1"
 

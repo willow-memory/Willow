@@ -73,7 +73,7 @@ def test_keeping_counts_the_highest_or_lowest_and_the_first_of_a_tie():
 
 def test_plain_dice_are_dices_own_faces():
     for text in ("2d6", "1d20+3", "1d8+1d6"):
-        mine, theirs = d5.throw(text, TIP), d5.dice.throw(text, TIP)
+        mine, theirs = d5.throw(text, TIP), d5.play_dice.throw(text, TIP)
         assert mine["faces"] == theirs["faces"] and mine["total"] == theirs["total"]
     assert d5.throw("4d6kh3", TIP) == d5.throw("4d6kh3", TIP), "the same every time"
     assert d5.throw("4d6kh3", TIP)["generator"] == "sha256-stream/v1"
@@ -103,7 +103,7 @@ def test_a_roll_is_a_row_seeded_by_the_tip_and_check_throws_it_again(tmp_path):
     assert (
         got.returncode == 0 and "2 rolls on the record; every one holds." in got.stdout
     )
-    assert run("--box", str(box), "check", script=d5.dice.__file__).returncode == 0
+    assert run("--box", str(box), "check", script=d5.play_dice.__file__).returncode == 0
 
 
 def test_check_finds_a_roll_that_was_changed(tmp_path):

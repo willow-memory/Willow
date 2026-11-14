@@ -16,6 +16,12 @@ import trial  # noqa: E402
 REPORT = "done: 6 of 29 steps flagged\nthe chain holds: 2 rows, 0 sealed\nfirst mention: 1959-04-17\n"
 
 
+#: add-ons renamed since a trial was kept, old name to new
+RENAMED = json.loads(
+    (HERE.parents[1] / "adapters" / "renamed.json").read_text(encoding="utf-8")
+)["names"]
+
+
 def test_a_sentence_with_a_figure_the_report_lacks_is_struck_and_no_other():
     account = "It ran 29 steps and 6 were flagged. It took 204 seconds.\nNothing was sealed. First said on 1959-04-17."
     kept, struck = trial.strike(REPORT, account)
@@ -92,22 +98,25 @@ def test_the_report_and_briefs_name_no_machine_and_hold_no_answer_key():
 def test_the_chain_refuses_what_a_step_may_not_be_and_passes_what_it_may():
     import chain
 
-    stack = "## a\n- scan -- scan --index x\n- glance -- --of {01}\n"
-    passes = [("ids", "--box {box} kernel.py"), ("fixity", "--box {box}"),
-              ("glance", "--of {02} --questions <scratch>/questions.txt"),
+    stack = "## a\n- batch-ask -- scan --index x\n- batch-glance -- --of {01}\n"
+    passes = [("world-ids", "--box {box} kernel.py"), ("fixity", "--box {box}"),
+              ("batch-glance", "--of {02} --questions <scratch>/questions.txt"),
               ("fair-merge", '--from <pile> "kept so it is not computed again"')]  # fmt: skip
     for name, args in passes:
         assert chain.refusal(name, args, stack) is None, (name, args)
     refused = {
         ("nope", "--box {box}"): "not a built add-on",
-        ("kinds", "count"): "not a built add-on",  # a repo tool, not a stack's step
-        ("scan", "scan --index x"): "already on the stack",
+        (
+            "repo-kinds",
+            "count",
+        ): "not a built add-on",  # a repo tool, not a stack's step
+        ("batch-ask", "scan --index x"): "already on the stack",
         ("backup", "--box {box} --to /media/usb"): "no path of its own",
-        ("ids", "--box {box} ../x"): "no path of its own",
-        ("ids", "--box {box} ~/x"): "no path of its own",
-        ("ids", "--box {box} <repo>/kernel.py"): "the only folders",
-        ("glance", "--of {03}"): "not an earlier step",
-        ("glance", "--of {00}"): "not an earlier step",
+        ("world-ids", "--box {box} ../x"): "no path of its own",
+        ("world-ids", "--box {box} ~/x"): "no path of its own",
+        ("world-ids", "--box {box} <repo>/kernel.py"): "the only folders",
+        ("batch-glance", "--of {03}"): "not an earlier step",
+        ("batch-glance", "--of {00}"): "not an earlier step",
         ("share", "send --box {box} --id <scratch>/a.key"): "may not name .key",
         ("fixity", "--box {box} --key x"): "may not name",
         ("session-seal", "--box {box}"): "may not name seal",
@@ -131,9 +140,9 @@ def test_a_reply_is_read_by_its_three_lines_and_the_catalog_is_what_a_stack_can_
     assert chain.steps_of("## a\n- ids -- --box {box}\n# - no -- x\n- scan -- scan\n") == [
         ("ids", "--box {box}"), ("scan", "scan")]  # fmt: skip
     cards = chain.catalog()
-    assert "scan" in cards and "fixity" in cards and "star-system" in cards
+    assert "batch-ask" in cards and "fixity" in cards and "star-system" in cards
     assert (
-        "kinds" not in cards
+        "repo-kinds" not in cards
         and "hook-handoff" not in cards
         and "starter-words" not in cards
     )
@@ -174,7 +183,9 @@ def test_what_trial_twos_page_says_is_what_its_kept_files_hold():
             and turn["step"] == f"- {steps[6 + n][0]} -- {steps[6 + n][1]}"
         )
         page = (two / f"handoff-{n}.txt").read_text()
-        assert steps[6 + n][0] in cards and f"\n{steps[6 + n][0]}: " in page, (
+        # trial 2 was kept before some add-ons were renamed: its names, as now
+        name = steps[6 + n][0]
+        assert RENAMED.get(name, name) in cards and f"\n{name}: " in page, (
             "chosen from the page"
         )
         figures = set(trial.figures(" ".join(said["want"] + said["why"])))

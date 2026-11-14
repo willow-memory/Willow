@@ -121,8 +121,12 @@ def say(step: str, msg: str) -> None:
     print(f"[{step}] {msg}", flush=True)
 
 
+#: batch-ask's script kept the name it had as scan, because studies froze it
+SCRIPTS = {"batch-ask": "scan.py"}
+
+
 def addon(name: str) -> Path:
-    return STDLIB / name / f"{name.replace('-', '_')}.py"
+    return STDLIB / name / SCRIPTS.get(name, f"{name.replace('-', '_')}.py")
 
 
 def run(argv: list, text_in: str | None = None) -> subprocess.CompletedProcess:
@@ -267,7 +271,7 @@ def build(o: dict) -> int:
         indexes.append(("index-code", base / "repos"))
     for name, src in indexes:
         shutil.rmtree(base / name, ignore_errors=True)
-        r = py(addon("scan"), "index", "--from", src, "--to", base / name)
+        r = py(addon("batch-ask"), "index", "--from", src, "--to", base / name)
         say("index", f"{name}: {first(r).split(' to ')[0]}")
     r = py(STDLIB.parents[1] / "kernel.py", "verify", "--box", box)
     say("verify", first(r))
@@ -310,7 +314,7 @@ def ask(o: dict, base: Path) -> int:
         argv += ["--words", words]
     argv += ["--top", o["--top"]] if "--top" in o else []
     argv += ["--todo"] if "--todo" in o else []
-    return scrubbed(py(addon("scan"), *argv), "--raw" in o)
+    return scrubbed(py(addon("batch-ask"), *argv), "--raw" in o)
 
 
 def report(o: dict, base: Path) -> int:

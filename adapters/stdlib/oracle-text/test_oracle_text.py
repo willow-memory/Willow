@@ -57,7 +57,7 @@ def test_the_modifiers():
 
 
 def test_symbols_modifiers_chains_and_plain_text_expand():
-    rng = ot.tarot.Stream(b"x")
+    rng = ot.play_tarot.Stream(b"x")
     g = only(
         "#animal.a.capitalize# met #box.s.allCaps#, a #x# and a #z.s#. 100% # kept"
     )

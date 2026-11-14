@@ -32,7 +32,7 @@ def root():
     with tempfile.TemporaryDirectory() as tmp:
         r = Path(tmp)
         for rel in ("adapters/stdlib/a11y-check/test_a11y_check.py",
-                    "adapters/stdlib/play-dice/test_play_dice.py",
+                    "adapters/stdlib/dice/test_dice.py",
                     "adapters/stdlib/new/test_new.py"):  # fmt: skip
             (r / rel).parent.mkdir(parents=True)
             (r / rel).write_text("")
@@ -42,18 +42,18 @@ def root():
 def test_each_files_tests_are_summed_under_it_a_class_and_a_dash_folder_too(root):
     assert times.measured([XML], root) == {
         "adapters/stdlib/a11y-check/test_a11y_check.py": pytest.approx(0.55),
-        "adapters/stdlib/play-dice/test_play_dice.py": 2.0,
+        "adapters/stdlib/dice/test_dice.py": 2.0,
     }
 
 
 def test_what_was_seen_is_new_what_wasnt_kept_and_whats_gone_left_out(root):
-    old = {"adapters/stdlib/play-dice/test_play_dice.py": 7.0,
+    old = {"adapters/stdlib/dice/test_dice.py": 7.0,
            "adapters/stdlib/new/test_new.py": 3.0,
            "adapters/stdlib/gone/test_gone.py": 1.0}  # fmt: skip
     got = times.merged(old, times.measured([XML], root), times.test_files(root))
     assert got == {
         "adapters/stdlib/a11y-check/test_a11y_check.py": 0.6,
-        "adapters/stdlib/play-dice/test_play_dice.py": 2.0,
+        "adapters/stdlib/dice/test_dice.py": 2.0,
         "adapters/stdlib/new/test_new.py": 3.0,
     }
     assert list(got) == sorted(got)

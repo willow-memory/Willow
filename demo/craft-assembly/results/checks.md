@@ -12,9 +12,9 @@ Written by [report.py](../report.py) `write`, after [REPORT.md](../REPORT.md), t
 
 ## Every reference in the folder, by xref
 
-    python adapters/stdlib/xref/xref.py --from demo/craft-assembly
+    python adapters/stdlib/ref-check/ref_check.py --from demo/craft-assembly
 
-    xref: empty, 71 references checked, 0 don't hold; 10 leading out of your folder, not checked
+    ref-check: empty, 71 references checked, 0 don't hold; 10 leading out of your folder, not checked
 
 ## The counts, looked for in the README by claim-check
 

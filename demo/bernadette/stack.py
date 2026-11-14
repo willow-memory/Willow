@@ -112,7 +112,15 @@ def summary(name: str, out: str, err: str) -> str:
             f"{sum(x.startswith('## ') for x in lines)} approved answers, as Markdown"
         )
     if (
-        name in ("start", "kernel", "backup", "session-seal", "stale", "secrets-audit")
+        name
+        in (
+            "start",
+            "kernel",
+            "backup",
+            "session-seal",
+            "stale-answers",
+            "secrets-audit",
+        )
         and lines
     ):
         return lines[0]

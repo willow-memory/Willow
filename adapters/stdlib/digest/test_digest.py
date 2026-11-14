@@ -110,7 +110,7 @@ def test_the_command_line_prints_a_report_of_each_section(tmp_path, capsys):
     said += ["1 gone stale"] if BESIDE["stale-answers"] else []
     said += ["1 coming up"] if BESIDE["coming-up"] else []
     blind = [f"couldn't look at {c}: the {n} add-on isn't here"
-             for c, n in (("gone stale", "stale"), ("coming up", "coming-up"))
+             for c, n in (("gone stale", "stale-answers"), ("coming up", "coming-up"))
              if not BESIDE[n]]  # fmt: skip
     assert head == "digest: populated, " + "; ".join(
         [", ".join([*said, "1 asked again"]), *blind]

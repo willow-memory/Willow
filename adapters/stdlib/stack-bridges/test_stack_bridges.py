@@ -25,8 +25,8 @@ CARDS_HERE = all(
     for kind, name in (
         ("stdlib", "fixity"),
         ("stdlib", "backup"),
-        ("stdlib", "glance"),
-        ("deps", "dp"),
+        ("stdlib", "batch-glance"),
+        ("deps", "noised-count"),
     )
 )
 REPO_HERE = (ROOT / "demo" / "kept" / "stack.md").is_file()
@@ -77,8 +77,8 @@ def test_each_step_is_tied_to_the_step_whose_output_or_place_it_names(tmp_path):
     assert doc["said"] == "9 steps, 5 bridges, 3 deep; 4 rest on no other"
     assert rows(doc, "what each step takes") == {
         "02 index-cache": "01 code-comments: what it wrote, {box}-code",
-        "03 scan": "02 index-cache: what it wrote, index",
-        "04 glance": "03 scan: its output",
+        "03 batch-ask": "02 index-cache: what it wrote, index",
+        "04 batch-glance": "03 batch-ask: its output",
         "06 diverge": "05 star-system: what it wrote, star.md",
         "08 three-two-one": "07 backup: what it wrote, usb",
     }
@@ -97,12 +97,12 @@ def test_the_order_is_by_depth_with_the_longest_way_down_and_the_record_said(tmp
     )
     assert order["1 step deep"] == "3: 02 index-cache, 06 diverge, 08 three-two-one"
     assert (
-        order["2 steps deep"] == "1: 03 scan"
-        and order["3 steps deep"] == "1: 04 glance"
+        order["2 steps deep"] == "1: 03 batch-ask"
+        and order["3 steps deep"] == "1: 04 batch-glance"
     )
     assert (
         order["the longest way down"]
-        == "04 glance → 03 scan → 02 index-cache → 01 code-comments"
+        == "04 batch-glance → 03 batch-ask → 02 index-cache → 01 code-comments"
     )
     assert order["write the record"].startswith(
         "1: 09 fixity; a step that names the record after"
@@ -247,10 +247,13 @@ def test_on_the_repos_own_stacks_every_bridge_holds():
         kept.returncode == 0
         and doc["said"] == "33 steps, 28 bridges, 3 deep; 11 rest on no other"
     )
-    assert rows(doc, "what each step takes")["07 glance"] == "06 scan: its output"
+    assert (
+        rows(doc, "what each step takes")["07 batch-glance"]
+        == "06 batch-ask: its output"
+    )
     assert (
         rows(doc, "the order")["the longest way down"]
-        == "07 glance → 06 scan → 04 index-cache → 01 code-comments"
+        == "07 batch-glance → 06 batch-ask → 04 index-cache → 01 code-comments"
     )
     for file in sorted((ROOT / "adapters/stdlib/stack/examples").glob("*.md")):
         got = run("--stack", str(file))
@@ -274,7 +277,7 @@ def test_its_own_example_has_the_bridges_its_card_says():
     )
     assert rows(doc, "the order")["write the record"].startswith("1: 08 fixity; ")
     assert (
-        rows(doc, "what each step takes")["09 history"]
+        rows(doc, "what each step takes")["09 record-history"]
         == "08 fixity: the record as it left it"
     )
 
