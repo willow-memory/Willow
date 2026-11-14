@@ -660,6 +660,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="codeowners"></a>[**codeowners**](adapters/stdlib/codeowners/) \
   Who owns this file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo alike. \
   *new* `no-install` `offline` `gitlab` `github` · near: gitlab, across, rules
+- <a id="copy-in"></a>[**copy-in**](adapters/stdlib/copy-in/) \
+  New files from another folder or device copied into yours, each logged with its SHA-256; nothing deleted, a changed file a second copy. \
+  *new* `no-install` `offline` `sha` `copy` · near: almanac-keep, snapshot, xref
 - <a id="fair-merge"></a>[**fair-merge**](adapters/stdlib/fair-merge/) \
   Each folder ranked on its own and the lists merged in turns, so a big corpus can't crowd out a small one; one that found nothing says so. \
   Uses scan. *bot* `no-install` `offline` `found` `pile` · near: scan, parallel, bench
@@ -684,12 +687,12 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="pieces"></a>[**pieces**](adapters/stdlib/pieces/) \
   Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once. \
   *new* `no-install` `offline` · near: pile-store, surprise, scan
-- <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
-  Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
-  Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
 
 #### Tools you run yourself, p to w
 
+- <a id="pile-gold"></a>[**pile-gold**](adapters/stdlib/pile-gold/) \
+  Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five. \
+  Uses pile-rank, scan. *box* `no-install` `offline` `search` `pile` · near: again, pile-store, pile-sweep
 - <a id="pile-rank"></a>[**pile-rank**](adapters/stdlib/pile-rank/) \
   Finds passages that use your folder's own phrases ("sourdough bread"), not just the separate words, ranked without any AI model. \
   Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, all

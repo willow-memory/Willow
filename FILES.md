@@ -589,6 +589,10 @@ willow/
 │   │   │   ├── codeowners.py   who owns a file: the CODEOWNERS rule that matches it, cited by line, on GitHub, GitLab and Forgejo
 │   │   │   ├── test_codeowners.py
 │   │   │   └── README.md
+│   │   ├── copy-in/
+│   │   │   ├── copy_in.py    New files from another folder or device copied into one of yours, each logged with its SHA-256; nothing is deleted, and a changed file arrives as a second copy
+│   │   │   ├── test_copy_in.py
+│   │   │   └── README.md     its card
 │   │   ├── fair-merge/
 │   │   │   ├── fair_merge.py   each folder ranked on its own and the lists dealt out in turns, so a large corpus can't bury a small one
 │   │   │   ├── test_fair_merge.py
@@ -631,15 +635,15 @@ willow/
 │   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
 │   │   │   ├── test_pile_rungs.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from pile-sweep/
+
+```
 │   │   ├── pile-sweep/
 │   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
 │   │   │   ├── test_pile_sweep.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from quote-check/
-
-```
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py
