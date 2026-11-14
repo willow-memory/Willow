@@ -1636,6 +1636,10 @@ willow/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
 │   │   │   └── README.md
+│   │   ├── liars-dice/
+│   │   │   ├── liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
+│   │   │   ├── test_liars_dice.py
+│   │   │   └── README.md     its card
 │   │   ├── life/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
 │   │   │   ├── test_life.py
@@ -1644,15 +1648,15 @@ willow/
 │   │   │   ├── odds.py       exact odds for any dice, as fractions
 │   │   │   ├── test_odds.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from oracle-text/
+
+```
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from quiz/
-
-```
 │   │   ├── quiz/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
 │   │   │   ├── test_quiz.py

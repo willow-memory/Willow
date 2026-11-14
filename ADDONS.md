@@ -1986,6 +1986,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="horoscope"></a>[**horoscope**](adapters/stdlib/horoscope/) \
   A daily horoscope keyed on your name and the date: same name, same day, same reading, always. \
   *bot* `no-install` `offline` `daily` · near: daily-word, goodreads, gaps
+- <a id="liars-dice"></a>[**liars-dice**](adapters/stdlib/liars-dice/) \
+  Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give. \
+  Uses dice. *new* `no-install` `offline` `dice` `game` · near: game-master, life, tarot
 - <a id="life"></a>[**life**](adapters/stdlib/life/) \
   Conway's Game of Life as rows: a fully deterministic world on the record. \
   *bot* `no-install` `offline` `rows` `game` · near: catgrid, game-master, tarot

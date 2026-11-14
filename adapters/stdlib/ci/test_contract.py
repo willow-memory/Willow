@@ -768,6 +768,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
+    "liars-dice": ("liars_dice.py", ["--box", "{box}", "new"]),
     "licenses": ("licenses.py", ["--box", "{box}"]),
     "life": ("life.py", ["--box", "{box}", "play", "--generations", "8", *NOW]),
     "live": ("live.py", ["list"]),
