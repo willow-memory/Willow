@@ -1977,6 +1977,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice, odds. *bot* `no-install` `offline` `rows` `dice` · near: life, dice5e, dice
+- <a id="hearts"></a>[**hearts**](adapters/stdlib/hearts/) \
+  Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
+  *new* `no-install` `offline` `seeded` `tip` · near: life, catgrid, tarot
 - <a id="horoscope"></a>[**horoscope**](adapters/stdlib/horoscope/) \
   A daily horoscope keyed on your name and the date: same name, same day, same reading, always. \
   *bot* `no-install` `offline` `daily` · near: daily-word, goodreads, gaps

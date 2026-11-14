@@ -729,6 +729,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "gradebook": ("gradebook.py", ["--box", "{box}"]),
     "habits": ("habits.py", ["--box", "{box}"]),
     "handover": ("handover.py", ["--project", "{box}/.."]),
+    "hearts": ("hearts.py", ["--box", "{box}", "new"]),
     "history": ("history.py", ["--box", "{box}"]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),

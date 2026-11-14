@@ -1624,6 +1624,10 @@ willow/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
 │   │   │   └── README.md
+│   │   ├── hearts/
+│   │   │   ├── hearts.py     Hearts played on the record, hands open, the deal seeded
+│   │   │   ├── test_hearts.py
+│   │   │   └── README.md     its card
 │   │   ├── horoscope/
 │   │   │   ├── horoscope.py  a daily reading picked by the SHA-256 of name and date
 │   │   │   ├── test_horoscope.py
@@ -1644,6 +1648,11 @@ willow/
 │   │   │   ├── quiz.py       a passage of your own writing with a word missing, cut and scored on the record
 │   │   │   ├── test_quiz.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from tarot/
+
+```
 │   │   ├── tarot/
 │   │   │   ├── tarot.py      a tarot spread dealt by the record's tip, replayable by anyone, meaning nothing by itself
 │   │   │   ├── test_tarot.py
