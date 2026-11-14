@@ -681,3 +681,8 @@ folders and are left as they were. Its tests read the tools where they are
 now, through [demo/renamed.py](../renamed.py); nothing a rule, a question or
 a result rests on changed. To re-run the study's own scripts by hand, check
 out 87228252, the commit of its last freeze.
+
+One frozen tool did change: latent.py imported scan from its old folder,
+so after the move it couldn't run at all. Its import line and one link in
+its docstring now say batch-ask (2026-11-13); nothing it computes changed.
+The freeze keeps latent.py's hash from before, the record of what ran.

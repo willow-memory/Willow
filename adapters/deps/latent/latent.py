@@ -11,7 +11,7 @@ truncated SVD, so words that keep the same company (a synonym pair, a term
 and its abbreviation) sit close, and a question reaches a passage that shares
 its sense without sharing its words. Offline: it downloads no model.
 
-It reads an index that [scan](../../stdlib/scan/) built; it never reads a
+It reads an index that [batch-ask](../../stdlib/batch-ask/) built; it never reads a
 folder itself. With `--changed-from INDEX`, it ranks only the passages that
 index lacks (a release against its fix), as scan's own `--changed-from` does.
 With `--only FILE`, it ranks only the passages FILE names: another add-on's
@@ -49,7 +49,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "scan"))
+sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "batch-ask"))
 import kernel  # noqa: E402
 import scan  # noqa: E402
 
