@@ -9,7 +9,7 @@ number to read:
    results.json`); every answer is lined up against kernel.py's.
 2. **sessions.** The same scripted session (init, bites, proposals, one with
    every line refused, a seal, a decline, out, verify, a forged seal and a
-   forged decline, an edit) run through kernel.py's command line
+   forged decline, re-proposals refused at the door, an edit) run through kernel.py's command line
    and the port's, on the same paths with the same key, so each box is
    directly comparable: exit codes, what the person was shown, kernel.json,
    proposal files, and every record row but `version`, `hash`, `prev` and
@@ -372,6 +372,16 @@ def session(impl, root: Path) -> dict:
     step("decline", *b, k.subject_of(unsealed))  # refused: declined already
     step("decline", *b, k.subject_of(good))  # refused: sealed
     step("decline", *b, "proposal:" + "0" * 64)  # not a proposal here
+    # offered once, counted once (CONST-V-11): sealed, declined and waiting
+    # are refused at the door, and what waits is counted once
+    step("bite", *b, "tomatoes want how much sun")  # serves the sealed one's cite
+    rows_file.write_text(json.dumps(good) + "\n")
+    step("propose", *b, "--file", str(rows_file))  # refused: approved
+    step("bite", *b, "water them at the root?")
+    deep = {**unsealed, "data": "Deep."}
+    rows_file.write_text("".join(json.dumps(x) + "\n" for x in (unsealed, deep, deep)))
+    step("propose", *b, "--file", str(rows_file))  # declined, pass, waiting
+    step("out", *b)  # one waiting
     step("verify", *b)
     return {"shown": shown, "box": box, "key": key}
 
