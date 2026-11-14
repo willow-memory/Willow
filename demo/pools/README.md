@@ -206,9 +206,8 @@ were; the new ones are [truth/changes.py](truth/changes.py).
   previous row's hash, the run's folders and the time normalized, the rest
   hashed with the pile's salt) and as a shape (its field names, with one
   salt for the study). Readers are tied to which rows moved them, not only
-  to kinds, and no word is kept. The maintainer's idea, from willows-grove
-  `docs/design/one-script/README.md`, "Matching when the wording isn't
-  exact".
+  to kinds, and no word is kept. The maintainer's idea, from the willows-grove repository's
+  one-script design, "Matching when the wording isn't exact".
 
 ## What the report may say: [truth/](truth/)
 
