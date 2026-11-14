@@ -40,7 +40,8 @@ def test_an_add_on_reaches_its_folder_what_its_card_names_in_turn_and_the_runner
     addon(root, "c", kind="deps")
     got = reach.reach(str(root), "stdlib/a")
     assert got == sorted(["adapters/stdlib/a/", "adapters/stdlib/b/", "adapters/deps/c/",
-                          "kernel.py", "adapters/stdlib/ci/", "adapters/stdlib/test-shards/"])  # fmt: skip
+                          "kernel.py", "adapters/renamed.json", "adapters/stdlib/ci/",
+                          "adapters/stdlib/test-shards/"])  # fmt: skip
     assert reach.within("adapters/stdlib/b/x.json", got) and reach.within(
         "kernel.py", got
     )
