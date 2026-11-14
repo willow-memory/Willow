@@ -1600,6 +1600,10 @@ willow/
 │   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
 │   │   │   ├── test_catgrid.py
 │   │   │   └── README.md
+│   │   ├── checkers/
+│   │   │   ├── checkers.py   checkers (English draughts) played on the record, the table's ruler sealing a draw
+│   │   │   ├── test_checkers.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py

@@ -1956,6 +1956,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="catgrid"></a>[**catgrid**](adapters/stdlib/catgrid/) \
   A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. \
   *new* `no-install` `offline` `rows` `seeded` · near: life, game-master, hook-replay
+- <a id="checkers"></a>[**checkers**](adapters/stdlib/checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
+  *new* `no-install` `offline` `rows` `draw` · near: catgrid, life, game-master
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: quiz, surprise, serve

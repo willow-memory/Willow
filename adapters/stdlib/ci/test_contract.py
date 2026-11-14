@@ -681,6 +681,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "car": ("car.py", ["--box", "{box}"]),
     "catgrid": ("catgrid.py", ["--box", "{box}", "play", *NOW]),
     "changed": ("changed.py", ["--box", "{box}", *NOW]),
+    "checkers": ("checkers.py", ["--box", "{box}", "new"]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),
     "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
