@@ -981,7 +981,7 @@ def out(box: Path, ts: str) -> int:
     return ESCALATE if owed else ALIVE
 
 
-# ── the thirteen beats, as the test ───────────────────────────────────────────
+# ── the thirteen beats, as the test ─────────────────────────────────────────
 def test() -> None:
     """Runs in a temporary directory, never in a box of yours."""
     import ast
