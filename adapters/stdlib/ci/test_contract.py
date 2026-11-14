@@ -677,6 +677,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "braille": ("braille.py", ["--box", "{box}", "--to", "{tmp}/answers.brf"]),
     "browse": ("browse.py", ["launcher", "--box", "{box}"]),
     "budget": ("budget.py", ["--box", "{box}"]),
+    "bureau": ("bureau.py", ["--box", "{box}", "new"]),
     "calendar-out": ("calendar_out.py", ["--box", "{box}", "--to", "{tmp}/coming.ics", *NOW]),
     "capture": ("capture.py", ["--to", "{tmp}", "--type", "idea", "--tags", "garden,veg", *NOW, "Plant out the tomatoes."]),
     "car": ("car.py", ["--box", "{box}"]),

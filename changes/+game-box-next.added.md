@@ -2,3 +2,4 @@
 `hearts`: Hearts on the record for four seats, hands open and every deal seeded by the record's tip; the passes, following suit, hearts broken, the first trick clean and shooting the moon held to game-lab's rules
 `crazy-eights`: Crazy Eights on the record for four seats, hands open and the deck seeded by the record's tip; following suit or rank, the wild 8 naming a suit, drawing only when nothing plays, and the stalled hand held to game-lab's rules
 `liars-dice`: Liar's Dice on the record for four seats, every cup dice's own throw seeded by the record's tip and thrown straight before its round; raises, wild ones and every call counted as game-lab's rules count them
+`bureau`: bureau, the Bureaucracy homage at UTETY, on the record, seeded by the tip with its own xorshift32 so the browser engine plays the same game; the deadlock proved by `prove`, every move a row carrying its state, and check replaying each game from its seed

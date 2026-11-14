@@ -1600,6 +1600,10 @@ willow/
 │   │   │   ├── backgammon.py backgammon played on the record, the dice thrown by dice
 │   │   │   ├── test_backgammon.py
 │   │   │   └── README.md     its card
+│   │   ├── bureau/
+│   │   │   ├── bureau.py     bureau, the Bureaucracy homage at UTETY, played on the record
+│   │   │   ├── test_bureau.py
+│   │   │   └── README.md     its card
 │   │   ├── catgrid/
 │   │   │   ├── catgrid.py    a seeded logic grid with one answer, played on the record; check plays every game again
 │   │   │   ├── test_catgrid.py
@@ -1644,15 +1648,15 @@ willow/
 │   │   │   ├── life.py       Conway's Game of Life as one row; check plays it again
 │   │   │   ├── test_life.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from odds/
+
+```
 │   │   ├── odds/
 │   │   │   ├── odds.py       exact odds for any dice, as fractions
 │   │   │   ├── test_odds.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from oracle-text/
-
-```
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py

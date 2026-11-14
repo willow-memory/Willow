@@ -1959,6 +1959,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="backgammon"></a>[**backgammon**](adapters/stdlib/backgammon/) \
   Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored. \
   Uses dice. *new* `no-install` `offline` `rows` `dice` · near: dice, game-master, dice5e
+- <a id="bureau"></a>[**bureau**](adapters/stdlib/bureau/) \
+  bureau, the Bureaucracy homage at UTETY, on the record: the deadlock proved, every visit a row, and Gerald's napkin the only way out. \
+  *new* `no-install` `offline` `rows` `prov` · near: changed, life, catgrid
 - <a id="catgrid"></a>[**catgrid**](adapters/stdlib/catgrid/) \
   A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. \
   *new* `no-install` `offline` `rows` `seeded` · near: life, game-master, hook-replay
