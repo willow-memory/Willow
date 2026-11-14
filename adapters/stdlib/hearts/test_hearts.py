@@ -192,6 +192,7 @@ def test_a_hand_played_out_is_scored_and_the_next_dealt(t):
     g = t.game()
     assert g.phase == "deal" and sum(g.scores) in (26, 78)
     assert t.rows()[-1]["scores"] == g.scores
+    assert "hand 2 to deal: deal" in t.run("show").stdout
     assert t.run("play", "2C").returncode == 2
     got = t.run("deal")
     assert got.returncode == 0 and "pass right" in got.stdout

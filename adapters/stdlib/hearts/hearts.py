@@ -353,7 +353,7 @@ def cmd_show(box: Path) -> int:
     if g.over:
         print(f"\nthe game is over: {g.result()}")
     elif g.phase == "deal":
-        print(f"\nhand {g.hand_no + 1} to deal: deal")
+        print(f"\nhand {g.hand_no + 2} to deal: deal")  # hand_no counts from 0
     elif g.phase == "pass":
         waiting = [SEATS[s] for s in range(4) if s not in g.passes]
         print(

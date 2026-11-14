@@ -206,6 +206,13 @@ def test_check_finds_a_bid_out_of_turn(t):
     assert "don't hold" in t.run("show").stderr
 
 
+@pytest.mark.parametrize("q, f", [("2", 3), (2, "3"), (True, 3), (2.0, 3)])
+def test_check_finds_a_bid_that_isnt_whole_numbers(t, q, f):
+    t.run("new")
+    t.forge(ld.BID, game=t.game_n(), round=1, seat="north", quantity=q, face=f)
+    assert "a bid is a quantity and a face, both whole numbers" in t.run("check").stderr
+
+
 def test_check_finds_a_call_that_isnt_what_the_dice_count(t):
     t.run("new")
     t.run("bid", "1", "2")
