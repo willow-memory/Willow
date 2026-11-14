@@ -57,7 +57,17 @@ it runs under, mutants' own code, plus every stdlib script's name and
 whether it holds a command line, since the contract's COMMANDS test runs
 inside every one of them. The repo's own tools (`ci`, `readme`, `similar`,
 `github`) read the whole tree in their tests, so their mutants take the
-whole tree.
+whole tree. And each `tests:adapters` chunk: what its add-ons' tests can
+read, as [reach.py](../ci/reach.py) draws it (each add-on's folder, the
+add-ons its card names and theirs in turn, the kernel and CI's runner). An
+add-on whose files reach past that, by a scan of them, is drawn wide, and
+ci.py cuts those into chunks of their own, so the rest can stand.
+
+**The guard holds the reach.** A scan can miss a path built from parts, so
+the add-on chunks run under the guard with `WILLOW_GUARD_READS=1`: a test
+or add-on that reads or lists a file of the repo outside its reach is a
+breach, and the gate fails. A run ci-memo pins is green, so none of its
+tests read past what its keys hold.
 
 **Three parts are never memoized**, because their verdicts reach past the
 tree, where no hash holds: `deps` (what pip serves), `ports` and `tools`
@@ -69,7 +79,12 @@ pass: `plan` only says which rows the bytes still cover, prints the line
 that runs the rest, and runs nothing itself. ci.py's record stays the
 receipt, and the full run stays the merge's evidence.
 
-**CI uses it on pull requests, and only there.** A pull request's slowest job
+**CI uses it on pull requests, and only there,** for the tests part as for
+mutants: each Python's tests job pins main's last green run on that Python
+and runs the tests part `--without` the gates that stand
+(`plan --standing` names them). Main's commit still runs every gate.
+
+For mutants, a pull request's slowest job
 was mutants, four shards of 5 to 19 minutes, though a change usually reaches
 one add-on's gate. So a push to main still runs every mutants gate, and a
 pull request's `mutants-reach` job pins the records of main's last green run

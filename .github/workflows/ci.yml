@@ -282,18 +282,74 @@ jobs:
         # A pull request runs the oldest and newest Python; main's commit
         # runs all six.
         exclude: ${{ github.event_name == 'pull_request' && fromJSON('[{"python-version":"3.10"},{"python-version":"3.11"},{"python-version":"3.12"},{"python-version":"3.13"}]') || fromJSON('[]') }}
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          # a pull request checks main's commit out beside its own, to stand on
+          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install pytest
+      - id: stand
+        # On a pull request, a gate of the tests part stands on main's last
+        # green run, on this Python, when everything it can read holds the
+        # same bytes as main's (adapters/stdlib/ci-memo; the add-on chunks'
+        # reach is adapters/stdlib/ci/reach.py, which the guard holds every
+        # test to), as mutants-reach does for mutants; the rest run here. A
+        # change to one add-on runs the chunks that hold the repo's own tools
+        # and its own chunk. The merge's evidence stays whole: main's commit
+        # runs every gate. Never short: with no green run of main, no record
+        # to download, or a pin or plan ci-memo refuses, every gate runs here
+        # and the summary says why.
+        if: github.event_name == 'pull_request'
+        run: |
+          fallback() {
+            {
+              echo "### tests (${{ matrix.python-version }}): every gate runs here"
+              echo "Nothing stands on main's run, because $1"
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          }
+          name="ci-record-tests-${{ matrix.python-version }}"
+          found=$(python adapters/stdlib/ci/main_run.py --repo "$GITHUB_REPOSITORY" --artifact "$name" 2> "$RUNNER_TEMP/main.err") || fallback "no run of main's holds $name: $(cat "$RUNNER_TEMP/main.err")"
+          read -r id sha <<< "$found"
+          [ -n "${sha:-}" ] || fallback "main has no successful ci run."
+          gh run download "$id" --repo "$GITHUB_REPOSITORY" -n "$name" -D "$RUNNER_TEMP/main-records" || fallback "main's run $id has no $name to download (expired, say)."
+          boxes=()
+          for d in "$RUNNER_TEMP"/main-records/*/; do boxes+=(--box "$d"); done
+          [ "${#boxes[@]}" -gt 0 ] || fallback "main's run $id held no tests records."
+          git worktree add --detach "$RUNNER_TEMP/main-tree" "$sha" || fallback "main's commit $sha isn't in this checkout."
+          python adapters/stdlib/ci-memo/ci_memo.py pin --repo "$RUNNER_TEMP/main-tree" "${boxes[@]}" --to "$RUNNER_TEMP/ci.pin" 2> "$RUNNER_TEMP/pin.err" || fallback "ci-memo refused the pin: $(cat "$RUNNER_TEMP/pin.err")"
+          set +e
+          python adapters/stdlib/ci-memo/ci_memo.py plan --pin "$RUNNER_TEMP/ci.pin" tests > "$RUNNER_TEMP/plan.txt" 2> "$RUNNER_TEMP/plan.err"
+          code=$?
+          set -e
+          if [ "$code" != 0 ] && [ "$code" != 42 ]; then
+            fallback "ci-memo refused the plan: $(cat "$RUNNER_TEMP/plan.err")"
+          fi
+          standing=$(python adapters/stdlib/ci-memo/ci_memo.py plan --pin "$RUNNER_TEMP/ci.pin" --standing tests) || fallback "ci-memo refused the plan."
+          without=""
+          for g in $standing; do without="$without --without $g"; done
+          echo "without=$without" >> "$GITHUB_OUTPUT"
+          {
+            echo "### tests (${{ matrix.python-version }}): what this change reaches"
+            echo "A \`stand\` row is the verdict of main's run $id, at $sha, on this Python (adapters/stdlib/ci-memo); a \`run\` row runs in this job."
+            echo '```'
+            cat "$RUNNER_TEMP/plan.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       # cores.py verifies each record itself and refuses when one doesn't;
       # its records are ci-record/1 to ci-record/4, and its log has every
       # gate's verdict, which ci-why reads
       # on main, one Python writes each tests:adapters gate's times, for
       # adapters/stdlib/ci/times.py to keep test-times.json to
-      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests --without tests:strip | tee "$RUNNER_TEMP/ci.log"
+      - run: python adapters/stdlib/ci/cores.py --jobs 4 --box ${{ runner.temp }}/ci-record tests --without tests:strip ${{ steps.stand.outputs.without }} | tee "$RUNNER_TEMP/ci.log"
         env:
           WILLOW_JUNIT_DIR: ${{ github.event_name != 'pull_request' && matrix.python-version == '3.13' && format('{0}/junit', runner.temp) || '' }}
       - if: failure()

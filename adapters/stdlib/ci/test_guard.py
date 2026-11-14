@@ -248,3 +248,81 @@ def test_writing_a_repo_file_by_pattern_and_only_that(repo):
     code, log = run(root, script)
     assert ok.read_text() == "fine"
     assert code != 0 and "x/y/README.md" in log
+
+
+def reading(root: Path, code: str, uses: str = "") -> tuple[int, str]:
+    """A probe whose card names `uses`, run with reads held to its reach."""
+    script = addon(root, "nothing", "none", code)
+    card = script.parent / "README.md"
+    if uses:
+        card.write_text(card.read_text().replace("-->", f"uses: {uses}\n-->"))
+    log = root.parent / "guard.log"
+    log.unlink(missing_ok=True)
+    env = dict(os.environ, PYTHONPATH=str(GUARD), WILLOW_GUARD_LOG=str(log),
+               WILLOW_GUARD_ROOT=str(root), PYTHONDONTWRITEBYTECODE="1",
+               WILLOW_GUARD_READS="1")  # fmt: skip
+    got = subprocess.run([sys.executable, str(script)], env=env,
+                         capture_output=True, text=True)  # fmt: skip
+    return got.returncode, log.read_text() if log.exists() else ""
+
+
+def test_a_read_outside_an_add_ons_reach_is_a_breach(repo):
+    """What ci-memo keys a gate on is what its tests can read: a read past it
+    would let a gate stand on bytes its key doesn't hold."""
+    root, _, _ = repo
+    (root / "docs").mkdir()
+    (root / "docs" / "a.md").write_text("a doc\n")
+    # the path built from pieces, so reach.py's scan can't see it: the guard can
+    code, log = reading(root, f"open({str(root)!r} + '/d' + 'ocs/a.md').read()\n")
+    assert code != 0 and "read docs/a.md, outside its reach" in log, (code, log)
+
+
+def test_a_read_within_its_reach_is_no_breach(repo):
+    root, _, _ = repo
+    other = root / "adapters" / "stdlib" / "named"
+    other.mkdir()
+    (other / "data.txt").write_text("x\n")
+    code, log = reading(
+        root,
+        f"open({str(other / 'data.txt')!r}).read()\n"
+        f"open({str(root / 'kernel.py')!r}).read()\n"
+        "open(__file__).read()\n",
+        uses="named",
+    )
+    assert code == 0 and log == "", log
+
+
+def test_listing_the_add_ons_is_a_read_past_the_reach(repo):
+    root, _, _ = repo
+    code, log = reading(
+        root, f"os.listdir({str(root / 'adapters')!r} + '/std' + 'lib')\n"
+    )
+    assert code != 0 and "read adapters/stdlib, outside its reach" in log, (code, log)
+
+
+def test_without_the_read_flag_reads_arent_judged(repo):
+    root, _, _ = repo
+    (root / "docs").mkdir()
+    (root / "docs" / "a.md").write_text("a doc\n")
+    script = addon(
+        root, "nothing", "none", f"open({str(root / 'docs' / 'a.md')!r}).read()\n"
+    )
+    code, log = run(root, script)
+    assert code == 0 and log == "", log
+
+
+def test_a_folder_handed_on_the_command_line_is_the_callers_choice(repo):
+    """An add-on run on a folder reads what its caller chose, not past its
+    own reach; the caller's reach holds it."""
+    root, _, _ = repo
+    (root / "docs").mkdir()
+    (root / "docs" / "a.md").write_text("a doc\n")
+    script = addon(root, "nothing", "none", "open(sys.argv[1] + '/a.md').read()\n")
+    log = root.parent / "guard.log"
+    log.unlink(missing_ok=True)
+    env = dict(os.environ, PYTHONPATH=str(GUARD), WILLOW_GUARD_LOG=str(log),
+               WILLOW_GUARD_ROOT=str(root), PYTHONDONTWRITEBYTECODE="1",
+               WILLOW_GUARD_READS="1")  # fmt: skip
+    got = subprocess.run([sys.executable, str(script), str(root / "docs")], env=env,
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0 and not log.exists(), got.stderr

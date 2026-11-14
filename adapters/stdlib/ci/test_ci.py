@@ -294,7 +294,7 @@ def test_a_gate_weighs_what_its_tests_took():
     mine = ci.gate_weight("mutants:ci")
     assert mine == round(ci.MUTANT_COPY + ci.MUTANT_BREAKS * ci.TIMES_TO_RUNNER * own)
     assert mine > 10 * ci.gate_weight("mutants:accents"), "ci's tests are the slow ones"
-    chunk = ci.chunks(ci.adapter_tests(), ci.ADAPTER_CHUNKS)[2]
+    chunk = ci.adapter_parts()[2]
     median = sorted(times.values())[len(times) // 2]
     want = ci.TIMES_TO_RUNNER * sum(times.get(f, median) for f in chunk)
     assert ci.gate_weight("tests:adapters-3") == round(want)

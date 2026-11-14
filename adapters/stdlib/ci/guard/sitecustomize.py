@@ -68,6 +68,11 @@ WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
 WRITES = {"os.remove", "os.rename", "os.rmdir", "os.mkdir", "shutil.rmtree",
           "os.truncate", "os.chmod", "os.symlink", "os.link"}  # fmt: skip
 NETWORK = {"socket.connect", "socket.sendto", "socket.getaddrinfo"}
+#: with WILLOW_GUARD_READS=1, what a test or an add-on reads or lists of the
+#: repo is held to its reach (ci/reach.py), so a gate ci-memo keys on that
+#: reach never read past what its key holds
+READS = os.environ.get("WILLOW_GUARD_READS", "") == "1"
+LISTS = {"os.listdir", "os.scandir", "glob.glob"}
 LOOPBACK = {"localhost", "127.0.0.1", "::1"}
 
 _busy = threading.local()
@@ -252,12 +257,106 @@ def judge_read(addon: str, via_kernel: bool, path: str) -> None:
         breach(addon, f"read the key itself: {path}")
 
 
+_reach: list = []
+_owner: dict = {}
+
+
+def reach_of(addon: str):
+    """(the prefixes `addon` may read, or None for the whole tree; within)."""
+    if not _reach:
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "willow_reach_for_guard",
+            os.path.join(os.path.dirname(HERE), os.pardir, "reach.py"),
+        )
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _reach.append(mod)
+    return _reach[0].reach(ROOT, addon), _reach[0].within
+
+
+def reader() -> str | None:
+    """The add-on whose folder holds the first frame of this repo's code that
+    asked, its tests included ("stdlib/NAME"); None when that frame is a repo
+    file outside the add-ons. The kernel and this guard are passed over."""
+    frame = sys._getframe(1)
+    while frame is not None:
+        name = frame.f_code.co_filename
+        got = _owner.get(name)
+        if got is None:
+            path = os.path.realpath(name)
+            if path in (HERE, KERNEL) or not under(path, ROOT):
+                got = ""
+            else:
+                parts = os.path.relpath(path, ADAPTERS).split(os.sep)
+                ours = len(parts) >= 3 and parts[0] in ("stdlib", "deps")
+                got = f"{parts[0]}/{parts[1]}" if ours else "-"
+            _owner[name] = got
+        if got == "-":
+            return None
+        if got:
+            return got
+        frame = frame.f_back
+    return None
+
+
+_given: list = []
+
+
+def given() -> list[str]:
+    """What this process was handed on its command line that is there: an
+    add-on reading a folder it was given reads its caller's choice, not past
+    its own reach (the caller's reach holds it)."""
+    if not _given:
+        _given.append([os.path.realpath(a) for a in sys.argv[1:]
+                       if isinstance(a, str) and a and os.path.exists(a)])  # fmt: skip
+    return _given[0]
+
+
+def judge_reach(path: str) -> None:
+    if not under(path, ROOT) or not os.path.lexists(path):
+        return  # outside the repo, or nothing there to read
+    if any(under(path, g) for g in given()):
+        return
+    rel = os.path.relpath(path, ROOT).replace(os.sep, "/")
+    if rel.startswith("."):
+        return
+    folder, _, base = rel.rpartition("/")
+    if folder == "__pycache__" or folder.endswith("/__pycache__"):
+        # a module's cached bytecode is its source, read
+        source = base.split(".")[0] + ".py"
+        rel = folder[: -len("__pycache__")] + source
+    addon = reader()
+    if addon is None:
+        return
+    prefixes, within = reach_of(addon)
+    if prefixes is None or within(rel, prefixes) or within(rel + "/", prefixes):
+        return
+    breach(addon, f"read {rel}, outside its reach: name what it reads on its card, or add it to WIDE in adapters/stdlib/ci/reach.py")  # fmt: skip
+
+
 def hook(event: str, args: tuple) -> None:
     if getattr(_busy, "on", False):
         return
     if event in ("tempfile.mkdtemp", "tempfile.mkstemp"):
         _scratch.append(os.path.realpath(args[0]))
         return
+    if READS and (event in LISTS or event == "open"):
+        mode = args[1] if event == "open" else "r"
+        flags = (args[2] if event == "open" else 0) or 0
+        reading = (
+            not any(c in mode for c in "wax+") if isinstance(mode, str)
+            else not flags & WRITE_FLAGS
+        )  # fmt: skip
+        if reading and args and args[0] is not None:
+            _busy.on = True
+            try:
+                path = real(args[0])
+                if path is not None:
+                    judge_reach(path)
+            finally:
+                _busy.on = False
     if event != "open" and event not in WRITES and event not in NETWORK:
         return
     _busy.on = True
