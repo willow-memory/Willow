@@ -130,3 +130,52 @@ def test_readers_are_grouped_by_the_writers_that_move_them(tmp_path):
     }
     assert res["reader_groups"] == {"quiz": ["serve"]}
     assert "- moved by quiz: `serve`" in ch.report(res)
+
+
+def test_a_step_that_timed_out_is_held_to_nothing(tmp_path):
+    run = _run(tmp_path)
+    rows = [json.loads(x) for x in (run / "rows-0-0.jsonl").read_text().splitlines()]
+    for r in rows:
+        if r["step"] == "b" and r["stack"] == "pair-0":
+            r.update(out="", timed_out=True, exit=None)
+    (run / "rows-0-0.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    res = ch.measure([run], [GRID, PAIRS])
+    assert res["controls"] == {"stacks": 8, "changed": 0, "changed_rows": []}, (
+        "a timeout says nothing about what came before it"
+    )
+
+
+def test_a_step_unsteady_in_one_run_is_unsteady_in_every_run_of_its_pile(tmp_path):
+    first, second = tmp_path / "1", tmp_path / "2"
+    first.mkdir()
+    second.mkdir()
+    one = _run(first)
+    two = _run(second)
+    # the first run's single stack shows syllabus unsteady; the second has no single stack
+    rows = [json.loads(x) for x in (one / "rows-0-0.jsonl").read_text().splitlines()]
+    for r in rows:
+        if r["stack"] == "single/syllabus":
+            r["out"] = "otherwise"
+    (one / "rows-0-0.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    rows = [json.loads(x) for x in (two / "rows-0-0.jsonl").read_text().splitlines()]
+    rows = [r for r in rows if r["stack"] != "single/syllabus"]
+    rows += [
+        _row("dice", "r", "bridge/dice--syllabus", 0),
+        _row("syllabus", "moved", "bridge/dice--syllabus", 1),
+    ]
+    (two / "rows-0-0.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    grid = {
+        "stacks": GRID["stacks"]
+        + [
+            {
+                "id": "bridge/dice--syllabus",
+                "way": "bridge",
+                "steps": ["dice", "syllabus"],
+            }
+        ]
+    }
+    res = ch.measure([one, two], [grid, PAIRS])
+    assert ("dice", "syllabus") not in {
+        (h["from"], h["to"]) for h in res["bridges"]["held"]
+    }
+    assert res["piles"]["p"]["unsteady"] == ["syllabus"]

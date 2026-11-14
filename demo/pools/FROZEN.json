@@ -17,7 +17,7 @@
   "adapters/stdlib/readme/week.json": "e721c6a7e29360dac15e4506e803ab2568afc04619c8cb619beedfc42a0e72b4",
   "kernel.py": "953bb4ccc65f9fd013c31d6c9a2fa33e76acb3f37637dea0395969f0184a99da",
   "demo/pools/trace/memo/sitecustomize.py": "82cb4b9a8cfa20a6dd011d276c21544e7c00b0020afa1fa511a981118a7c8449",
-  "demo/pools/truth/changes.py": "0c098fb36f544bef67c98bdb71391d8e95b960420a06e927f0feaa7782aebd98"
+  "demo/pools/truth/changes.py": "8418499acd999dc6937986f6b7f970289b46782a68c5632485dd248fb3c71cbb"
  },
  "made": {
   "grid manifest (grid.py write)": "6d9472e782f36992d678fed3b74c6413d12c8b2f40accf9979a009792e2ebe45",
@@ -241,6 +241,16 @@
    },
    "now": {
     "demo/pools/truth/changes.py": "0c098fb36f544bef67c98bdb71391d8e95b960420a06e927f0feaa7782aebd98"
+   }
+  },
+  {
+   "frozen": "2026-11-14",
+   "why": "Two measuring faults found in phase 7's controls, fixed stricter and said so: a row that timed out is held to nothing (ocr timed out at 120 s in 22 grove stacks, and two such timeouts were counted as controls that changed); and a step unsteady in any of a pile's runs is unsteady in all of them (handover's single stack ran in one notebook only, so in the other it was held, and stack then handover and karakeep then handover counted). Phase 7 read again under it: bridges 3 of 402, controls 0 of 1946; the reader groups as they were.",
+   "was": {
+    "demo/pools/truth/changes.py": "0c098fb36f544bef67c98bdb71391d8e95b960420a06e927f0feaa7782aebd98"
+   },
+   "now": {
+    "demo/pools/truth/changes.py": "8418499acd999dc6937986f6b7f970289b46782a68c5632485dd248fb3c71cbb"
    }
   }
  ]

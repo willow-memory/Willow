@@ -30,7 +30,8 @@ report said were missing:
   was put before it reads the record as a whole.
 
 A step unsteady alone (it differs between its alone row and its single
-stack's) is never held to anything. Nor is a row from another UTC day than
+stack's, in any of its pile's runs) is never held to anything, nor is a row
+that timed out. Nor is a row from another UTC day than
 its step's alone row: midnight can fall inside one run.
 
 Exit codes, the kernel's: 0 done; 2 refused (a bad command line, a file that
@@ -84,6 +85,7 @@ def measure(runs: list[Path], grids: list[dict]) -> dict:
     bridge_n = bridge_c = ctrl_n = ctrl_c = 0
     held, ctrl_changed, kind_effects, unsteady_all = [], [], [], set()
     edges: set = set()
+    loaded, unsteady_in = [], {}
     for run in runs:
         alone = {r["step"]: r for r in _load(run / "rows-alone.jsonl")}
         empty = {r["step"]: r for r in _load(run / "rows-empty.jsonl")}
@@ -98,12 +100,16 @@ def measure(runs: list[Path], grids: list[dict]) -> dict:
             if (run / "run.json").is_file()
             else {}
         )
-        unsteady = {
+        mine = unsteady_in.setdefault(pile, set())
+        mine |= {
             s for s, r in single.items() if s in alone and r["out"] != alone[s]["out"]
         }
-        unsteady |= set(
-            said.get("never", [])
-        )  # stage 0's two runs alone, as the run was given them
+        mine |= set(said.get("never", []))  # stage 0's two runs alone, as given
+        loaded.append((alone, empty, stacked, pile))
+    for alone, empty, stacked, pile in loaded:
+        # unsteady in any of the pile's runs is unsteady in all of them: a
+        # pile's single stacks may all have run in one notebook
+        unsteady = unsteady_in[pile]
         unsteady_all |= unsteady
         fired = sorted(
             s
@@ -119,6 +125,8 @@ def measure(runs: list[Path], grids: list[dict]) -> dict:
             s = r["step"]
             if s in unsteady or s not in alone:
                 return None
+            if r.get("timed_out") or alone[s].get("timed_out"):
+                return None  # a timeout says nothing about what came before it
             if r.get("day") != alone[s].get("day"):
                 return None  # another day than its baseline: a step may count days
             return r["out"] != alone[s]["out"]
