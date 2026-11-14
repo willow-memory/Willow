@@ -354,3 +354,45 @@ def test_a_remembered_step_is_not_reused_when_the_boxs_files_are_not_as_they_wer
     assert memo.find("markdown", roots) is one
     (box / "new.json").write_text("{}")
     assert memo.find("markdown", roots) is None
+
+
+def test_rows_group_by_content_with_the_chain_the_clock_and_the_folders_taken_out():
+    fill = {"pile": "/p/pile", "box": "/w/1/box", "tmp": "/w/1/tmp"}
+    other = {"pile": "/p/pile", "box": "/w/2/box", "tmp": "/w/2/tmp"}
+
+    def row(n, prev, ts, **body):
+        return json.dumps({"n": n, "prev": prev, "hash": f"h{n}", "ts": ts, "version": "v",
+                           "standing": "unattested", "family": "kernel", **body})  # fmt: skip
+
+    a = row(
+        3,
+        "aaa",
+        "2026-11-13T23:59:00Z",
+        kind="bite",
+        served=[{"where": "/p/pile/a.md:1"}],
+        seed="aaa",
+    )
+    b = row(
+        9,
+        "bbb",
+        "2026-11-14T00:01:00Z",
+        kind="bite",
+        served=[{"where": "/p/pile/a.md:1"}],
+        seed="bbb",
+    )
+    c = row(3, "aaa", "2026-11-13T23:59:00Z", kind="bite", served=[])
+    g1, s1 = trace.row_groups([a], "salt", fill)
+    g2, s2 = trace.row_groups([b], "salt", other)
+    g3, s3 = trace.row_groups([c], "salt", fill)
+    assert g1 == g2, (
+        "the same content, another place in the chain, another day: one group"
+    )
+    assert g1 != g3 and g1[0].startswith("bite:"), (
+        "a bite that served nothing is another group"
+    )
+    assert s1 == s2 and s1 != s3, "the shape is its field names"
+    g4, s4 = trace.row_groups([a], "another pile's salt", fill)
+    assert g4 != g1 and s4 == s1, (
+        "content is the pile's to hash; shapes compare across piles"
+    )
+    assert all("a.md" not in g and "pile" not in g.split(":")[1] for g in g1 + s1)

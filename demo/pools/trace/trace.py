@@ -26,6 +26,12 @@ to ROWS:
                       run's own folders and any time of day taken out, so
                       one step's output can be held to another run of it
     rows              the kinds of row it added to the record, each counted
+    row_groups        each row it added as kind:hash of its content, the
+                      chain's own fields out and the rest normalized (the
+                      grove's ladder, rungs 1 and 2), salted with the pile's
+                      salt: rows with the same content group together
+    row_shapes        the same as kind:hash of its field names, with one salt
+                      for the study, so shapes compare across piles
     wrote             the files it left in its scratch folder, counted by
                       suffix, and how many of them are a mirror's map
     places, files     the places in the pile its output names, each as a
@@ -107,6 +113,58 @@ def steady(out: str, fill: dict[str, str], mine: Path) -> str:
                        (fill["pile"], "{pile}")):  # fmt: skip
         out = out.replace(path, word)
     return WHEN.sub("{when}", out)
+
+
+CHAIN = frozenset({"n", "prev", "hash", "ts", "version", "standing", "family"})
+SHAPE_SALT = (
+    "pools-row-shape-2026-11-14"  # the study's own, so shapes compare across piles
+)
+
+
+def _norm(value, prev: str, fill: dict[str, str]):
+    """Rung 2 of the grove's ladder: a row's value with what differs for no
+    reason of its content taken out: the previous row's hash (a dice seed is
+    the chain's, not the roll's), the run's own folders, the time of day."""
+    if isinstance(value, dict):
+        return {k: _norm(v, prev, fill) for k, v in sorted(value.items())}
+    if isinstance(value, list):
+        return [_norm(v, prev, fill) for v in value]
+    if isinstance(value, str):
+        if prev and value == prev:
+            return "{prev}"
+        for path, word in (
+            (fill["tmp"], "{tmp}"),
+            (fill["box"], "{box}"),
+            (fill["pile"], "{pile}"),
+        ):
+            value = value.replace(path, word)
+        return WHEN.sub("{when}", value)
+    return value
+
+
+def row_groups(
+    lines: list[str], salt: str, fill: dict[str, str]
+) -> tuple[list[str], list[str]]:
+    """Rung 1: each record row a step added, as kind:hash of its content (the
+    chain's own fields out, the rest normalized, hashed with the pile's salt)
+    and as kind:hash of its shape (its field names, with the study's salt).
+    Two rows with the same content group together; no word is kept."""
+    groups, shapes = set(), set()
+    for line in lines:
+        row = json.loads(line)
+        kind = str(row.get("kind", "?"))
+        body = {
+            k: _norm(v, row.get("prev", ""), fill)
+            for k, v in sorted(row.items())
+            if k not in CHAIN
+        }
+        groups.add(
+            f"{kind}:"
+            + sha(f"{salt}\0{json.dumps(body, sort_keys=True)}".encode())[:16]
+        )
+        names = sorted(k for k in row if k not in CHAIN)
+        shapes.add(f"{kind}:" + sha(f"{SHAPE_SALT}\0{json.dumps(names)}".encode())[:12])
+    return sorted(groups), sorted(shapes)
 
 
 def sha(data: bytes) -> str:
@@ -213,6 +271,7 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box: Path, tmp: 
         out = out.decode("utf-8", "replace") if isinstance(out, bytes) else out
     seconds = round(time.perf_counter() - began, 3)
     record = (box / "record.jsonl").read_text(encoding="utf-8").splitlines()[before:]
+    groups, shapes = row_groups(record, salt, fill)
     rows: dict[str, int] = {}
     for line in record:
         kind = json.loads(line).get("kind", "?")
@@ -247,7 +306,7 @@ def trace(step: str, script: Path, argv: list[str], pile: Path, box: Path, tmp: 
     return {
         "step": step, "card": card, "code": code_sha, "exit": code, "timed_out": timed_out,
         "seconds": seconds, "state": state.group(1) if state else None,
-        "lines": len(out.splitlines()), "out": sha(steady(out, fill, mine).encode()), "rows": dict(sorted(rows.items())),
+        "lines": len(out.splitlines()), "out": sha(steady(out, fill, mine).encode()), "rows": dict(sorted(rows.items())), "row_groups": groups, "row_shapes": shapes,
         "wrote": dict(sorted(wrote.items())), "maps": maps,
         "places": sorted({salted(f"{f}\0{w}") for f, w, _ in seen}),
         "files": sorted({salted(f) for f, _, _ in seen}),
