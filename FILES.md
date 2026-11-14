@@ -2173,20 +2173,22 @@ willow/
 │   │       ├── proof.md
 │   │       ├── voice.md
 │   │       └── ways-in.md
+```
+
+#### demo/, from game-box/
+
+```
 │   ├── game-box/
 │   │   ├── open_table.py     a game table set up from the box, with nothing sealed
+│   │   ├── session.py        a session at the table played by code, as far as it goes without the person
 │   │   ├── table/
 │   │   │   ├── check.md      the table's own check
-│   │   │   ├── house-rules.md House rules
-│   │   │   └── worlds/
-│   │   │       └── lantern-fair.json
+│   │   │   └── house-rules.md House rules
+│   │   ├── worlds/
+│   │   │   ├── clockwork-cellar.json
+│   │   │   └── lantern-fair.json
 │   │   ├── test_game_box.py
 │   │   └── README.md         The game box
-```
-
-#### demo/, from google-privacy-2026-10-16/
-
-```
 │   ├── google-privacy-2026-10-16/  a real policy change: what Google's text says against what the news said
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the results
 │   │   ├── FROZEN.json       the SHA-256 of each frozen file, and of the tools when frozen
@@ -2221,6 +2223,11 @@ willow/
 │   │   ├── private.py        one count over four folders, where the one who asks learns the
 │   │   ├── scene.py          the report sealed, sent, forwarded hop by hop, forged once, corrected and witnessed; stacks shared, taken and declined
 │   │   └── test_scene.py     holds the scene to what README.md says it shows
+```
+
+#### demo/, from kept/
+
+```
 │   ├── kept/                 a stack built by hand over this repository: what it remembers, and what it computes again
 │   │   ├── KEPT.json     what the stack's last run printed, listed as kept
 │   │   ├── questions.txt     the sixteen questions scan was asked
@@ -2232,11 +2239,6 @@ willow/
 │   │   ├── words.txt         the six-line words list the box carried
 │   │   ├── test_kept.py
 │   │   └── README.md         the row step by step: what each found, what it got wrong, what held and what didn't
-```
-
-#### demo/, from known-gaps/
-
-```
 │   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
 │   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze

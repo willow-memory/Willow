@@ -32,7 +32,7 @@ class Table:
     def __init__(self, tmp: Path):
         self.dir, self.key = tmp / "table", tmp / "gm.key"
         self.box, self.pile = self.dir / "record", self.dir / "pile"
-        self.world = self.pile / "worlds" / "lantern-fair.json"
+        self.world = self.dir / "worlds" / "lantern-fair.json"
 
     def open(self):
         return py(
@@ -69,6 +69,33 @@ class Table:
         got = self.k("seal", subject)
         assert got.returncode == 0, got.stderr
 
+    def session(self, *argv, world: str = "clockwork-cellar"):
+        return py(
+            HERE / "session.py", "--table", self.dir, "--world", world, *argv, *NOW
+        )
+
+    def asked(self) -> list[str]:
+        """The rulings handed in that nobody has answered."""
+        said = {r["subject"] for r in self.rows() if r["kind"] in ("seal", "decline")}
+        return [r["subject"] for r in self.rows() if r["kind"] == "table-ask" and r["subject"] not in said]  # fmt: skip
+
+    def night(self, answer=lambda fact: True, world: str = "clockwork-cellar"):
+        """Play a session to its end, the test standing in for the person:
+        each ruling the story reaches is sealed or declined by `answer`."""
+        for _ in range(20):
+            got = self.session(world=world)
+            if got.returncode != 42:
+                return got
+            for subj in self.asked():
+                fact = next(r["fact"] for r in self.rows() if r.get("subject") == subj and r["kind"] == "table-ask")  # fmt: skip
+                assert (
+                    self.k("seal" if answer(fact) else "decline", subj).returncode == 0
+                )
+        raise AssertionError("the session never ended")
+
+    def beats(self) -> list[str]:
+        return [f"{r['beat']}:{r.get('band') or r.get('verdict')}" for r in self.rows() if r["kind"] == "table-beat"]  # fmt: skip
+
 
 @pytest.fixture
 def t(tmp_path):
@@ -87,11 +114,8 @@ def test_open_lays_a_table_and_seals_nothing(t):
         if r["kind"] in ("seal", "decline") or r.get("who") == "human"
     ]
     assert t.key.exists() and not any(p.name == t.key.name for p in t.dir.rglob("*"))
-    assert sorted(p.name for p in t.pile.iterdir()) == [
-        "check.md",
-        "house-rules.md",
-        "worlds",
-    ]
+    assert sorted(p.name for p in t.pile.iterdir()) == ["check.md", "house-rules.md"]
+    assert sorted(p.name for p in (t.dir / "worlds").iterdir()) == ["clockwork-cellar.json", "lantern-fair.json"]  # fmt: skip
     assert t.k("verify").returncode == 0
 
 
@@ -190,10 +214,107 @@ def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
     assert got.returncode == 2 and "isn't a table" in got.stderr
 
 
-def test_the_world_is_one_game_master_takes_and_names_no_player():
-    world = json.loads((HERE / "table" / "worlds" / "lantern-fair.json").read_text())
+@pytest.mark.parametrize("name", ["lantern-fair", "clockwork-cellar"])
+def test_each_world_is_one_game_master_takes_and_names_no_player(name):
+    world = json.loads((HERE / "worlds" / f"{name}.json").read_text())
     assert "never a player" in world["setting"]
     sys.path.insert(0, str(STDLIB / "game-master"))
     import game_master
 
     game_master.validate(world)
+
+
+# ── a session played by code ─────────────────────────────────────────────────
+def test_a_session_plays_to_the_first_ruling_and_waits(t):
+    t.open()
+    got = t.session()
+    assert got.returncode == 42 and "it waits on you" in got.stdout
+    assert [b.split(":")[0] for b in t.beats()] == ["stair", "gears"]
+    assert len(t.asked()) == 1
+    again = t.session()  # nothing answered: it says so, and plays nothing more
+    assert again.returncode == 42 and len(t.beats()) == 2
+
+
+def test_a_whole_session_ends_with_what_the_table_made_true(t):
+    t.open()
+    got = t.night()
+    assert got.returncode == 0, got.stderr
+    assert "The Clockwork Cellar, played to its end" in got.stdout
+    assert "button  sealed" in got.stdout and "guest  sealed" in got.stdout
+    canon = t.session("canon")
+    assert canon.returncode == 0 and "what this table holds true:" in canon.stdout
+    assert "the Lantern Man" in canon.stdout
+    check = t.check()
+    assert (
+        "2 games, " in check.stdout and "every one holds" in check.stdout
+    )  # the fair, opened, and the cellar
+
+
+def test_canon_never_frees_the_prince_unless_a_riddle_was_answered(t):
+    """Whatever the dice did tonight, the rulings put to the person are the
+    ones the story reached."""
+    t.open()
+    t.night()
+    path = t.beats()
+    canon = t.session("canon").stdout
+    answered = any(b in path for b in ("riddle:strong", "riddle:weak", "second:strong", "second:weak"))  # fmt: skip
+    assert ("Prince Aldric is free" in canon) == answered, path
+    if "riddle:miss" not in path:
+        assert not any(b.startswith("second") for b in path)
+
+
+@pytest.mark.parametrize(
+    "heart, path",
+    [
+        (10, ["riddle:strong", "free:sealed"]),
+        (-10, ["riddle:miss", "second:"]),
+    ],
+)
+def test_the_riddle_roll_turns_the_story(t, heart, path):
+    """A copy of the cellar whose Brann always answers (or never does)."""
+    t.open()
+    f = t.dir / "worlds" / "clockwork-cellar.json"
+    w = json.loads(f.read_text())
+    next(c for c in w["characters"] if c["id"] == "brann")["stats"]["Heart"] = heart
+    f.write_text(json.dumps(w))
+    assert t.night().returncode == 0
+    got = t.beats()
+    assert got[4] == path[0] and got[5].startswith(path[1]), got
+    if heart < 0:
+        assert "free:" not in " ".join(
+            got
+        )  # the first freeing is never put to the person
+
+
+def test_a_ruling_said_no_to_is_canon_as_a_no(t):
+    t.open()
+    t.night(answer=lambda fact: "guest" not in fact)
+    canon = t.session("canon").stdout
+    assert (
+        "what it said no to:" in canon and "not: A guest walks into the cellar" in canon
+    )
+    assert "The red button is bait" in canon.split("what it said no to:")[0]
+
+
+def test_canon_before_anything_is_sealed_says_so(t):
+    t.open()
+    got = t.session("canon")
+    assert got.returncode == 42 and "nothing has been sealed" in got.stdout
+
+
+def test_the_table_cannot_read_the_script(t):
+    """The worlds are beside the pile, never in it: asking the record about a
+    scene not played yet, or a ruling not made, finds nothing to serve."""
+    t.open()
+    for q in ("is the red button bait", "is prince aldric free"):
+        got = json.loads(t.k("bite", q).stdout)
+        assert all("worlds/" not in s["where"] for s in got.get("served", [])), got
+
+
+def test_a_session_refuses_what_isnt_a_table_or_a_world(t, tmp_path):
+    t.open()
+    assert "no world" in t.session(world="nowhere").stderr
+    got = py(HERE / "session.py", "--table", tmp_path / "none")
+    assert got.returncode == 2 and "isn't a table" in got.stderr
+    for argv in ((), ("--table", str(t.dir), "fly")):
+        assert py(HERE / "session.py", *argv).returncode == 2

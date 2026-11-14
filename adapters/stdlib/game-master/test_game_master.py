@@ -671,3 +671,124 @@ def test_status_names_the_place_the_scene_is_set_in(t):
     t.k("seal", t.subject())
     t.run("settle")
     assert "at The inn" in t.run("status").stdout
+
+
+# ── a beat that plays on an earlier beat's outcome ──────────────────────────
+def branching(grit: int) -> dict:
+    """A world whose path turns on one roll (Ana's Grit, +10 always strong,
+    -10 always a miss) and on one ruling."""
+    w = copy.deepcopy(WORLD)
+    w["characters"][0]["stats"] = {"Grit": grit}
+    w["characters"][1]["seat"] = False  # Ana takes every beat
+    w["scenes"] = [{"id": "s1", "title": "Dusk", "place": "bridge", "opening": ["The light goes."],
+        "beats": [
+            {"id": "gate", "kind": "action", "prompt": "Ana forces the gate.", "suggests": "Grit", "outcomes": outcomes("gate")},
+            {"id": "through", "kind": "decision", "prompt": "Is she through?", "when": {"beat": "s1::gate", "is": ["strong", "weak"]},
+             "proposes": {"fact": "Ana is through the gate.", "proposed_by": "cy"}},
+            {"id": "again", "kind": "action", "prompt": "Ana tries the wall.", "suggests": "Grit", "when": {"beat": "s1::gate", "is": ["miss"]},
+             "outcomes": outcomes("again")},
+        ]},
+        {"id": "s2", "title": "Night", "place": "inn", "opening": ["Rain."],
+         "beats": [
+             {"id": "toll", "kind": "decision", "prompt": "Is the toll paid?",
+              "proposes": {"fact": "The toll is paid.", "proposed_by": "cy"}},
+             {"id": "paid", "kind": "action", "prompt": "Ana walks in.", "suggests": "Grit", "when": {"beat": "s2::toll", "is": ["sealed"]}, "outcomes": outcomes("paid")},
+             {"id": "unpaid", "kind": "action", "prompt": "Ana is turned away.", "suggests": "Grit", "when": {"beat": "s2::toll", "is": ["declined"]}, "outcomes": outcomes("unpaid")},
+         ]}]  # fmt: skip
+    return w
+
+
+def played(t) -> list[str]:
+    return [f"{r['scene']}::{r['beat']}" for r in t.rows() if r["kind"] == gm.BEAT]
+
+
+def test_a_beat_plays_only_when_the_beat_it_names_came_out_its_way(tmp_path):
+    t = Table(tmp_path / "strong", branching(10))
+    t.run("open")
+    assert t.run("act", "Grit").returncode == 0
+    assert (
+        "Is she through?" in t.run("status").stdout
+    )  # strong: the decision, not the wall
+    t.run("ask")
+    t.k("seal", t.subject())
+    assert t.run("settle").returncode == 0
+    t.run("ask")
+    t.k("decline", t.subject())
+    got = t.run("settle")
+    assert "-- Night --" not in got.stdout  # already in it
+    assert t.run("act", "Grit").returncode == 0
+    assert played(t) == ["s1::gate", "s1::through", "s2::toll", "s2::unpaid"]
+    assert "finished" in t.run("status").stdout and t.run("check").returncode == 0
+
+    t = Table(tmp_path / "miss", branching(-10))
+    t.run("open")
+    t.run("act", "Grit")
+    got = t.run("act", "Grit")  # a miss: the wall, never the decision
+    assert (
+        got.returncode == 0
+        and "again miss" in got.stdout
+        and "-- Night --" in got.stdout
+    )
+    t.run("ask")
+    t.k("seal", t.subject())
+    t.run("settle")
+    t.run("act", "Grit")
+    assert played(t) == ["s1::gate", "s1::again", "s2::toll", "s2::paid"]
+    assert t.run("check").returncode == 0
+
+
+def test_status_says_at_most_when_the_path_can_turn(tmp_path):
+    t = Table(tmp_path, branching(10))
+    t.run("open")
+    assert "0 of at most 6 beats done" in t.run("status").stdout
+
+
+def test_check_finds_a_beat_played_that_its_when_left_out(tmp_path):
+    t = Table(tmp_path, branching(10))
+    t.run("open")
+    t.run("act", "Grit")  # strong: `again` is off the path
+    t.forge(game=[r for r in t.rows() if r["kind"] == gm.OPEN][0]["n"], beat_kind="action", scene="s1", beat="again")  # fmt: skip
+    why = t.run("check")
+    assert why.returncode == 2 and "not the beat the world has at place 1" in why.stderr
+
+
+@pytest.mark.parametrize(
+    "when, says",
+    [
+        ({"beat": "s1::later", "is": ["strong"]}, "is not an earlier beat"),
+        (
+            {"beat": "s1::gate", "is": ["sealed"]},
+            "a action beat comes out strong, weak, miss",
+        ),
+        ({"beat": "s1::gate", "is": []}, "a action beat comes out"),
+        ({"beat": "s1::gate"}, "when"),
+        ("s1::gate", "when"),
+    ],
+)
+def test_a_when_that_isnt_one_is_refused_naming_where(when, says):
+    w = branching(10)
+    w["scenes"][0]["beats"][1]["when"] = when
+    w["scenes"][0]["beats"].append({**w["scenes"][0]["beats"][2], "id": "later"})
+    with pytest.raises(gm.WorldError, match=says):
+        gm.validate(w)
+
+
+def test_a_beat_that_names_its_character_is_theirs_whatever_the_turn(tmp_path):
+    w = copy.deepcopy(WORLD)
+    w["scenes"][0]["beats"][0]["by"] = (
+        "bo"  # Ana's turn by the seats; Bo's by the world
+    )
+    t = Table(tmp_path, w)
+    t.run("open")
+    assert "Bo's turn" in t.run("status").stdout
+    t.run("act", "Wit")
+    row = [r for r in t.rows() if r["kind"] == gm.BEAT][-1]
+    assert row["character"] == "bo" and row["bonus"] == 2
+    assert (
+        "Bo's turn" in t.run("status").stdout
+    )  # the next beat is the second seat's: Bo
+    assert t.run("check").returncode == 0
+    w2 = copy.deepcopy(w)
+    w2["scenes"][0]["beats"][0]["by"] = "cy"  # not seated
+    with pytest.raises(gm.WorldError, match="is not a seated character"):
+        gm.validate(w2)

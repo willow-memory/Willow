@@ -3,7 +3,7 @@ section: Play
 line: A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.
 source: bot
 added: 2026-11-01
-version: 0.1.0
+version: 0.2.0
 writes: record
 network: none
 role: tools
@@ -51,7 +51,20 @@ what it records is the no.
             "proposes": { "fact", "proposed_by" } } ] }] }
 
 Stats are whole numbers; a stat missing from a sheet is `base_stat`. Seated
-characters take the beats in turn. A world that isn't this is refused, naming
+characters take the beats in turn.
+
+**A beat can name whose it is:** `"by": "CHARACTER"`, a seated
+character, takes that beat whatever the turn. Beats without one go round the
+seats in order.
+
+**A beat can turn on an earlier one.** A beat with
+`"when": {"beat": "SCENE::BEAT", "is": ["miss"]}` is played only if that
+earlier beat came out one of those ways: `strong`, `weak` or `miss` for an
+action, `sealed` or `declined` for a decision. Otherwise the story passes it
+by. So a missed roll can lead somewhere a strong one doesn't, and a ruling
+declined can take the story down another road. `status` then counts beats
+"of at most" the world's total, and `check` holds each row to the path the
+outcomes before it made. A world that isn't this is refused, naming
 where. The game records the world's SHA-256 when it opens, and refuses the
 file if it has changed since.
 

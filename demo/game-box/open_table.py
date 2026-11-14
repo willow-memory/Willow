@@ -4,8 +4,10 @@
     python demo/game-box/open_table.py check --table DIR
 
 `open` lays a fresh table in DIR, which must not exist yet: the box's own
-pile copied to DIR/pile (the house rules, the world, the table's check), and
-a kernel record started over it at DIR/record. The kernel makes the key at
+pile copied to DIR/pile (the house rules and the table's check), the
+worlds to DIR/worlds, and a kernel record started over the pile at
+DIR/record. The worlds are kept out of the pile: they are the game master's
+script, and what the record reads is what the table may ask about. The kernel makes the key at
 FILE, for whoever rules the table; FILE must not be inside DIR, so the key is
 never part of what the record reads. Then each house rule is handed in for
 the seal (the rules add-on) and the story is opened (game-master), and it
@@ -39,7 +41,8 @@ STDLIB = ROOT / "adapters" / "stdlib"
 RULES = STDLIB / "rules" / "rules.py"
 GM = STDLIB / "game-master" / "game_master.py"
 STACK = STDLIB / "stack" / "stack.py"
-WORLD = "worlds/lantern-fair.json"
+WORLDS = HERE / "worlds"
+WORLD = "lantern-fair.json"
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:
@@ -69,6 +72,7 @@ def cmd_open(table: Path, key: Path, now: str) -> int:
     pile, box = table / "pile", table / "record"
     table.mkdir(parents=True)
     shutil.copytree(TABLE, pile)
+    shutil.copytree(WORLDS, table / "worlds")  # the script stays out of the pile
     steps = (
         (
             "the record",
@@ -105,7 +109,7 @@ def cmd_open(table: Path, key: Path, now: str) -> int:
                 str(box),
                 "open",
                 "--world",
-                str(pile / WORLD),
+                str(table / "worlds" / WORLD),
                 "--now",
                 now,
             ],
