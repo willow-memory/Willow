@@ -25,6 +25,44 @@ OUTBOX = {
 }  # fmt: skip
 
 
+#: a stand-in reader: writes text for each file it was handed that TAKES
+READER = """import sys, pathlib
+a = sys.argv
+src = pathlib.Path(a[a.index("--from") + 1])
+dst = pathlib.Path(a[a.index("--to") + 1])
+for f in sorted(src.rglob("*")):
+    text = f.read_bytes().decode("utf-8", "replace") if f.is_file() else ""
+    if f.is_file() and ({takes}):
+        out = dst / f.relative_to(src)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        (out.parent / (out.name + ".txt")).write_text("x")
+if __name__ == "__main__":
+    pass
+"""
+
+
+@pytest.fixture
+def adapters(tmp_path: Path) -> Path:
+    """Stand-in readers, so these tests hold whatever add-ons are beside
+    this one: shapely knows an outbox's shape, anything takes any .json,
+    pdfish says it reads .pdf and takes none, and not-a-reader is a page."""
+    root = tmp_path / "adapters"
+    for kind, name, card, takes in (
+        ("stdlib", "shapely", "reads: .json", '"orderedItems" in text'),
+        ("stdlib", "anything", "reads: .json", "True"),
+        ("deps", "pdfish", "reads: .pdf\nneeds: somepkg; MIT", "False"),
+        ("stdlib", "not-a-reader", "", "True"),
+    ):
+        here = root / kind / name
+        here.mkdir(parents=True)
+        role = "reads" if card else "page"
+        (here / "README.md").write_text(
+            f"<!-- willow-addon\nrole: {role}\nnetwork: none\n{card}\n-->\n# {name}\n"
+        )
+        (here / f"{name.replace('-', '_')}.py").write_text(READER.format(takes=takes))
+    return root
+
+
 def run(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True, text=True)  # fmt: skip
 
@@ -56,8 +94,8 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
     assert got.returncode == 2 and "names no steps" in got.stderr
 
 
-def test_a_kind_no_step_reads_is_said_with_the_readers_that_took_it(folder):
-    got = run("--from", str(folder), "--json")
+def test_a_kind_no_step_reads_is_said_with_the_readers_that_took_it(folder, adapters):
+    got = run("--from", str(folder), "--json", "--adapters", str(adapters))
     assert got.returncode == 42, got.stderr
     doc = json.loads(got.stdout)
     assert doc["addon"] == "new-kinds" and doc["state"] == "populated"
@@ -65,9 +103,9 @@ def test_a_kind_no_step_reads_is_said_with_the_readers_that_took_it(folder):
         g["name"]: {r["where"]: r["what"] for r in g["rows"]} for g in doc["groups"]
     }
     shape = rows["a reader knows their shape"][".json"]
-    assert shape.startswith("2 files; ") and "mastodon took 1 of 2" in shape
-    assert "any .json is taken by json-paths" in shape
-    assert "json-paths took" not in shape  # it takes anything, so it is no fit
+    assert shape.startswith("2 files; ") and "shapely took 1 of 2" in shape
+    assert "any .json is taken by anything" in shape
+    assert "anything took" not in shape  # it takes anything, so it is no fit
     assert ".txt" not in json.dumps(
         rows["a reader knows their shape"]
     )  # plain text, no shape
@@ -78,34 +116,42 @@ def test_a_kind_no_step_reads_is_said_with_the_readers_that_took_it(folder):
         assert leak not in got.stdout, leak
 
 
-def test_a_kind_a_step_reads_or_you_leave_is_not_said(folder, tmp_path):
+def test_a_kind_a_step_reads_or_you_leave_is_not_said(folder, tmp_path, adapters):
     stack = tmp_path / "stack.md"
-    stack.write_text(f"# s\n## read\n- mastodon -- mirror --from {folder} --to {tmp_path / 'm'}\n- digest\n")  # fmt: skip
-    got = run("--from", str(folder), "--stack", str(stack))
+    stack.write_text(f"# s\n## read\n- shapely -- mirror --from {folder} --to {tmp_path / 'm'}\n- digest\n")  # fmt: skip
+    a = ("--adapters", str(adapters))
+    got = run("--from", str(folder), "--stack", str(stack), *a)
     assert got.returncode == 42 and ".json" not in got.stdout and ".qqzz" in got.stdout
-    got = run("--from", str(folder), "--stack", str(stack), "--leave", ".QQZZ")
+    got = run("--from", str(folder), "--stack", str(stack), "--leave", ".QQZZ", *a)
     assert got.returncode == 0, got.stdout
     assert got.stdout.startswith("new-kinds: empty, every kind of 3 in 1 folder")
-    assert run("--from", str(folder), "--leave", ".json,.qqzz").returncode == 0
+    assert run("--from", str(folder), "--leave", ".json,.qqzz", *a).returncode == 0
 
 
-def test_what_the_kernel_cant_read_names_its_readers_even_when_none_took_it(tmp_path):
+def test_what_the_kernel_cant_read_names_its_readers_even_when_none_took_it(
+    tmp_path, adapters
+):
     f = tmp_path / "pile"
     f.mkdir()
     (f / "scan.pdf").write_bytes(b"%PDF-1.4\0\0not really")
-    doc = json.loads(run("--from", str(f), "--json").stdout)
+    doc = json.loads(
+        run("--from", str(f), "--json", "--adapters", str(adapters)).stdout
+    )
     (g,) = doc["groups"]
     assert g["name"] == "the kernel can't read them"
-    what = g["rows"][0]["what"]
-    assert what.startswith("1 file; ") and "pdf" in what
+    assert g["rows"][0]["what"] == (
+        "1 file; none of 1 tried taken by pdfish (needs its install)"
+    )
 
 
-def test_the_copies_tried_are_gone_after(folder, tmp_path, monkeypatch, capsys):
+def test_the_copies_tried_are_gone_after(
+    folder, tmp_path, monkeypatch, capsys, adapters
+):
     scratch = tmp_path / "scratch"
     scratch.mkdir()
     monkeypatch.setattr(nk.tempfile, "tempdir", str(scratch))
-    assert nk.main(["--from", str(folder)]) == 42
-    assert "mastodon took 1 of 2" in capsys.readouterr().out
+    assert nk.main(["--from", str(folder), "--adapters", str(adapters)]) == 42
+    assert "shapely took 1 of 2" in capsys.readouterr().out
     assert list(scratch.iterdir()) == []
 
 
@@ -144,10 +190,13 @@ def test_a_few_files_are_tried_spread_over_the_kind():
     )
 
 
-def test_the_readers_are_the_cards_that_say_role_reads():
-    known = nk.readers()
-    assert ".json" in known["mastodon"]["reads"] and known["mastodon"]["script"]
-    assert "new-kinds" not in known and "box-health" not in known
+def test_the_readers_are_the_cards_that_say_role_reads(adapters, tmp_path):
+    known = nk.readers(adapters)
+    assert set(known) == {"shapely", "anything", "pdfish"}
+    assert known["shapely"]["reads"] == [".json"] and known["shapely"]["script"]
+    assert known["pdfish"]["needs"] and not known["anything"]["needs"]
+    got = run("--from", str(tmp_path), "--adapters", str(tmp_path / "nope"))
+    assert got.returncode == 2 and "is not a folder" in got.stderr
     assert all(
         r["script"] is None or r["script"].suffix == ".py" for r in known.values()
     )
@@ -160,8 +209,10 @@ def test_a_stack_whose_only_step_names_a_path_names_no_steps(tmp_path):
     assert got.returncode == 2 and "names no steps" in got.stderr
 
 
-def test_the_printed_report_heads_each_named_group_and_caps_the_where_column(folder):
-    got = run("--from", str(folder))
+def test_the_printed_report_heads_each_named_group_and_caps_the_where_column(
+    folder, adapters
+):
+    got = run("--from", str(folder), "--adapters", str(adapters))
     assert got.returncode == 42, got.stderr
     assert "## no reader for them yet" in got.stdout and "## None" not in got.stdout
     doc = nk.report("new-kinds", "populated", "said",

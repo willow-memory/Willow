@@ -13,7 +13,7 @@ output: report
 
 Kinds of file in your folders that no step of your stack reads yet, each with the readers that took some of them when tried on a few.
 
-    python adapters/stdlib/new-kinds/new_kinds.py --from FOLDER [--from FOLDER]... [--stack STACKFILE] [--leave .EXT[,.EXT]]... [--json]
+    python adapters/stdlib/new-kinds/new_kinds.py --from FOLDER [--from FOLDER]... [--stack STACKFILE] [--leave .EXT[,.EXT]]... [--adapters DIR] [--json]
 
     new-kinds: populated, 3 kinds no step reads, of 7 in 1 folder: .ics, .docx, .ttf
     ## a reader knows their shape
@@ -70,8 +70,8 @@ their shape" list on its first page, so the page and the step say the same.
 It doesn't add a reader to your stack, or run one over your folders: what
 it tries runs on copies, and what they write is thrown away. Only kinds and
 counts are said, never a file's name or a line of it. The readers are the
-ones beside it in this willow, and only those whose card says `network:
-none`. Four files are tried a kind, so a shape held by few files of a big
+ones beside it in this willow (or in `--adapters DIR`, another willow's),
+and only those whose card says `network: none`. Four files are tried a kind, so a shape held by few files of a big
 kind can be missed.
 
 **Refused:** no `--from`; a `--from` that isn't a folder; an option with no

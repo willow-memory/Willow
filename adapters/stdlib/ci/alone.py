@@ -6,7 +6,8 @@ it uses. Python 3.9+.
 An add-on is a folder anyone can copy beside the kernel. This holds it to
 that: for each add-on in adapters/stdlib, a scratch copy gets kernel.py, the
 law (CONSTITUTION.md) and the kernel's vectors (vectors/cases.json), the
-add-on, and every add-on its card `uses`, and theirs, and nothing else.
+names add-ons had before a rename (adapters/renamed.json), the add-on, and
+every add-on its card `uses`, and theirs, and nothing else.
 Its own tests then run there. One that fails reached something its card
 doesn't name, or assumed an add-on it only `looks-for`.
 
@@ -45,6 +46,9 @@ _spec.loader.exec_module(readme)
 
 #: beside kernel.py in every copy: the kernel's own, not an add-on's
 KERNEL_FILES = ("kernel.py", "CONSTITUTION.md", "vectors/cases.json")
+#: beside the add-ons in every copy: the names add-ons had before a rename,
+#: which an add-on reading an old run or stack reads (route, stack)
+SHARED_FILES = ("adapters/renamed.json",)
 #: pytest's own timing, which differs run to run, kept out of what is printed
 TIMING = re.compile(r" in [0-9.]+s(?: \([0-9:]+\))?")
 
@@ -69,7 +73,7 @@ def held(name: str, every: dict[str, dict]) -> tuple[str, str]:
     """(name, "" when its tests held alone, else pytest's summary line)."""
     with tempfile.TemporaryDirectory(prefix=f"willow-alone-{name}-") as tmp:
         here = Path(tmp)
-        for f in KERNEL_FILES:
+        for f in KERNEL_FILES + tuple(f for f in SHARED_FILES if (ROOT / f).is_file()):
             (here / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / f, here / f)
         for n in needed(name, every):

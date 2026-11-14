@@ -1,6 +1,6 @@
 """new_kinds.py: kinds of file no step of your stack reads yet, with the readers that took some. Python 3.9+.
 
-    python adapters/stdlib/new-kinds/new_kinds.py --from FOLDER [--from FOLDER]... [--stack STACKFILE] [--leave .EXT[,.EXT]]... [--json]
+    python adapters/stdlib/new-kinds/new_kinds.py --from FOLDER [--from FOLDER]... [--stack STACKFILE] [--leave .EXT[,.EXT]]... [--adapters DIR] [--json]
 
     new-kinds: populated, 2 kinds no step reads, of 6 in 1 folder: .gpx, .pdf
     ## a reader knows their shape
@@ -26,8 +26,9 @@ nonsense too reads any file of the kind (json-paths takes any .json), and
 is named only beside the rest. A kind the kernel reads as text, that no
 reader knows the shape of, is fine as it is and isn't a row.
 
-The readers are the ones beside this add-on (its own adapters folder), and
-only those whose card says `network: none`. Only kinds and counts are said,
+The readers are the ones beside this add-on (its own adapters folder, or
+`--adapters DIR`, another willow's), and only those whose card says
+`network: none`. Only kinds and counts are said,
 never a file's name or a line of it.
 
 Exit codes: 0 `empty` (every kind is read by a step, read as text, or left);
@@ -53,7 +54,7 @@ import kernel  # noqa: E402
 NAME = "new-kinds"
 USAGE = (
     "usage: new_kinds.py --from FOLDER [--from FOLDER]... [--stack STACKFILE]"
-    " [--leave .EXT[,.EXT]]... [--json]"
+    " [--leave .EXT[,.EXT]]... [--adapters DIR] [--json]"
 )
 ADAPTERS = Path(__file__).resolve().parents[2]
 #: files of a kind a reader is tried on, and how long it is given for them
@@ -313,12 +314,12 @@ def refuse(why: str) -> int:
 
 
 def main(argv: list[str]) -> int:
-    folders, stack, leave, as_json = [], None, set(), False
+    folders, stack, leave, as_json, adapters = [], None, set(), False, ADAPTERS
     it = iter(argv)
     for a in it:
         if a == "--json":
             as_json = True
-        elif a in ("--from", "--stack", "--leave"):
+        elif a in ("--from", "--stack", "--leave", "--adapters"):
             v = next(it, None)
             if v is None or v.startswith("--"):
                 return refuse(f"{a} needs a value")
@@ -326,6 +327,8 @@ def main(argv: list[str]) -> int:
                 folders.append(Path(v).expanduser())
             elif a == "--stack":
                 stack = Path(v).expanduser()
+            elif a == "--adapters":
+                adapters = Path(v).expanduser()
             else:
                 for e in v.split(","):
                     e = e.strip().lower()
@@ -340,7 +343,9 @@ def main(argv: list[str]) -> int:
     for f in folders:
         if not f.is_dir():
             return refuse(f"{f} is not a folder")
-    known = readers()
+    if not adapters.is_dir():
+        return refuse(f"{adapters} is not a folder")
+    known = readers(adapters)
     stacked: list[str] = []
     if stack is not None:
         try:
