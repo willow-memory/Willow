@@ -76,7 +76,9 @@ class Game:
         return sum(self.dice)
 
     def after(self, seat: int) -> int:
-        return next(s for k in range(1, 5) if self.dice[s := (seat + k) % 4] > 0)
+        return next(
+            (seat + k) % 4 for k in range(1, 5) if self.dice[(seat + k) % 4] > 0
+        )
 
     def throws_wanted(self) -> list[tuple[int, str]]:
         """(seat, dice) for the cups the next round throws, in seat order."""
