@@ -503,6 +503,15 @@ willow/
 │   │   │   └── README.md     its card
 ```
 
+### adapters/stdlib/: Reading more kinds of files: Tools you run yourself
+
+```
+│   │   ├── new-kinds/
+│   │   │   ├── new_kinds.py  Kinds of file in your folders that no step of your stack reads yet, each with the readers that took some of them when tried on a few
+│   │   │   ├── test_new_kinds.py
+│   │   │   └── README.md     its card
+```
+
 ### adapters/stdlib/: Finding things: What runs on your page
 
 ```

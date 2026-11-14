@@ -563,6 +563,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 ### Tools you run yourself
 
+- <a id="new-kinds"></a>[**new-kinds**](adapters/stdlib/new-kinds/) \
+  Kinds of file in your folders that no step of your stack reads yet, each with the readers that took some of them when tried on a few. \
+  *new* `no-install` `offline` `stack` `reader` · near: stack, stack-share, index-cache
 
 #### Tools you run yourself: ideas, not built yet
 

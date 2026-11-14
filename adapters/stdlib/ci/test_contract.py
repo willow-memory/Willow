@@ -793,6 +793,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "model-fit": ("model_fit.py", ["check", "--root", "{tmp}"]),
     "model-shelf": ("model_shelf.py", ["list", "--home", "{tmp}"]),
     "mood": ("mood.py", ["--box", "{box}"]),
+    "new-kinds": ("new_kinds.py", ["--from", "{pile}"]),
     "nicknames": ("nicknames.py", ["--box", "{box}", "--to", "{tmp}/nicknames.txt"]),
     # a time long gone: it stops before the first question, no server looked for
     "night-batch": ("night_batch.py", ["run", "--box", "{box}", "--questions", "{pile}/garden.md",
