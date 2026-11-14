@@ -205,6 +205,19 @@ def _when(when, seen: dict, where: str, kinds: set = frozenset()) -> None:
     """A beat's `when`: an earlier beat, by scene::beat, and the outcomes it
     plays on; or a kind of offer the world names, and how the GM answered."""
     _is(when, dict, f"{where}.when")
+    if "sealed" in when:
+        _need(when, ("sealed", "is"), f"{where}.when")
+        if (
+            not isinstance(when["sealed"], str)
+            or len([x for x in when["sealed"].split("::") if x]) != 3
+        ):
+            raise WorldError(
+                f"{where}.when.sealed is a ruling in any story, as story::scene::beat"
+            )
+        _is(when["is"], list, f"{where}.when.is")
+        if not when["is"] or any(o not in ANSWERS for o in when["is"]):
+            raise WorldError(f"{where}.when.is: a ruling stands {', '.join(ANSWERS)}")
+        return
     if "offered" in when:
         _need(when, ("offered", "is"), f"{where}.when")
         if when["offered"] not in kinds:
@@ -248,7 +261,19 @@ def stands(heard: list[dict], kind: str, before: float) -> str:
     return said[-1]["verdict"] if said else "none"
 
 
-def walk(world: dict, beats: list[dict], heard: list[dict] = ()) -> tuple[list, int | None, tuple | None]:  # fmt: skip
+def ruled(rows: list[dict]) -> list[dict]:
+    """Every ruling the GM answered on this record, in any story, as
+    {key: story::scene::beat, verdict, n}: what a later chapter can turn on."""
+    out = []
+    for g in games(rows):
+        for b in g["beats"]:
+            if b.get("beat_kind") == "decision":
+                out.append({"key": f"{g['open'].get('world')}::{b.get('scene')}::{b.get('beat')}",
+                            "verdict": b.get("verdict"), "n": b["n"]})  # fmt: skip
+    return out
+
+
+def walk(world: dict, beats: list[dict], heard: list[dict] = (), canon: list[dict] = ()) -> tuple[list, int | None, tuple | None]:  # fmt: skip
     """(the beats played, in order; the place the rows stop being the world's
     path, or None; the beat to play next, or None at the end). A beat with a
     `when` is on the path only if the beat it names came out one of its ways,
@@ -258,7 +283,12 @@ def walk(world: dict, beats: list[dict], heard: list[dict] = ()) -> tuple[list, 
     played: list[tuple[dict, dict]] = []
     for sc, b in flat(world):
         w = b.get("when")
-        if w and "offered" in w:
+        if w and "sealed" in w:
+            at = beats[len(played)]["n"] if len(played) < len(beats) else float("inf")
+            said = [c for c in canon if c["key"] == w["sealed"] and c["n"] < at]
+            if (said[-1]["verdict"] if said else "none") not in w["is"]:
+                continue
+        elif w and "offered" in w:
             at = beats[len(played)]["n"] if len(played) < len(beats) else float("inf")
             if stands(list(heard), w["offered"], at) not in w["is"]:
                 continue
@@ -331,7 +361,10 @@ def offer_proposal(world: dict, n: int, k: int, char: dict, fact: str, kind: str
 
 
 def finished(game: dict, world: dict) -> bool:
-    return walk(world, game["beats"], game.get("heard", []))[2] is None
+    return (
+        walk(world, game["beats"], game.get("heard", []), game.get("canon", []))[2]
+        is None
+    )
 
 
 def fail(why: str) -> int:
@@ -354,13 +387,13 @@ def line(world: dict, game: dict) -> str:
 # ── the game's one state: how many beats are done ───────────────────────────
 def now_in(world: dict, game: dict) -> tuple[dict, dict, dict]:
     k = len(game["beats"])
-    sc, b = walk(world, game["beats"], game.get("heard", []))[2]
+    sc, b = walk(world, game["beats"], game.get("heard", []), game.get("canon", []))[2]
     return sc, b, seen_by(world, k, b)
 
 
-def entering(world: dict, beats: list[dict], heard: list[dict] = ()) -> list[str]:
+def entering(world: dict, beats: list[dict], heard: list[dict] = (), canon: list[dict] = ()) -> list[str]:  # fmt: skip
     """The lines a scene opens with, when the next beat after `beats` starts one."""
-    played, _, nxt = walk(world, beats, heard)
+    played, _, nxt = walk(world, beats, heard, canon)
     if nxt is None or (played and played[-1][0] is nxt[0]):
         return []
     return [f"-- {nxt[0]['title']} --", *nxt[0]["opening"]]
@@ -396,7 +429,7 @@ def current(box: Path, world: dict):
     game = ours[-1]
     if game["open"].get("sha256") != world_sha(world):
         return rows, None, "this world file isn't the one the game opened with"
-    return rows, game, None
+    return rows, {**game, "canon": ruled(rows)}, None
 
 
 def cmd_open(box: Path, world: dict, ts: str) -> int:
@@ -409,7 +442,7 @@ def cmd_open(box: Path, world: dict, ts: str) -> int:
     row = kernel.append(box, ts, OPEN, who=WHO, world=world["id"], title=world["title"],
                         sha256=world_sha(world), seats=[c["id"] for c in seated(world)])  # fmt: skip
     print(f"{world['title']}\n{world['setting']}")
-    print(*entering(world, []), sep="\n")
+    print(*entering(world, [], [], ruled(rows)), sep="\n")
     print(f"(game opened at row {row['n']})")
     return kernel.ALIVE
 
@@ -474,9 +507,9 @@ def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
     print(f"{char['name']} tries {stat}: {dice.said(roll)}, {bonus:+d} {stat} = {total}: {band}   (rows {roll['n']}, {row['n']})")  # fmt: skip
     print(b["outcomes"][band])
     after = [*game["beats"], row]
-    for text in entering(world, after, game["heard"]):
+    for text in entering(world, after, game["heard"], game["canon"]):
         print(text)
-    if walk(world, after, game["heard"])[2] is None:
+    if walk(world, after, game["heard"], game["canon"])[2] is None:
         print(f"finished: {tally({**game, 'beats': after})}")
     return kernel.ALIVE
 
@@ -607,9 +640,9 @@ def cmd_settle(box: Path, world: dict, ts: str) -> int:
                         ruling_row=got["n"], proposed_by=b["proposes"]["proposed_by"])  # fmt: skip
     print(f"{sc['id']}::{b['id']}: you {'sealed' if what == 'sealed' else 'declined'} it (row {got['n']}); recorded at row {row['n']}")  # fmt: skip
     after = [*game["beats"], row]
-    for text in entering(world, after, game["heard"]):
+    for text in entering(world, after, game["heard"], game["canon"]):
         print(text)
-    if walk(world, after, game["heard"])[2] is None:
+    if walk(world, after, game["heard"], game["canon"])[2] is None:
         print(f"finished: {tally({**game, 'beats': after})}")
     return kernel.ALIVE
 
@@ -624,7 +657,9 @@ def check_game(
             f"game at row {opened['n']}: this world file isn't the one it opened with"
         )
     played, off, _ = (
-        walk(world, game["beats"], game["heard"]) if world else ([], None, None)
+        walk(world, game["beats"], game["heard"], ruled(rows))
+        if world
+        else ([], None, None)
     )
     for k, r in enumerate(game["beats"]):
         at, where = r["n"], f"row {r['n']}"

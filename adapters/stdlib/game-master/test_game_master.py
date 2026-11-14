@@ -1063,3 +1063,72 @@ def test_an_offered_when_that_isnt_one_is_refused(change, says):
     change(w)
     with pytest.raises(gm.WorldError, match=says):
         gm.validate(w)
+
+
+# ── a chapter that turns on what an earlier one made true ────────────────────
+def chapter_two() -> dict:
+    """A second story whose first beat plays only if, in the toll bridge,
+    the GM sealed that the toll was paid twice (s1::d1)."""
+    w = copy.deepcopy(WORLD)
+    w["id"], w["title"] = "toll-bridge-2", "The Toll Bridge, again"
+    w["scenes"] = [{"id": "c2", "title": "Morning", "place": "inn", "opening": ["Light again."],
+        "beats": [
+            {"id": "refund", "kind": "action", "prompt": "Ana asks for the second toll back.", "suggests": "Grit",
+             "when": {"sealed": "toll-bridge::s1::d1", "is": ["sealed"]}, "outcomes": outcomes("refund")},
+            {"id": "road", "kind": "action", "prompt": "Ana takes the long road.", "suggests": "Grit",
+             "when": {"sealed": "toll-bridge::s1::d1", "is": ["declined", "none"]}, "outcomes": outcomes("road")},
+        ]}]  # fmt: skip
+    return w
+
+
+def second(t, tmp_path):
+    f = tmp_path / "chapter-two.json"
+    f.write_text(json.dumps(chapter_two()))
+    return lambda *argv: subprocess.run(
+        [sys.executable, str(HERE / "game_master.py"), "--box", str(t.box), *argv, "--world", str(f), *NOW],
+        capture_output=True, text=True,
+    )  # fmt: skip
+
+
+@pytest.mark.parametrize("answer, beat", [("seal", "refund"), ("decline", "road")])
+def test_a_chapter_turns_on_a_ruling_from_an_earlier_one(t, tmp_path, answer, beat):
+    t.play_to_first_decision()
+    t.run("ask")
+    t.k(answer, t.subject())
+    t.run("settle")
+    two = second(t, tmp_path)
+    assert two("open").returncode == 0
+    assert two("act", "Grit").returncode == 0
+    assert [
+        r["beat"] for r in t.rows() if r["kind"] == gm.BEAT and r["scene"] == "c2"
+    ] == [beat]
+    assert two("check").returncode == 0 and t.run("check", world=False).returncode == 0
+
+
+def test_with_no_earlier_chapter_played_a_ruling_stands_as_none(t, tmp_path):
+    two = second(t, tmp_path)
+    two("open")
+    assert "Ana takes the long road" in two("status").stdout
+
+
+def test_check_finds_a_chapters_beat_its_earlier_ruling_doesnt_allow(t, tmp_path):
+    two = second(t, tmp_path)
+    two("open")
+    game = [r for r in t.rows() if r["kind"] == gm.OPEN][-1]["n"]
+    t.forge(game=game, beat_kind="action", scene="c2", beat="refund")
+    assert "not the beat the world has at place 0" in two("check").stderr
+
+
+@pytest.mark.parametrize(
+    "sealed, says",
+    [
+        ("toll-bridge::d1", "story::scene::beat"),
+        ("", "story::scene::beat"),
+        (3, "story::scene::beat"),
+    ],
+)
+def test_a_sealed_when_that_isnt_one_is_refused(sealed, says):
+    w = chapter_two()
+    w["scenes"][0]["beats"][0]["when"]["sealed"] = sealed
+    with pytest.raises(gm.WorldError, match=says):
+        gm.validate(w)

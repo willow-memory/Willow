@@ -119,7 +119,8 @@ def test_open_lays_a_table_and_seals_nothing(t):
         t.dir / "words.txt"
     ).stat().st_mode & 0o077 == 0  # the words list, owner-only, beside the pile
     assert (t.dir / "check.md").is_file() and (t.dir / "gm-stack.md").is_file()
-    assert sorted(p.name for p in (t.dir / "worlds").iterdir()) == ["clockwork-cellar.json", "lantern-fair.json"]  # fmt: skip
+    assert sorted(p.name for p in (t.dir / "worlds").iterdir()) == [
+        "aetheris.json", "clockwork-cellar.json", "hasbeen.json", "ironworks.json", "lantern-fair.json"]  # fmt: skip
     assert (t.dir / "stories" / "wasp-nest.md").is_file()
     assert t.k("verify").returncode == 0
 
@@ -578,3 +579,11 @@ def test_a_story_game_master_wouldnt_play_is_refused_with_its_reason(tmp_path):
     (tmp_path / "s.md").write_text(text)
     got = py(HERE / "author.py", tmp_path / "s.md")
     assert got.returncode == 2 and "'Charm' is not a stat" in got.stderr
+
+
+@pytest.mark.parametrize("name", ["aetheris", "hasbeen", "ironworks"])
+def test_the_tables_own_worlds_play_in_the_box(t, name):
+    """The three worlds the-table authored in the store, as they are."""
+    t.open()
+    got = t.night(world=name)
+    assert got.returncode == 0 and "played to its end" in got.stdout, got.stderr

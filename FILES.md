@@ -2205,7 +2205,10 @@ willow/
 │   │   ├── stories/
 │   │   │   └── wasp-nest.md  The Wasp Nest
 │   │   ├── worlds/
+│   │   │   ├── aetheris.json
 │   │   │   ├── clockwork-cellar.json
+│   │   │   ├── hasbeen.json
+│   │   │   ├── ironworks.json
 │   │   │   └── lantern-fair.json
 │   │   ├── test_end.py
 │   │   ├── test_game_box.py
@@ -2225,17 +2228,17 @@ willow/
 │   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
 │   │       ├── blind-claims.txt     the claims, reworded three ways, blind
 │   │       └── null.txt        thirty questions about the policy with nothing to do with ads
+```
+
+#### demo/, from hollis/
+
+```
 │   ├── hollis/               built blind, by an agent that never saw the code
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md
 │   │   ├── PLANTED.md
 │   │   ├── QUESTIONS.md      the questions he would ask, written before any run
 │   │   └── STRIP.md
-```
-
-#### demo/, from johnson/
-
-```
 │   ├── johnson/              one report passed between five people's willows, a forged copy, a correction and a rewrite caught
 │   │   ├── README.md         the scene, what each step shows, and what it found
 │   │   ├── count/
@@ -2260,6 +2263,11 @@ willow/
 │   │   ├── words.txt         the six-line words list the box carried
 │   │   ├── test_kept.py
 │   │   └── README.md         the row step by step: what each found, what it got wrong, what held and what didn't
+```
+
+#### demo/, from known-gaps/
+
+```
 │   ├── known-gaps/           the fleet's own twelve known security gaps, asked of the code their fixes changed
 │   │   ├── README.md         the claim, the threats, what is frozen, how to reproduce, the dry run
 │   │   ├── FROZEN.json       freeze 1: the SHA-256 of every frozen file and tool; a change is a new freeze
@@ -2275,11 +2283,6 @@ willow/
 │   │   ├── outside.py        phase 6: the same method on seven cpython CVE fixes, the outside control
 │   │   ├── cpython_sources.json  those seven units: CVE, OSV address, fetch time, advisory text hashes, commits, trees, weight; never the text
 │   │   ├── flag.py           the flagged-line rule for question lines, and how the questions' folders are read
-```
-
-#### demo/known-gaps/, from questions/
-
-```
 │   │   ├── questions/
 │   │   │   ├── inputs.md     what the blind writers were given: the redacted gap text, and nothing else
 │   │   │   ├── local/
@@ -2308,6 +2311,11 @@ willow/
 │   │   │   │   ├── KG10.txt  the same for KG10
 │   │   │   │   ├── KG11.txt  the same for KG11
 │   │   │   │   └── KG12.txt  the same for KG12
+```
+
+#### demo/known-gaps/questions/, from cpython/
+
+```
 │   │   │   ├── cpython/
 │   │   │   │   ├── local/
 │   │   │   │   │   ├── CP1.txt  eight questions a local model wrote, blind, for CP1
@@ -2334,11 +2342,6 @@ willow/
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
 │   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
 │   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
-```
-
-#### demo/, from money-hour/
-
-```
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
 │   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
@@ -2363,6 +2366,11 @@ willow/
 │   │   ├── PLANTED.md        the needs hidden in her files, and the traps
 │   │   ├── STRIP.md          her questions, and what kernel.py found and missed
 │   │   └── names.txt         everyone named in her files, written by make_life.py
+```
+
+#### demo/, from ofrenda/
+
+```
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
@@ -2388,11 +2396,6 @@ willow/
 │   │   │   ├── 6-caught.txt  the commands and their output, word for word
 │   │   │   ├── 7-verify.svg  both chains hold, nothing sealed
 │   │   │   └── 7-verify.txt  the commands and their output, word for word
-```
-
-#### demo/ofrenda/, from results/
-
-```
 │   │   ├── results/
 │   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
 │   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught
@@ -2404,6 +2407,11 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
+```
+
+#### demo/, from percus-yevick/
+
+```
 │   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
 │   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
 │   │   ├── blind.py          the blind questions, written by a local model that has seen no

@@ -58,6 +58,13 @@ offered was a seal; `declined` and `none` (no guest answered yet) go the
 other ways. What the story reached is fixed by the rows: an answer written
 after a beat was passed by doesn't put it back.
 
+**A chapter can turn on an earlier one.** `"when": {"sealed":
+"toll-bridge::s1::d1", "is": ["sealed"]}` names a ruling in any story, as
+story::scene::beat, and the beat is played only if your last answer to it on
+this record, in any game of that story before the story reached the beat,
+was a seal; `declined` and `none` (never ruled) go the other ways. So the
+next chapter, a world of its own, carries what the last one made true.
+
 **A world** is a JSON file:
 
     { "id", "title", "setting", "stats": ["Grit", ...], "base_stat": 1,
