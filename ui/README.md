@@ -16,7 +16,14 @@ way a person does:
 2. **What the kernel does on its own.** Each folder read the kernel's way,
    before any add-on, as counts: how many files it can read, the passages
    that makes, and how many it can't, by kind, with the readers that could
-   read them, one click to add. Never a passage, never a file's name.
+   read them, one click to add. For the kinds it reads as plain text
+   (.json, .csv, .jsonl), the readers whose cards name the kind are tried
+   on up to four of its files, copied to a folder removed after, beside a
+   file of the kind with nothing in it: a reader that takes some of yours
+   and not the nonsense knows their shape (mastodon, an outbox), and is
+   offered with how many it took; one that takes the nonsense too reads
+   any file of the kind (json-paths), and is said in a line of its own.
+   Never a passage, never a file's name.
 3. **Start from an example**, the folders the stack add-on ships, each step
    with the options it runs with (hover one to see in the tree what it
    would add), or **pick add-ons** by what you want done, in your own words,

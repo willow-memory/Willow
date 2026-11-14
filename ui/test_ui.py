@@ -127,11 +127,42 @@ def test_the_kernels_baseline_is_counts_and_kinds_and_nothing_of_the_files(
     assert call("GET", f"/tok/api/baseline?path={tmp_path / 'nope'}")[1]["ok"] is False
 
 
+def test_a_reader_is_offered_for_text_it_knows_the_shape_of(
+    site, tmp_path, monkeypatch
+):
+    """The kernel reads .json as it is, so no reader is needed to read it;
+    but mastodon knows an outbox's shape, and is offered for it by trying
+    it on the file, not by the extension. json-paths takes any .json, even
+    the nonsense it's tried on beside them, so it is `any`, not a fit."""
+    _, call = site
+    f = tmp_path / "posts"
+    f.mkdir()
+    (f / "outbox-SECRETNAME.json").write_text(json.dumps({
+        "type": "OrderedCollection", "orderedItems": [{"type": "Create",
+        "published": "2024-03-02T08:15:00Z", "object": {"type": "Note",
+        "content": "<p>Planted the BEANSTALK today.</p>"}}]}))  # fmt: skip
+    (f / "settings-OTHERNAME.json").write_text('{"theme": "WALRUS"}')
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(scratch))
+    status, b = call("GET", f"/tok/api/baseline?path={f}")
+    assert status == 200 and b["ok"] and b["cant"] == []
+    (j,) = [c for c in b["better"] if c["kind"] == ".json"]
+    assert (j["files"], j["tried"]) == (2, 2)
+    assert {"name": "mastodon", "took": 1} in j["fits"]
+    assert "json-paths" in [r["name"] for r in j["any"]]
+    assert "json-paths" not in [r["name"] for r in j["fits"]]
+    said = json.dumps(b)
+    for leak in ("SECRETNAME", "OTHERNAME", "BEANSTALK", "WALRUS", "outbox"):
+        assert leak not in said, leak
+    assert list(scratch.iterdir()) == []  # the copies tried are gone
+
+
 def test_what_an_add_on_uses_comes_with_it_and_the_cards_say_it(site):
     cv, call = site
     pieces = call("GET", "/tok/api/pieces")[1]
     assert pieces["debts"]["hard"] == ["amounts"]  # its card's uses
-    assert set(pieces["digest"]["soft"]) == {"coming-up", "stale"}  # looks-for
+    assert set(pieces["digest"]["soft"]) == {"coming-up", "stale-answers"}  # looks-for
     assert pieces["ci"]["runs_in"] == "repo"
     assert pieces["vim"]["tags"][:2] == [
         "no-install",
@@ -232,12 +263,12 @@ def test_only_a_piece_that_makes_a_page_runs_as_a_step(site, tmp_path):
         {"title": "watch", "steps": [{"name": "digest"}, {"name": "browse"}]},
         {"title": "assistants", "steps": [{"name": "claude-code"}, {"name": "stack"}]},
         {"title": "read", "steps": [{"name": "office"}]},
-        {"title": "scores", "steps": [{"name": "predict", "args": "score --box {box}"}]},
+        {"title": "scores", "steps": [{"name": "forecast-ask", "args": "score --box {box}"}]},
     ]}  # fmt: skip
     arr, why = cv.arrangement(pick)
     assert why == ""
     steps = {s["name"]: s["args"] for ln in arr["lanes"] for s in ln["steps"]}
-    assert steps == {"digest": "--box {box}", "predict": "score --box {box}"}
+    assert steps == {"digest": "--box {box}", "forecast-ask": "score --box {box}"}
     assert arr["kept"] == ["browse", "claude-code", "stack", "office"]
     assert {"browse", "claude-code", "stack", "office"} <= set(arr["pieces"])
     assert "## read" not in arr["stack_md"]  # a lane left empty isn't there
@@ -272,8 +303,8 @@ def test_a_piece_both_asked_for_and_leaned_on_is_added_once(tmp_path, capsys):
     assert assemble.add(["coming-up", "not-an-add-on"], to, None) == assemble.REFUSED
     assert sorted(p.name for p in stdlib.iterdir()) == before
     # a folder left by an older crash is named, not a traceback
-    (stdlib / "stale").mkdir()
-    assert assemble.add(["stale"], to, None) == assemble.REFUSED
+    (stdlib / "stale-answers").mkdir()
+    assert assemble.add(["stale-answers"], to, None) == assemble.REFUSED
     assert "not on STACK.json" in capsys.readouterr().err
 
 

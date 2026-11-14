@@ -59,8 +59,8 @@ code admits about itself, each repo answering in turn.
 
 ## who the histories name
 - people -- --box <scratch>/hist-box
-- said -- --box <scratch>/hist-box
+- who-said -- --box <scratch>/hist-box
 
 ## the histories as verse
-- pile-poetry -- --box <scratch>/hist-box --seed "git log"
-- pile-poetry -- --box <scratch>/hist-box --seed "code comments" --lines 4
+- verse -- --box <scratch>/hist-box --seed "git log"
+- verse -- --box <scratch>/hist-box --seed "code comments" --lines 4

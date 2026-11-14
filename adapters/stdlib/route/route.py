@@ -120,21 +120,34 @@ def line_of(step: str) -> str | None:
     return None
 
 
+def renamed() -> dict[str, str]:
+    """Add-ons renamed, old name to new (adapters/renamed.json); {} without it."""
+    f = Path(__file__).resolve().parents[2] / "renamed.json"
+    try:
+        return dict(json.loads(f.read_text(encoding="utf-8"))["names"])
+    except (OSError, ValueError, KeyError):
+        return {}
+
+
 def kept(run: Path | None) -> dict[str, list[str]]:
-    """{an add-on: the files a run kept its output in}, in step order."""
+    """{an add-on: the files a run kept its output in}, in step order. A run
+    kept before an add-on was renamed names its step the old way; it is read
+    as the add-on's name now."""
     out: dict[str, list[str]] = {}
     if run is None:
         return out
+    now = renamed()
     for f in sorted(run.glob("[0-9]*-*.txt")):
         num, _, name = f.stem.partition("-")
         if num.strip("0"):  # not the log itself
-            out.setdefault(name, []).append(str(f))
+            out.setdefault(now.get(name, name), []).append(str(f))
     return out
 
 
 def where(step: str, found: dict[str, list[str]]) -> str:
-    """Where a run kept a step's output; the ask's is the scan's or glance's."""
-    for name in [step] if step != "ask" else ["glance", "scan"]:
+    """Where a run kept a step's output; the ask's is batch-glance's or
+    batch-ask's."""
+    for name in [step] if step != "ask" else ["batch-glance", "batch-ask"]:
         if name in found:
             return found[name][-1]
     return ""

@@ -9,7 +9,7 @@ person said it. The usual reasons:
 - **A passage needs half the question's content words.** That is what
   keeps it from answering with something you didn't write, and it is not
   loosened. To be pointed at where to look instead, `scan --rank bm25`
-  always serves its top passages ([scan](../../adapters/stdlib/scan/)).
+  always serves its top passages ([batch-ask](../../adapters/stdlib/batch-ask/)).
 - **English is built in.** Its common words are dropped from a question;
   in other languages every word counts, unless a words add-on for that
   language is in your stack.

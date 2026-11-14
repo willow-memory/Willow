@@ -6,7 +6,7 @@ Run it with:
 
 ## what is waiting, and what is filed
 - digest -- --box {box}
-- export -- --box {box}
+- export-answers -- --box {box}
 
 ## just the filed answers
-- export -- --box {box}
+- export-answers -- --box {box}

@@ -389,6 +389,20 @@ def test_an_ideas_from_is_said_and_an_unknown_field_refused(repo):
         rd.rebuild(PAGE, None)
 
 
+def test_an_old_name_isnt_used_again(repo):
+    """A name adapters/renamed.json gives up is refused for any add-on or
+    idea, so a stack that still names it finds what it meant."""
+    (repo / "adapters" / "renamed.json").write_text(
+        json.dumps({"names": {"gamma": "delta"}})
+    )
+    with pytest.raises(rd.Refused, match="gamma was renamed delta"):
+        rd.rebuild(PAGE, None)
+    (repo / "adapters" / "renamed.json").write_text(
+        json.dumps({"names": {"omega": "delta"}})
+    )
+    assert rd.rebuild(PAGE, None)
+
+
 def test_a_readme_missing_a_section_is_refused(repo):
     with pytest.raises(rd.Refused, match="needs one each"):
         rd.rebuild(

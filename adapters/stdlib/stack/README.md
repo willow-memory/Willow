@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.6.0
+version: 0.6.1
 writes: to
 network: none
 role: ways
@@ -11,7 +11,7 @@ role: ways
 # stack
 
 One document from a **stack of add-on steps** over a box. Where
-[`across`](../across/) runs one document add-on over many boxes, `stack` runs
+[`many-boxes`](../many-boxes/) runs one document add-on over many boxes, `stack` runs
 many heterogeneous steps over one box and composes what each prints — pooled,
 and ordered tallest-first. It is the input side of the serve layer in
 `docs/design/serve.md`: the operator's stack, before any seal.
@@ -24,7 +24,7 @@ A markdown file, pools and steps:
 
     ## a pool heading
     - digest -- --box {box}
-    - export -- --box {box}
+    - export-answers -- --box {box}
 
     ## another pool
     - timeline -- --box {box} --to {box}-notes "mould landlord"
@@ -93,8 +93,8 @@ A later step can be given what an earlier one made. In a step's args, a
 step's number in braces is the file that step's output was kept in:
 
     ## what I asked
-    - scan -- scan --index my.index --questions my-questions.txt
-    - glance -- --of {01} --questions my-questions.txt
+    - batch-ask -- scan --index my.index --questions my-questions.txt
+    - batch-glance -- --of {01} --questions my-questions.txt
 
 `{01}` is step 01's output, 01 being its place in the stack file, counted
 from the top. `{01.json}` is its report as data, for a step that printed

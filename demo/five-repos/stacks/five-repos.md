@@ -20,9 +20,9 @@ any of them. The stack reorders the pools tallest first; this is reading order.
 ## what the code still owes
 - todo -- --box {box}
 - risky-code -- --box {box}
-- pins -- --box {box}
+- unpinned -- --box {box}
 - install-scripts -- --box {box}
-- xref -- --box {box}
+- ref-check -- --box {box}
 - format-rot -- --from <repos>
 
 ## what shouldn't be sitting in plain files
@@ -42,21 +42,21 @@ any of them. The stack reorders the pools tallest first; this is reading order.
 - duplicates -- --box {box}
 - contradictions -- --box {box}
 - people -- --box {box}
-- said -- --box {box}
+- who-said -- --box {box}
 - amounts -- --box {box}
 - coming-up -- --box {box} --days 90
 
 ## what the box itself needs from you
 - digest -- --box {box}
 - box-health -- --box {box} --long
-- history -- --box {box}
-- export -- --box {box} --log
+- record-history -- --box {box}
+- export-answers -- --box {box} --log
 
 ## names the rest of the world already uses
-- ids -- --box {box} Willow/kernel.py
-- ids -- --box {box} socratic-fork/SKILL.md
-- ids -- --box {box} redential-cli/taxonomy.json
+- world-ids -- --box {box} Willow/kernel.py
+- world-ids -- --box {box} socratic-fork/SKILL.md
+- world-ids -- --box {box} redential-cli/taxonomy.json
 
 ## play
-- pile-poetry -- --box {box} --seed "five repos"
-- pile-poetry -- --box {box} --seed "the vault is sean's key" --lines 4
+- verse -- --box {box} --seed "five repos"
+- verse -- --box {box} --seed "the vault is sean's key" --lines 4

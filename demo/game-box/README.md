@@ -23,10 +23,10 @@ the box is what will ship on its own, from Die-Namic.
 | [gm-stack.md](gm-stack.md) | the GM's prep sheet: thirteen steps, each with the want it answers | [stack](../../adapters/stdlib/stack/) |
 | [gm-end.md](gm-end.md) | the end of the night: the GM's handwritten pages read in, the night compiled, sealed as one, backed up | stack, with [ocr](../../adapters/deps/ocr/) reading the pages |
 | [sample-scans/](sample-scans/) | a made-up photo of a fifth night's handwritten page | ocr |
-| [ideas.py](ideas.py) | between sessions: story seeds dealt from the box's own words, what was set up and never played, what's still open | [oracle-text](../../adapters/stdlib/oracle-text/), [surprise](../../adapters/stdlib/surprise/) |
+| [ideas.py](ideas.py) | between sessions: story seeds dealt from the box's own words, what was set up and never played, what's still open | [oracle-text](../../adapters/stdlib/oracle-text/), [random-passage](../../adapters/stdlib/random-passage/) |
 | [stories/](stories/), [author.py](author.py) | stories written in story-timeline, the writer's workbench in the SAFE App Store, and exported as markdown: [the wasp nest](stories/wasp-nest.md), the cellar's next chapter | author.py makes them worlds; game-master checks and plays them |
-| [worlds/](worlds/) | the box's two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice; and the three the-table authored in the store, [Aetheris](worlds/aetheris.json), [Hasbeen](worlds/hasbeen.json) and [Ironworks](worlds/ironworks.json), as they are | [game-master](../../adapters/stdlib/game-master/), rolling with [dice](../../adapters/stdlib/dice/) |
-| checkers, a logic grid | games played straight onto the record | [checkers](../../adapters/stdlib/checkers/), [catgrid](../../adapters/stdlib/catgrid/) |
+| [worlds/](worlds/) | the box's two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice; and the three the-table authored in the store, [Aetheris](worlds/aetheris.json), [Hasbeen](worlds/hasbeen.json) and [Ironworks](worlds/ironworks.json), as they are | [game-master](../../adapters/stdlib/game-master/), rolling with [play-dice](../../adapters/stdlib/play-dice/) |
+| checkers, a logic grid | games played straight onto the record | [play-checkers](../../adapters/stdlib/play-checkers/), [play-catgrid](../../adapters/stdlib/play-catgrid/) |
 | [check.md](check.md) | the table's own check: every game played again, every house rule's standing | stack |
 | [open_table.py](open_table.py) | the box's code: lays a box, and runs its prep sheet and its check | the kernel and the add-ons above |
 | [session.py](session.py) | the GM's bookkeeping, done by code: plays a story as far as it goes without the GM, and says what the table made true | game-master |
@@ -64,7 +64,7 @@ From there it's the kernel and the add-ons' own commands, on `DIR/record`:
   --box DIR/record Draws` gives the section back, word for word.
 - **The story.** `game_master.py act Grit`, `ask` and `settle`, or
   `session.py` to play it through.
-- **Checkers and the grid.** `checkers.py new`, `move 11-15`, `offer`,
+- **Checkers and the grid.** `play_checkers.py new`, `move 11-15`, `offer`,
   `settle`; `catgrid.py play`.
 
 ## The prep sheet
@@ -98,7 +98,7 @@ each with the want it answers:
   asks, tells, pays. A GM's notes say "answered", "found", "pocketed",
   "wanted", so of six characters it found one, Aldric, who "asked".
 - **todo** reads TODO, "need to", "remember to" and checkboxes. A GM writes
-  "Next time:", so want 6 asks for those words with `all`. That also finds
+  "Next time:", so want 6 asks for those words with `all-passages`. That also finds
   the friend Brann was told could come next time.
 - **contradictions** reads dates and money, so a hound with six hits on one
   page and eight on another isn't one it can see. No card reads that yet.
@@ -114,7 +114,7 @@ night kept in `DIR/end/NNN`:
 | # | Want | Step |
 |---|---|---|
 | 1 | Read what I wrote by hand | `ocr mirror` into `DIR/pile/scanned`, where every question finds it |
-| 2 | What's new in my binder tonight? | `changed`, fingerprints on the record |
+| 2 | What's new in my binder tonight? | `what-changed`, fingerprints on the record |
 | 3 | Where did the springs go tonight? | `timeline`, typed nights and scanned ones together |
 | 4 | What did I promise for next time? | `all "next time"` |
 | 5 | What's still waiting on me? | `digest` |

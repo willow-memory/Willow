@@ -152,6 +152,16 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
 }
 ```
 
+- `name` says what it does or what it says, in a person's words (`debts`,
+  `coming-up`, `stale-answers`), not how it works. One or two words, three
+  when two would collide. A reader is named for the format or source it
+  reads (`pdf`, `mastodon`). A first word shared by several add-ons is a
+  family, the same kind of thing run the same way: `hook-`, `words-`,
+  `bot-`, `pile-`, `port-` (the kernel in another language), `forecast-`,
+  `play-` and `model-`. Don't start a name with another add-on's word
+  unless it's one of these; a new family is the maintainer's to add. A
+  name [adapters/renamed.json](adapters/renamed.json) gave up isn't used
+  again, so a stack that still names it finds what it meant.
 - `kind` is `stdlib` if it needs nothing installed, else `deps`, with a
   `needs` line naming each install and its licence.
 - `tags` is optional: one tag of your own. The rest (needs an install or not,

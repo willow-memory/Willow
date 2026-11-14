@@ -56,7 +56,7 @@ TOP = 6
 
 def scan_addon():
     """The scan add-on's module, from its source beside this one."""
-    sys.path.insert(0, str(STDLIB / "scan"))
+    sys.path.insert(0, str(STDLIB / "batch-ask"))
     import scan
 
     return scan

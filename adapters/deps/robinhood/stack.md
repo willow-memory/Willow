@@ -16,4 +16,4 @@ timeline goes to robinhood-timeline.txt, where you run it.
 - readings -- bite --box {box} "total_value"
 
 ## each day's portfolio value
-- all -- --box {box} --top 40 "total_value"
+- all-passages -- --box {box} --top 40 "total_value"

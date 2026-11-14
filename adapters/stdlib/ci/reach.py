@@ -31,13 +31,18 @@ import re
 #: the repo's own tools: their tests read the whole tree (cards, docs, lists)
 REPO_TOOLS = {"ci", "readme", "similar", "github"}
 #: what every add-on's tests run under: the runner, the guard, the cut into
-#: chunks, and the kernel
-RUNNER = ("kernel.py", "adapters/stdlib/ci/", "adapters/stdlib/test-shards/")
+#: chunks, the kernel, and the old names' map (stack and route read it)
+RUNNER = (
+    "kernel.py",
+    "adapters/renamed.json",
+    "adapters/stdlib/ci/",
+    "adapters/stdlib/test-shards/",
+)
 #: add-ons whose tests read past their reach in a way the scan can't see (a
 #: path built from parts): found by the guard, which fails a run that reads
 #: outside, and listed here, so each is drawn wide
 WIDE = {
-    "live",  # runs each way in through config(), naming their folders as words
+    "ways-live",  # runs each way in through config(), naming their folders as words
 }
 LISTS = re.compile(
     r"(STDLIB|HERE\.parent|\"stdlib\"|\"deps\")\)?\s*\.\s*(iterdir|glob|rglob)\("

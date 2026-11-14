@@ -49,7 +49,7 @@ Each step's results are in [runs/](runs/); the code is in
 ## The box
 
     python demo/small-models/build.py --to DIR [--session FILE]
-    python adapters/stdlib/plain/plain.py bite --box DIR/box "who owes teodora money"
+    python adapters/stdlib/sentences/sentences.py bite --box DIR/box "who owes teodora money"
 
 [build.py](build.py) puts into one pile every result here and in
 [../ofrenda/results/](../ofrenda/results/), flattened to one `where: what`

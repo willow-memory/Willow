@@ -3,7 +3,7 @@ section: Ways to use it
 line: Which steps of a stack take what an earlier step made, the order that leaves them in, and a step that takes what none before it made.
 source: new
 added: 2026-11-11
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: tools

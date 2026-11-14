@@ -6,7 +6,7 @@ policy text keeps a default against that, plus an opt-in exception. This
 folder asks the documents alone which one the text supports. Willow's kernel
 answers, with the [snapshot](../../adapters/stdlib/snapshot/),
 [clauses](../../adapters/stdlib/clauses/), [pdf](../../adapters/deps/pdf/),
-[scan](../../adapters/stdlib/scan/) and
+[batch-ask](../../adapters/stdlib/batch-ask/) and
 [quote-check](../../adapters/stdlib/quote-check/) add-ons, from files saved
 once and never fetched again.
 
@@ -123,8 +123,8 @@ minutes apart. By hand, the steps are the add-ons':
     python adapters/deps/pdf/pdf.py mirror --from PILE/policy-new --to TEXT/new
     python adapters/stdlib/clauses/clauses.py mirror --from TEXT/new --to CLAUSES/new
     python adapters/stdlib/clauses/clauses.py diff --old CLAUSES/old/X --new CLAUSES/new/X --to CHANGED
-    python adapters/stdlib/scan/scan.py index --from CLAUSES/new --to IX/new
-    python adapters/stdlib/scan/scan.py scan --index IX/new --changed-from IX/old \
+    python adapters/stdlib/batch-ask/scan.py index --from CLAUSES/new --to IX/new
+    python adapters/stdlib/batch-ask/scan.py scan --index IX/new --changed-from IX/old \
         --questions demo/google-privacy-2026-10-16/questions/reporters.txt
     python kernel.py init --box BOX --pile CHANGED --key KEY
     python kernel.py bite --box BOX "Google scans Gmail for ads"
@@ -317,3 +317,13 @@ which these two documents can't show.
   and on synonyms (0 of 10); the Wayback check, which never got an answer;
   and the probe, which passed only as an echo. BM25 again does better than
   the kernel's own rank, as in php2shell.
+
+## Renamed after the freeze (2026-11-13)
+
+After this study froze, scan was renamed batch-ask
+([adapters/renamed.json](../../adapters/renamed.json)). scan.py moved with
+its folder unchanged, byte for byte. The frozen files still name the old
+folders and are left as they were. Its tests read the tools where they are
+now, through [demo/renamed.py](../renamed.py); nothing a rule, a question or
+a result rests on changed. To re-run the study's own scripts by hand, check
+out 6575494b, the commit of its last freeze.

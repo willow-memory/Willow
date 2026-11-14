@@ -3,7 +3,7 @@ section: Privacy and safety
 line: A total of everyone's counts, by Shamir's secret sharing: the one who asked learns the sum, and no one's own count is in any package.
 source: new
 added: 2026-11-04
-version: 0.1.0
+version: 0.1.1
 needs: shamirs; MIT
 floor: shamirs 2.0.0; the rule names 0.1.0.0 from 2018, and before 2.0.0 shares() takes no modulus, so its shares can't be held to one field that every person in a round uses
 writes: record
@@ -35,7 +35,7 @@ the round: the three [share](../../stdlib/share/) keys, in one order, and T,
 how many of their sums the total needs (all of them, by default). Then:
 
 1. Each runs the job with kart and seals the numbers it printed, as kart
-   has them do (or seals [dp](../dp/)'s noisy ones).
+   has them do (or seals [noised-count](../noised-count/)'s noisy ones).
 2. `split` cuts each number into one share per person, any T of which make
    it again and any fewer say nothing. Each share is proposed as an answer
    of yours, waiting on your seal. Seal each, and send it with `share send`

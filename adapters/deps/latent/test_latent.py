@@ -10,10 +10,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-SCAN = ROOT / "adapters" / "stdlib" / "scan" / "scan.py"
+SCAN = ROOT / "adapters" / "stdlib" / "batch-ask" / "scan.py"
 LATENT = HERE / "latent.py"
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "scan"))
+sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "batch-ask"))
 
 
 def index(tmp: Path, name: str, files: dict[str, str]) -> Path:

@@ -6,7 +6,7 @@ the lines that register it.
 
 ## answers in a shape a tool reads
 - pipe -- --box {box} --grep "who may approve"
-- plain -- bite --box {box} "what never leaves the machine"
+- sentences -- bite --box {box} "what never leaves the machine"
 - launcher -- --box {box} --format lines "where is the vault"
 - deep-links -- --box {box} "source code never leaves the machine"
 

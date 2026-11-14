@@ -9,7 +9,7 @@
       work.md step 03  sort: populated, 435 files: 271 sorted into 8 categories (mine/run-work-2/03-sort.txt)
     ## last runs
       mend.md          mine/run-mend-4: 4 steps, nothing flagged
-      mend.md step 04  glance: populated, 18 questions: 9 held whole, 9 in part, 0 found nothing
+      mend.md step 04  batch-glance: populated, 18 questions: 9 held whole, 9 in part, 0 found nothing
     ## never run
       full.md          19 steps
     ## changed since its last run

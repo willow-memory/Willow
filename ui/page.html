@@ -284,7 +284,7 @@ function baselines(){const box=el('div',{class:'base'});
  if(!S.folders.length){box.append(el('div',{class:'none',text:'Choose a folder first: this is where you’ll see what the kernel makes of it on its own.'}));return box}
  for(const f of S.folders){const b=BASE[f.path];if(!b){baseline(f.path);continue}
   const sec=el('div',{class:'bfold'},el('div',{class:'bpath',text:f.path}));box.append(sec);
-  if(b.loading){sec.append(el('div',{class:'none',text:'Reading it the way the kernel does…'}));continue}
+  if(b.loading){sec.append(el('div',{class:'none',text:'Reading it the way the kernel does, and trying the readers on a few of its files…'}));continue}
   if(!b.ok){sec.append(el('div',{class:'none',text:b.why}));continue}
   sec.append(el('div',{class:'bline'},el('b',{text:n2(b.read,'file')}),' it can read, making ',el('b',{text:n2(b.passages,'passage')}),' it can answer from.'));
   const cant=b.cant.reduce((t,c)=>t+c.files,0);
@@ -294,6 +294,14 @@ function baselines(){const box=el('div',{class:'base'});
     const adds=c.readers.map(r=>all().includes(r)?el('span',{class:'tag have',text:r+' ✓'}):cantAdd(r)?el('span',{class:'tag',text:r+' ('+cantAdd(r)+')'}):el('button',{class:'link',text:'+ '+r,title:P[r]?.line||'',onclick:()=>addPiece(r)}));
     ul.append(el('li',{},el('b',{text:c.kind}),' '+c.files+' · '+why+(adds.length?' · could be read by ':c.text?'':' · no reader for it yet'),...adds.flatMap((a,i)=>i?[' ',a]:[a])))}
    sec.append(ul)}
+  // read as plain text already, but a reader took some of them as its own shape (tried on a few, beside a file of nonsense)
+  const fit=(b.better||[]).filter(c=>c.fits.length),loose=(b.better||[]).filter(c=>c.any.length);
+  if(fit.length){sec.append(el('div',{class:'bline',text:'Read as plain text, but a reader knows their shape:'}));const ul=el('ul',{class:'bcant'});
+   for(const c of fit){const adds=c.fits.map(r=>{const said=' ('+r.took+' of '+c.tried+')';return all().includes(r.name)?el('span',{class:'tag have',text:r.name+' ✓'+said}):cantAdd(r.name)?el('span',{class:'tag',text:r.name+' ('+cantAdd(r.name)+')'}):el('button',{class:'link',text:'+ '+r.name+said,title:P[r.name]?.line||'',onclick:()=>addPiece(r.name)})});
+    ul.append(el('li',{},el('b',{text:c.kind}),' '+c.files+' · tried on '+c.tried+' · taken by ',...adds.flatMap((a,i)=>i?[' ',a]:[a])))}
+   sec.append(ul)}
+  if(loose.length){const by={};for(const c of loose)for(const r of c.any)(by[r.name]??=[]).push(c.kind);
+   sec.append(el('div',{class:'bline mute',text:'Readers that take any file of a kind, whatever is in it: '+Object.entries(by).map(([n,k])=>n+' ('+k.join(', ')+')').join(', ')+'.'}))}
   if(b.hidden)sec.append(el('div',{class:'bline mute',text:n2(b.hidden,'file')+' in hidden folders, which it never reads.'}))}
  box.append(el('div',{class:'bline mute',text:'Counts only: nothing of what your files say, and none of their names, is shown here.'}));return box}
 // ── saved batches: the add-ons you picked, by name ──────────────────────────
@@ -493,7 +501,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  head.append(el('div',{class:'counts'},el('span',{text:mine.length+' add-on'+(mine.length===1?'':'s')}),el('span',{class:'in',text:nIn+' in your stack'}),nNo?el('span',{text:nNo+' can’t be added yet'}):null,
   nNo?el('button',{class:'link',text:HIDE?'show them':'hide them',onclick:()=>{HIDE=!HIDE;try{localStorage.setItem('willow-canvas-hide',HIDE?'1':'0')}catch(e){}shelf()}}):null));
  // first: for reading, the readers the kernel's counts name for files in your folders; else what the examples run
- const want=new Set(S.folders.flatMap(f=>(BASE[f.path]?.cant||[]).flatMap(c=>c.readers))),first=p=>s.key==='reads'?want.has(p.name):p.in_examples>0;
+ const want=new Set(S.folders.flatMap(f=>[...(BASE[f.path]?.cant||[]).flatMap(c=>c.readers),...(BASE[f.path]?.better||[]).flatMap(c=>c.fits.map(r=>r.name))])),first=p=>s.key==='reads'?want.has(p.name):p.in_examples>0;
  const rank=p=>cantAdd(p.name)?2:first(p)?0:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
  const node=(n,depth,trail)=>{const p=P[n],kids=(under[n]||[]).filter(c=>!trail.includes(c)&&!hidden(c)).sort(order),used=all().includes(n),no=cantAdd(n);
   const cb=el('input',{type:'checkbox',title:no||(used?'take it out':'add it')});cb.checked=used;cb.disabled=!!no&&!used;

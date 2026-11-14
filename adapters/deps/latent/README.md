@@ -3,17 +3,17 @@ section: Finding things
 line: Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 needs: numpy; BSD-3-Clause
 floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13 (the version the deps CI job runs), and 2.1.0 is the first that does
 writes: nothing
 network: none
 role: tools
-uses: scan
+uses: batch-ask
 -->
 # latent
 
-Rank a [scan](../../stdlib/scan/) index's passages by meaning instead of by
+Rank a [batch-ask](../../stdlib/batch-ask/) index's passages by meaning instead of by
 words.
 
     python adapters/deps/latent/latent.py rank --index INDEX \

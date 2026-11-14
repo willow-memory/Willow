@@ -74,7 +74,7 @@ chosen before any run:
 At freeze 1, FROZEN.json holds the SHA-256 of `gaps.json`, `pins.json`,
 `resolve.py`, `trees.py`, `ask.py`, `score.py`, `origin.py` and `run.py`, and
 of every tool file they run on, by import graph: `kernel.py`,
-`adapters/stdlib/scan/scan.py`, `adapters/stdlib/todo/todo.py`,
+`adapters/stdlib/batch-ask/scan.py`, `adapters/stdlib/todo/todo.py`,
 `adapters/stdlib/ci/whose.py`, and php2shell's `make_trees.py`, `phase2.py`,
 `phase3.py`, `phase4.py`, `score.py` and `score2.py` (the hit rule's real
 code, the chance and the baselines). `test_known_gaps.py` re-hashes every one,
@@ -984,3 +984,14 @@ into their own records and agree with it.
 ### Not run
 
 Phase 5's findings are private and nothing here claims a result for them.
+
+## Renamed after the freeze (2026-11-13)
+
+After this study froze, scan was renamed batch-ask
+([adapters/renamed.json](../../adapters/renamed.json)). scan.py moved with
+its folder unchanged, byte for byte, so FROZEN.json's hash of it still
+holds. The frozen files still name the old folders and are left as they
+were. Its tests read the tools where they are now, through
+[demo/renamed.py](../renamed.py); nothing a rule, a question or a result
+rests on changed. To re-run the study's own scripts by hand, check out
+0943aa7b, the commit of its last freeze.

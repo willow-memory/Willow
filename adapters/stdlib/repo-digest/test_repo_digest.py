@@ -208,7 +208,7 @@ def test_only_uses_is_read_and_only_from_a_card(tmp_path):
     )
     tree["adapters/stdlib/c/README.md"] = "# no card header\nuses: a\n"
     tree["adapters/stdlib/d/README.md"] = card("") + "\nuses: ghost\n"
-    files = repo_digest.kinds.tracked(make(tmp_path, tree))
+    files = repo_digest.repo_kinds.tracked(make(tmp_path, tree))
     assert repo_digest.uses_of(tmp_path, files) == {"a": [], "b": ["a"], "d": []}
 
 
@@ -278,7 +278,7 @@ def test_on_this_repo_the_page_has_its_groups_and_every_add_on_is_placed_or_in_a
     for where, what in rows(doc, "a ring").items():
         resting += len(where.split(" → ")) - 1
         resting += int(what.split("; ")[1].split()[0]) if "; " in what else 0
-    files = repo_digest.kinds.tracked(ROOT)
+    files = repo_digest.repo_kinds.tracked(ROOT)
     assert placed + resting == len(repo_digest.uses_of(ROOT, files))
     chain = order["the longest way down"].split(" → ")
     assert len(chain) == max(int(w.split()[0]) for w in order if w[0].isdigit()) + 1

@@ -86,7 +86,7 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
     index-cache isn't here, the index isn't current for the box's folder by
     index-cache's manifest, or the box's words list can't be read (the
     kernel's bite then says why)."""
-    cache, scan = sibling("index-cache", "index_cache"), sibling("scan", "scan")
+    cache, scan = sibling("index-cache", "index_cache"), sibling("batch-ask", "scan")
     if cache is None or scan is None:
         return None
     cfg = kernel.config(box)

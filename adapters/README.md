@@ -86,7 +86,10 @@ A reader says what it reads, `reads: .eml, .mbox`: kinds of file by
 extension, or a file it looks for by name (`zotero.sqlite`), or `none` for
 one that reads no kind of file (a repository, a page it fetches). The UI
 offers a reader by it for the files in your folders the kernel can't read,
-and `stdlib/ci/test_contract.py` holds each kind to the reader's own code.
+and for the ones it reads as plain text when the reader, tried on a few of
+them, takes some (its `mirror` writes text for them) and not a file of the
+kind with nothing in it. `stdlib/ci/test_contract.py` holds each kind to
+the reader's own code.
 
 What an add-on leans on is on its card too, so whoever copies it knows what
 to copy with it:

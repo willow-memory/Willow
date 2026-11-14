@@ -3,7 +3,7 @@ section: For maintainers
 line: The CI test jobs split by each test's past time, so every job finishes about together.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools
@@ -18,7 +18,7 @@ how long each test took last time, so the jobs end about together.
 
     3 parts, 69 files, 734 tests, expected 120.405 s in all
     part 1/3  40.138 s  23 files
-      adapters/stdlib/again/test_again.py  1.012 s
+      adapters/stdlib/asked-again/test_asked_again.py  1.012 s
       adapters/stdlib/ci/test_contract.py  16.230 s
       ...
     part 2/3  40.140 s  23 files

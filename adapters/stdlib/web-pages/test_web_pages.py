@@ -101,7 +101,7 @@ def test_a_charset_is_read_only_from_the_first_4096_bytes():
     assert web_pages.decode(b" " + pad + head + page) is None  # its last byte past
 
 
-#: the shape Chrome 154 wrote for live.py's check: no charset on the page's
+#: the shape Chrome 154 wrote for ways_live.py's check: no charset on the page's
 #: part, only in the page's own meta tag (shortened; the boundary is Chrome's)
 CHROME = (
     "From: <Saved by Blink>\r\n"

@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Subtitle and transcript files (.vtt, .srt) as lines cited by timestamp, for podcasts and videos already transcribed.
 source: new
 added: 2026-10-27
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: reads
@@ -43,7 +43,7 @@ Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused
 (FOLDER is not a folder, or MIRROR and FOLDER are inside one another).
 
 Point the kernel at MIRROR (`kernel.py init --pile MIRROR ...`) to ask
-questions of what was said; [said](../said/) then reads a voice-tagged line
+questions of what was said; [who-said](../who-said/) then reads a voice-tagged line
 as its speaker's quote.
 
 **Uses:** the kernel's exit codes; the mirror is for `chunks` to read.

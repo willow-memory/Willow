@@ -21,7 +21,7 @@ NOW = ["--now", "2026-10-24T00:00:00Z"]
 TODAY = date(2026, 10, 24)
 #: the add-ons two of its sections are read by: each test holds digest to
 #: whichever is true here, so a copy with only some add-ons is checked too
-BESIDE = {n: (HERE.parent / n).is_dir() for n in ("stale", "coming-up")}
+BESIDE = {n: (HERE.parent / n).is_dir() for n in ("stale-answers", "coming-up")}
 
 
 def gone(name: str) -> dict:
@@ -68,10 +68,10 @@ def life(tmp_path: Path) -> Path:
 def test_each_section_shows_what_it_found(tmp_path):
     doc = dg.digest(life(tmp_path), TODAY)
     assert [w["answer"] for w in doc["waiting"]["items"]] == ["30 October"]
-    if BESIDE["stale"]:
+    if BESIDE["stale-answers"]:
         assert [e["data"] for e in doc["stale"]["items"]] == ["Thursday night"]
     else:
-        assert doc["stale"] == gone("stale")
+        assert doc["stale"] == gone("stale-answers")
     if BESIDE["coming-up"]:
         assert [(c["date"], c["where"]) for c in doc["coming"]["items"]] == [
             ("2026-10-30", "car.txt:1")
@@ -107,10 +107,10 @@ def test_the_command_line_prints_a_report_of_each_section(tmp_path, capsys):
     assert dg.main(["--box", str(b), *NOW]) == 42
     head, *body = capsys.readouterr().out.splitlines()
     said = ["1 waiting"]
-    said += ["1 gone stale"] if BESIDE["stale"] else []
+    said += ["1 gone stale"] if BESIDE["stale-answers"] else []
     said += ["1 coming up"] if BESIDE["coming-up"] else []
     blind = [f"couldn't look at {c}: the {n} add-on isn't here"
-             for c, n in (("gone stale", "stale"), ("coming up", "coming-up"))
+             for c, n in (("gone stale", "stale-answers"), ("coming up", "coming-up"))
              if not BESIDE[n]]  # fmt: skip
     assert head == "digest: populated, " + "; ".join(
         [", ".join([*said, "1 asked again"]), *blind]
@@ -145,7 +145,7 @@ def test_nothing_is_said_as_nothing(tmp_path, capsys):
         str(tmp_path / "key"),
         *NOW,
     )
-    everything = BESIDE["stale"] and BESIDE["coming-up"]
+    everything = BESIDE["stale-answers"] and BESIDE["coming-up"]
     assert dg.main(["--box", str(b), *NOW]) == (0 if everything else 42)
     head = capsys.readouterr().out
     if everything:
@@ -154,7 +154,9 @@ def test_nothing_is_said_as_nothing(tmp_path, capsys):
         assert head.startswith("digest: unreachable, couldn't look at ")
     out = dg.render(dg.digest(b, TODAY), 14)
     assert "Nothing is waiting for your approval." in out
-    assert ("Every approved answer's sources still hold." in out) == BESIDE["stale"]
+    assert ("Every approved answer's sources still hold." in out) == BESIDE[
+        "stale-answers"
+    ]
     assert ("Nothing dated in that window." in out) == BESIDE["coming-up"]
     assert ("couldn't look: the coming-up add-on isn't here" in out) != BESIDE[
         "coming-up"
@@ -164,15 +166,15 @@ def test_nothing_is_said_as_nothing(tmp_path, capsys):
 
 def test_couldnt_look_and_nothing_found_is_unreachable_not_empty():
     nothing = {"state": "empty", "items": []}
-    doc = {"waiting": nothing, "stale": gone("stale"), "coming": nothing,
+    doc = {"waiting": nothing, "stale": gone("stale-answers"), "coming": nothing,
            "again": nothing}  # fmt: skip
     rep = dg.report_of(doc, 14)
     assert rep == {"addon": "digest", "state": "unreachable", "groups": [],
-                   "said": "couldn't look at gone stale: the stale add-on isn't here"}  # fmt: skip
+                   "said": "couldn't look at gone stale: the stale-answers add-on isn't here"}  # fmt: skip
     assert dg.code_of(doc) == 0  # the page's code holds; the report's is 42
     rep = dg.report_of({**doc, "again": {"state": "populated", "items": [3]}}, 14)
     assert rep["state"] == "populated" and rep["said"] == (
-        "1 asked again; couldn't look at gone stale: the stale add-on isn't here"
+        "1 asked again; couldn't look at gone stale: the stale-answers add-on isn't here"
     )
 
 
@@ -186,14 +188,16 @@ def test_a_deleted_add_on_is_couldnt_look_and_the_rest_still_show(
         shutil.copytree(HERE.parent / "coming-up", fake / "coming-up")
     monkeypatch.setattr(dg, "STDLIB", fake)
     doc = dg.digest(b, TODAY)
-    assert doc["stale"] == gone("stale")
+    assert doc["stale"] == gone("stale-answers")
     assert doc["coming"]["state"] == (
         "populated" if BESIDE["coming-up"] else "unreachable"
     )
     assert doc["waiting"]["state"] == "populated"
     assert dg.code_of(doc) == 42
     print(dg.render(doc, 14))
-    assert "couldn't look: the stale add-on isn't here" in capsys.readouterr().out
+    assert (
+        "couldn't look: the stale-answers add-on isn't here" in capsys.readouterr().out
+    )
 
 
 def test_the_window_is_the_days_asked(tmp_path):

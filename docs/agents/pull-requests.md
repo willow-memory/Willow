@@ -23,7 +23,7 @@ Opening one, keeping it current, and what CI's rows need. Part of
   below for you, opens the pull request and numbers its entry, and exits 42
   only on what needs you, saying what. The rest of this page is what it does,
   for when it stops. The steps and the body are
-  [ready](../../adapters/stdlib/ready/)'s, which needs no host: without gh,
+  [pr-ready](../../adapters/stdlib/pr-ready/)'s, which needs no host: without gh,
   create_pr.py says the ready commands that do the same by hand, around a
   push and an open of your own.
 - **Run it in the background, in a worktree of its own.** It can take many

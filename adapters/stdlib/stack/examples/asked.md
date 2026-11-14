@@ -10,4 +10,4 @@ counts you sent have spent. Run it before you seal the next one.
 - share -- log --box {box}
 
 ## what your counts have spent
-- dp -- spent --box {box}
+- noised-count -- spent --box {box}

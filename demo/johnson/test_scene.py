@@ -148,7 +148,7 @@ def test_a_stack_pins_its_steps_and_a_changed_one_is_seen(played):
 
     text = scene.stack_text("case-file")
     pinned = scene.pins(text)
-    assert sorted(pinned) == ["coming-up", "contradictions", "export", "people"]
+    assert sorted(pinned) == ["coming-up", "contradictions", "export-answers", "people"]
     for name, sha in pinned.items():
         assert sha == scene.h256(scene.script(name).read_text(encoding="utf-8"))
     assert (

@@ -3,7 +3,7 @@ section: Trust and proof
 line: Each answer's inputs marked measured, fitted or assumed, and the result worth its weakest input, never an average.
 source: new
 added: 2026-11-01
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
@@ -39,7 +39,7 @@ so is any answer that cites one, or that cites a passage no longer in your
 folder. It is never quietly read as `assumed`. "No claim" and "a weak claim"
 are different facts. A passage marked twice is worth its weaker mark. An
 approval whose proposal file isn't the bytes that were sealed is `broken`,
-shown with why and counted, as [stale](../stale/) shows it.
+shown with why and counted, as [stale-answers](../stale-answers/) shows it.
 
 An approval that cites **no passage at all**, such as
 [session-seal](../session-seal/)'s summary of what you did, is

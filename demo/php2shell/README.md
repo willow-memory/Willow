@@ -2,7 +2,7 @@
 
 In October 2026, Willow's kernel was asked about PHP2Shell
 (CVE-2026-109618 and CVE-2026-109619) in the advisories' own words, through
-the [scan](../../adapters/stdlib/scan/) add-on. Given the fixed release, it
+the [batch-ask](../../adapters/stdlib/batch-ask/) add-on. Given the fixed release, it
 pointed at the code the fix replaced; without it, at the two files that held
 the bugs. This folder tests that result seven ways, so that it stands or
 falls on what anyone can rerun. The plan, phase by phase, is published as
@@ -65,9 +65,9 @@ FROZEN.json also records the SHA-256 of `kernel.py`, `scan.py` and
 
     python demo/php2shell/make_trees.py --to /tmp/php2shell       # about 3 GB
     python demo/php2shell/make_trees.py --to /tmp/php2shell --check
-    python adapters/stdlib/scan/scan.py index --from /tmp/php2shell/trees/8.5.11 --to /tmp/ix/8.5.11
-    python adapters/stdlib/scan/scan.py index --from /tmp/php2shell/trees/8.5.12 --to /tmp/ix/8.5.12
-    python adapters/stdlib/scan/scan.py scan --index /tmp/ix/8.5.11 --changed-from /tmp/ix/8.5.12 \
+    python adapters/stdlib/batch-ask/scan.py index --from /tmp/php2shell/trees/8.5.11 --to /tmp/ix/8.5.11
+    python adapters/stdlib/batch-ask/scan.py index --from /tmp/php2shell/trees/8.5.12 --to /tmp/ix/8.5.12
+    python adapters/stdlib/batch-ask/scan.py scan --index /tmp/ix/8.5.11 --changed-from /tmp/ix/8.5.12 \
         --questions demo/php2shell/questions/author.txt > answers.jsonl
     python demo/php2shell/score.py --fixes /tmp/php2shell answers.jsonl
 
@@ -433,3 +433,13 @@ as LIMITS.md says.
 
 Ran on kernel `ccr-b405f5ee-kernel-seams` at 87a7f05, with the indexes rebuilt
 on that kernel.
+
+## Renamed after the freeze (2026-11-13)
+
+After this study froze, scan was renamed batch-ask
+([adapters/renamed.json](../../adapters/renamed.json)). scan.py moved with
+its folder unchanged, byte for byte. The frozen files still name the old
+folders and are left as they were. Its tests read the tools where they are
+now, through [demo/renamed.py](../renamed.py); nothing a rule, a question or
+a result rests on changed. To re-run the study's own scripts by hand, check
+out ae0c4f68, the commit of its last freeze.

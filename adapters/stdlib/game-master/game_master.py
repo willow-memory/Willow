@@ -54,14 +54,14 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
-sys.path.insert(0, str(HERE.parent / "dice"))
-sys.path.insert(0, str(HERE.parent / "odds"))
-import dice  # noqa: E402
+sys.path.insert(0, str(HERE.parent / "play-dice"))
+sys.path.insert(0, str(HERE.parent / "play-odds"))
+import play_dice  # noqa: E402
 import kernel  # noqa: E402
-import odds  # noqa: E402
+import play_odds  # noqa: E402
 
 KERNEL = HERE.parents[2] / "kernel.py"
-DICE = HERE.parent / "dice" / "dice.py"
+DICE = HERE.parent / "play-dice" / "play_dice.py"
 OPEN, ASK, BEAT = "table-open", "table-ask", "table-beat"
 OFFER, HEARD = (
     "table-offer",
@@ -401,8 +401,8 @@ def entering(world: dict, beats: list[dict], heard: list[dict] = (), canon: list
 
 def band_lines(world: dict, char: dict, stat: str, mark: str = " ") -> str:
     bonus = stat_of(world, char, stat)
-    got = odds.bands(
-        odds.distribution(f"{ROLL}+{bonus}"), [10, 7]
+    got = play_odds.bands(
+        play_odds.distribution(f"{ROLL}+{bonus}"), [10, 7]
     )  # strong, weak, miss
     parts = [f"{n} {p}" for (n, _), (_, p) in zip(BANDS, got)]
     return f"{mark} {stat:<10} {bonus:+d}   " + "   ".join(parts)
@@ -504,7 +504,7 @@ def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
                         scene=sc["id"], beat=b["id"], character=char["id"], stat=stat,
                         bonus=bonus, roll_row=roll["n"], roll=roll["total"], total=total,
                         band=band, text=b["outcomes"][band])  # fmt: skip
-    print(f"{char['name']} tries {stat}: {dice.said(roll)}, {bonus:+d} {stat} = {total}: {band}   (rows {roll['n']}, {row['n']})")  # fmt: skip
+    print(f"{char['name']} tries {stat}: {play_dice.said(roll)}, {bonus:+d} {stat} = {total}: {band}   (rows {roll['n']}, {row['n']})")  # fmt: skip
     print(b["outcomes"][band])
     after = [*game["beats"], row]
     for text in entering(world, after, game["heard"], game["canon"]):
@@ -751,7 +751,7 @@ def cmd_check(box: Path, world: dict | None) -> int:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return fail("the record doesn't verify: " + "; ".join(breaks))
-    held, why = dice.check(rows)
+    held, why = play_dice.check(rows)
     if why:
         return fail(f"{why} ({held} rolls before it held)")
     mine = games(rows, world["id"] if world else None)

@@ -73,7 +73,20 @@ STDLIB = HERE.parent
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
-NONE_FOUND = {"amounts", "contradictions", "duplicates", "gaps", "said"}
+NONE_FOUND = {"amounts", "contradictions", "duplicates", "gaps", "who-said"}
+
+
+def renames() -> dict:
+    """Add-ons renamed, old name to new (adapters/renamed.json); {} when
+    this willow has no such file."""
+    try:
+        doc = json.loads((STDLIB.parent / "renamed.json").read_text(encoding="utf-8"))
+        return dict(doc.get("names", {}))
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+RENAMED = renames()
 FLAGS_ON_ALIVE = {
     "contradictions",
     "gaps",
@@ -421,6 +434,7 @@ def mass(text: str) -> int:
 
 def step_result(name: str, code: int) -> tuple[bool, str]:
     """(flagged, note) for a step's exit code, by that add-on's card."""
+    name = RENAMED.get(name, name)
     if code == kernel.ALIVE and name in FLAGS_ON_ALIVE:
         return True, "flagged"
     if code == kernel.ESCALATE and name in NONE_FOUND:
@@ -491,6 +505,10 @@ def main(argv: list[str]) -> int:
         for name, _ in steps:
             if name not in scripts:
                 script = resolve(name)
+                if script is None and (new := RENAMED.get(name)):
+                    script = resolve(new)
+                    if script is not None:
+                        print(f"{name} is now called {new}: ran {new}", file=sys.stderr)
                 if script is None:
                     print(f"refused: the {name} add-on isn't here", file=sys.stderr)
                     return kernel.REFUSED

@@ -3,12 +3,12 @@ section: Finding things
 line: Your approved answers used as a test: each question asked again, scored by how often search puts its passage in the top five.
 source: box
 added: 2026-10-28
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools
 tags: pile
-uses: pile-rank, scan
+uses: batch-ask, pile-rank
 -->
 # pile-gold
 
@@ -23,7 +23,7 @@ its top five.
 
 The record keeps no words, only each question's key, so the questions come
 from FILE: one a line, optionally `name<TAB>question`, blank and `#` lines
-skipped, as [scan](../scan/) reads them. A question is matched to its seals
+skipped, as [batch-ask](../batch-ask/) reads them. A question is matched to its seals
 by `kernel.bite_key`, so "When is the BOILER serviced?" finds the seal made
 for "when is the boiler serviced".
 

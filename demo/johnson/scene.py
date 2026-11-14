@@ -89,9 +89,9 @@ STACKS = {
         ("what's coming up", "coming-up", f"--box {{box}} --now {LATER}"),
         ("where the notes disagree", "contradictions", "--box {box}"),
         ("who is in it", "people", "--box {box}"),
-        ("what is signed off", "export", "--box {box}")]),
+        ("what is signed off", "export-answers", "--box {box}")]),
     "client-view": ("ines", "stack client view", "what a client needs from the adjuster", [
-        ("what is signed off", "export", "--box {box}"),
+        ("what is signed off", "export-answers", "--box {box}"),
         ("what's coming up", "coming-up", f"--box {{box}} --now {LATER}")]),
     "exhibit-check": ("tamsin", "stack exhibit check", "what counsel checks before an exhibit is filed", [
         ("where the papers disagree", "contradictions", "--box {box}"),

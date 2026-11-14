@@ -47,7 +47,7 @@ def test_without_a_session_the_box_holds_every_run_the_ofrenda_and_the_code(tmp_
     assert (pile / "code" / "build.py.txt").is_file()
     assert not (pile / "session").exists()
     assert (tmp_path / "out" / "box" / "record.jsonl").is_file()
-    plain = ROOT / "adapters/stdlib/plain/plain.py"
+    plain = ROOT / "adapters/stdlib/sentences/sentences.py"
     said = subprocess.run([sys.executable, str(plain), "bite", "--box", str(tmp_path / "out" / "box"),
                            "which model told the biscochitos secret"],
                           capture_output=True, text=True)  # fmt: skip

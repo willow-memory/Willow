@@ -1,27 +1,21 @@
 {
-  "across": {
-    "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
-  },
-  "again": {
-    "0cc8444c7793": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
-  },
   "agents-md-check": {
     "00b8e1df6074": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
-  "all": {
-    "7ec175d12b0a": "EVERY is a cap no folder reaches; 10**9 and 10**10 serve the same passages."
+  "all-passages": {
+    "32622b64e069": "The cap that stands for every passage when no --top is given: 10**9 and 11**9 both exceed any pile's passages, so either serves the same list."
   },
   "assistant-scores": {
     "37337c7fbb46": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
+  },
+  "batch-ask": {
+    "07d00d17c34c": "The floor under the passage count when averaging lengths: it differs only with one passage, where the average scales every score alike and only the order, which one passage can't change, is returned."
   },
   "clauses": {
     "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
   },
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
-  },
-  "dice5e": {
-    "10e98042170d": "A term's sign is only ever -1 or 1, so `sign < 0` and `sign < 1` pick the same terms."
   },
   "flashcards": {
     "02e79d23c4db": "`last` is None only on a card's first review, when `card` is None too and step() returns before it reads `days`, so the days passed there (0 or 1) change no result."
@@ -32,15 +26,11 @@
   "lesson-time": {
     "05dbd1b2d85d": "said_at's starting value is never read: a plan that states its time sets said_at to that line, and one that states none is skipped or shown as from --period, so the starting 0 changes no result."
   },
-  "live": {
-    "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
-    "03f95b5e44db": "Where the DevTools message counter starts: replies are matched to requests by id, so starting at 1 instead of 0 matches the same replies."
-  },
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },
-  "pins": {
-    "1eb781c3ac07": "pins.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
+  "play-bureau": {
+    "06401a082af5": "The seed a Session falls back to when none is given: the default is never used, since every game is built with the seed its record holds, so any number there plays the same."
   },
   "red-on-main": {
     "3fe0b0e60f12": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
@@ -48,8 +38,8 @@
   "restack-open": {
     "2007109c09fd": "How much of git's own message a refusal quotes: any length names the same git failure, and only a message longer than 200 characters would read differently."
   },
-  "scan": {
-    "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
+  "run-answer": {
+    "21deb2a9f8c4": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
   "secrets-audit": {
     "245feee800fc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
@@ -65,6 +55,9 @@
   },
   "typosquat": {
     "0b021f6deb3f": "src is used only via len(src)!=1; with the two-name list, flipping 'o in opts' to 'o not in opts' swaps which names land in src but leaves that length 0/1/2 the same for every command line, so the refuse/pass decision is unchanged."
+  },
+  "unpinned": {
+    "0c539d7b4204": "Which of --box and --from were given: of two options, exactly one given and exactly one not given are the same test, and the source is read from the options themselves after."
   },
   "why-not": {
     "0a2392676768": "The 1 caps how many times \"A passage\" is made lower case in the line that says how many words a passage has to hold; that line holds the phrase once, so any cap of one or more gives the same words."
