@@ -140,6 +140,45 @@ was still the run without the memory's, and 60 of 60 checks matched. The
 stronger answer to the clock, the field's `SOURCE_DATE_EPOCH`, is a kernel
 change, for the maintainer.
 
+## What failed: the first report (2026-11-14)
+
+`truth.py measure` and `report` over stage 0 on all thirteen piles and
+Phase A on willow: 17,632 rows, 357 steps. The maintainer called it two
+failures, with data to learn from. They were:
+
+**1. The null failed, and the frozen design caused it.** 99 step runs in
+stacks printed other than the same step alone, with no bridge to them,
+and the report holds every pair back until that is explained. 91 of the 99
+are eight steps that count days from today (car 21, foia 15, syllabus 15,
+home-upkeep 12, pets 11, warranties 8, job-hunt 6, handover 3). Each also
+differs as a stack of one step, with no company. Stage 0 ran on 13
+November and Phase A on the 14th. So the null held the stacks to a
+baseline made on another day, and the clock was the only thing that
+changed. The design never fixed the time a step sees. The remaining 8 are
+record-sql, which changes in large stacks and never alone: a dependency
+the bridges don't hold. That one is a finding, not a failure.
+
+**2. The pair measure found nothing, and it couldn't have.** 29,338 pairs
+fired together on five piles or more; none held at the false discovery
+rate. Nearly every step fires on every pile (289 to 303 of 357 on each),
+so firing together carries almost no information. Places overlapping
+found none either, since a place is seen only when an output names a file
+as one word. The rule frozen as "a pair" can't find a pool on piles like
+these. The signal the stacks do carry, a taker that changes when its giver
+runs first, was planned for the report and isn't in `truth.py`.
+
+**What held:** the pipeline ran end to end, the probes were as frozen, and
+the duplicates and gaps below are read from rows. Duplicates: coming-up and
+digest (11 piles); ids, reading-level and snapshot (all 13); look and
+make-it-so (8). Gaps, kinds of file no step named: .docx, .xlsx, .odt,
+.epub, .mbox, .ged, each on one pile.
+
+**What it teaches, for the next freeze:** fix the time every step sees, by
+running its baseline on the same day or by a pinned clock (the
+maintainer's to decide, `SOURCE_DATE_EPOCH`), and measure what the stacks
+change, not what fires together. Both are written after reading this
+report, and will say so.
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and
