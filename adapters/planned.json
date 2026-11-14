@@ -605,6 +605,17 @@
   "version": "0.0.1"
  },
  {
+  "name": "game-baselines",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "A game's measured self-play results as lines, each with its count of games and the policy every seat played: a run, never an estimate.",
+  "source": "new",
+  "writes": "to",
+  "network": "none",
+  "role": "reads",
+  "version": "0.0.1"
+ },
+ {
   "name": "gifts",
   "kind": "stdlib",
   "section": "Keeping track",

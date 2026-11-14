@@ -1927,6 +1927,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ## Play
 
+### Other readers
+
+
+#### Other readers: ideas, not built yet
+
+- <a id="game-baselines"></a>**game-baselines** (idea) \
+  A game's measured self-play results as lines, each with its count of games and the policy every seat played: a run, never an estimate. \
+  *new* `no-install` `offline` `game` `measured` · near: weakest-link, life, game-master
+
 ### What runs on your page
 
 - <a id="pile-poetry"></a>[**pile-poetry**](adapters/stdlib/pile-poetry/) \

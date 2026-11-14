@@ -86,6 +86,8 @@ chatgpt = openai, model, suggestions
 
 # play
 games = game, play, dice, quiz
+rule = rules
+rules = rules
 
 # searching code
 grep = ripgrep
