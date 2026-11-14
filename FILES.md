@@ -590,7 +590,7 @@ willow/
 │   │   │   ├── test_codeowners.py
 │   │   │   └── README.md
 │   │   ├── copy-in/
-│   │   │   ├── copy_in.py    New files from another folder or device copied into one of yours, each logged with its SHA-256; nothing is deleted, and a changed file arrives as a second copy
+│   │   │   ├── copy_in.py    new files from another folder or device, copied in by SHA-256
 │   │   │   ├── test_copy_in.py
 │   │   │   └── README.md     its card
 │   │   ├── fair-merge/

@@ -1,6 +1,5 @@
-"""copy_in.py: new files from another folder or device copied into yours,
-each logged with its SHA-256; nothing deleted, a changed file a second copy.
-Python 3.9+.
+"""copy_in.py: new files from another folder or device, copied in by SHA-256.
+Nothing is deleted, and a changed file comes in as a second copy. Python 3.9+.
 
     python adapters/stdlib/copy-in/copy_in.py --from FOLDER --to DIR [--skip PREFIX ...]
         [--dry-run] [--json]
