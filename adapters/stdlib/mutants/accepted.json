@@ -29,6 +29,9 @@
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },
+  "play-bureau": {
+    "06401a082af5": "The seed a Session falls back to when none is given: the default is never used, since every game is built with the seed its record holds, so any number there plays the same."
+  },
   "red-on-main": {
     "3fe0b0e60f12": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
