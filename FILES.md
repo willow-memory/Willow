@@ -1717,6 +1717,8 @@ willow/
 │   │   │   ├── test-times.json  seconds each add-on test file took, to cut the add-ons' tests into even chunks
 │   │   │   ├── test_ci.py    its tests: the same record every run, and every state
 │   │   │   ├── test_guard.py the guard's tests: each broken promise caught
+│   │   │   ├── reach.py      what an add-on's tests may read of the repo: ci-memo's key, the guard's line
+│   │   │   ├── test_reach.py reach.py's tests: a card's names in turn, and wide on whatever the scan sees past them
 │   │   │   ├── test_contract.py  what every add-on promises alike, held for all of them
 │   │   │   ├── test_changelog.py  changelog.py's tests: owed, not owed, and in the wrong place
 │   │   │   ├── test_versions.py  versions.py's tests: one step a pull request, a promise never a patch, where new ones start

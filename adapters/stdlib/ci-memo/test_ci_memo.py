@@ -167,6 +167,39 @@ def test_plan_bare_prints_only_the_gates_to_run(tmp_path):
     assert "deps:mcp" in names and "mutants:accents" not in names
 
 
+def test_plan_standing_prints_only_the_gates_that_stand(tmp_path):
+    root = tree(tmp_path)
+    b = pinned_box(tmp_path, root, GATES)
+    pin = tmp_path / "ci.pin"
+    memo("pin", "--box", str(b), "--to", str(pin), "--repo", str(root))
+    (root / "adapters/stdlib/accents/accents.py").write_text("a2\n")
+    got = memo("plan", "--pin", str(pin), "--repo", str(root), "--standing")
+    assert got.returncode == 0 and got.stdout.count("\n") == 1
+    names = got.stdout.split()
+    assert "mutants:zed" in names and "tests:beats" in names
+    assert "mutants:accents" not in names and "deps:mcp" not in names
+
+
+def test_an_add_on_chunk_reads_its_add_ons_reach_and_a_wide_one_the_tree():
+    """On this repo: ci.py cuts the add-ons drawn wide (reach.py) into the
+    first chunks, keyed on the whole tree; each other chunk is keyed on its
+    add-ons' reach, which never holds the docs or another chunk's add-on."""
+    files = cm.files_of(cm.ROOT)
+    parts = cm.ci.adapter_parts()
+    assert cm.inputs("tests:adapters-1", files) == files
+    last = len(parts)
+    got = cm.inputs(f"tests:adapters-{last}", files)
+    assert "kernel.py" in got and len(got) < len(files)
+    assert not any(f.startswith("docs/") for f in got)
+    for test in parts[last - 1]:
+        assert test in got, test
+    elsewhere = {t.split("/")[2] for t in parts[last - 2]} - {
+        t.split("/")[2] for t in parts[last - 1]
+    }
+    leaned = {f.split("/")[2] for f in got if f.startswith("adapters/stdlib/")}
+    assert elsewhere - leaned, "another chunk's add-ons aren't all in this one's reach"
+
+
 def test_pin_refuses_a_record_of_another_tree_and_holds_the_chain(tmp_path):
     root = tree(tmp_path)
     b = pinned_box(tmp_path, root, GATES)

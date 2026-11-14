@@ -153,6 +153,12 @@ def reach_problems(job: str, gates: set, blocks: dict, cimod) -> list[str]:
     ]
 
 
+#: a pull request's tests job leaves out the gates that stand on main's run
+#: (ci-memo): its stand step runs only on a pull request, so on a push this
+#: is empty and the job runs every gate
+STANDING = "${{ steps.stand.outputs.without }}"
+
+
 def strip_options(argv: list[str]) -> list[str]:
     """A cores.py line less its options (--box, --jobs, --now and their
     values): the parts and gates it names and its --without."""
@@ -189,10 +195,19 @@ def split_problems(ci: str) -> list[str]:
         shards = re.search(r"^        shard: \[(.*?)\]$", block, re.M)
         values = [v.strip() for v in shards.group(1).split(",")] if shards else [""]
         lines = [(x, values) for x in re.findall(r"ci/ci\.py run (.*?) --box", block)]
+        if STANDING in block and not re.search(
+            r"^      - id: stand\n(?:        #.*\n)*        if: github\.event_name == 'pull_request'$",
+            block, re.M,
+        ):  # fmt: skip
+            out.append(
+                f"ci.yml's {job} job leaves out what its stand step says stands,"
+                " but that step isn't only on pull requests: a push must run every gate"
+            )
         for line in re.findall(r"ci/cores\.py (.*?)(?: \||$)", block, re.M):
             # cores.py cuts the gates into shards of its own and runs every
-            # one, so the line runs what ci.py's select names, uncut
-            argv = re.sub(r"\$\{\{.*?\}\}", "X", line).split()
+            # one, so the line runs what ci.py's select names, uncut; what a
+            # stand step leaves out is nothing on a push, where it doesn't run
+            argv = re.sub(r"\$\{\{.*?\}\}", "X", line.replace(STANDING, "")).split()
             lines.append((" ".join(strip_options(argv)), [""]))
         if lines and not (
             re.search(r"^    needs: \[[^\]]*\bqueued\b", block, re.M)
