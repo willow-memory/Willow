@@ -23,6 +23,8 @@ the box is what will ship on its own, from Die-Namic.
 | [gm-stack.md](gm-stack.md) | the GM's prep sheet: thirteen steps, each with the want it answers | [stack](../../adapters/stdlib/stack/) |
 | [gm-end.md](gm-end.md) | the end of the night: the GM's handwritten pages read in, the night compiled, sealed as one, backed up | stack, with [ocr](../../adapters/deps/ocr/) reading the pages |
 | [sample-scans/](sample-scans/) | a made-up photo of a fifth night's handwritten page | ocr |
+| [ideas.py](ideas.py) | between sessions: story seeds dealt from the box's own words, what was set up and never played, what's still open | [oracle-text](../../adapters/stdlib/oracle-text/), [surprise](../../adapters/stdlib/surprise/) |
+| [stories/](stories/), [author.py](author.py) | stories written as markdown, the way the binder is: [the wasp nest](stories/wasp-nest.md), the cellar's next chapter | author.py makes them worlds; game-master checks and plays them |
 | [worlds/](worlds/) | two stories, every name a character: [the lantern fair](worlds/lantern-fair.json), and [the clockwork cellar](worlds/clockwork-cellar.json), a boss room that turns on its dice | [game-master](../../adapters/stdlib/game-master/), rolling with [dice](../../adapters/stdlib/dice/) |
 | checkers, a logic grid | games played straight onto the record | [checkers](../../adapters/stdlib/checkers/), [catgrid](../../adapters/stdlib/catgrid/) |
 | [check.md](check.md) | the table's own check: every game played again, every house rule's standing | stack |
@@ -142,6 +144,36 @@ For the start of the next session. It has two parts:
 - **For the GM's eyes.** The latest night's notes, typed or scanned, each
   line cited; every promise made for next time; and what the table said no
   to. The binder is the GM's, so none of it is read aloud.
+
+## Between sessions
+
+    python demo/game-box/ideas.py  --table DIR [--seed TEXT]
+    python demo/game-box/author.py DIR/stories/wasp-nest.md --to DIR/worlds/wasp-nest.json
+
+**Ideas from the box.** `ideas.py` builds a story-seed grammar out of the
+box's own words: the characters and places of the story last played, the
+binder's monsters and people, the threads promised for next time, and what
+the table made true. The oracle-text add-on deals from it with willow's
+seeded stream, so a seed deals the same ideas again:
+
+    - What if Pell finds out where the springs go, and doesn't tell the others?
+    - Because the red button is bait, Prince Aldric owes someone at the table a favour.
+    - At the gear cellar, Brann comes face to face with the clockwork hound.
+
+It lists what the binder set up and no session has played (the spring
+wasps, before the fifth night), every promise still open, and one passage
+the GM wrote and may have forgotten, drawn by surprise. Nothing here is
+canon or handed in: an idea the GM likes goes into the binder, or a story.
+
+**Stories written as markdown.** A new story, or the next chapter of one,
+in headings and `key: value` lines (the shape is in author.py), made into a
+world by `author.py` and checked by game-master. [The wasp nest](stories/wasp-nest.md)
+picks the cellar up a week on: the springs lead up into a nest where Old
+Vell's lamp may be; the wasps come out only if the climb goes badly; the
+table's guest, if one was sealed, has seen Cogwen's machine before; and it
+ends on "what is Cogwen building?". A line author.py can't read is refused
+with its number, and a world game-master wouldn't play with game-master's
+reason.
 
 ## A session, played by code
 

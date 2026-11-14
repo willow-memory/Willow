@@ -95,6 +95,9 @@ def cmd_open(table: Path, key: Path, now: str) -> int:
     table.mkdir(parents=True)
     shutil.copytree(BINDER, pile)
     shutil.copytree(WORLDS, table / "worlds")
+    shutil.copytree(
+        HERE / "stories", table / "stories"
+    )  # written between sessions; author.py makes worlds of them
     (
         table / "scans"
     ).mkdir()  # photos of the GM's handwritten pages, read at the end of the night

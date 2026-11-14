@@ -120,6 +120,7 @@ def test_open_lays_a_table_and_seals_nothing(t):
     ).stat().st_mode & 0o077 == 0  # the words list, owner-only, beside the pile
     assert (t.dir / "check.md").is_file() and (t.dir / "gm-stack.md").is_file()
     assert sorted(p.name for p in (t.dir / "worlds").iterdir()) == ["clockwork-cellar.json", "lantern-fair.json"]  # fmt: skip
+    assert (t.dir / "stories" / "wasp-nest.md").is_file()
     assert t.k("verify").returncode == 0
 
 
@@ -511,3 +512,69 @@ def test_recap_reads_aloud_only_what_the_table_made_true_last_time_first(t):
         "sessions/2026-10-24.md:5  Brann wanted to bring a friend. I said next time."
         in gm_only
     )
+
+
+# ── between sessions ─────────────────────────────────────────────────────────
+def test_ideas_are_dealt_from_the_box_again_from_the_same_seed(t):
+    t.open()
+    t.night()
+    first = py(HERE / "ideas.py", "--table", t.dir, "--seed", "between nights")
+    again = py(HERE / "ideas.py", "--table", t.dir, "--seed", "between nights")
+    seeds = lambda got: got.stdout.split("## Set up")[0]  # noqa: E731
+    assert first.returncode == 0 and seeds(first) == seeds(again)
+    dealt = [ln for ln in seeds(first).splitlines() if ln.startswith("  - ")]
+    assert len(dealt) == 5
+    for name in (
+        "Tamsin",
+        "Oro",
+        "stalls",
+    ):  # the cellar was played: its ideas, not the fair's
+        assert name not in seeds(first)
+    assert (
+        "  - Spring wasps  (monsters/)" in first.stdout
+    )  # set up in the binder, never in a session
+    assert "Next time: where the springs go." in first.stdout
+    assert "Something you wrote and forgot" in first.stdout
+
+
+def test_a_story_written_as_markdown_is_a_world_game_master_plays(t):
+    t.open()
+    made = py(HERE / "author.py", t.dir / "stories" / "wasp-nest.md", "--to", t.dir / "worlds" / "wasp-nest.json")  # fmt: skip
+    assert made.returncode == 0 and "The Wasp Nest, 2 scenes, 6 beats" in made.stdout
+    got = t.night(world="wasp-nest")
+    assert got.returncode == 0 and "The Wasp Nest, played to its end" in got.stdout
+    played = [b.split(":")[0] for b in t.beats()]
+    assert played[0] == "climb" and ("wasps" in played) == (
+        t.beats()[0] != "climb:strong"
+    )
+    assert "guest" not in played  # no guest offered: that beat never comes
+    again = py(HERE / "author.py", t.dir / "stories" / "wasp-nest.md", "--to", t.dir / "worlds" / "wasp-nest.json")  # fmt: skip
+    assert again.returncode == 2 and "never written over" in again.stderr
+
+
+@pytest.mark.parametrize(
+    "text, says",
+    [
+        ("# A story\n\ncolour: blue\n", "line 3: 'colour' isn't a story's"),
+        ("# A story\n## Characters\n- pell: Pell\n", "line 3: a character is"),
+        (
+            "# A story\n\n### A beat before any scene\n",
+            "line 3: a beat comes inside a scene",
+        ),
+    ],
+)
+def test_a_story_that_isnt_one_is_refused_naming_its_line(tmp_path, text, says):
+    (tmp_path / "s.md").write_text(text)
+    got = py(HERE / "author.py", tmp_path / "s.md")
+    assert got.returncode == 2 and says in got.stderr, got.stderr
+
+
+def test_a_story_game_master_wouldnt_play_is_refused_with_its_reason(tmp_path):
+    text = (
+        (HERE / "stories" / "wasp-nest.md")
+        .read_text()
+        .replace("suggests: Wit", "suggests: Charm")
+    )
+    (tmp_path / "s.md").write_text(text)
+    got = py(HERE / "author.py", tmp_path / "s.md")
+    assert got.returncode == 2 and "'Charm' is not a stat" in got.stderr

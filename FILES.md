@@ -2179,6 +2179,7 @@ willow/
 
 ```
 │   ├── game-box/
+│   │   ├── author.py         a story written as markdown, made into a world game-master plays
 │   │   ├── binder/
 │   │   │   ├── house-rules.md House rules
 │   │   │   ├── monsters/
@@ -2196,10 +2197,13 @@ willow/
 │   │   ├── gm-end.md         the game master's end of the night
 │   │   ├── gm-stack.md       the game master's prep sheet
 │   │   ├── gm-words.txt
+│   │   ├── ideas.py          story ideas between sessions, made from what's in the box
 │   │   ├── open_table.py     a game table set up from the box, with nothing sealed
 │   │   ├── sample-scans/
 │   │   │   └── 2026-11-21.jpg
 │   │   ├── session.py        a session at the table played by code, as far as it goes without the person
+│   │   ├── stories/
+│   │   │   └── wasp-nest.md  The Wasp Nest
 │   │   ├── worlds/
 │   │   │   ├── clockwork-cellar.json
 │   │   │   └── lantern-fair.json
