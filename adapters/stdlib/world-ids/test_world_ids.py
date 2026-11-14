@@ -101,3 +101,10 @@ def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):
     assert got.returncode == 2
     got = run(str(HERE / "world_ids.py"), "--box", str(tmp_path))
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+def test_two_paths_in_a_real_box_are_refused_not_one_of_them_named(tmp_path):
+    b = box(tmp_path, {"a.md": "One.\n", "b.md": "Two.\n"})
+    got = run(str(HERE / "world_ids.py"), "--box", str(b), "a.md", "b.md")
+    assert got.returncode == 2 and "world_ids.py" in got.stderr
+    assert got.stdout == ""

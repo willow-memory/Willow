@@ -154,3 +154,22 @@ def test_zero_generations_is_the_first_board_alone(tmp_path):
     b = make(tmp_path)
     got = run("--box", str(b), "play", "--generations", "0", "--seed", "z", *NOW)
     assert got.returncode == 0 and "after 0 generations" in got.stdout
+
+
+def test_the_stream_rejects_past_its_cap_and_replays_word_for_word():
+    """A seeded stream replays exactly (its promise), so its draws are pinned.
+    k = 3 << 30 puts the cap at 3 << 30, rejecting a quarter of all words:
+    the third word, 3913929810, is past it and drawn again, so a cap moved
+    either way, or a counter that steps by more than one, draws otherwise."""
+    s = lf.Stream(b"seed")
+    assert [s.u32() for _ in range(4)] == [
+        439407552,
+        1927608750,
+        3913929810,
+        1422432220,
+    ]
+    s = lf.Stream(b"seed")
+    got = [s.below(3 << 30) for _ in range(8)]
+    assert got == [439407552, 1927608750, 1422432220, 799538456,
+                   611338437, 2007642807, 2712823856, 2954991248]  # fmt: skip
+    assert all(x < 3 << 30 for x in got) and s.n == 11, "three words rejected"

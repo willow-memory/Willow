@@ -151,3 +151,24 @@ def test_the_readers_are_the_cards_that_say_role_reads():
     assert all(
         r["script"] is None or r["script"].suffix == ".py" for r in known.values()
     )
+
+
+def test_a_stack_whose_only_step_names_a_path_names_no_steps(tmp_path):
+    stack = tmp_path / "stack.md"
+    stack.write_text("# s\n## read\n- adapters/stdlib/mastodon -- mirror\n")
+    got = run("--from", str(tmp_path), "--stack", str(stack))
+    assert got.returncode == 2 and "names no steps" in got.stderr
+
+
+def test_the_printed_report_heads_each_named_group_and_caps_the_where_column(folder):
+    got = run("--from", str(folder))
+    assert got.returncode == 42, got.stderr
+    assert "## no reader for them yet" in got.stdout and "## None" not in got.stdout
+    doc = nk.report("new-kinds", "populated", "said",
+                    [(None, [("x" * 70, "long")]), ("named", [(".a", "short")])])  # fmt: skip
+    assert nk.report_text(doc).splitlines() == [
+        "new-kinds: populated, said",
+        f"  {'x' * 70}  long",
+        "## named",
+        f"  {'.a':<60}  short",
+    ]

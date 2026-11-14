@@ -120,3 +120,33 @@ def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):
     b = box(tmp_path)
     got = tarot_cmd(b, "draw", "3", "--stray")
     assert got.returncode == 2 and "play_tarot.py" in got.stderr
+
+
+def test_the_stream_rejects_past_its_cap_and_replays_word_for_word():
+    """A seeded stream replays exactly (its promise), so its draws are pinned.
+    k = 3 << 30 puts the cap at 3 << 30, rejecting a quarter of all words:
+    the third word, 3913929810, is past it and drawn again, so a cap moved
+    either way, or a counter that steps by more than one, draws otherwise."""
+    s = tr.Stream(b"seed")
+    assert [s.u32() for _ in range(4)] == [
+        439407552,
+        1927608750,
+        3913929810,
+        1422432220,
+    ]
+    s = tr.Stream(b"seed")
+    got = [s.below(3 << 30) for _ in range(8)]
+    assert got == [439407552, 1927608750, 1422432220, 799538456,
+                   611338437, 2007642807, 2712823856, 2954991248]  # fmt: skip
+    assert all(x < 3 << 30 for x in got) and s.n == 11, "three words rejected"
+
+
+def test_a_seeded_deal_turns_some_cards_and_not_others():
+    """A seeded deal replays exactly, each card's coin included: pinned."""
+    assert tr.deal(5, "ab" * 32)["cards"] == [
+        ["Five of Wands", False],
+        ["Six of Pentacles", True],
+        ["Page of Pentacles", True],
+        ["The Fool", True],
+        ["Four of Swords", True],
+    ]

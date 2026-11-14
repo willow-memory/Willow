@@ -224,6 +224,32 @@ def test_an_iphone_sms_db_under_its_hashed_name(tmp_path):
     )
 
 
+def test_an_attributed_body_without_its_words_is_no_text(tmp_path):
+    """A body with no NSString, or one that ends where its words would
+    start, holds no words: the message is (no text), never bytes guessed at."""
+    folder, to = tmp_path / "phone", tmp_path / "mirror"
+    folder.mkdir()
+    con = sqlite3.connect(folder / "sms.db")
+    con.executescript(
+        "CREATE TABLE handle (ROWID INTEGER PRIMARY KEY, id TEXT);"
+        "CREATE TABLE message (ROWID INTEGER PRIMARY KEY, date INTEGER, is_from_me INTEGER,"
+        " text TEXT, attributedBody BLOB, handle_id INTEGER);"
+        "INSERT INTO handle VALUES (1, '+15550100');"
+    )  # fmt: skip
+    apple = DEC3 - 978307200
+    for rowid, body in ((1, b"\x04\x0bstreamtyped\x81words"), (2, b"\x84NSString\x01\x94\x84\x01+")):  # fmt: skip
+        con.execute("INSERT INTO message VALUES (?, ?, 0, NULL, ?, 1)", (rowid, apple + rowid * 60, body))  # fmt: skip
+    con.commit()
+    con.close()
+    got = mirror(folder, to, "--tz", "UTC")
+    assert got.returncode == 0, got.stderr
+    assert out_of(to, "sms.db") == (
+        "# +15550100\n\n"
+        "2024-12-03 00:01  +15550100: (no text)\n"
+        "2024-12-03 00:02  +15550100: (no text)\n"
+    )
+
+
 def test_an_older_iphone_db_without_chats_or_attributed_bodies(tmp_path):
     folder, to = tmp_path / "phone", tmp_path / "mirror"
     folder.mkdir()

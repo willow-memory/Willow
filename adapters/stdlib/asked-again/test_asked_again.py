@@ -160,3 +160,16 @@ def test_only_bite_rows_are_counted():
     ]
     got = ag.repeats(rows)
     assert list(got) == ["q"] and got["q"]["times"] == 2
+
+
+def test_one_question_by_its_words_offers_standing_only_at_the_offer(tmp_path):
+    """Asked by its words, the line offers to make it standing at the offer
+    rung, and says nothing of it before."""
+    b = box(tmp_path)
+    q = "how much sun do tomatoes want"
+    ask(b, q, 2)
+    got = run(str(HERE / "asked_again.py"), "--box", str(b), q)
+    assert "asked 2 times" in got.stdout and "standing?" not in got.stdout
+    ask(b, q, 1)
+    got = run(str(HERE / "asked_again.py"), "--box", str(b), q)
+    assert "\n  make it standing? approve an answer for it" in got.stdout

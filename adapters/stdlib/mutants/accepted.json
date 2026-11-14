@@ -1,15 +1,6 @@
 {
-  "across": {
-    "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
-  },
-  "again": {
-    "0cc8444c7793": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
-  },
   "agents-md-check": {
     "00b8e1df6074": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
-  },
-  "all": {
-    "7ec175d12b0a": "EVERY is a cap no folder reaches; 10**9 and 10**10 serve the same passages."
   },
   "assistant-scores": {
     "37337c7fbb46": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
@@ -20,9 +11,6 @@
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
   },
-  "dice5e": {
-    "10e98042170d": "A term's sign is only ever -1 or 1, so `sign < 0` and `sign < 1` pick the same terms."
-  },
   "flashcards": {
     "02e79d23c4db": "`last` is None only on a card's first review, when `card` is None too and step() returns before it reads `days`, so the days passed there (0 or 1) change no result."
   },
@@ -32,24 +20,20 @@
   "lesson-time": {
     "05dbd1b2d85d": "said_at's starting value is never read: a plan that states its time sets said_at to that line, and one that states none is skipped or shown as from --period, so the starting 0 changes no result."
   },
-  "live": {
-    "099e4afa6871": "How much of what a program said is quoted in a failure's reason: one character more is the same message, and the state, the part a person and CI act on, is unchanged.",
-    "03f95b5e44db": "Where the DevTools message counter starts: replies are matched to requests by id, so starting at 1 instead of 0 matches the same replies."
+  "many-boxes": {
+    "041037f2efda": "`a.startswith(\"--\") or not a` only refuses a token the later `doc not in DOCS` check refuses anyway (no DOC name starts with -- or is empty), so and/or here changes no result."
   },
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },
-  "pins": {
-    "1eb781c3ac07": "unpinned.py's own repo-root insert on sys.path is redundant: importing advisories inserts the same root and imports kernel, so changing this index only adds a directory that never supplies kernel."
+  "play-dice5e": {
+    "10e98042170d": "A term's sign is only ever -1 or 1, so `sign < 0` and `sign < 1` pick the same terms."
   },
   "red-on-main": {
     "3fe0b0e60f12": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
   "restack-open": {
     "2007109c09fd": "How much of git's own message a refusal quotes: any length names the same git failure, and only a message longer than 200 characters would read differently."
-  },
-  "scan": {
-    "09336b67f2ff": "Only narrows candidates: the kernel's own rank re-checks each one, so an or here adds passages it drops, never one it serves."
   },
   "secrets-audit": {
     "245feee800fc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."

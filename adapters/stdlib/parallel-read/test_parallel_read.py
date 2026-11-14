@@ -141,6 +141,21 @@ def test_two_folders_with_the_same_name_are_refused(tmp_path):
     assert got.returncode == 2 and "share a name" in got.stderr
 
 
+def test_a_reader_that_refuses_is_refused_with_its_own_last_line(tmp_path):
+    """Its standard error says why; when it says nothing there, its output
+    does."""
+    a, _ = two_vaults(tmp_path)
+    for said, where in (("print('locked', file=sys.stderr)", "err"),
+                        ("print('looked'); print('locked', file=sys.stderr)", "both"),
+                        ("print('locked')", "out")):  # fmt: skip
+        NOTES.write_text(
+            f"import sys\n\nif __name__ == '__main__':\n    {said}\n    sys.exit(2)\n"
+        )
+        got = run("--reader", "notes", "--from", str(a), "--to", str(tmp_path / where))
+        assert got.returncode == 2, where
+        assert got.stderr == f"refused: notes on {a}: locked\n", where
+
+
 def test_all_empty_folders_escalate(tmp_path):
     (tmp_path / "e1").mkdir()
     (tmp_path / "e2").mkdir()

@@ -141,3 +141,13 @@ def test_a_bad_command_line_is_refused(tmp_path):
         got = run(*argv)
         assert got.returncode == 2 and "predict.py" in got.stderr, argv
     assert len(rows(Path(box))) == 1, "nothing written by a refusal"
+
+
+def test_the_where_column_is_never_wider_than_sixty():
+    """A long where is printed whole, and the others line up at sixty, not
+    at its length."""
+    doc = pr.report("predict", "populated", "said", [(None, [("w" * 70, "long"), ("a", "short")])])  # fmt: skip
+    assert pr.report_text(doc).splitlines()[1:] == [
+        "  " + "w" * 70 + "  long",
+        "  a" + " " * 59 + "  short",
+    ]

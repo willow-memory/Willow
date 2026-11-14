@@ -119,3 +119,8 @@ def test_one_roll_is_said_as_one(tmp_path):
     assert (
         "1 roll on the record; every one holds." in run("--box", str(b), "check").stdout
     )
+
+
+def test_a_roll_with_no_count_is_one_die():
+    assert dc.parse("d6") == ([(1, 1, 6)], 0)
+    assert dc.parse("d20+3") == ([(1, 1, 20)], 3)

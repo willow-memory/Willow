@@ -117,3 +117,11 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
         got = run(*argv)
         assert got.returncode == 2 and "what_changed.py" in got.stderr
     assert "not a kernel box" in run("--box", str(tmp_path)).stderr
+
+
+def test_one_file_on_the_first_check_is_said_as_one(tmp_path):
+    pile, b = make(tmp_path)
+    (pile / "care" / "log.txt").unlink()
+    (pile / "scan.pdf").unlink()
+    got = run("--box", str(b), "--now", "2026-10-20T09:12:00Z")
+    assert got.returncode == 0 and "First check: 1 file fingerprinted." in got.stdout

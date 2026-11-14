@@ -1412,7 +1412,7 @@ def test_a_home_that_isnt_there_is_refused_before_anything_listens(tmp_path, cap
 
 # ── a model's sentence about an answer, held to what code said ──────────────
 SAY_HERE = all((br.STDLIB / d / f).is_file()
-               for d, f in (("say", "model_sentence.py"), ("say-check", "sentence_check.py")))  # fmt: skip
+               for d, f in (("model-sentence", "model_sentence.py"), ("sentence-check", "sentence_check.py")))  # fmt: skip
 FACT = "Your files hold 1 passage for it; the first is at dentist.txt:1"
 
 
@@ -1512,6 +1512,22 @@ def test_with_no_model_named_none_is_asked_and_small_talk_is_never_said(tmp_path
         assert t.req("GET", "/say?turn=99")[1] == "" and t.req("GET", "/say")[1] == ""
     finally:
         t.close()
+
+
+@pytest.mark.skipif(not SAY_HERE, reason="the say or say-check add-on isn't here")
+def test_a_say_is_about_the_turn_it_names_and_no_other(tmp_path):
+    s = opened(make_box(tmp_path), say="tiny:1b")
+    asked = []
+    s.willow.sayer = lambda prompt: asked.append(prompt) or "The dentist [b1]."
+    try:
+        s.post("/ask", q="when is the dentist")
+        s.post("/ask", q="what should I bring to the dentist")
+        s.req("GET", "/say?turn=1")
+        (prompt,) = asked
+        assert "The human asked: when is the dentist" in prompt
+        assert "bring" not in prompt
+    finally:
+        s.close()
 
 
 def test_a_say_with_no_model_named_is_refused(tmp_path, capsys):

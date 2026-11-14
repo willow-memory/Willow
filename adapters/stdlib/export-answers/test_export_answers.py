@@ -124,3 +124,31 @@ def test_an_approval_whose_proposal_file_changed_is_left_out_and_said(tmp_path):
     assert got.returncode == 42 and "Traceback" not in got.stderr
     f.write_text(held)
     assert run(str(HERE / "export_answers.py"), "--box", str(b)).returncode == 0
+
+
+def test_a_cite_no_bite_served_is_named_by_its_first_twelve(tmp_path):
+    """A cite the record never served has no file and line to say, so it is
+    named by the first 12 characters of its id."""
+    import importlib.util
+
+    b = approved(tmp_path)
+    spec = importlib.util.spec_from_file_location("kernel", KERNEL)
+    k = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(k)
+    rows, _ = k.read(b / "record.jsonl")
+    last = [r for r in rows if r["kind"] == "bite"][-1]
+    row = {"path": "far.md", "data": "Far away.", "cites": ["abcdefghijklmnop"],
+           "claim": "a passage no bite served"}  # fmt: skip
+    subj = subject(row)
+    (b / "proposals" / f"{subj[9:]}.json").write_text(json.dumps(row))
+    k.append(b, NOW[1], "proposal", subject=subj, verdict="pass", bite_row=last["n"])
+    assert run(str(KERNEL), "seal", "--box", str(b), subj, *NOW).returncode == 0
+    md = run(str(HERE / "export_answers.py"), "--box", str(b)).stdout
+    assert "## Far away." in md and "- cites: abcdefghijkl\n" in md
+
+
+def test_the_log_leaves_nothing_out_and_waits_on_nothing(tmp_path):
+    """The log is counts of days, not approvals, so none is ever left out."""
+    b = approved(tmp_path)
+    got = run(str(HERE / "export_answers.py"), "--box", str(b), "--log")
+    assert got.returncode == 0 and got.stderr == ""
