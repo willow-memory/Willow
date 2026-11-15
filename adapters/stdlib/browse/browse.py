@@ -1465,11 +1465,18 @@ class Handler(BaseHTTPRequestHandler):
             given = parse_qs(url.query).get("key", [""])[0]
             if not hmac.compare_digest(given, self.willow.token):
                 return self.refuse("That link is from another start, or was cut short.")
+            # Not a redirect: a link opened from another app (a phone's
+            # terminal, a chat) is a cross-site start, and a browser keeps a
+            # Strict cookie off every hop of it, so "/" behind a redirect is
+            # refused. This page moves on by itself, a step of its own.
             return self.send(
-                303,
-                "",
+                200,
+                page(
+                    "Opening willow",
+                    "<p><a href=/>Open your folder's page</a></p>",
+                    head='<meta http-equiv=refresh content="0;url=/">',
+                ),
                 {
-                    "Location": "/",
                     "Set-Cookie": f"{COOKIE}={self.willow.token}; HttpOnly; SameSite=Strict; Path=/",
                 },
             )
