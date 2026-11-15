@@ -568,6 +568,17 @@ def test_the_page_names_every_role_a_person_can_fill():
             assert f"{{key:'{key}',title:'{title}'" in page
 
 
+def test_the_page_is_sized_for_a_phone():
+    """Without the viewport line a phone's browser lays the page out a
+    desktop wide and blows the paragraphs up on its own, the lists left tiny
+    (seen on an Android phone, 2026-11-15)."""
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    head = page.split("</head>")[0]
+    assert (
+        '<meta name="viewport" content="width=device-width, initial-scale=1">' in head
+    )
+
+
 def run(capsys, *argv):
     code = canvas.main([str(a) for a in argv])
     out = capsys.readouterr()
