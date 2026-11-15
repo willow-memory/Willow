@@ -243,3 +243,28 @@ def test_a_suggestion_you_declined_no_longer_waits(tmp_path):
     subj = dg.digest(b, TODAY)["waiting"]["items"][0]["subject"]
     assert k("decline", "--box", str(b), subj, *NOW).returncode == 0
     assert dg.digest(b, TODAY)["waiting"] == {"state": "empty", "items": []}
+
+
+def test_a_suggestion_passed_twice_in_an_older_record_waits_once(tmp_path):
+    """The kernel now refuses a re-proposal (CONST-V-11); a record from
+    before that may hold one subject passed twice, and it waits once."""
+    b = life(tmp_path)
+    rows = dg.kernel.read(b / "record.jsonl")[0]
+    held = next(r for r in rows if r.get("subject") in dg.kernel.waiting(b, rows))
+    dg.kernel.append(b, NOW[1], "proposal", subject=held["subject"], verdict="pass",
+                     bite_row=held["bite_row"])  # fmt: skip
+    doc = dg.digest(b, TODAY)
+    assert [w["answer"] for w in doc["waiting"]["items"]] == ["30 October"]
+
+
+def test_a_long_place_is_cut_to_sixty_columns_and_the_rest_line_up_there():
+    """A subject is 73 characters; the column it sets is held to 60, so a
+    short place beside it is padded to 60, not to the subject."""
+    subj = "proposal:" + "a" * 64
+    doc = {"addon": "digest", "state": "populated", "said": "1 waiting",
+           "groups": [{"name": "Waiting for you",
+                       "rows": [{"where": subj, "what": "Six."},
+                                {"where": "notes.md:1", "what": "Seven."}]}]}  # fmt: skip
+    lines = dg.report_text(doc).splitlines()
+    assert lines[2] == f"  {subj}  Six."
+    assert lines[3] == "  notes.md:1" + " " * 50 + "  Seven."

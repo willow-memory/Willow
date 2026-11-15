@@ -168,7 +168,7 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
     fine.append(
         f"{len(rows)} row{'s' if len(rows) != 1 else ''} hold{'' if len(rows) != 1 else 's'}"
     )
-    good, no = kernel.sealed(box, rows), kernel.declined(box, rows)
+    good = kernel.sealed(box, rows)
     forged = [
         r["n"] for r in rows if r["kind"] == "seal" and r.get("subject") not in good
     ]
@@ -177,15 +177,7 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
         for s, row in good.items()
         if kernel.standing(box, rows, s, row)[2] is not None
     ]
-    waiting = (
-        {
-            r["subject"]
-            for r in rows
-            if r["kind"] == "proposal" and r.get("verdict") == "pass"
-        }
-        - set(good)
-        - set(no)
-    )
+    waiting = kernel.waiting(box, rows)  # once a thing (CONST-V-11)
     fine.append(f"{len(good) - len(drifted)} approved, {len(waiting)} waiting")
     if forged:
         needs.append(

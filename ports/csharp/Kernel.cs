@@ -1378,6 +1378,36 @@ public static class Kernel
 
     static Dictionary<string, JObj> Declined(string box, List<JObj> rows) => Sealed(box, rows, new List<string>(), "decline");
 
+    // What waits on the person: each proposal that passed the door, neither
+    // sealed nor declined, by subject, its first passing row; `order` gets the
+    // subjects in the order first proposed. Counted once a thing to decide
+    // (CONST-V-11).
+    static Dictionary<string, JObj> Waiting(string box, List<JObj> rows, List<string> order)
+    {
+        var good = Sealed(box, rows, new List<string>());
+        var no = Declined(box, rows);
+        var o = new Dictionary<string, JObj>(StringComparer.Ordinal);
+        foreach (var r in rows)
+            if (r.Get("kind") is "proposal" && r.Get("verdict") is "pass" && r.Get("subject") is string s
+                && !good.ContainsKey(s) && !no.ContainsKey(s) && !o.ContainsKey(s))
+            { o[s] = r; order.Add(s); }
+        return o;
+    }
+
+    // Why a suggestion that passed the door isn't offered again, or null: what
+    // waits, was sealed or was declined is offered once (CONST-V-11).
+    static string? Offered(string box, List<JObj> rows, string subj)
+    {
+        var ways = new (string Why, Dictionary<string, JObj> Held)[] {
+            ("you approved it at row", Sealed(box, rows, new List<string>())),
+            ("you declined it at row", Declined(box, rows)),
+            ("already waiting on your seal, row", Waiting(box, rows, new List<string>())),
+        };
+        foreach (var (why, held) in ways)
+            if (held.ContainsKey(subj)) return $"{why} {PyStr(held[subj]["n"])}";
+        return null;
+    }
+
     static Dictionary<string, JObj> Sealed(string box, List<JObj> rows, List<string> order, string act = "seal")
     {
         var (key, _) = ReadKey((string)Config(box)["key"]!, box);
@@ -1519,6 +1549,8 @@ public static class Kernel
             try { prop = Parser.Loads(lines[i]); } catch (Exception e) when (e is JsonError || e is FormatException || e is OverflowException) { parsed = false; }
             var why = Door(prop, parsed, served);
             if (why == null)
+                why = Offered(box, ReadRecord(System.IO.Path.Combine(box, "record.jsonl")).Rows, SubjectOf((JObj)prop!));
+            if (why == null)
             {
                 var p = (JObj)prop!;
                 var subj = SubjectOf(p);
@@ -1607,10 +1639,10 @@ public static class Kernel
         var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
         if (RefusedBreaks(r)) return REFUSED;
         var good = Sealed(box, r.Rows, new List<string>());
-        var no = Declined(box, r.Rows);
-        var waiting = r.Rows.Where(x => x.Get("kind") is "proposal" && x.Get("verdict") is "pass"
-                && !(x.Get("subject") is string s && (good.ContainsKey(s) || no.ContainsKey(s))))
-            .Select(x => (string)x["subject"]!).ToList();
+        // what they declined is not offered again (CONST-V-10), and what waits
+        // is counted once (CONST-V-11)
+        var waiting = new List<string>();
+        Waiting(box, r.Rows, waiting);
         var tip = r.Rows.Count > 0 ? r.Rows[^1]["hash"] : GENESIS;
         Append(box, ts, "out", "kernel", Obj("waiting", new BigInteger(waiting.Count), "tip", tip));
         foreach (var s in waiting) Console.WriteLine($"waiting on your seal: {s}");

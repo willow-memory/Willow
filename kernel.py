@@ -734,6 +734,33 @@ def declined(box: Path, rows: list[dict]) -> dict[str, dict]:
     return sealed(box, rows, "decline")
 
 
+def waiting(box: Path, rows: list[dict]) -> dict[str, dict]:
+    """What waits on the person: each proposal that passed the door and that
+    they neither sealed nor declined, by subject, its first passing row, in
+    the order first proposed. Counted once a thing to decide (CONST-V-11)."""
+    good, no = sealed(box, rows), declined(box, rows)
+    out: dict[str, dict] = {}
+    for r in rows:
+        if r["kind"] == "proposal" and r.get("verdict") == "pass":
+            s = r.get("subject")
+            if s not in good and s not in no and s not in out:
+                out[s] = r
+    return out
+
+
+def offered(box: Path, rows: list[dict], subj: str) -> str | None:
+    """Why a suggestion that passed the door isn't offered again, or None:
+    what waits, was sealed or was declined is offered once (CONST-V-11)."""
+    for why, held in (
+        ("you approved it at row", sealed(box, rows)),
+        ("you declined it at row", declined(box, rows)),
+        ("already waiting on your seal, row", waiting(box, rows)),
+    ):
+        if subj in held:
+            return f"{why} {held[subj]['n']}"
+    return None
+
+
 def bite(box: Path, text: str, ts: str) -> int:
     rows, breaks = read(box / "record.jsonl")
     if breaks:
@@ -819,6 +846,8 @@ def propose(box: Path, lines: list[str], ts: str) -> int:
         except ValueError:
             prop = None
         why = door(prop, served)
+        if why is None:
+            why = offered(box, read(box / "record.jsonl")[0], subject_of(prop))
         if why is None:
             subj = subject_of(prop)
             (box / "proposals").mkdir(exist_ok=True)
@@ -941,23 +970,18 @@ def out(box: Path, ts: str) -> int:
     if breaks:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return REFUSED
-    good, no = sealed(box, rows), declined(box, rows)
-    # what they declined is not offered again (CONST-V-10)
-    waiting = [
-        r["subject"] for r in rows
-        if r["kind"] == "proposal" and r.get("verdict") == "pass"
-        and r["subject"] not in good and r["subject"] not in no
-    ]  # fmt: skip
-    append(
-        box, ts, "out", waiting=len(waiting), tip=rows[-1]["hash"] if rows else GENESIS
-    )
-    for s in waiting:
+    good = sealed(box, rows)
+    # what they declined is not offered again (CONST-V-10), and what waits is
+    # counted once (CONST-V-11)
+    owed = waiting(box, rows)
+    append(box, ts, "out", waiting=len(owed), tip=rows[-1]["hash"] if rows else GENESIS)
+    for s in owed:
         print(f"waiting on your seal: {s}")
-    print(f"{len(rows) + 1} rows; {len(good)} sealed; {len(waiting)} waiting")
-    return ESCALATE if waiting else ALIVE
+    print(f"{len(rows) + 1} rows; {len(good)} sealed; {len(owed)} waiting")
+    return ESCALATE if owed else ALIVE
 
 
-# ── the twelve beats, as the test ───────────────────────────────────────────
+# ── the thirteen beats, as the test ─────────────────────────────────────────
 def test() -> None:
     """Runs in a temporary directory, never in a box of yours."""
     import ast
@@ -1145,17 +1169,37 @@ def test() -> None:
         for r in read(box / "record.jsonl")[0]:
             held |= set(words(" ".join(kept({**r, **dict.fromkeys(LABELS)}))))
         assert "tomatoes" in said and not said & held, said & held
-        # 11. the chain verifies, every step on it
+        # 11. offered once, counted once (CONST-V-11): what was sealed, was
+        #     declined or waits is refused at the door, and counted once
+        quiet(bite, box, "tomatoes want how much sun", ts)
+        f.write_text(json.dumps(row) + "\n")
+        said = quiet(propose, box, f.read_text().splitlines(), ts)[1]
+        assert said.startswith("refused  line 0: you approved it at row"), said
+        quiet(bite, box, "water them at the root?", ts)
+        deep = {**unsealed, "data": "Deep."}
+        f.write_text("".join(json.dumps(x) + "\n" for x in (unsealed, deep, deep)))
+        said = quiet(propose, box, f.read_text().splitlines(), ts)[1].splitlines()
+        assert said[0].startswith("refused  line 0: you declined it at row"), said
+        assert said[1] == f"pass  {subject_of(deep)}  waiting on your seal", said
+        assert said[2].startswith("refused  line 2: already waiting on your seal, row")
+        # a record from before the door: one subject passed twice, still once
+        rows = read(box / "record.jsonl")[0]
+        held = next(r for r in rows if r.get("subject") == subject_of(deep))
+        append(box, ts, "proposal", subject=held["subject"], verdict="pass",
+               bite_row=held["bite_row"])  # fmt: skip
+        code, said = quiet(out, box, ts)
+        assert code == ESCALATE and said.count("waiting on your seal") == 1
+        # 12. the chain verifies, every step on it
         rows, breaks = read(box / "record.jsonl")
         assert not breaks and [r["n"] for r in rows] == list(range(len(rows)))
-        # 12. one field of one past row edited: the chain refuses, and so does the next bite
+        # 13. one field of one past row edited: the chain refuses, and so does the next bite
         path = box / "record.jsonl"
         path.write_bytes(
             path.read_bytes().replace(b'"verdict":"pass"', b'"verdict":"fail"', 1)
         )
         assert quiet(verify, box)[0] == REFUSED
         assert quiet(bite, box, "how much sun do tomatoes want", ts)[0] == REFUSED
-    print("kernel: the twelve beats held")
+    print("kernel: the thirteen beats held")
 
 
 # ── the command line ────────────────────────────────────────────────────────

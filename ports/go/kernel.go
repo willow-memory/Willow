@@ -2406,6 +2406,61 @@ func bite(box, text, ts string) (int, error) {
 	return ESCALATE, nil
 }
 
+// waiting is what waits on the person: each proposal that passed the door,
+// neither sealed nor declined, by subject, its first passing row, in the
+// order first proposed. Counted once a thing to decide (CONST-V-11).
+func waiting(box string, rows []*Obj) (*bySubject, error) {
+	good, err := sealed(box, rows, "seal")
+	if err != nil {
+		return nil, err
+	}
+	no, err := sealed(box, rows, "decline")
+	if err != nil {
+		return nil, err
+	}
+	out := &bySubject{rows: map[string]*Obj{}}
+	for _, r := range rows {
+		if get(r, "kind") == "proposal" && get(r, "verdict") == "pass" {
+			s := pyStr(get(r, "subject"))
+			if !good.has(s) && !no.has(s) && !out.has(s) {
+				out.put(s, r)
+			}
+		}
+	}
+	return out, nil
+}
+
+// offered is why a suggestion that passed the door isn't offered again, or
+// nil: what waits, was sealed or was declined is offered once (CONST-V-11).
+func offered(box string, rows []*Obj, subj string) (*string, error) {
+	good, err := sealed(box, rows, "seal")
+	if err != nil {
+		return nil, err
+	}
+	no, err := sealed(box, rows, "decline")
+	if err != nil {
+		return nil, err
+	}
+	owed, err := waiting(box, rows)
+	if err != nil {
+		return nil, err
+	}
+	for _, w := range []struct {
+		why  string
+		held *bySubject
+	}{
+		{"you approved it at row", good},
+		{"you declined it at row", no},
+		{"already waiting on your seal, row", owed},
+	} {
+		if w.held.has(subj) {
+			why := w.why + " " + pyStr(get(w.held.rows[subj], "n"))
+			return &why, nil
+		}
+	}
+	return nil, nil
+}
+
 func propose(box string, lines []string, ts string) (int, error) {
 	r, err := record(box)
 	if err != nil {
@@ -2438,6 +2493,15 @@ func propose(box string, lines []string, ts string) (int, error) {
 			prop = nil
 		}
 		why := door(prop, served)
+		if why == nil {
+			now, err := record(box)
+			if err != nil {
+				return 0, err
+			}
+			if why, err = offered(box, now.rows, subjectOf(prop.(*Obj))); err != nil {
+				return 0, err
+			}
+		}
 		if why == nil {
 			p := prop.(*Obj)
 			subj := subjectOf(p)
@@ -2641,19 +2705,13 @@ func out(box, ts string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	no, err := sealed(box, r.rows, "decline")
+	// what they declined is not offered again (CONST-V-10), and what waits is
+	// counted once (CONST-V-11)
+	owed, err := waiting(box, r.rows)
 	if err != nil {
 		return 0, err
 	}
-	var waiting []string
-	for _, row := range r.rows {
-		if get(row, "kind") == "proposal" && get(row, "verdict") == "pass" {
-			s := pyStr(get(row, "subject"))
-			if !good.has(s) && !no.has(s) {
-				waiting = append(waiting, s)
-			}
-		}
-	}
+	waiting := owed.order
 	var tip interface{} = GENESIS
 	if len(r.rows) > 0 {
 		tip = get(r.rows[len(r.rows)-1], "hash")

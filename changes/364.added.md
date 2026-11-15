@@ -1,0 +1,1 @@
+`kernel.py`: Draft 0.17.0, V.11 *offered once, counted once*: `propose` refuses a suggestion you approved, declined or that already waits on you, and records why; `out` counts each thing waiting on you once; in all five ports, held to the vectors

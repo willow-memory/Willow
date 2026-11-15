@@ -12,7 +12,7 @@ makes the cuts; they're never written by hand.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,200 lines)
+├── kernel.py                 the whole program (about 1,250 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -55,7 +55,8 @@ willow/
 │   │   ├── 0007.md           III.6, the core reaches nothing that extends it: with 0008 to 0010, made 0.16.0
 │   │   ├── 0008.md           IV.10, the same question, the same answer: made 0.16.0
 │   │   ├── 0009.md           V.10, a no is final: made 0.16.0
-│   │   └── 0010.md           VI.8, the record keeps acts, not words: made 0.16.0
+│   │   ├── 0010.md           VI.8, the record keeps acts, not words: made 0.16.0
+│   │   └── 0011.md           V.11, offered once, counted once: made 0.17.0
 │   └── README.md             what the kernel answers for, and what it doesn't claim
 ```
 

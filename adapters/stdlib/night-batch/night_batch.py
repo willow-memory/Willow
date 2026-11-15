@@ -66,19 +66,17 @@ def when(ts: str) -> datetime | None:
 
 def settled(box: Path, rows: list[dict]) -> tuple[set[str], set[str]]:
     """(questions answered by a seal, questions with a suggestion waiting), by bite key."""
-    good, no = kernel.sealed(box, rows), kernel.declined(box, rows)
+    good = kernel.sealed(box, rows)
     answered = set()
     for subj, seal in good.items():
         _, asked, why = kernel.standing(box, rows, subj, seal)
         if why is None:
             answered.add(asked)
     waiting = set()
-    for r in rows:
-        if r["kind"] == "proposal" and r.get("verdict") == "pass":
-            if r["subject"] not in good and r["subject"] not in no:
-                key = kernel.proposed_under(rows, r["subject"])
-                if key is not None:
-                    waiting.add(key)
+    for subj in kernel.waiting(box, rows):  # once a thing (CONST-V-11)
+        key = kernel.proposed_under(rows, subj)
+        if key is not None:
+            waiting.add(key)
     return answered, waiting
 
 

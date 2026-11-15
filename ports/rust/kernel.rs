@@ -2681,6 +2681,42 @@ fn bite(box_: &str, text: &str, ts: &str) -> Res<i32> {
     Ok(if answers.is_empty() { ESCALATE } else { ALIVE })
 }
 
+/// What waits on the person: each proposal that passed the door, neither
+/// sealed nor declined, by subject, its first passing row, in the order first
+/// proposed. Counted once a thing to decide (CONST-V-11).
+fn waiting(box_: &str, rows: &[Obj]) -> Res<BySubject> {
+    let good = sealed(box_, rows, "seal")?;
+    let no = sealed(box_, rows, "decline")?;
+    let mut out = BySubject::default();
+    for r in rows {
+        if r.str("kind") == Some("proposal") && r.str("verdict") == Some("pass") {
+            let sj = r.get("subject").map(py_str).unwrap_or_default();
+            if !good.has(&sj) && !no.has(&sj) && !out.has(&sj) {
+                out.put(&sj, r.clone());
+            }
+        }
+    }
+    Ok(out)
+}
+
+/// Why a suggestion that passed the door isn't offered again, or None: what
+/// waits, was sealed or was declined is offered once (CONST-V-11).
+fn offered(box_: &str, rows: &[Obj], subj: &str) -> Res<Option<String>> {
+    for (why, held) in [
+        ("you approved it at row", sealed(box_, rows, "seal")?),
+        ("you declined it at row", sealed(box_, rows, "decline")?),
+        ("already waiting on your seal, row", waiting(box_, rows)?),
+    ]
+    .iter()
+    {
+        if held.has(subj) {
+            let n = py_str(held.rows[subj].get("n").unwrap_or(&Value::Null));
+            return Ok(Some(format!("{} {}", why, n)));
+        }
+    }
+    Ok(None)
+}
+
 fn propose(box_: &str, lines: &[String], ts: &str) -> Res<i32> {
     let bp = Path::new(box_);
     let r = record(box_)?;
@@ -2701,7 +2737,13 @@ fn propose(box_: &str, lines: &[String], ts: &str) -> Res<i32> {
         .collect();
     for (i, line) in lines.iter().enumerate() {
         let prop = loads(line).ok();
-        match door(prop.as_ref(), &served) {
+        let mut why = door(prop.as_ref(), &served).map(String::from);
+        if why.is_none() {
+            if let Some(Value::Obj(p)) = prop.as_ref() {
+                why = offered(box_, &record(box_)?.rows, &subject_of(p)?)?;
+            }
+        }
+        match why {
             None => {
                 let p = match prop {
                     Some(Value::Obj(p)) => p,
@@ -2745,7 +2787,7 @@ fn propose(box_: &str, lines: &[String], ts: &str) -> Res<i32> {
                     &obj(&[
                         ("verdict", s("refused")),
                         ("line", int(i as i64)),
-                        ("why", s(why)),
+                        ("why", s(&why)),
                     ]),
                 )?;
                 println!("refused  line {}: {}", i, why);
@@ -2956,14 +2998,9 @@ fn out(box_: &str, ts: &str) -> Res<i32> {
         return Ok(REFUSED);
     }
     let good = sealed(box_, &r.rows, "seal")?;
-    let no = sealed(box_, &r.rows, "decline")?;
-    let waiting: Vec<String> = r
-        .rows
-        .iter()
-        .filter(|x| x.str("kind") == Some("proposal") && x.str("verdict") == Some("pass"))
-        .map(|x| x.get("subject").map(py_str).unwrap_or_default())
-        .filter(|sj| !good.has(sj) && !no.has(sj))
-        .collect();
+    // what they declined is not offered again (CONST-V-10), and what waits is
+    // counted once (CONST-V-11)
+    let waiting: Vec<String> = waiting(box_, &r.rows)?.order;
     let tip = r
         .rows
         .last()

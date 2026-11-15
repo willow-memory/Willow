@@ -1243,6 +1243,34 @@ function sealed(box: string, rows: JMap[], act = "seal"): Map<string, JMap> {
 
 const declined = (box: string, rows: JMap[]) => sealed(box, rows, "decline");
 
+// What waits on the person: each proposal that passed the door, neither
+// sealed nor declined, by subject, its first passing row, in the order first
+// proposed. Counted once a thing to decide (CONST-V-11).
+function waiting(box: string, rows: JMap[]): Map<string, JMap> {
+  const good = sealed(box, rows);
+  const no = declined(box, rows);
+  const out = new Map<string, JMap>();
+  for (const r of rows) {
+    if (r.get("kind") === "proposal" && r.get("verdict") === "pass") {
+      const s = r.get("subject") as string;
+      if (!good.has(s) && !no.has(s) && !out.has(s)) out.set(s, r);
+    }
+  }
+  return out;
+}
+
+// Why a suggestion that passed the door isn't offered again, or null: what
+// waits, was sealed or was declined is offered once (CONST-V-11).
+function offered(box: string, rows: JMap[], subj: string): string | null {
+  const ways: [string, Map<string, JMap>][] = [
+    ["you approved it at row", sealed(box, rows)],
+    ["you declined it at row", declined(box, rows)],
+    ["already waiting on your seal, row", waiting(box, rows)],
+  ];
+  for (const [why, held] of ways) if (held.has(subj)) return `${why} ${held.get(subj)!.get("n")}`;
+  return null;
+}
+
 function refusedBreaks(r: Read): boolean {
   if (!r.breaks.length) return false;
   console.error(["refused:", ...r.breaks].join("\n  "));
@@ -1348,7 +1376,8 @@ function propose(box: string, lines: string[], ts: string): number {
     } catch {
       prop = undefined;
     }
-    const why = door(prop, served);
+    let why = door(prop, served);
+    if (why === null) why = offered(box, read(path.join(box, "record.jsonl")).rows, subjectOf(prop as JMap));
     if (why === null) {
       const p = prop as JMap;
       const subj = subjectOf(p);
@@ -1455,16 +1484,14 @@ function out(box: string, ts: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (refusedBreaks(r)) return REFUSED;
   const good = sealed(box, r.rows);
-  const no = declined(box, r.rows);
-  const waiting = r.rows
-    .filter((row) => row.get("kind") === "proposal" && row.get("verdict") === "pass"
-      && !good.has(row.get("subject") as string) && !no.has(row.get("subject") as string))
-    .map((row) => row.get("subject") as string);
+  // what they declined is not offered again (CONST-V-10), and what waits is
+  // counted once (CONST-V-11)
+  const owed = [...waiting(box, r.rows).keys()];
   const tip = r.rows.length ? r.rows[r.rows.length - 1].get("hash")! : T.GENESIS;
-  append(box, ts, "out", "kernel", obj(["waiting", BigInt(waiting.length)], ["tip", tip]));
-  for (const s of waiting) console.log(`waiting on your seal: ${s}`);
-  console.log(`${r.rows.length + 1} rows; ${good.size} sealed; ${waiting.length} waiting`);
-  return waiting.length ? ESCALATE : ALIVE;
+  append(box, ts, "out", "kernel", obj(["waiting", BigInt(owed.length)], ["tip", tip]));
+  for (const s of owed) console.log(`waiting on your seal: ${s}`);
+  console.log(`${r.rows.length + 1} rows; ${good.size} sealed; ${owed.length} waiting`);
+  return owed.length ? ESCALATE : ALIVE;
 }
 
 // ── the vectors: every case, answered, for compare.py ──────────────────────

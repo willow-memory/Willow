@@ -1486,6 +1486,32 @@ public final class Kernel {
         return sealed(box, rows, "decline");
     }
 
+    // What waits on the person: each proposal that passed the door, neither
+    // sealed nor declined, by subject, its first passing row, in the order
+    // first proposed. Counted once a thing to decide (CONST-V-11).
+    static Map<String, Map<String, Object>> waiting(Path box, List<Map<String, Object>> rows) throws IOException {
+        Map<String, Map<String, Object>> good = sealed(box, rows), no = declined(box, rows);
+        Map<String, Map<String, Object>> out = new LinkedHashMap<>();
+        for (Map<String, Object> r : rows)
+            if ("proposal".equals(r.get("kind")) && "pass".equals(r.get("verdict"))) {
+                Object s = r.get("subject");
+                if (!good.containsKey(s) && !no.containsKey(s) && !out.containsKey(s)) out.put((String) s, r);
+            }
+        return out;
+    }
+
+    // Why a suggestion that passed the door isn't offered again, or null: what
+    // waits, was sealed or was declined is offered once (CONST-V-11).
+    static String offered(Path box, List<Map<String, Object>> rows, String subj) throws IOException {
+        Map<String, Map<String, Object>> held = sealed(box, rows);
+        if (held.containsKey(subj)) return "you approved it at row " + held.get(subj).get("n");
+        held = declined(box, rows);
+        if (held.containsKey(subj)) return "you declined it at row " + held.get(subj).get("n");
+        held = waiting(box, rows);
+        if (held.containsKey(subj)) return "already waiting on your seal, row " + held.get(subj).get("n");
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     static Map<String, Map<String, Object>> sealed(Path box, List<Map<String, Object>> rows, String act) throws IOException {
         Key k = readKey(Path.of((String) config(box).get("key")), box);
@@ -1680,6 +1706,8 @@ public final class Kernel {
                 prop = null;
             }
             String why = door(prop, served);
+            if (why == null)
+                why = offered(box, read(box.resolve("record.jsonl")).rows, subjectOf((Map<String, Object>) prop));
             if (why == null) {
                 Map<String, Object> p = (Map<String, Object>) prop;
                 String subj = subjectOf(p);
@@ -1804,12 +1832,10 @@ public final class Kernel {
     static int out(Path box, String ts) throws IOException {
         Read r = read(box.resolve("record.jsonl"));
         if (refusedBreaks(r)) return REFUSED;
-        Map<String, Map<String, Object>> good = sealed(box, r.rows), no = declined(box, r.rows);
-        List<String> waiting = new ArrayList<>();
-        for (Map<String, Object> row : r.rows)
-            if ("proposal".equals(row.get("kind")) && "pass".equals(row.get("verdict"))
-                    && !good.containsKey(row.get("subject")) && !no.containsKey(row.get("subject")))
-                waiting.add((String) row.get("subject"));
+        Map<String, Map<String, Object>> good = sealed(box, r.rows);
+        // what they declined is not offered again (CONST-V-10), and what waits
+        // is counted once (CONST-V-11)
+        List<String> waiting = new ArrayList<>(waiting(box, r.rows).keySet());
         Object tip = r.rows.isEmpty() ? GENESIS : r.rows.get(r.rows.size() - 1).get("hash");
         append(box, ts, "out", "kernel", fields("waiting", BigInteger.valueOf(waiting.size()), "tip", tip));
         for (String s : waiting) System.out.println("waiting on your seal: " + s);
