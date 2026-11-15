@@ -155,6 +155,31 @@ def names_kind(word: str, line: str) -> bool:
     )
 
 
+# Where a person's files usually are, offered first in the picker; only the
+# ones this machine has. /storage/emulated/0 is a phone's own storage, which
+# from Termux is outside home and not reached by going up.
+PLACES = (
+    ("home", "~"),
+    ("Desktop", "~/Desktop"),
+    ("Documents", "~/Documents"),
+    ("Downloads", "~/Downloads"),
+    ("the phone's files", "/storage/emulated/0"),
+)
+
+
+def places() -> list[dict]:
+    """The PLACES this machine has, as {name, path}; names only, no file read."""
+    out = []
+    for name, where in PLACES:
+        p = Path(where).expanduser()
+        try:
+            if p.is_dir():
+                out.append({"name": name, "path": str(p.resolve())})
+        except OSError:
+            continue
+    return out
+
+
 class Canvas:
     def __init__(self, to: Path, willow: Path, box: Path, folders: list[str]):
         # every path whole: steps run from other folders
@@ -369,7 +394,8 @@ class Canvas:
         except OSError as e:
             return {"ok": False, "path": str(p), "why": e.strerror or "can't be read"}
         return {"ok": True, "path": str(p), "parent": str(p.parent) if p.parent != p else None,
-                "dirs": names[:1000], "more": len(names) > 1000}  # fmt: skip
+                "dirs": names[:1000], "more": len(names) > 1000,
+                "places": places()}  # fmt: skip
 
     # ── batches: a named set of add-ons, saved to recall, and deleted for good ─
     def _batches_file(self) -> Path:

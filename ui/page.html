@@ -166,6 +166,9 @@ h3{font:600 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;c
 .folder span{flex:1;min-width:0;word-break:break-all;font:13px var(--mono)}.folder small{color:var(--mute);font-variant-numeric:tabular-nums}
 #picker{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:8px;margin-top:8px}
 .ppath{font-family:var(--mono);font-size:12px;word-break:break-all;margin-bottom:6px;color:var(--mute)}
+.pplaces{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.pplaces button{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer}
+.pplaces button.on{background:var(--accl);border-color:var(--acc)}
 .plist{max-height:280px;overflow:auto;border-top:1px solid var(--line)}
 .plist div{padding:5px 6px;cursor:pointer;border-bottom:1px solid var(--line2);font-size:14px}.plist div:hover{background:var(--accl)}.plist .up{color:var(--mute)}
 
@@ -486,13 +489,14 @@ function stacktree(){const t=document.getElementById('stacktree');t.innerHTML=''
 // ── the shelf: what can go in the chosen stage ──────────────────────────────
 async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!document.getElementById('ppath'))return;if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
  document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
+ const pl=document.getElementById('pplaces');if(pl){pl.innerHTML='';for(const x of r.places||[])pl.append(el('button',{class:x.path===r.path?'on':'',text:x.name,onclick:()=>browse(x.path)}))}
  if(r.parent)l.append(el('div',{class:'up',text:'↑ up to '+r.parent,onclick:()=>browse(r.parent)}));
  for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
-async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(!S.folders.some(f=>f.path===r.path))S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
+async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(S.folders.some(f=>f.path===r.path)){say(r.path+' is already one of your folders');return}S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
 function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');head.innerHTML='';box.innerHTML='';
  if(!s||s.fixed)return;head.append(el('h3',{text:s.key==='folders'?'Add a folder':'Add-ons for this step'}));
  if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
-  box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
+  box.append(el('div',{id:'picker'},el('div',{class:'pplaces',id:'pplaces'}),el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
  const q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
  const grouped=s.group!=='rank',mine=Object.values(P).filter(p=>stageOf(p)===s.key),inStage=new Set(grouped?[]:mine.map(p=>p.name));

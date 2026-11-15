@@ -579,6 +579,23 @@ def test_the_page_is_sized_for_a_phone():
     )
 
 
+def test_the_picker_offers_only_the_places_this_machine_has(tmp_path, monkeypatch):
+    """A phone's own files are outside Termux's home and up from it is
+    unreadable, so the picker names them; a place that isn't there isn't
+    offered."""
+    assert ("the phone's files", "/storage/emulated/0") in canvas.PLACES
+    (tmp_path / "Documents").mkdir()
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr(
+        canvas, "PLACES", canvas.PLACES[:4] + (("gone", str(tmp_path / "gone")),)
+    )
+    got = canvas.places()
+    assert got == [
+        {"name": "home", "path": str(tmp_path.resolve())},
+        {"name": "Documents", "path": str((tmp_path / "Documents").resolve())},
+    ]
+
+
 def run(capsys, *argv):
     code = canvas.main([str(a) for a in argv])
     out = capsys.readouterr()
