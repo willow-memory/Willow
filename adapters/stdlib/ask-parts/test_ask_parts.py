@@ -248,3 +248,21 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
         str(HERE / "ask_parts.py"), "--box", str(tmp_path), "how much was my half"
     )
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+def test_their_words_list_is_read_for_each_part_and_a_bad_one_is_refused(tmp_path):
+    b = box(tmp_path)
+    words = tmp_path / "words.txt"
+    words.write_text("share = half\n")
+    words.chmod(0o600)
+    cfg = b / "kernel.json"
+    cfg.write_text(cfg.read_text().replace("}", f', "words": "{words}"}}'))
+    got = json.loads(
+        run(str(HERE / "ask_parts.py"), "--box", str(b), "what is the share").stdout
+    )
+    assert [s["where"] for s in got["parts"][0]["served"]] == [
+        "Mail/stone-done.eml.txt:5"
+    ]
+    words.chmod(0o644)
+    bad = run(str(HERE / "ask_parts.py"), "--box", str(b), "what is the share")
+    assert bad.returncode == 2 and "readable beyond its owner" in bad.stderr
