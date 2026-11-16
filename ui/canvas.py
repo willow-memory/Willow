@@ -155,6 +155,31 @@ def names_kind(word: str, line: str) -> bool:
     )
 
 
+# Where a person's files usually are, offered first in the picker; only the
+# ones this machine has. /storage/emulated/0 is a phone's own storage, which
+# from Termux is outside home and not reached by going up.
+PLACES = (
+    ("home", "~"),
+    ("Desktop", "~/Desktop"),
+    ("Documents", "~/Documents"),
+    ("Downloads", "~/Downloads"),
+    ("the phone's files", "/storage/emulated/0"),
+)
+
+
+def places() -> list[dict]:
+    """The PLACES this machine has, as {name, path}; names only, no file read."""
+    out = []
+    for name, where in PLACES:
+        p = Path(where).expanduser()
+        try:
+            if p.is_dir():
+                out.append({"name": name, "path": str(p.resolve())})
+        except OSError:
+            continue
+    return out
+
+
 class Canvas:
     def __init__(self, to: Path, willow: Path, box: Path, folders: list[str]):
         # every path whole: steps run from other folders
@@ -369,7 +394,8 @@ class Canvas:
         except OSError as e:
             return {"ok": False, "path": str(p), "why": e.strerror or "can't be read"}
         return {"ok": True, "path": str(p), "parent": str(p.parent) if p.parent != p else None,
-                "dirs": names[:1000], "more": len(names) > 1000}  # fmt: skip
+                "dirs": names[:1000], "more": len(names) > 1000,
+                "places": places()}  # fmt: skip
 
     # ── batches: a named set of add-ons, saved to recall, and deleted for good ─
     def _batches_file(self) -> Path:
@@ -485,7 +511,7 @@ class Canvas:
         if not f["ok"]:
             return f
         k, root = self.kernel, Path(f["path"])
-        read, hidden, kinds, readable = 0, 0, {}, {}
+        read, hidden, kinds, readable, unread = 0, 0, {}, {}, {}
         for p in root.rglob("*"):
             rel = p.relative_to(root)
             if not p.is_file():
@@ -511,6 +537,7 @@ class Canvas:
                 why = "text in another encoding than UTF-8"
             except OSError:
                 why = "couldn't be opened"
+            unread.setdefault(ext, []).append(p)
             kind = kinds.setdefault(ext, {"kind": ext, "files": 0, "why": {}})
             kind["files"] += 1
             kind["why"][why] = kind["why"].get(why, 0) + 1
@@ -519,6 +546,11 @@ class Canvas:
         for c in cant:
             c["readers"] = self.readers_for(c["kind"])
             c["text"] = c["kind"] in TEXT_KINDS
+            # a card saying it reads the kind isn't that it reads yours (a .zip
+            # is a Discord package or anything else): the built ones are tried
+            # on a few, as for text below; `tried` 0 is none could be tried here
+            c.update(self.tried(c["kind"], unread[c["kind"]]) if c["readers"]
+                     else {"tried": 0, "fits": [], "any": [], "big": 0})  # fmt: skip
         better = []
         for ext, files in sorted(readable.items(), key=lambda kv: (-len(kv[1]), kv[0])):
             took = self.tried(ext, files)
@@ -529,13 +561,13 @@ class Canvas:
                 "hidden": hidden, "cant": cant, "better": better}  # fmt: skip
 
     def tried(self, ext: str, files: list[Path]) -> dict:
-        """For a kind the kernel reads as it is (.json, .csv, .jsonl): the
-        readers that take some of these files, by the new-kinds add-on's
+        """For a kind of file, whether the kernel reads it as it is (.json,
+        .csv) or not (.zip, .pdf): the readers that take some of these files, by the new-kinds add-on's
         trial. Each built reader whose card says it reads the kind runs its
         own `mirror` on copies of a few of them, beside a file of the kind
         with nothing in it: `fits` took some of yours and not that, `any`
         took that too. Counts only, never a file's name or a line of it."""
-        none = {"tried": 0, "fits": [], "any": []}
+        none = {"tried": 0, "fits": [], "any": [], "big": 0}
         nk = self.new_kinds
         if nk is None or not ext.startswith("."):
             return none
@@ -548,7 +580,8 @@ class Canvas:
                 if m:
                     scripts[n] = m
         t = nk.trial(ext, files, scripts)
-        return {"tried": t["tried"], "fits": t["fits"][:4], "any": t["any"][:4]}
+        return {"tried": t["tried"], "fits": t["fits"][:4], "any": t["any"][:4],
+                "big": t.get("big", 0)}  # fmt: skip
 
     def readers_for(self, ext: str) -> list[str]:
         """Reader add-ons that read a kind of file, as their cards' `reads`
