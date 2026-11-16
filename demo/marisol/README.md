@@ -57,6 +57,11 @@ another CRS passage above the one that says "ultimate repeal in 2005", which is
 in the pile. Both are misses of the kernel's rank, not of the folder. Neither
 rule was changed after seeing this.
 
+*Corrected by run 3 (below):* the repeal half of this is wrong. The phrase is
+in the saved CRS page but in no passage of the box: the web-pages reader
+breaks the page at every `<br/>`, so "ultimate repeal in" and "2005." are two
+passages. That miss is the reader's, not the kernel's rank.
+
 **Run 2, on freeze 2** (`results/run-2.json`, SHA-256 `28f17ad678ccf431881f458e63ac054fd973223720824e346d03136dbb2fe99a`;
 its dry run with nonsense, `results/dry-run-2.json`, served nothing and
 sealed nothing). Freeze 2 builds the box as VI.9 says, read where its files
@@ -80,6 +85,58 @@ her own note, which the tools do not see disagree. C6: only in Spanish.
 **Also found.** `contradictions` reads the battery bank and the inverter, two
 purchases at one vendor with different prices, as an "amount" disagreement. That
 is a false alarm, and it is in the dry run's and the run's output.
+
+## Run 3, on freeze 3
+
+Freeze 3 is the maintainer's extension, in three strands, each asked on a box
+of its own and judged into a verdict box of its own ([questions-3.json](questions-3.json),
+[run3.py](run3.py)). `python3 demo/marisol/make_life_3.py` writes `life-more/`
+beside `life/`, which is untouched: a school calendar, her texts with Tomás,
+the lab's budget sheet and its battery sensors, read by the calendar, sms,
+office and home-sensors readers, against a new paragraph of her draft (C7 to
+C10, never boxed). Its dry run with nonsense (`results/dry-run-3.json`) built
+every box, served nothing and sealed nothing, and skipped the two kinds that
+take no question, so no answer was seen before the freeze. Run 3
+(`results/run-3.json`, SHA-256 `3dd2079329e4e95cffeb9345a69fc9905d884099fef3f3d7aa911aaa69a5da2d`)
+was asked once:
+
+| Strand | Rule | Result | What it rests on |
+|---|---|---|---|
+| life | served | held | The Spanish question finds the calendar's closures; her texts' "Ya llegaron los $6,000" is found in Spanish and in English; the English claim about the bank finds the sensor sheet |
+| life | gap | held | English claims find neither the Spanish calendar (C7) nor the budget, which says Chromebooks, not laptops (C9) |
+| life | count | held | 7 passages say "Cierre por apagón"; the draft says 9 days |
+| life | budget | held | `amounts` reads the Chromebook line, $3,468.00, and the total, $4,040.00; nothing says the draft's $18,000 |
+| claims | served | **failed** | The Spanish question about the principal and the diesel served nothing (below); the tape's 28 years and the 2004 closing, and Inés's "que cada afirmación lleve su fuente", were found in Spanish; the championship question served nothing, as predicted |
+| claims | gap | held | The three English claims about Spanish lines (C11, C12, C14) missed, as predicted |
+| misses | reach | **failed** | `all-passages` ranks no passage holding either phrase in its first 10; its first three were the kernel's own each time |
+| misses | phrases | **failed** for the repeal, held for the brother | `pile-rank` puts "$6,000" second in the mail mirror; it finds no "repeal in 2005" |
+| misses | rank | held | `kernel.py` is the file freeze 2 ran |
+| every strand | unsealed, verify | held | No seal or decline row; every evidence and verdict box verifies |
+
+**What failed.** *The repeal.* No passage in the box holds "repeal in 2005", so
+no ranking could have served it. The saved CRS page writes a line break
+(`<br/>`) at the end of each line of the printed report, and the web-pages
+reader makes each one a passage break: "…phaseout and ultimate repeal in" is
+one passage and "2005. The tax credit…" the next. Runs 1 and 2 said the
+phrase was in the pile and the kernel ranked it too low; that was never
+checked, and it was wrong. *The brother.* `all-passages` serves one passage,
+the email's header: the body ("Te mandé $6,000 … baterías") holds too few of
+the question's words for the kernel's half-the-words rule ("mandé" is not
+"mandó"). `pile-rank`, which ranks without that rule, serves the body second.
+*The diesel.* The Spanish question asks what the principal *pidió*; his email
+says "Le *pido*", and "Director" is in its signature, another passage. Too
+few of the question's words are in any one passage, so nothing is served.
+None of these changed a rule or the kernel's rank; each is written down here
+as found, after the run.
+
+**What it shows.** Read where they are kept, four more kinds of file her work
+leaves were found and checked: the calendar against the draft's 9 days, the
+texts confirming the money's arrival, the budget against the draft's figure,
+and the sensors against "a full school day" (4.5, 4.0 and 5.0 hours against a
+6.5-hour day; a person reads the sheet the claim points to). The language gap
+held again on three new claims. And following the two old misses showed one
+was a reader splitting a page, not a rank: the next bite there is the
+web-pages reader, not the kernel.
 
 ## What the freeze is and is not
 
