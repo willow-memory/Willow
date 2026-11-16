@@ -79,6 +79,41 @@ def test_a_break_the_tests_miss_fails_until_accepted_with_a_reason(repo, capsys)
     assert "stale" in capsys.readouterr().out
 
 
+#: two breaks the same size: A = 1 to 2, B = 2 to 3
+TWO = "A = 1\nB = 2\n"
+#: imports toy through `python -I`, which ignores PYTHONDONTWRITEBYTECODE and
+#: writes toy's .pyc anyway. It sets toy.py's mtime to one fixed second first,
+#: as two breaks written in the same second would have it, so a cached break
+#: is mistaken for the next one every time, not only when the clock allows.
+ISOLATED = """import os
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+
+
+def test_a_is_one():
+    os.utime(HERE / "toy.py", (1_000_000_000, 1_000_000_000))
+    code = f"import sys; sys.path.insert(0, {str(HERE)!r}); import toy; assert toy.A == 1"
+    assert subprocess.run([sys.executable, "-I", "-c", code]).returncode == 0
+"""
+
+
+def test_a_break_cached_by_a_python_dash_i_test_is_not_run_as_the_next(repo, capsys):
+    """Without the copy's __pycache__ cleared after each write, whichever
+    break runs second imports the first one's .pyc: B's break would be killed
+    by A's, or A's survive as B's."""
+    here, _ = repo
+    (here / "toy.py").write_text(TWO)
+    (here / "test_toy.py").write_text(ISOLATED)
+    assert mu.run(["toy"], 6) == 2
+    out = capsys.readouterr().out
+    assert "toy: 1 of 2 killed" in out
+    survivors = [ln for ln in out.splitlines() if "survived" in ln]
+    assert len(survivors) == 1 and "toy.py:2  number: 2" in survivors[0]
+
+
 def test_tests_that_cant_run_kill_nothing(repo, capsys):
     here, _ = repo
     (here / "test_toy.py").write_text("import no_such_module\n")
