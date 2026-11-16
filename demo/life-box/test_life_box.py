@@ -229,6 +229,90 @@ def test_a_command_line_that_isnt_one_is_refused(teo):
     )
 
 
+@pytest.fixture(scope="module")
+def bern(tmp_path_factory):
+    """Bernadette's life is mail, calendars, chats, notes, spreadsheets, a
+    kindle and scans, so it is read through willow's readers first (--read),
+    and her dates are day first (Ballarat)."""
+    table = tmp_path_factory.mktemp("life") / "bernadette"
+    opened = run("open", "--who", "bernadette", "--table", table, "--read", "--dates", "day-first")  # fmt: skip
+    assert opened.returncode == 0, opened.stderr
+    week = run("week", "--table", table)
+    asked = run("ask", "--table", table)
+    decided = run("decide", "--table", table)
+    recap = run("recap", "--table", table)
+    pdf = "pdf: unreachable" not in opened.stdout  # a deps add-on, read where pypdf is
+    return {"table": table, "open": opened, "week": week, "ask": asked, "decide": decided, "recap": recap, "pdf": pdf}  # fmt: skip
+
+
+def test_bernadettes_life_is_read_by_the_readers_before_it_is_laid(bern):
+    out = bern["open"].stdout
+    for said in ("mail: wrote 83 files", "calendar: wrote 4 files", "notes: wrote 159 files",
+                 "office: wrote 6 files", f"copied: {14 if bern['pdf'] else 16} files no reader took"):  # fmt: skip
+        assert said in out, said
+    assert "2026-10-24" in out and "its dates read day-first" in out
+    pile = bern["table"] / "bernadette-day-first"
+    assert (
+        pile / "Documents" / "Household budget 2026.xlsx.txt"
+    ).is_file()  # read, not raw
+    assert not (pile / "Documents" / "Household budget 2026.xlsx").exists()
+
+
+def test_bernadettes_week_finds_her_rego_her_cover_and_her_friend(bern):
+    run_ = bern["table"] / "week" / "001"
+    renewals = (run_ / "02-renewals.txt").read_text()
+    assert "         2026-11-03  Mail/Inbox/2026-10-06 Registration renewal notice" in renewals  # N1  # fmt: skip
+    assert "gone by  2025-11-03" in renewals and "1 to come" in renewals  # T2, gone by
+    coming = (run_ / "01-coming-up.txt").read_text()
+    for day, what in (
+        ("2026-10-30", "Mags's birthday"),  # N4
+        ("2026-10-31", "TAX DUE (self lodge)"),  # N6
+        ("2026-11-03", "Car rego due"),  # N1
+        ("2026-11-14", "FINAL NOTICE policy suspension"),  # N3, her cover's last day
+    ):
+        assert what in coming.split(f"## {day}")[1].split("## ")[0], day
+    # the card replaced in August is what she meant to do and didn't
+    assert "update any recurring payments" in (run_ / "09-todo.txt").read_text()
+
+
+def test_bernadette_seals_what_her_key_names_and_her_traps_hold(bern):
+    assert "sealed 17 answers and declined 28" in bern["decide"].stdout
+    assert "14 of 20 questions have an answer bernadette sealed" in bern["recap"].stdout
+    got = answers(bern["recap"].stdout)
+    # T2: the budget's estimate and last year's rego are no answer to this year's
+    assert got[2]["sealed"] == [] and "Documents/Household budget 2026.xlsx.txt:3" in got[2]["declined"]  # fmt: skip
+    # T3: the skin check she cancelled is sealed; no booking is
+    assert got[3]["sealed"] == ["Calendar/Home.ics.txt:139"]
+    # her referral letter is read only with pypdf; without it, the 5 Nov
+    # booking the clinic cancelled is offered in its place, and declined
+    third = "Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:12" if bern["pdf"] else "Calendar/Home.ics.txt:155"  # fmt: skip
+    assert third in got[3]["declined"]
+    # T5: her granddaughter's birthday, not Aoife Brennan's from bowls
+    assert got[8]["sealed"] == ["Calendar/Home.ics.txt:55"]
+    # N3: the bank shows July's premium, the last; the final notice says the rest
+    assert got[4]["sealed"] == ["Bank/CommBank_SmartAccess_FY2026-27.csv:73",
+        "Mail/Inbox/2026-10-22 FINAL NOTICE policy suspension LH-5520913.eml.txt:1"]  # fmt: skip
+    # N2, N5: what she promised Siobhán; "tomorrow, promise" was to Gerry
+    assert sorted(got[19]["sealed"]) == ["Chats/WhatsApp Chat with Siobhán.txt.txt:138",
+        "Mail/Sent/2022-12-12 Happy 17th to our Aoife.eml.txt:10"]  # fmt: skip
+    assert "Chats/WhatsApp Chat with Gerry.txt.txt:99" in got[19]["declined"]
+    # the right file, the wrong passage: her scone recipe's backlinks, not its recipe
+    assert got[12] == {"sealed": [], "declined": ["Notes/Bernie's Vault/Recipes/Scones.md.txt:8",
+        "Chats/WhatsApp Chat with Siobhán.txt.txt:103", "Chats/WhatsApp Chat with Siobhán.txt.txt:101"]}  # fmt: skip
+    # her spelling: "dermatoligist referal" holds too few of the letter's words
+    assert got[20] == {"sealed": [], "declined": []}
+
+
+def test_her_answer_key_holds_her_traps_out():
+    key = json.loads((HERE / "bernadette.json").read_text())
+    files = {a["file"] for v in key["answers"].values() for a in v}
+    assert len(key["answers"]) == 20
+    for trap in ("Downloads/rental_fy26_draft.csv", "Mail/Inbox/2026-10-15 ATO You have a pending tax refund of 128460.eml.txt",
+                 "Mail/Inbox/2025-10-07 Registration renewal notice SUBARU FORESTER 1XY4KD.eml.txt",
+                 "Mail/Inbox/2026-08-20 Appointment confirmation Lydiard Dermatology.eml.txt"):  # fmt: skip
+        assert trap not in files, trap
+
+
 def test_her_answer_key_is_what_planted_md_names():
     key = json.loads((HERE / "teodora.json").read_text())
     planted = (ROOT / "demo" / "teodora" / "PLANTED.md").read_text()

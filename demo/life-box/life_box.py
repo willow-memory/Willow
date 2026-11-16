@@ -1,6 +1,6 @@
 """life_box.py: the game box, with a person's life for its binder. Python 3.9+.
 
-    python demo/life-box/life_box.py open   --who NAME --table DIR [--dates day-first|month-first]
+    python demo/life-box/life_box.py open   --who NAME --table DIR [--read] [--dates day-first|month-first]
     python demo/life-box/life_box.py week   --table DIR
     python demo/life-box/life_box.py ask    --table DIR
     python demo/life-box/life_box.py decide --table DIR
@@ -17,6 +17,12 @@ the starter words list a person begins with:
   with a key made for NAME at DIR/NAME.key. NAME is made up, and so is the
   key: this demo seals for them. A real person's key is never made, read
   or used here.
+- `--read` reads the life through willow's readers first, as a person
+  with mail, calendars, chats, notes, spreadsheets, books and scans would:
+  each reader mirrors what it reads into DIR/NAME-read, the files no reader
+  took are copied beside them as they are, and the box is laid over that.
+  Without it, the box is laid over the life as written, which suits a life
+  of plain files; a scan or a spreadsheet is never read raw.
 - `--dates day-first` (or month-first) says the order the life's dates
   are written in, which only its writer knows: the life is mirrored through
   that add-on, each date given its ISO form beside it, and the box laid over
@@ -64,6 +70,12 @@ ORDERS = {  # a folder's date order, which only its writer knows, and the add-on
     "day-first": ROOT / "adapters" / "stdlib" / "day-first" / "day_first.py",
     "month-first": ROOT / "adapters" / "stdlib" / "month-first" / "month_first.py",
 }
+#: The readers --read runs, each by its own command line; pdf is a deps add-on,
+#: read where pypdf is installed and said to be unreachable where it isn't
+STD = ROOT / "adapters" / "stdlib"
+READERS = [STD / "mail" / "mail.py", STD / "calendar" / "cal.py", STD / "chats" / "chats.py",
+           STD / "notes" / "notes.py", STD / "office" / "office.py", STD / "books" / "books.py",
+           ROOT / "adapters" / "deps" / "pdf" / "pdf.py"]  # fmt: skip
 WEEK = HERE / "week.md"
 TODAY = re.compile(r"^TODAY = date\((\d{4}), (\d{1,2}), (\d{1,2})\)", re.M)
 QUESTION = re.compile(r"^\d+\. (.+)$", re.M)
@@ -99,7 +111,30 @@ def box_of(table: Path) -> Path:
     return table / "record"
 
 
-def cmd_open(who: str, table: Path, dates: str = "") -> int:
+def read_life(life: Path, to: Path) -> list[str]:
+    """Every reader over the life into one mirror, then the files no reader
+    took copied beside them; what each reader said, one line each."""
+    said = []
+    for script in READERS:
+        got = py(script, "mirror", "--from", life, "--to", to)
+        if got.returncode == 2 and ("pip install" in got.stderr or "ModuleNotFoundError" in got.stderr):  # fmt: skip
+            said.append(f"{script.parent.name}: unreachable, {script.parent.name}'s package isn't installed")  # fmt: skip
+        elif got.returncode == 2:
+            raise ValueError(f"{script.parent.name}: {got.stderr.strip()}")
+        else:
+            said.append(f"{script.parent.name}: {(got.stdout.strip().splitlines() or ['read nothing'])[-1].replace(str(to), to.name)}")  # fmt: skip
+    left = 0
+    for f in sorted(life.rglob("*")):
+        rel = f.relative_to(life)
+        if f.is_file() and not any(p.startswith(".") for p in rel.parts) and not (to / f"{rel}.txt").exists():  # fmt: skip
+            (to / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(f, to / rel)
+            left += 1
+    said.append(f"copied: {left} files no reader took, as they are")
+    return said
+
+
+def cmd_open(who: str, table: Path, dates: str = "", read: bool = False) -> int:
     if not re.fullmatch(r"[a-z][a-z-]*", who) or not (DEMO / who / "make_life.py").is_file():  # fmt: skip
         return fail(
             f"{who!r} isn't one of willow's made-up lives (demo/NAME/make_life.py)"
@@ -116,15 +151,22 @@ def cmd_open(who: str, table: Path, dates: str = "") -> int:
     if made.returncode != 0:
         return fail(f"{who}'s make_life.py: {made.stderr.strip()}")
     pile = table / who / "life"
+    if read:
+        try:
+            said = read_life(pile, table / f"{who}-read")
+        except ValueError as e:
+            return fail(f"reading the life: {e}")
+        pile = table / f"{who}-read"
+        print("read:\n" + "".join(f"  {s}\n" for s in said), end="")
     if (
         dates
     ):  # each date given its ISO form beside it, so every reader of dates can place it
-        pile = table / f"{who}-{dates}"
         marked = py(
-            ORDERS[dates], "mirror", "--from", table / who / "life", "--to", pile
+            ORDERS[dates], "mirror", "--from", pile, "--to", table / f"{who}-{dates}"
         )
         if marked.returncode != 0:
             return fail(f"{dates}: {marked.stderr.strip()}")
+        pile = table / f"{who}-{dates}"
     now = today_of(who)
     words = py(STARTER, "copy", "--to", table / "words.txt")
     if words.returncode != 0:
@@ -310,7 +352,9 @@ def cmd_recap(table: Path) -> int:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--who", "--table", "--dates"):
+        if a == "--read":
+            opts[a] = "yes"
+        elif a in ("--who", "--table", "--dates"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -320,7 +364,7 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     table = Path(opts["--table"])
     if verb == "open":
-        return cmd_open(opts["--who"], table, opts.get("--dates", ""))
+        return cmd_open(opts["--who"], table, opts.get("--dates", ""), "--read" in opts)
     if not (table / "who.txt").is_file():
         return fail(f"{table} isn't a life box laid by open")
     return {"week": cmd_week, "ask": cmd_ask, "decide": cmd_decide, "recap": cmd_recap}[

@@ -1,0 +1,1 @@
+`demo/life-box`: Bernadette as a life box: `open --read` reads a life through willow's readers before it is laid, and her answer key, bernadette.json, is written from her PLANTED.md. She seals 17 and declines 28; her traps hold.

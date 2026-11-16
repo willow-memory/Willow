@@ -2385,6 +2385,7 @@ willow/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
 │   ├── life-box/
+│   │   ├── bernadette.json
 │   │   ├── life_box.py       the game box, with a person's life for its binder
 │   │   ├── teodora.json
 │   │   ├── week.md           the week, over a life
