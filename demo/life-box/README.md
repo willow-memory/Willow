@@ -14,6 +14,7 @@ with a key made for them.
 
     python demo/life-box/life_box.py open   --who teodora --table DIR --dates day-first
     python demo/life-box/life_box.py open   --who bernadette --table DIR --read --dates day-first
+    python demo/life-box/life_box.py open   --who bernadette --table DIR --read --dates day-first --piles
     python demo/life-box/life_box.py week   --table DIR
     python demo/life-box/life_box.py ask    --table DIR
     python demo/life-box/life_box.py decide --table DIR
@@ -107,8 +108,9 @@ mirror is then mirrored again through day-first.
   cancelled, is never sealed (T3). "Aoifes birthday" is her granddaughter's,
   not Aoife Brennan's from bowls (T5). "Did I promise Siobhán anything" seals
   the ring and the mole; "Tomorrow, promise" was to Gerry.
-- What it can't do yet, and says so: "scone recipe" is served the right
-  file's wrong passage (its backlinks).
+- What it can't do yet, and says so: laid as one big pile, "scone recipe"
+  is served the right file's wrong passage (its backlinks); [piles](#a-life-as-the-piles-its-person-keeps)
+  below serve the recipe itself.
 - Her week's subscriptions lists eight things she pays, about 4596.28 a
   month, and three that come in, written with a plus as her bank writes a
   credit: her super pension, the unit's rent and a tax refund, never added
@@ -120,7 +122,72 @@ mirror is then mirrored again through day-first.
   its place, and declined; "dermatoligist referal letter" then has no answer
   to seal. The test holds both.
 
-[test_life_box.py](test_life_box.py) runs all of it in about thirty-five seconds.
+## A life as the piles its person keeps
+
+Real people keep their files a folder per matter, and each folder is its own
+pile. `open --piles` lays the life that way: each top-level folder is a pile
+with a box of its own (DIR/records/SLUG), all under the one key made for the
+person; a folder holding exactly one folder and no files is only a way in and
+is walked through (`Notes/` to `Notes/Bernie's Vault/`, and the folders
+inside the vault are the piles); the files loose at a level are one more
+pile, named for that level (`Notes/Bernie's Vault/.`, `.` for the top).
+DIR/piles.json says which folder each box is. A folder that holds two
+folders (`Mail/` with `Inbox/` and `Sent/`) is one pile. DIR/record is laid
+beside them over the whole life: the week and the spelling add-ons each read
+one box, so the week runs over that one, as it did, and nothing is ever
+asked of it.
+
+**Why it matters.** In one big pile a passage's path counts toward its
+words, so every passage under `Notes/Bernie's Vault/Recipes/Scones.md.txt`
+holds both "scone" and "recipe" from the path alone. They all tie, and the
+tie-break (fewest copies, then newest) puts the undated recipe itself
+("3 cups SR flour ... #recipe") behind dated chatter: five chat lines saying
+"send me your scone recipe" and the note's own dated backlinks. As its own
+pile the folder's name stops being a word every passage in it gets for free:
+the recipe holds "recipe" from its `#recipe` tag and "scone" from its file
+name, and comes first.
+
+| "scone recipe" | the one pile | piles |
+|---|---|---|
+| offered | the backlinks, two chat lines | the recipe, a chat line, a recipe from another folder, ... |
+| sealed | nothing | `Notes/Bernie's Vault/Recipes/Scones.md.txt:5` |
+
+**`ask` with piles.** Every pile's box is bitten for each question (the
+question read in the files' spelling first, as before). What each served is
+then dealt out in turns by [fair-merge](../../adapters/stdlib/fair-merge/)'s
+own rule, which `life_box.py` calls rather than copies: the first of each
+pile, then the second of each, a passage word for word in two piles shown
+once, the question asked back left out. Up to ten are dealt: the kernel's 3
+or fair-merge's 6 never reach the later piles of fifteen (3 loses the
+recipe; 6 loses Bernadette's skin-check and pennant answers). Each is proposed in the box that
+served it, citing only that box's last bite, and the claim's `from` is the
+path in the whole life, so the answer keys read the same. `decide` and
+`recap` walk every box; the recap names each answer's pile, and
+`kernel.py verify` holds on every one.
+
+**What it changes.** Bernadette opened with `--read --dates day-first
+--piles` is laid as fifteen piles (the vault's loose notes, its Daily and
+Recipes, and a pile for each other folder) and 99 passages are offered (98
+without pypdf), against 48 in one box: she seals 24 and declines 75, and
+sixteen questions are answered, as before. The scone recipe is in; "that
+quote about loss I highlighted on the kindle" is out, because "kindle" was
+only the folder's name and her one file of clippings no longer holds it. The
+other gains are more of what her key names (the Tax note for the deadline,
+the cancellation mail for her skin check, two more for Aoife's birthday) and
+more declined beside them. Teodora, opened with `--dates day-first --piles`,
+is laid as twelve piles; 62 passages are offered, she seals 19 and declines
+43, and ten questions are answered, as before. "Did Hargreaves pay August"
+now finds the remittance advice, which she seals, and still declines the
+ledger line (T2); the phishing email stays declined (T1). "Which AAT exams
+have I passed" is lost for the same reason as the kindle quote: `study/aat/`
+is only the folder's name.
+
+So a question that names the folder ("on the kindle") loses it. That is the
+price of a folder's name no longer being free, and the answer is not to
+loosen it.
+
+[test_life_box.py](test_life_box.py) runs all of it in about a hundred
+seconds.
 
 ## Where it comes from
 

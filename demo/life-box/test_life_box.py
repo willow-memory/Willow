@@ -18,6 +18,9 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402
 
+sys.path.insert(0, str(HERE))
+import life_box  # noqa: E402
+
 LB = HERE / "life_box.py"
 
 
@@ -47,7 +50,8 @@ def answers(recap: str) -> dict[int, dict[str, list[str]]]:
             out[q] = {"sealed": [], "declined": []}
         elif q is not None and line.strip().startswith(("sealed", "declined")):
             verb, where = line.split(None, 1)  # a file name can hold spaces
-            out[q][verb].append(where)
+            # with --piles each line ends with the pile it came from, after three spaces
+            out[q][verb].append(re.sub(r"\s{3}\[[^\]]*\]$", "", where))
     return out
 
 
@@ -379,3 +383,257 @@ def test_her_answer_key_is_what_planted_md_names():
     named = {f for f in files if f in planted or f.split("/")[-1] in planted}
     assert len(key["answers"]) == 20
     assert {"car/MOT_2025-11-10.txt", "email/2026-10-06_pi-renewal-2026.eml", "work/invoices/invoice_ledger.csv"} <= named  # fmt: skip
+
+
+# ── --piles: a life laid as the person's own piles, a box each, one key ──────
+
+
+def verifies(box: Path) -> subprocess.CompletedProcess:
+    return subprocess.run([sys.executable, str(ROOT / "kernel.py"), "verify", "--box", str(box)],
+                          capture_output=True, text=True, check=False)  # fmt: skip
+
+
+def all_boxes(table: Path) -> list[Path]:
+    return [table / "record", *sorted((table / "records").iterdir())]
+
+
+def seals(table: Path) -> list[tuple[Path, dict]]:
+    """Every seal in every box, with the proposal it sealed."""
+    out = []
+    for box in all_boxes(table):
+        for r in kernel.read(box / "record.jsonl")[0]:
+            if r["kind"] == "seal":
+                prop = json.loads(
+                    (box / "proposals" / f"{r['subject'][9:]}.json").read_text()
+                )
+                out.append((box, prop))
+    return out
+
+
+@pytest.fixture(scope="module")
+def bern_piles(tmp_path_factory):
+    """Bernadette as her own piles: a folder per matter, her vault walked
+    through to its Daily and Recipes."""
+    table = tmp_path_factory.mktemp("life") / "bernadette"
+    opened = run("open", "--who", "bernadette", "--table", table, "--read", "--dates", "day-first", "--piles")  # fmt: skip
+    assert opened.returncode == 0, opened.stderr
+    week = run("week", "--table", table)
+    asked = run("ask", "--table", table)
+    decided = run("decide", "--table", table)
+    recap = run("recap", "--table", table)
+    pdf = "pdf: unreachable" not in opened.stdout
+    return {"table": table, "open": opened, "week": week, "ask": asked, "decide": decided, "recap": recap, "pdf": pdf}  # fmt: skip
+
+
+def test_bernadette_is_laid_as_her_own_piles_a_box_each_under_one_key(bern_piles):
+    t = bern_piles["table"]
+    piles = json.loads((t / "piles.json").read_text())
+    folders = {p["folder"]: p for p in piles}
+    # the vault (Notes/ holds only it) is walked through: its folders are piles, its loose notes one more
+    assert "Notes" not in folders and "Notes/Bernie's Vault" in folders
+    assert (
+        folders["Notes/Bernie's Vault"]["loose"]
+        and not folders["Notes/Bernie's Vault/Recipes"]["loose"]
+    )
+    assert folders["Notes/Bernie's Vault/Recipes"]["files"] == 2 and folders["Notes/Bernie's Vault/Daily"]["files"] == 143  # fmt: skip
+    assert folders["Notes/Bernie's Vault"]["files"] == 13
+    assert [p["folder"] for p in piles if "/" not in p["folder"]] == [
+        "Bank", "Books", "Calendar", "Chats", "Contacts", "Desktop", "Documents", "Downloads", "Family History", "Garden", "Kindle", "Mail"]  # fmt: skip
+    assert "Mail/Inbox" not in folders  # a folder holding two folders is one pile
+    # every file is in one pile, none twice (two files fewer without pypdf)
+    files = 274 if bern_piles["pdf"] else 272
+    assert sum(p["files"] for p in piles) == files
+    assert f"{files} files" in bern_piles["open"].stdout
+    assert "as 15 piles, a box each under the one key" in bern_piles["open"].stdout
+    # a box each, and the whole life beside them; one key, not one per box
+    assert sorted(b.name for b in (t / "records").iterdir()) == sorted(
+        p["slug"] for p in piles
+    )
+    assert [k.name for k in t.rglob("*.key")] == ["bernadette.key"]
+    for box in all_boxes(t):
+        v = verifies(box)
+        assert v.returncode == 0, (box.name, v.stdout, v.stderr)
+
+
+def test_bernadette_piles_are_asked_every_box_and_sealed_in_the_box_that_served_them(
+    bern_piles,
+):
+    t = bern_piles["table"]
+    # the whole-life box serves the week and the spelling: it is never bitten or proposed in
+    whole = {r["kind"] for r in kernel.read(t / "record" / "record.jsonl")[0]}
+    assert not whole & {"bite", "proposal", "seal", "decline"}
+    for p in json.loads((t / "piles.json").read_text()):
+        kinds = [
+            r["kind"]
+            for r in kernel.read(t / "records" / p["slug"] / "record.jsonl")[0]
+        ]
+        assert kinds.count("bite") == 20, p["slug"]  # every pile hears every question
+        # a proposal says where it is from in the whole life: the pile's folder, then the file
+        for prop in (t / "records" / p["slug"] / "proposals").glob("*.json"):
+            where = life_box.CLAIM.match(json.loads(prop.read_text())["claim"]).group(4)
+            assert where.startswith(p["folder"] + "/"), (p["slug"], where)
+            if p["loose"]:  # a level's own files, not the folders below it
+                assert where.count("/") == p["folder"].count("/") + 1
+    assert bern_piles["ask"].returncode == 42
+
+
+def test_the_scone_recipe_is_offered_first_in_its_own_pile_and_she_seals_it(bern_piles):
+    """In one big pile `Recipes` is a word every passage under it holds, so
+    "scone recipe" tied the recipe with her chat lines and the dated ones won.
+    As its own pile the recipe holds "recipe" from its own #recipe tag and
+    "scone" from its file name, and is the Recipes pile's first."""
+    got = answers(bern_piles["recap"].stdout)
+    assert got[12]["sealed"] == ["Notes/Bernie's Vault/Recipes/Scones.md.txt:5"]
+    assert (
+        "Notes/Bernie's Vault/Recipes/Scones.md.txt:8" not in got[12]["declined"]
+    )  # its backlinks aren't offered now
+    line = next(
+        ln for ln in bern_piles["recap"].stdout.splitlines() if "Scones.md.txt:5" in ln
+    )
+    assert line.endswith(
+        "   [Notes/Bernie's Vault/Recipes]"
+    )  # the recap names the pile
+    assert (
+        "Notes/Bernie's Vault/Recipes/Scones.md.txt:5 [Notes/Bernie's Vault/Recipes]"
+        in bern_piles["ask"].stdout
+    )
+
+
+def test_bernadette_by_piles_counts(bern_piles):
+    # one box: 48 offered, 20 sealed, 28 declined, 16 of 20. Dealt across piles each question
+    # offers up to 10, so more is offered and declined; the same 16 questions are answered,
+    # the scone recipe in, "the quote about loss i highlighted on the kindle" out (the Kindle
+    # folder's name is no longer a word of its one file's passages). Without pypdf, the
+    # scan is unread: one offered, one declined and one question fewer.
+    offered, declined, answered = (99, 75, 16) if bern_piles["pdf"] else (98, 74, 15)
+    assert f"{offered} answers wait on bernadette's seal" in bern_piles["ask"].stdout
+    assert f"sealed 24 answers and declined {declined}" in bern_piles["decide"].stdout
+    assert (
+        f"{answered} of 20 questions have an answer bernadette sealed"
+        in bern_piles["recap"].stdout
+    )
+    got = answers(bern_piles["recap"].stdout)
+    assert got[17] == {
+        "sealed": [],
+        "declined": [],
+    }  # the cost: "kindle" was only the folder's name
+    assert "     nothing in the life holds it" in bern_piles["recap"].stdout.split("17. ")[1].split("18. ")[0]  # fmt: skip
+    # last week's dated answers stay where they were
+    assert got[1]["sealed"] == ["Calendar/Home.ics.txt:44"]
+    assert got[8]["sealed"] == ["Calendar/Home.ics.txt:55", "Contacts/contacts.vcf.txt:6", "Calendar/Home.ics.txt:163"]  # fmt: skip
+    assert got[3]["sealed"][0] == "Calendar/Home.ics.txt:139"
+    assert got[20]["sealed"] == (["Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:1"] if bern_piles["pdf"] else [])  # fmt: skip
+
+
+def test_bernadette_by_piles_seals_nothing_her_key_does_not_name_in_any_box(bern_piles):
+    t = bern_piles["table"]
+    key = json.loads((HERE / "bernadette.json").read_text())
+    sealed = seals(t)
+    assert len(sealed) == 24
+    for box, prop in sealed:
+        m = life_box.CLAIM.match(prop["claim"])
+        q, where = m.group(1), m.group(4)
+        assert any(where == a["file"] and a.get("says", "") in prop["data"] for a in key["answers"][q]), (box.name, q, where)  # fmt: skip
+        assert "pending tax refund" not in where and "rental_fy26_draft" not in where
+        assert "2025-10-07 Registration" not in where and "Lydiard" not in where
+        assert not (
+            where == "Calendar/Home.ics.txt" and m.group(5) == "155"
+        )  # the cancelled 5 Nov booking
+    got = answers(bern_piles["recap"].stdout)
+    assert "Calendar/Home.ics.txt:155" in got[3]["declined"]  # offered, and declined
+    assert "Calendar/Home.ics.txt:155" not in sum(
+        (g["sealed"] for g in got.values()), []
+    )
+
+
+@pytest.fixture(scope="module")
+def teo_piles(tmp_path_factory):
+    table = tmp_path_factory.mktemp("life") / "teodora"
+    opened = run("open", "--who", "teodora", "--table", table, "--dates", "day-first", "--piles")  # fmt: skip
+    assert opened.returncode == 0, opened.stderr
+    week = run("week", "--table", table)
+    asked = run("ask", "--table", table)
+    decided = run("decide", "--table", table)
+    recap = run("recap", "--table", table)
+    return {"table": table, "open": opened, "week": week, "ask": asked, "decide": decided, "recap": recap}  # fmt: skip
+
+
+def test_teodora_by_piles_keeps_her_week_and_her_traps(teo_piles):
+    t = teo_piles["table"]
+    piles = json.loads((t / "piles.json").read_text())
+    assert [p["slug"] for p in piles] == ["bank", "calendar", "car", "chats", "email", "home", "maisie", "notes", "receipts", "recipes", "study-aat-loose", "work"]  # fmt: skip
+    # study/ holds only aat/, which holds only files: walked through, its files one pile
+    assert (
+        next(p for p in piles if p["slug"] == "study-aat-loose")["name"]
+        == "study/aat/."
+    )
+    assert sum(p["files"] for p in piles) == 308
+    assert teo_piles["week"].returncode in (
+        0,
+        42,
+    )  # the week still runs, over the whole-life box
+    assert "SUMMARY:Half term" in teo_piles["week"].stdout
+    # one box offered 41, sealed 16 and declined 25 for 10 of 20; across piles more is offered
+    # (up to 10 a question), the key seals 3 more and the same count of questions is answered
+    assert "62 answers wait on teodora's seal" in teo_piles["ask"].stdout
+    assert "sealed 19 answers and declined 43" in teo_piles["decide"].stdout
+    assert (
+        "10 of 20 questions have an answer teodora sealed" in teo_piles["recap"].stdout
+    )
+    got = answers(teo_piles["recap"].stdout)
+    # T2: the ledger line says Hargreaves' August is unpaid; it is declined. The remittance
+    # advice (her key names it) is now offered and sealed, which one box never reached
+    assert "work/invoices/invoice_ledger.csv:236" in got[11]["declined"]
+    assert got[11]["sealed"] == ["email/2026-09-02_remittance-advice.eml:9"]
+    # T1: the "refund" email is phishing and answers nothing
+    assert got[12]["sealed"] == [] and all(
+        "tax-refund" in w for w in got[12]["declined"]
+    )
+    # the cost: "aat" was only the folder's name, so progress.md is no longer found for Q14
+    assert (
+        "study/aat/progress.md:3" not in got[14]["sealed"] and got[14]["sealed"] == []
+    )
+    assert got[1]["sealed"] == ["car/MOT_2025-11-10.txt:3", "car/MOT_2025-11-10.txt:15"]
+    for box, prop in seals(t):
+        m = life_box.CLAIM.match(prop["claim"])
+        key = json.loads((HERE / "teodora.json").read_text())
+        assert any(m.group(4) == a["file"] or (a["file"].endswith("/") and m.group(4).startswith(a["file"])) for a in key["answers"][m.group(1)]), prop["claim"]  # fmt: skip
+
+
+def test_teodoras_boxes_all_verify_with_one_key(teo_piles):
+    t = teo_piles["table"]
+    assert [k.name for k in t.rglob("*.key")] == ["teodora.key"]
+    for box in all_boxes(t):
+        v = verifies(box)
+        assert v.returncode == 0, (box.name, v.stdout)
+    total = sum(1 for _, _ in seals(t))
+    assert total == 19
+
+
+def test_a_folder_that_holds_only_a_folder_is_walked_through_and_loose_files_are_a_pile(
+    tmp_path,
+):
+    p = tmp_path / "life"
+    for rel in ("top.txt", "Wrap/Vault/loose.md", "Wrap/Vault/Daily/a.md", "Wrap/Vault/Recipes/Cakes/b.md",
+                "Mail/Inbox/m.eml", "Mail/Sent/s.eml", "Solo/only.txt", "Hollow/Deep/Deeper/z.txt",
+                "Empty/.keep", ".hidden/h.txt"):  # fmt: skip
+        (p / rel).parent.mkdir(parents=True, exist_ok=True)
+        (p / rel).write_text("x\n")
+    (p / "Void" / "Hole").mkdir(parents=True)  # a folder of nothing is no pile
+    got = life_box.split_piles(p)
+    assert [(g["name"], g["loose"]) for g in got] == [
+        (".", True),  # the files loose at the top
+        (
+            "Hollow/Deep/Deeper/.",
+            True,
+        ),  # Hollow and Deep each hold only a folder: walked through
+        ("Mail", False),  # a folder holding two folders is one pile, not walked
+        ("Solo", False),
+        ("Wrap/Vault/.", True),  # Wrap holds only Vault: the vault's own loose notes
+        ("Wrap/Vault/Daily", False),
+        (
+            "Wrap/Vault/Recipes/Cakes/.",
+            True,
+        ),  # Recipes holds only Cakes: walked through too
+    ]
+    assert len({g["slug"] for g in got}) == len(got)
