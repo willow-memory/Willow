@@ -53,12 +53,13 @@ nothing else is played.
 
 Exit codes, the kernel's: 0 done, or every hand holds; 2 refused.
 
-**Where it comes from:** the-table's crazy eights in the SAFE App Store,
-over game-lab's rules, with the-table's turn: one card drawn at a time,
-each its own row. Its legal cards were checked against game-lab's
-`legal_cards` in 159,776 states from 3,000 hands, all the same. The hands
-are open for now; hidden hands wait on a way to deal a seat cards only it
-can read.
+**Where it comes from:** the-table's crazy eights, built in the SAFE App
+Store and now in
+[Die-Namic](https://github.com/rudi193-cmd/die-namic-games), over game-lab's
+rules, with the-table's turn: one card drawn at a time, each its own row.
+Its legal cards were checked against game-lab's `legal_cards` in 159,776
+states from 3,000 hands, all the same. The hands are open for now; hidden
+hands wait on a way to deal a seat cards only it can read.
 
 **Never:** shuffles without the record's seed, plays a card the rules don't
 allow, reads the key, or writes the record except through the kernel.

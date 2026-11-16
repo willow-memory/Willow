@@ -55,13 +55,15 @@ else is played.
 
 Exit codes, the kernel's: 0 done, or every game holds; 2 refused.
 
-**Where it comes from:** the-table's liar's dice in the SAFE App Store, over
-game-lab's rules, with game-lab's simplifications: no palifico, no exact
-call, a bid on ones ordered like any other. Its raises were checked against
-game-lab's `bids_above` on 159,920 bids, its counts against `count_face` on
-100,000 tables, and 3,000 whole games against game-lab's round loop (whose
-turn, who loses, who opens, who wins): all the same. The cups are open for
-now; hidden cups wait on a way to throw dice only one seat can read.
+**Where it comes from:** the-table's liar's dice, built in the SAFE App
+Store and now in
+[Die-Namic](https://github.com/rudi193-cmd/die-namic-games), over game-lab's
+rules, with game-lab's simplifications: no palifico, no exact call, a bid on
+ones ordered like any other. Its raises were checked against game-lab's
+`bids_above` on 159,920 bids, its counts against `count_face` on 100,000
+tables, and 3,000 whole games against game-lab's round loop (whose turn, who
+loses, who opens, who wins): all the same. The cups are open for now; hidden
+cups wait on a way to throw dice only one seat can read.
 
 **Never:** throws without writing the row, counts a call any way but the
 dice's, reads the key, or writes the record except through the kernel and

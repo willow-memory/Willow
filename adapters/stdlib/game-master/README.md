@@ -107,10 +107,11 @@ it), and the `roll`,
 `bite` and `proposal` rows of dice and the kernel. Exit codes, the kernel's:
 0 done, 42 waiting on your seal, 2 refused.
 
-**Where it comes from:** the-table's story session in the SAFE App Store
+**Where it comes from:** the-table's story session, built in the SAFE App
+Store and now in [Die-Namic](https://github.com/rudi193-cmd/die-namic-games)
 (a world played beat by beat; action beats rolled 2d6 plus a stat; decision
-beats that move only on the person's seal), rebuilt on the record: the
-rolls are dice's rows, and the seal is the kernel's own.
+beats that move only on the person's seal), rebuilt on the record: the rolls
+are dice's rows, and the seal is the kernel's own.
 
 **Left out:** the-table's puzzle beats (a world with one is refused), its
 other games, and its sealed-fact tally outside the record. A record holds
