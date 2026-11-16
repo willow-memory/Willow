@@ -12,25 +12,25 @@
   {
    "file": "nber-w23681.html",
    "url": "https://www.nber.org/papers/w23681",
-   "fetched": "2026-11-12T10:43:18Z",
+   "fetched": "2026-11-16T07:30:40Z",
    "bytes": 92101,
-   "sha256": "897ae6531c9d0e4e3b322c19e9df38013f5b66af3e84aae1975bddcea5dc98fd",
+   "sha256": "0e3f9f6368eba6c3dfe77a8710e134e61d810833792f79e8962790d3e52ad520",
    "used_for": "Context for Section 936 and PROMESA; not used by a claim until read"
   },
   {
    "file": "nbc-luma-2021.html",
    "url": "https://www.nbcnews.com/news/latino/puerto-rico-private-company-takes-power-utility-service-rcna1091",
-   "fetched": "2026-11-12T10:43:19Z",
-   "bytes": 374067,
-   "sha256": "e12c5025ec2171b3e84ad8c9fab3dfea9358408a3a28d248ee3b44bd78b61359",
+   "fetched": "2026-11-16T07:30:41Z",
+   "bytes": 374613,
+   "sha256": "52f57155c830eca034c555d6fc90c26c8205bfa4344741ff3f7c9dedf264798a",
    "used_for": "LUMA takes over the grid, June 2021 (claim C3)"
   },
   {
    "file": "wikipedia-prepa.html",
    "url": "https://en.wikipedia.org/wiki/Puerto_Rico_Electric_Power_Authority",
-   "fetched": "2026-11-12T10:43:21Z",
-   "bytes": 465457,
-   "sha256": "aaa0d08e31417affb778945ba83aecce96986aa07016171171a1270651751d57",
+   "fetched": "2026-11-16T07:30:41Z",
+   "bytes": 466657,
+   "sha256": "f9dc652f13927c693417cbdf1044a89c8dfb6e125844a46116486bac7e6073e0",
    "used_for": "Context on PREPA; not used by a claim"
   },
   {

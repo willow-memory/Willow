@@ -5,10 +5,11 @@ each written as a kernel row.
         [--now TS] [--nonsense]
 
 --life is make_life.py's `life/`; --sources is what `sources.py fetch` wrote
-(checked against sources.json first). One pile is put together under --work,
-a kernel box of its own: her folder without grants/ (whose claims are what is
-checked), each file read through the add-on that reads it, with the saved real
-sources beside it. No model is asked. The kernel serves, the tools find where
+(checked against sources.json first). One box under --work reads her folder
+without grants/ (whose claims are what is checked) and the saved real sources
+where they are kept (VI.9): each reader's mirror is a source of its own, her
+log/ and lessons/ are read in her folder, and the credit note through a list,
+so nothing is copied to make a pile. No model is asked. The kernel serves, the tools find where
 to read, and a person decides: no key but the box's own is made, and none is
 read.
 
@@ -29,7 +30,6 @@ import hashlib
 import io
 import json
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -92,48 +92,40 @@ def run(script: Path, *args: str) -> tuple[int, str]:
     return got.returncode, got.stdout
 
 
-def copy_visible(src: Path, dst: Path) -> None:
-    """The mirror's files, never its hidden .places."""
-    for p in sorted(src.rglob("*")):
-        rel = p.relative_to(src)
-        if p.is_file() and not any(part.startswith(".") for part in rel.parts):
-            (dst / rel).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(p, dst / rel)
-
-
-def build(work: Path, life: Path, sources: Path, now: str) -> tuple[Path, Path]:
-    """The evidence pile and its box."""
-    pile = work / "piles/evidence"
+def build(work: Path, life: Path, sources: Path, now: str) -> tuple[Path, list[str]]:
+    """The evidence box: every place it reads, read where it is (CONST-VI-9).
+    A reader's mirror is a new file beside hers, kept under --work; her own
+    files are read in her folder, never copied."""
     tmp = work / "mirrors"
+    froms = []
     for name in READERS:
         run(SCRIPTS[name], "mirror", "--from", str(life), "--to", str(tmp / name))
-        copy_visible(tmp / name, pile / "life")
+        froms.append(f"{name}={tmp / name}")
     for name in SOURCE_READERS:
         run(SCRIPTS[name], "mirror", "--from", str(sources), "--to", str(tmp / name))
-        copy_visible(tmp / name, pile / "sources")
-    for rel in ("log", "lessons"):
-        for p in sorted((life / rel).rglob("*")):
-            if p.is_file():
-                (pile / "life" / p.relative_to(life)).parent.mkdir(
-                    parents=True, exist_ok=True
-                )
-                shutil.copyfile(p, pile / "life" / p.relative_to(life))
-    shutil.copyfile(
-        life / "notes/nota-credito-936.md", pile / "life/nota-credito-936.md"
+        froms.append(f"{name}={tmp / name}")
+    froms += [f"log={life / 'log'}", f"lessons={life / 'lessons'}"]
+    notes = work / "notes.txt"  # one note of hers, named where it is
+    notes.write_text(
+        f"{(life / 'notes/nota-credito-936.md').resolve()}\n", encoding="utf-8"
     )
+    froms.append(f"notes=@{notes}")
     box = work / "box-evidence"
-    quiet(kernel.init, box, pile, work / "evidence.key", now)
-    return pile, box
+    quiet(kernel.init, box, None, work / "evidence.key", now, None, froms)
+    return box, froms
 
 
-def passages(pile: Path) -> dict[str, str]:
-    return {f"{c['path']}:{c['line']}": c["text"] for c in kernel.chunks(pile)}
+def passages(box: Path) -> dict[str, str]:
+    return {
+        f"{c['path']}:{c['line']}": c["text"]
+        for c in kernel.pile_of_box(kernel.config(box))
+    }
 
 
 ROW = re.compile(r"^(?:all parts|some parts)\s+(\S+:\d+)\s")
 
 
-def ask(q: dict, box: Path, pile: Path, life: Path, nonsense: bool, text: dict) -> dict:
+def ask(q: dict, box: Path, life: Path, nonsense: bool, text: dict) -> dict:
     kind, said = q["kind"], (NONSENSE if nonsense else q["ask"])
     if kind == "bite":
         rc, out = run(ROOT / "kernel.py", "bite", "--box", str(box), said)
@@ -253,11 +245,11 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     now, nonsense = opts.get("--now") or NOW, bool(opts.get("--nonsense"))
     work.mkdir(parents=True)
-    pile, box = build(work, life, sources, now)
-    text = passages(pile)
+    box, froms = build(work, life, sources, now)
+    text = passages(box)
     asked = []
     for q in Q["questions"]:
-        a = ask(q, box, pile, life, nonsense, text)
+        a = ask(q, box, life, nonsense, text)
         asked.append(a)
         print(
             f"--- {q['id']} ({q['claim']}): {a['asked']}  [exit {a['exit']}, served {len(a['served'])}]"
@@ -274,7 +266,7 @@ def main(argv: list[str]) -> int:
     (work / "results.json").write_text(
         json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
     )
-    quiet(kernel.init, vbox, pile, vbox.parent / (vbox.name + ".key"), now)
+    quiet(kernel.init, vbox, None, vbox.parent / (vbox.name + ".key"), now, None, froms)
     gate = "marisol" + (":nonsense" if nonsense else "")
     for rule, r in res.items():
         kernel.append(vbox, now, "verdict", who="marisol", gate=f"{gate}:{rule}",
