@@ -1,0 +1,28 @@
+{
+  "_what": "Odile's answer key for her QUESTIONS.md, written from demo/odile/PLANTED.md and CHARACTER.md: for each question, the passages she would seal as its answer. A passage counts when it is from a file named here (a name ending in / is a folder) and, where `says` is given, holds those words. Anything else served for that question she declines. Her traps are never named: the client named Weight (T1) is no answer to Dad's weight; the 2024 county letter, already answered (T2), is no answer to what she needs to do; the Dry Creek purchase order paid in cash, which only her memo says (T3), is not one of the unpaid; the queen in a client's note (T4) and the February weight blip (T5) are neither the hive nor the weight. Files are as the box lays them (--read: her calendar is calendar.ics.txt, the rest as written).",
+  "who": "odile",
+  "answers": {
+    "1": [{"file": "tuning/2025.txt", "says": "Renata Lindahl"},
+          {"file": "tuning/2025.txt", "says": "Benedikt Ybarra"},
+          {"file": "tuning/2026.txt", "says": "Loretta Tremaine"},
+          {"file": "tuning/2026.txt", "says": "Imogen Sandoval"}],
+    "2": [{"file": "dad/care-log.csv", "says": "75.1"},
+          {"file": "dad/cardiology-2026-07-30.txt", "says": "more than 2 kg"}],
+    "3": [{"file": "dad/care-log.csv", "says": "75.1"},
+          {"file": "dad/cardiology-2026-07-30.txt", "says": "more than 2 kg"}],
+    "4": [{"file": "mail/2026-03-20-county.txt", "says": "180 days"},
+          {"file": "memos/2021-05-14_1502.txt", "says": "Mesa Mutual"}],
+    "5": [{"file": "money/invoices/CUSD-PO-2026-095.txt"},
+          {"file": "money/invoices/DCSD-PO-2025-063.txt"}],
+    "6": [{"file": "money/invoices/CUSD-PO-2026-095.txt"},
+          {"file": "money/invoices/DCSD-PO-2025-063.txt"}],
+    "7": [{"file": "hives/2026.txt", "says": "H4: 7 fr bees, eggs none, brood none"}],
+    "8": [{"file": "hives/2026.txt", "says": "H4: 7 fr bees, eggs none, brood none"}],
+    "9": [{"file": "memos/", "says": "Can't sleep"},
+          {"file": "texts/kati.txt", "says": "fine, tired"}],
+    "10": [{"file": "memos/", "says": "Tired"},
+           {"file": "texts/kati.txt", "says": "fine, tired"}],
+    "11": [{"file": "dad/care-log.csv", "says": "75.1"},
+           {"file": "dad/cardiology-2026-07-30.txt", "says": "more than 2 kg"}]
+  }
+}
