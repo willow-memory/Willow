@@ -311,6 +311,12 @@ def test_words_that_only_say_it_is_a_sum_or_a_period_name_nothing(tmp_path):
     assert sp.wanted("how much did we spend on electricity this year") == (["electricity"], "this", False)  # fmt: skip
     assert sp.wanted("total paid for the gym last financial year") == (["gym"], "last", True)  # fmt: skip
     assert sp.wanted("what did the rent cost in the fiscal year") == (["rent"], "", True)  # fmt: skip
+    # more words after the period change nothing: "this year so far", "last year in total"
+    assert sp.wanted("what did origin cost this year so far") == (["origin"], "this", False)  # fmt: skip
+    assert sp.wanted("origin last year in total") == (["origin"], "last", False)
+    assert sp.wanted("origin this fy please")[1:] == ("this", True)
+    assert sp.wanted("origin last fiscal year ok")[1:] == ("last", True)
+    assert sp.wanted("origin last calendar year ok")[1:] == ("last", False)
     assert sp.wanted("tesco tesco tesco") == (["tesco"], "", False)
     assert sp.wanted("what was last month's rent") == (
         ["month", "rent"],
