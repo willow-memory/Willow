@@ -2144,7 +2144,7 @@ willow/
 ## demo/
 
 ```
-├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
+├── demo/                     made-up lives to try it on, and studies of its work: demo/README.md tells them apart
 │   ├── README.md             the demos told apart: the made-up lives and the boxes that lay them, then the studies and runs
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
