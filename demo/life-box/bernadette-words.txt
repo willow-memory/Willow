@@ -1,0 +1,15 @@
+# Bernadette's own words: what she says that her files, or the people who wrote
+# them, say another way. Hers to add to, learned from the questions that
+# found nothing; the starter list stays as it was (it is nobody's in
+# particular, and is not tuned to any folder).
+#
+# Question 2, "how much is the car rego this year": she says rego (her
+# calendar's "Car rego due", her chat with Gerry, VICROADS REGO on her bank
+# lines); the notice VicRoads sends, and her folder files it under, says
+# Registration.
+rego = registration
+#
+# Question 6, "total rent from the geelong unit last financial year": she says
+# financial year; the agent's statement says EOFY and her own sheet, "Rental
+# unit", says FY.
+financial = fy, eofy

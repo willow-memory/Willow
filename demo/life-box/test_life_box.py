@@ -398,7 +398,8 @@ def verifies(box: Path) -> subprocess.CompletedProcess:
 
 
 def all_boxes(table: Path) -> list[Path]:
-    return [table / "record", *sorted((table / "records").iterdir())]
+    more = sorted((table / "records").iterdir()) if (table / "records").is_dir() else []
+    return [table / "record", *more]
 
 
 def seals(table: Path) -> list[tuple[Path, dict]]:
@@ -701,3 +702,182 @@ def test_a_claim_says_a_question_was_asked_of_a_pile_and_old_claims_still_parse(
     assert (
         life_box.CLAIM.match('answers question 1, "q", from f.txt:1').group(6) is None
     )
+
+
+# ── day two: her own words ──────────────────────────────────────────────────
+def bites(box: Path) -> list[dict]:
+    return [r for r in kernel.read(box / "record.jsonl")[0] if r["kind"] == "bite"]
+
+
+def day_two(table: Path) -> dict:
+    """What `words`, a second ask, `decide` and `recap` do on a table already
+    asked and decided once; the record of each box beforehand, to hold the
+    later one to."""
+    before = {b.name: (b / "record.jsonl").read_bytes() for b in all_boxes(table)}
+    old_list = (table / "words.txt").read_bytes()
+    words = run("words", "--table", table)
+    new_list = (table / "words.txt").read_bytes()
+    again = run("words", "--table", table)
+    asked = run("ask", "--table", table)
+    decided = run("decide", "--table", table)
+    recap = run("recap", "--table", table)
+    return {"table": table, "before": before, "old_list": old_list, "new_list": new_list, "words": words,
+            "again": again, "asked": asked, "decided": decided, "recap": recap}  # fmt: skip
+
+
+@pytest.fixture(scope="module")
+def words_piles(bern_piles):
+    """Her piles, asked and decided once (bern_piles), then day two. It goes on
+    in the same table, so it is read after the tests that read bern_piles."""
+    return {**day_two(bern_piles["table"]), "pdf": bern_piles["pdf"]}
+
+
+@pytest.fixture(scope="module")
+def words_one(bern):
+    return {**day_two(bern["table"]), "pdf": bern["pdf"]}
+
+
+STARTER_TXT = ROOT / "adapters" / "stdlib" / "starter-words" / "words.txt"
+NOTICE = (
+    "Mail/Inbox/2026-10-06 Registration renewal notice SUBARU FORESTER 1XY4KD.eml.txt"
+)
+LAST_YEARS = (
+    "Mail/Inbox/2025-10-07 Registration renewal notice SUBARU FORESTER 1XY4KD.eml.txt"
+)
+
+
+def test_her_own_words_are_the_starter_list_and_then_hers_kept_to_her(words_piles):
+    t, w = words_piles["table"], words_piles
+    assert w["words"].returncode == 0, w["words"].stderr
+    assert "  financial = eofy, fy\n" in w["words"].stdout and "  rego = registration\n" in w["words"].stdout  # fmt: skip
+    starter = STARTER_TXT.read_bytes()
+    assert w["old_list"] == starter and w["new_list"].startswith(starter.rstrip(b"\n"))
+    hers = (HERE / "bernadette-words.txt").read_bytes()
+    assert w["new_list"].endswith(hers) and w["new_list"] != w["old_list"]
+    assert (t / "words.txt").stat().st_mode & 0o077 == 0
+    alias, why = kernel.parse_words(w["new_list"].decode())
+    assert why is None and alias["rego"] == ["registration"] and alias["financial"] == ["eofy", "fy"]  # fmt: skip
+    assert set(kernel.parse_words(starter.decode())[0]) <= set(alias)
+    # said twice, it changes nothing
+    assert w["again"].returncode == 0 and "already holds" in w["again"].stdout
+    assert (t / "words.txt").read_bytes() == w["new_list"]
+
+
+def test_her_file_holds_only_her_lines_each_with_a_comment_saying_whose_file_says_it():
+    lines = (HERE / "bernadette-words.txt").read_text().splitlines()
+    kept = [ln for ln in lines if ln.strip() and not ln.startswith("#")]
+    assert kept == ["rego = registration", "financial = fy, eofy"]
+    text = "\n".join(lines)
+    assert "Car rego due" in text and "Registration" in text and "EOFY" in text and "FY" in text  # fmt: skip
+    assert kernel.parse_words(text)[1] is None
+    assert not {"rego", "financial"} & set(kernel.parse_words(STARTER_TXT.read_text())[0])  # not tuned in  # fmt: skip
+
+
+def test_every_box_still_verifies_and_holds_every_earlier_row_as_it_was(words_piles):
+    t = words_piles["table"]
+    assert len(all_boxes(t)) == 16
+    for box in all_boxes(t):
+        got = verifies(box)
+        assert got.returncode == 0, (box.name, got.stdout)
+        # every seal and decline stays: the old record is the start of the new
+        assert (box / "record.jsonl").read_bytes().startswith(words_piles["before"][box.name]), box.name  # fmt: skip
+
+
+def test_the_next_bite_names_the_new_list_and_the_earlier_ones_keep_the_old(
+    words_piles,
+):
+    import hashlib
+
+    old = hashlib.sha256(words_piles["old_list"]).hexdigest()
+    new = hashlib.sha256(words_piles["new_list"]).hexdigest()
+    for box in all_boxes(words_piles["table"]):
+        shas = [b["words_sha256"] for b in bites(box)]
+        kept = sum(1 for r in words_piles["before"][box.name].split(b"\n") if b'"kind":"bite"' in r)  # fmt: skip
+        assert shas[:kept] == [old] * kept and set(shas[kept:]) <= {new}, box.name
+
+
+def test_asked_again_only_the_open_questions_are_asked(words_piles):
+    ask = words_piles["asked"].stdout
+    answered = 17 if words_piles["pdf"] else 16
+    assert words_piles["asked"].returncode == 42
+    assert ask.count("already answered: sealed, ") == answered
+    assert f"{answered} questions already have a sealed answer and were not asked again" in ask  # fmt: skip
+    q1 = ask.split(" 1. ")[1].split(" 2. ")[0]
+    assert "already answered: sealed, Calendar/Home.ics.txt:44" in q1 and "suggested" not in q1  # fmt: skip
+    waiting = 5 if words_piles["pdf"] else 4
+    assert f"\n{waiting} answers wait on bernadette's seal" in ask
+
+
+def test_her_rego_is_sealed_from_the_notice_and_last_years_notice_is_declined(
+    words_piles,
+):
+    got = answers(words_piles["recap"].stdout)
+    assert got[2]["sealed"] == [NOTICE + ":10"]  # $912.40, this year's
+    assert LAST_YEARS + ":10" in got[2]["declined"]  # the trap: last year's, $874.10
+    assert "Documents/Household budget 2026.xlsx.txt:3" in got[2]["declined"]  # the budget's estimate  # fmt: skip
+    q2 = next(p["data"] for _, p in seals(words_piles["table"]) if p["claim"].startswith('answers question 2,'))  # fmt: skip
+    assert "$912.40" in q2
+
+
+def test_her_rent_is_sealed_from_her_sheet(words_piles):
+    got = answers(words_piles["recap"].stdout)
+    assert got[6]["sealed"] == ["Documents/Rental unit 2025-26.xlsx.txt:3"]
+    q6 = next(p["data"] for _, p in seals(words_piles["table"]) if p["claim"].startswith('answers question 6,'))  # fmt: skip
+    assert "21840" in q6
+
+
+def test_day_two_counts_with_her_piles_and_nothing_untrue_is_sealed(words_piles):
+    pdf = words_piles["pdf"]
+    declined = 3 if pdf else 2
+    assert f"sealed 2 answers and declined {declined}" in words_piles["decided"].stdout
+    assert f"{19 if pdf else 18} of 20 questions have an answer bernadette sealed" in words_piles["recap"].stdout  # fmt: skip
+    key = json.loads((HERE / "bernadette.json").read_text())
+    every = seals(words_piles["table"])
+    assert len(every) == 24
+    for box, prop in every:
+        m = life_box.CLAIM.match(prop["claim"])
+        q, where = m.group(1), m.group(4)
+        assert any(where == a["file"] and a.get("says", "") in prop["data"] for a in key["answers"][q]), (box.name, q, where)  # fmt: skip
+        assert "2025-10-07 Registration" not in where and "rental_fy26_draft" not in where  # fmt: skip
+    got = answers(words_piles["recap"].stdout)
+    assert "Calendar/Home.ics.txt:155" not in sum(
+        (g["sealed"] for g in got.values()), []
+    )
+
+
+def test_on_one_box_the_same_two_answers_are_sealed_and_the_record_holds(words_one):
+    w = words_one
+    assert w["words"].returncode == 0 and w["asked"].returncode == 42
+    pdf = w["pdf"]
+    assert f"\n{4 if pdf else 3} answers wait on bernadette's seal" in w["asked"].stdout
+    assert f"sealed 2 answers and declined {2 if pdf else 1}" in w["decided"].stdout
+    got = answers(w["recap"].stdout)
+    assert got[2]["sealed"] == [NOTICE + ":10"]
+    assert got[6]["sealed"] == ["Documents/Rental unit 2025-26.xlsx.txt:3"]
+    assert LAST_YEARS + ":10" not in sum((g["sealed"] for g in got.values()), [])
+    assert f"{18 if pdf else 17} of 20 questions have an answer bernadette sealed" in w["recap"].stdout  # fmt: skip
+    box = w["table"] / "record"
+    assert verifies(box).returncode == 0
+    assert (box / "record.jsonl").read_bytes().startswith(w["before"]["record"])
+    assert len(seals(w["table"])) == (22 if pdf else 21)
+
+
+def test_a_person_with_no_words_of_their_own_is_refused_and_nothing_changes(teo):
+    t = teo["table"]
+    kept = lambda: {b.name: (b / "record.jsonl").read_bytes() for b in all_boxes(t) if (b / "record.jsonl").is_file()}  # noqa: E731  # fmt: skip
+    before, words = kept(), (t / "words.txt").read_bytes()
+    got = run("words", "--table", t)
+    assert got.returncode == 2 and "teodora has no words of their own" in got.stderr
+    assert (t / "words.txt").read_bytes() == words and kept() == before
+
+
+def test_a_box_that_reads_no_words_list_is_sent_to_later_words(tmp_path):
+    table, pile = tmp_path / "t", tmp_path / "t" / "pile"
+    pile.mkdir(parents=True)
+    (pile / "a.txt").write_text("The registration is due.\n")
+    (table / "who.txt").write_text("bernadette\n")
+    made = subprocess.run([sys.executable, str(ROOT / "kernel.py"), "init", "--box", str(table / "record"), "--pile", str(pile), "--key", str(table / "k")], capture_output=True)  # fmt: skip
+    assert made.returncode == 0
+    got = run("words", "--table", table)
+    assert got.returncode == 2 and "later-words" in got.stderr
+    assert not (table / "words.txt").exists()

@@ -1,4 +1,4 @@
-"""words-later: a box made again with a words list it lacked. The record is
+"""later-words: a box made again with a words list it lacked. The record is
 laid down again through the kernel's own append and comes out the same bytes;
 seals, declines, proposals and answers are all still there and still verify;
 the old box is untouched; the next bite reads the list; and a box that can't
@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 HERE = Path(__file__).resolve().parent
-SCRIPT = HERE / "words_later.py"
+SCRIPT = HERE / "later_words.py"
 KERNEL = HERE.parents[2] / "kernel.py"
 T0, T1, T2, T3, T4 = (f"2026-11-0{d}T09:00:00Z" for d in (1, 2, 3, 4, 5))
 
@@ -153,7 +153,7 @@ def test_a_bad_command_line_is_refused_and_names_the_script(tmp_path):
     for argv in ([], ["--box", "x"], ["--box", "x", "--words", "w"],
                  ["--box", "x", "--words", "w", "--to", "n", "stray"]):  # fmt: skip
         got = run(SCRIPT, *argv)
-        assert got.returncode == 2 and "words_later.py" in got.stderr, argv
+        assert got.returncode == 2 and "later_words.py" in got.stderr, argv
 
 
 def test_what_is_not_a_box_is_refused(tmp_path):

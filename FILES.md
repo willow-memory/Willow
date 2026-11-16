@@ -700,6 +700,10 @@ willow/
 │   │   │   ├── accents.py    a word typed without its accent, read as the files write it; words-list lines
 │   │   │   ├── test_accents.py
 │   │   │   └── README.md
+│   │   ├── later-words/
+│   │   │   ├── later_words.py a box made again with a words list it lacked, its record carried over as it was
+│   │   │   ├── test_later_words.py
+│   │   │   └── README.md     its card
 │   │   ├── nicknames/
 │   │   │   ├── nicknames.py   the names you call people, found beside a family word in your files, as a words list
 │   │   │   ├── test_nicknames.py
@@ -737,10 +741,6 @@ willow/
 │   │   │   ├── words_it.py   a question in Italian, its common words out, then the kernel's bite
 │   │   │   ├── test_words_it.py
 │   │   │   └── README.md
-│   │   ├── words-later/
-│   │   │   ├── words_later.py A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made
-│   │   │   ├── test_words_later.py
-│   │   │   └── README.md     its card
 │   │   ├── words-nl/
 │   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
 │   │   │   ├── test_words_nl.py
@@ -2389,6 +2389,7 @@ willow/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
 │   ├── life-box/
+│   │   ├── bernadette-words.txt
 │   │   ├── bernadette.json
 │   │   ├── life_box.py       the game box, with a person's life for its binder
 │   │   ├── teodora.json

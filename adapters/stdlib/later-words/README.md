@@ -8,17 +8,22 @@ writes: record, to
 network: none
 role: words
 -->
-# words-later
+# later-words
 
 A box made again with a words list it lacked, its record kept as it was.
 
-    python adapters/stdlib/words-later/words_later.py --box DIR --words FILE --to NEWDIR
+    python adapters/stdlib/later-words/later_words.py --box DIR --words FILE --to NEWDIR
 
 **Why again.** A box takes its words list only when the kernel makes it
-(`init --words`, which writes the list's place into kernel.json); nothing
+(`init --words`, which writes the list's place into the box's settings); nothing
 afterwards adds one. A person's own words are learned from what found nothing,
 which is day two, after the box has a record. So the box is made again beside
 the old one, and the old one's record goes with it.
+
+**When it is not needed.** A box made *with* a words list points at the file,
+and the kernel reads the file at every bite: add lines to that file and the
+box has them from the next bite, with nothing made again (each bite row keeps
+the SHA-256 of the list it read). This is for the box made with none.
 
 **What carries over, and how.** The record is not copied as a file and not
 rewritten. Its rows are laid down again in order through the kernel's own
@@ -29,7 +34,7 @@ are copied as they are. It checks that the new record is the old one's bytes
 and that `kernel.py verify --box NEWDIR` holds before it says it is done, and
 `verify` on the old box is run first: a record that doesn't hold isn't carried.
 
-**What it changes.** One thing: `kernel.json` in NEWDIR names FILE as the
+**What it changes.** One thing: the new box's settings name FILE as the
 words list. From the next bite on, each bite row carries the list's SHA-256,
 as `init --words` boxes always have; the rows before it, made without a list,
 stay as they were.

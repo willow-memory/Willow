@@ -758,6 +758,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
     "land": ("land.py", ["--of", "{pile}/sort.json", "--from", "{pile}", "--to", "{tmp}/landed", "--dry-run"]),
+    "later-words": ("later_words.py", ["--box", "{box}", "--words", "{tmp}/my-words.txt", "--to", "{tmp}/again"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
@@ -922,7 +923,6 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "who-said": ("who_said.py", ["--box", "{box}"]),
     "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
-    "words-later": ("words_later.py", ["--box", "{box}", "--words", "{tmp}/my-words.txt", "--to", "{tmp}/again"]),
     "world-ids": ("world_ids.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     # every language pack, from its folder: a new one is run here without a line of its own
@@ -987,7 +987,7 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     fill = {"box": str(box), "pile": str(pile), "tmp": str(tmp_path)}
     good = [a.format(**fill) for a in argv]
     if (
-        name == "words-later"
+        name == "later-words"
     ):  # a list readable only by its owner: the kernel refuses any other
         (tmp_path / "my-words.txt").write_text(
             "rego = registration\n", encoding="utf-8"

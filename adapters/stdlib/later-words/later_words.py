@@ -1,6 +1,6 @@
-"""words_later.py: a box made again with a words list it lacked, its record carried over as it was. Python 3.9+.
+"""later_words.py: a box made again with a words list it lacked, its record carried over as it was. Python 3.9+.
 
-    python adapters/stdlib/words-later/words_later.py --box DIR --words FILE --to NEWDIR
+    python adapters/stdlib/later-words/later_words.py --box DIR --words FILE --to NEWDIR
 
 A box takes its words list only when the kernel makes it: `init --words`
 writes the list's place into kernel.json, and nothing afterwards changes it.
@@ -34,7 +34,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
 
-USAGE = "usage: words_later.py --box DIR --words FILE --to NEWDIR"
+USAGE = "usage: later_words.py --box DIR --words FILE --to NEWDIR"
 #: what the kernel's append makes itself, so a replayed row doesn't pass it on
 OWN = ("n", "kind", "who", "ts", "where", "prev", "hash")
 CARRIED = ("proposals", "written")

@@ -19,13 +19,13 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **384 of 606 built** · 545 need no install · 61 need one
+`█████████████░░░░░░░` **383 of 605 built** · 544 need no install · 61 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 99 | 43 | 132 | 10 |
 | Finding things | 41 | 17 | 48 | 10 |
-| Your own words | 22 | 7 | 26 | 3 |
+| Your own words | 21 | 7 | 25 | 3 |
 | Keeping track | 46 | 18 | 62 | 2 |
 | Trust and proof | 34 | 33 | 58 | 9 |
 | Privacy and safety | 15 | 4 | 17 | 2 |
@@ -68,8 +68,6 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
-- 2026-11-16 · [**words-later**](adapters/stdlib/words-later/) \
-  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made.
 - 2026-11-16 · [**day-first**](adapters/stdlib/day-first/) \
   For a folder you know writes dates day first: each one's ISO form written beside it, so it can be placed.
 - 2026-11-14 · [**play-liars-dice**](adapters/stdlib/play-liars-dice/) \
@@ -78,15 +76,17 @@ its list: someone who speaks the language can add one without much Python.
   Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules.
 - 2026-11-14 · [**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules.
+- 2026-11-14 · [**play-checkers**](adapters/stdlib/play-checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W47 -->
-**[sarif](adapters/stdlib/sarif/)** \
-SARIF reports from code scanners such as CodeQL and Semgrep: each finding as a passage with its rule and place.
+**[github](adapters/stdlib/github/)** \
+What willow's repo needs from GitHub, kept in one folder so it can be taken away.
 
-*Drawn for 2026-W47: SHA-256 of "willow add-on of the week 2026-W47", modulo the 384 built add-ons in name order.*
+*Drawn for 2026-W47: SHA-256 of "willow add-on of the week 2026-W47", modulo the 383 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -790,6 +790,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="accents"></a>[**accents**](adapters/stdlib/accents/) \
   A word typed without its accent read as your files write it, and the words-list lines that make it last. \
   *new* `no-install` `offline` · near: abbreviations, stems, synonyms
+- <a id="later-words"></a>[**later-words**](adapters/stdlib/later-words/) \
+  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
+  *new* `no-install` `offline` · near: synonyms, asked-again, hook-pin
 - <a id="nicknames"></a>[**nicknames**](adapters/stdlib/nicknames/) \
   The names you call people, mapped to who they are, so 'Mum' finds Margaret. \
   *new* `no-install` `offline` · near: starter-words, abbreviations, notes
@@ -811,21 +814,18 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-de"></a>[**words-de**](adapters/stdlib/words-de/) \
   German common words, so questions aren't matched on "der" and "und". \
   *new* `no-install` `offline` `common` `german` · near: words-nl, words-pl, words-it
-- <a id="words-es"></a>[**words-es**](adapters/stdlib/words-es/) \
-  Spanish common words ("el", "y"). \
-  *new* `no-install` `offline` `common` `spanish` · near: words-it, words-pt, words-cy
 
 #### What words it knows, w to w
 
+- <a id="words-es"></a>[**words-es**](adapters/stdlib/words-es/) \
+  Spanish common words ("el", "y"). \
+  *new* `no-install` `offline` `common` `spanish` · near: words-it, words-pt, words-cy
 - <a id="words-fr"></a>[**words-fr**](adapters/stdlib/words-fr/) \
   French common words ("le", "et"). \
   *new* `no-install` `offline` `common` `french` · near: words-it, words-pl, words-pt
 - <a id="words-it"></a>[**words-it**](adapters/stdlib/words-it/) \
   Italian common words ("il", "e"). \
   *new* `no-install` `offline` `common` `italian` · near: words-pt, words-tlh, words-es
-- <a id="words-later"></a>[**words-later**](adapters/stdlib/words-later/) \
-  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
-  *new* `no-install` `offline` · near: ask-later, starter-words, record-sync
 - <a id="words-nl"></a>[**words-nl**](adapters/stdlib/words-nl/) \
   Dutch common words ("de", "en"). \
   *new* `no-install` `offline` `common` `dutch` · near: words-de, words-it, words-pl
