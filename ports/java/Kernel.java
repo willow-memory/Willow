@@ -879,6 +879,7 @@ public final class Kernel {
 
     static final class Chunk {
         final String path, text, id;
+        String source; // a source's name, which places it and is no word of it (CONST-VI-9)
         final int line;
 
         Chunk(String path, int line, String text) {
@@ -897,6 +898,9 @@ public final class Kernel {
             return m;
         }
     }
+
+    /** A chunk's path as its own folder names it: a source's name is no word of it. */
+    static String ownPath(Chunk c) { return c.source == null ? c.path : c.path.substring(c.source.length() + 1); }
 
     /** Path.rglob("*"), sorted as Python sorts paths: by their parts. */
     private static void walk(Path dir, List<String> parts, List<List<String>> out) throws IOException {
@@ -1032,7 +1036,11 @@ public final class Kernel {
                 throw new IllegalArgumentException("the source " + name + " has the name of a file or folder at the top of the pile");
             String at = (String) srcs.get(name);
             List<Chunk> part = at.startsWith("@") ? listChunks(Path.of(at.substring(1))) : chunks(Path.of(at));
-            for (Chunk c : part) out.add(new Chunk(name + "/" + c.path, c.line, c.text));
+            for (Chunk c : part) {
+                Chunk x = new Chunk(name + "/" + c.path, c.line, c.text);
+                x.source = name;
+                out.add(x);
+            }
         }
         return out;
     }
@@ -1220,7 +1228,7 @@ public final class Kernel {
         String path = null, cur = "";
         for (int i = 0; i < pile.size(); i++) {
             Chunk c = pile.get(i);
-            if (!c.path.equals(path)) { path = c.path; cur = newest(c.path); }
+            if (!c.path.equals(path)) { path = c.path; cur = newest(ownPath(c)); }
             String t = newest(c.text);
             if (t.compareTo(cur) > 0) cur = t;
             out[i] = cur.isEmpty() ? 0 : Integer.parseInt(cur);
@@ -1239,7 +1247,7 @@ public final class Kernel {
         for (int k = 0; k < pile.size(); k++) {
             Chunk c = pile.get(k);
             List<String> both = new ArrayList<>(words(c.text));
-            both.addAll(words(c.path)); // a folder's name is the person's word too
+            both.addAll(words(ownPath(c))); // a folder's name is the person's word too
             Set<String> toks = forms(both);
             Set<String> h = new HashSet<>();
             for (String w : want) if (heldBy(w, toks, alias)) h.add(w);
@@ -1299,7 +1307,7 @@ public final class Kernel {
         Set<String> every = new HashSet<>();
         for (Chunk c : pile) {
             every.addAll(forms(words(c.text)));
-            every.addAll(forms(words(c.path)));
+            every.addAll(forms(words(ownPath(c))));
         }
         List<String> absent = new ArrayList<>();
         for (String w : want) if (!heldBy(w, every, alias)) absent.add(w);

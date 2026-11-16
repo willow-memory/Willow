@@ -1299,6 +1299,15 @@ func echo(bite, text string) bool {
 type Chunk struct {
 	path, text, id string
 	line           int
+	source         string // a source's name, which places it and is no word of it (CONST-VI-9)
+}
+
+// ownPath is a chunk's path as its own folder names it.
+func ownPath(c *Chunk) string {
+	if c.source == "" {
+		return c.path
+	}
+	return c.path[len(c.source)+1:]
 }
 
 func newChunk(path string, line int, text string) *Chunk {
@@ -1527,7 +1536,9 @@ func pileOfBox(cfg *Obj) ([]*Chunk, *string) {
 				part = chunks(at)
 			}
 			for _, c := range part {
-				out = append(out, newChunk(name+"/"+c.path, c.line, c.text))
+				x := newChunk(name+"/"+c.path, c.line, c.text)
+				x.source = name
+				out = append(out, x)
 			}
 		}
 	}
@@ -1691,7 +1702,7 @@ func dates(pile []*Chunk) []int64 {
 	path, cur := "\x00none", ""
 	for i, c := range pile {
 		if c.path != path {
-			path, cur = c.path, newest(c.path)
+			path, cur = c.path, newest(ownPath(c))
 		}
 		if t := newest(c.text); t > cur {
 			cur = t
@@ -1738,7 +1749,7 @@ func heldBy(w string, toks map[string]bool, al alias) bool {
 }
 
 func toks(c *Chunk) map[string]bool {
-	return forms(append(words(c.text), words(c.path)...))
+	return forms(append(words(c.text), words(ownPath(c))...))
 }
 
 // uniqueWords is dict.fromkeys(words) less FUNCTION: each content word once, in order.

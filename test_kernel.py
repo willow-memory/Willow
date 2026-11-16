@@ -56,8 +56,13 @@ PLANTED = {
     ),
     # CONST-VI-9: a source's passages lose their source's name
     "# 14./named": (
-        """out += [{**c, "path": f"{name}/{c['path']}"} for c in part]""",
+        """out += [{**c, "path": f"{name}/{c['path']}", "source": name} for c in part]""",
         "out += part",
+    ),
+    # CONST-VI-9: a source's name is a word every one of its passages holds
+    "# 14./words": (
+        'return c["path"][len(c["source"]) + 1 :] if c.get("source") else c["path"]',
+        'return c["path"]',
     ),
     # CONST-VI-9: a list of files is read as the whole folder it sits in
     "# 14./listed": (

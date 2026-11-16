@@ -701,6 +701,7 @@ interface Chunk {
   line: number;
   text: string;
   id: string;
+  source?: string;
 }
 
 const chunkJson = (c: Chunk): J => obj(["path", c.path], ["line", BigInt(c.line)], ["text", c.text], ["id", c.id]);
@@ -837,7 +838,7 @@ function pileOfBox(cfg: JMap): Chunk[] {
     if (tops.has(name)) throw new Error(`the source ${name} has the name of a file or folder at the top of the pile`);
     const at = srcs.get(name) as string;
     const part = at.startsWith("@") ? listChunks(at.slice(1)) : chunks(at);
-    out.push(...part.map((c) => ({ ...c, path: `${name}/${c.path}` })));
+    out.push(...part.map((c) => ({ ...c, path: `${name}/${c.path}`, source: name })));
   }
   return out;
 }
@@ -987,6 +988,9 @@ function newest(t: string): string {
 }
 
 /** kernel.py's dates: each chunk's date, carried down its file; 0 for none. */
+/** A chunk's path as its own folder names it: a source's name is no word of it (CONST-VI-9). */
+const ownPath = (c: Chunk): string => (c.source ? c.path.slice(c.source.length + 1) : c.path);
+
 function dates(pile: Chunk[]): number[] {
   const out: number[] = [];
   let path: string | null = null;
@@ -994,7 +998,7 @@ function dates(pile: Chunk[]): number[] {
   for (const c of pile) {
     if (c.path !== path) {
       path = c.path;
-      cur = newest(c.path);
+      cur = newest(ownPath(c));
     }
     const t = newest(c.text);
     if (t > cur) cur = t;
@@ -1009,7 +1013,7 @@ function rank(pile: Chunk[], bite: string, alias: Alias): Chunk[] {
   const when = dates(pile);
   const held: [Chunk, Set<string>, number][] = [];
   pile.forEach((c, k) => {
-    const toks = forms([...words(c.text), ...words(c.path)]); // a folder's name is the person's word too
+    const toks = forms([...words(c.text), ...words(ownPath(c))]); // a folder's name is the person's word too
     const h = new Set([...want].filter((w) => heldBy(w, toks, alias)));
     if (BigInt(h.size) * T.HOLD[1] >= T.HOLD[0] * BigInt(want.size)) held.push([c, h, when[k]]);
   });
@@ -1053,7 +1057,7 @@ function look(pile: Chunk[], bite: string, served: Chunk[], alias: Alias): J[] {
   };
   if (!want.length) out.push(hint("every word is a common one: name the thing you mean", null, null));
   const every = new Set<string>();
-  for (const c of pile) for (const w of forms([...words(c.text), ...words(c.path)])) every.add(w);
+  for (const c of pile) for (const w of forms([...words(c.text), ...words(ownPath(c))])) every.add(w);
   const absent = want.filter((w) => !heldBy(w, every, alias));
   for (const w of want) {
     // said, so a match their list made is never taken for theirs

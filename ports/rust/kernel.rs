@@ -1433,6 +1433,8 @@ struct Chunk {
     line: usize,
     text: String,
     id: String,
+    /// a source's name, which places it and is no word of it (CONST-VI-9)
+    source: Option<String>,
 }
 
 impl Chunk {
@@ -1443,6 +1445,15 @@ impl Chunk {
             line,
             text,
             id,
+            source: None,
+        }
+    }
+
+    /// Its path as its own folder names it: a source's name is no word of it.
+    fn own_path(&self) -> &str {
+        match &self.source {
+            Some(n) => &self.path[n.len() + 1..],
+            None => &self.path,
         }
     }
 
@@ -1639,7 +1650,9 @@ fn pile_of_box(cfg: &Obj) -> Result<Vec<Chunk>, String> {
                 chunks(&at)
             };
             for c in part {
-                out.push(Chunk::new(&format!("{}/{}", name, c.path), c.line, c.text));
+                let mut x = Chunk::new(&format!("{}/{}", name, c.path), c.line, c.text);
+                x.source = Some(name.clone());
+                out.push(x);
             }
         }
     }
@@ -1800,7 +1813,7 @@ fn dates(pile: &[Chunk]) -> Vec<i64> {
     for c in pile {
         if path != Some(c.path.as_str()) {
             path = Some(&c.path);
-            cur = newest(&c.path);
+            cur = newest(c.own_path());
         }
         let tdate = newest(&c.text);
         if tdate > cur {
@@ -1945,7 +1958,7 @@ fn held_by(w: &str, toks: &HashSet<String>, al: &Alias) -> bool {
 
 fn toks(c: &Chunk) -> HashSet<String> {
     let mut both = words(&c.text);
-    both.extend(words(&c.path)); // a folder's name is the person's word too
+    both.extend(words(c.own_path())); // a folder's name is the person's word too
     forms(&both)
 }
 

@@ -527,7 +527,7 @@ def pile_of_box(cfg: dict) -> list[dict]:
                 f"the source {name} has the name of a file or folder at the top of the pile"
             )
         part = list_chunks(at) if cfg["sources"][name].startswith("@") else chunks(at)
-        out += [{**c, "path": f"{name}/{c['path']}"} for c in part]
+        out += [{**c, "path": f"{name}/{c['path']}", "source": name} for c in part]
     return out
 
 
@@ -636,10 +636,17 @@ def newest(text: str) -> str:
     return best
 
 
+def own_path(c: dict) -> str:
+    """A chunk's path as its own folder names it: a source's name places a
+    passage and is no word of it (CONST-VI-9), or a source named "recipes"
+    would hand every passage in it the word for free (#366)."""
+    return c["path"][len(c["source"]) + 1 :] if c.get("source") else c["path"]
+
+
 def toks(c: dict) -> set[str]:
     """A chunk's words: its text's and its path's. A folder's name is the
     person's word too: Laszlo's care log never says "Dad", its folder does."""
-    return forms(words(c["text"]) + words(c["path"]))
+    return forms(words(c["text"]) + words(own_path(c)))
 
 
 def held_by(w: str, toks: set[str], alias: dict) -> bool:
@@ -727,7 +734,7 @@ def dates(pile: list[dict]) -> list[int]:
     out, path, cur = [], None, ""
     for c in pile:
         if c["path"] != path:
-            path, cur = c["path"], newest(c["path"])
+            path, cur = c["path"], newest(own_path(c))
         cur = max(cur, newest(c["text"]))
         out.append(int(cur or 0))
     return out
@@ -1368,6 +1375,8 @@ def test() -> None:
         assert [(c["line"], c["text"], c["id"]) for c in mine] == [
             (c["line"], c["text"], c["id"]) for c in chunks(law)
         ]
+        # a source's name places a passage and is no word of it (#366)
+        assert "law" not in toks(mine[0]) and "charter" in toks(mine[0])
         (notes / "roof.md").write_text("The roof estimate is now 4300.\n")
         said = json.loads(quiet(bite, both, "the roof estimate", ts)[1])
         assert [x["where"] for x in said["served"]] == ["chosen/roof.md:1"]

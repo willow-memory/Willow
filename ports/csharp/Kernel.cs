@@ -784,6 +784,8 @@ public static class Kernel
     {
         public readonly string Path, Text, Id;
         public readonly int Line;
+        public string? Source; // a source's name, which places it and is no word of it (CONST-VI-9)
+        public string OwnPath => Source == null ? Path : Path.Substring(Source.Length + 1);
         public Chunk(string path, int line, string text) { Path = path; Line = line; Text = text; Id = H256(text); }
         public JObj Json() => Obj("path", Path, "line", new BigInteger(Line), "text", Text, "id", Id);
     }
@@ -926,7 +928,7 @@ public static class Kernel
                 if (tops.Contains(name)) return (null, $"the source {name} has the name of a file or folder at the top of the pile");
                 var at = (string)srcs[name]!;
                 var part = at.StartsWith('@') ? ListChunks(at.Substring(1)) : Chunks(at);
-                foreach (var c in part) o.Add(new Chunk(name + "/" + c.Path, c.Line, c.Text));
+                foreach (var c in part) o.Add(new Chunk(name + "/" + c.Path, c.Line, c.Text) { Source = name });
             }
         }
         return (o, null);
@@ -1101,7 +1103,7 @@ public static class Kernel
         for (int i = 0; i < pile.Count; i++)
         {
             var c = pile[i];
-            if (c.Path != path) { path = c.Path; cur = Newest(c.Path); }
+            if (c.Path != path) { path = c.Path; cur = Newest(c.OwnPath); }
             var t = Newest(c.Text);
             if (string.CompareOrdinal(t, cur) > 0) cur = t;
             o[i] = cur.Length == 0 ? 0 : int.Parse(cur, System.Globalization.CultureInfo.InvariantCulture);
@@ -1120,7 +1122,7 @@ public static class Kernel
         {
             var c = pile[k];
             var toks = new HashSet<string>(Words(c.Text), StringComparer.Ordinal);
-            toks.UnionWith(Words(c.Path)); // a folder's name is the person's word too
+            toks.UnionWith(Words(c.OwnPath)); // a folder's name is the person's word too
             toks = Forms(toks);
             var h = want.Where(w => HeldBy(w, toks, alias)).ToHashSet(StringComparer.Ordinal);
             if (new BigInteger(h.Count) * HOLD_DEN >= HOLD_NUM * want.Count) held.Add((c, h, when[k]));
@@ -1173,7 +1175,7 @@ public static class Kernel
         foreach (var w in ws) if (!FUNCTION.Contains(w) && !want.Contains(w)) want.Add(w);
         if (want.Count == 0) o.Add(Hint("every word is a common one: name the thing you mean", null, null));
         var every = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var c in pile) { every.UnionWith(Forms(Words(c.Text))); every.UnionWith(Forms(Words(c.Path))); }
+        foreach (var c in pile) { every.UnionWith(Forms(Words(c.Text))); every.UnionWith(Forms(Words(c.OwnPath))); }
         var absent = want.Where(w => !HeldBy(w, every, alias)).ToList();
         foreach (var w in want) // said, so a match their list made is never taken for theirs
         {

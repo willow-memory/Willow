@@ -412,6 +412,7 @@ def sources(root: Path, step) -> None:
     step("init", *two, "--pile", str(pile), "--from", f"law={law}",
          "--from", f"chosen=@{lst}", "--key", str(key))  # fmt: skip
     step("bite", *two, "when is the shed painted")
+    step("bite", *two, "what does the law charter say")  # a source's name is no word
     step("bite", *two, "what was the roof estimate")
     step("bite", *two, "when was the deck oiled")
     step("bite", *two, "how much sun do tomatoes want")
