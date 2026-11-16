@@ -1,0 +1,11 @@
+# Hollis's own words: what he says that his files, or the people who wrote
+# them, say another way. His to add to, learned from the questions that
+# found nothing; the starter list stays as it was (it is nobody's in
+# particular, and is not tuned to any folder).
+#
+# Question 7, "who still owes me money": he says owes and money; his own chase
+# to the theatre says invoice (mail/sent/2026-09-15_invoice_inv_2026_011_108_days.eml:
+# "I'm writing about invoice INV-2026-011 for $640.00"), and so does the invoice
+# itself (work/invoices/INV-2026-011.txt).
+owes = invoice
+money = invoice

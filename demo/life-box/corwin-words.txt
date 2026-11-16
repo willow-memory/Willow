@@ -1,0 +1,16 @@
+# Corwin's own words: what he says that his files, or the people who wrote
+# them, say another way. His to add to, learned from the questions that
+# found nothing; the starter list stays as it was (it is nobody's in
+# particular, and is not tuned to any folder).
+#
+# Question 13, "did I ever find zermelo": he says find; his todo says
+# "[x] Zermelo found! catalogue it" (todo/todo_2025-06-09.txt), and the todos
+# that say he had not (todo/todo_2024-11-25.txt: "Zermelo still not found")
+# are the ones the kernel served instead.
+find = found
+#
+# Question 7, "is the brightwire course still open": he says open; the
+# course's own mail says access (mail/inbox/2026-10-01_your_access_ends_in_44_days.eml:
+# "Your access ends November 14, 2026") and so does his receipt
+# (receipts/2026-03-14_brightwire_ce.txt: "Access through 11/14/2026").
+open = access

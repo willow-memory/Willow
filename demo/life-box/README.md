@@ -433,6 +433,184 @@ for the boiler. The warranty file's "Total cost £3,680.00. Paid: £1,840.00
 card ..." is a file, not a bank line, and spent never adds it. "how much did I
 actually make last year" is money made, so it is not sent to spent.
 
+## Hollis and Corwin
+
+Two more made-up lives, each with an answer key written from its own
+PLANTED.md and CHARACTER.md ([hollis.json](hollis.json),
+[corwin.json](corwin.json)) and a words file of their own
+([hollis-words.txt](hollis-words.txt), [corwin-words.txt](corwin-words.txt)):
+Hollis Varga, a piano tuner with an old father and a daughter who has stopped
+answering, and Corwin Tamsett, an electrician who keeps a ledger about zero
+and whose licence runs out on 30 November. Both are laid as plain files with
+no option at all:
+
+    python demo/life-box/life_box.py open --who hollis --table DIR
+    python demo/life-box/life_box.py open --who corwin --table DIR
+
+**Why no option.** Each was chosen by what their files hold, and each other
+choice was run.
+
+- `--read`: nothing in either life is a file only a reader reads. Every file
+  is a `.csv`, `.eml`, `.ics` or `.txt`; every email is `text/plain`, utf-8,
+  with no attachment; there is no chat export, office file, book or scan, so
+  the pdf reader (and pypdf) never matters. Run anyway, each life offers the
+  same number of passages as without it (Hollis 52, Corwin 55) and only the
+  names change (`x.eml.txt`).
+- `--dates`: Hollis writes no date that reads two ways (ISO in his files, and
+  `Sep 15` or `September 15, 2024` in prose, which read one way only), so he
+  has none to say. Corwin does write month first (`11/30/2026` on his licence
+  card, `12/01/2023` for when it was issued), but the month-first add-on
+  mirrors only the `.txt`, `.md` and `.html` it is given and writes each as
+  `NAME.txt.txt`: his job logs, his bank, his catalogue (`.csv`), his mail
+  and his calendar are left out unless `--read` turns the last two into text
+  first. Laid that way (`--read --dates month-first`) his life is 263 files
+  against 302; it answers 15 of 20, as laid plain does, but seals 26 against
+  29 (the catalogue rows are gone), and its week loses every standing payment
+  (the subscriptions step reads the bank: "No payment in your folder comes
+  round on a monthly or yearly rhythm") and gains one date in words, the
+  permit by 23 November. The test holds the mirror's reach: 188 of his 302
+  files, no `.csv`, `.eml` or `.ics`.
+  [day-first](../../adapters/stdlib/day-first/) mirrors every file the kernel
+  reads, which is why Teodora can use it.
+- `--piles`: their folders are by kind (`mail/`, `messages/`, `receipts/`,
+  `notes/`) more than by matter, and the matters run across them (his father
+  is in messages, notes, receipts and mail; the Weiler in four folders; the
+  ledger's revisions, notes and todos in three). Laid as piles (each with
+  his words), Hollis offers 66, seals 12 and answers 8 of 20 (plain: 57, 15,
+  9), and Corwin offers 105, seals 30 and answers 14 (plain: 59, 29, 15).
+  Piles do answer a question plain does not (Hollis's goulash, and, measured
+  with `pills = rx` and `dad = imre`, which his words file no longer carries,
+  his father's pills) and lose others to the rule that a word naming a pile
+  is left out of the question: "who still owes me *money*" is asked of
+  `money/` alone, where there are no invoices.
+
+### Hollis, 2026-10-22
+
+His 395 files, asked his twenty questions:
+
+| | offered | sealed | declined | questions answered |
+|---|---|---|---|---|
+| day one | 52 | 12 | 40 | 7 of 20 |
+| after his words | 55 | 14 | 41 | 8 of 20 |
+
+- Sealed: 5 the van's timing belt ("due at 158,000 mi", the 2022 service
+  line), 8 Aldous Pell, 10 the Meridian order and the restoration log, 12 the
+  hearing centre's number (555-0131, from the referral and the reminder), 13
+  the note that the house was done, 17 the grudging thanksgiving text and the
+  calendar's "Corinne's?", 20 the 2024 tax notice and its $0.00 follow-up with
+  his own forward of it, and, after his words, 7 his chase of the theatre
+  (INV-2026-011, $640.00, 108 days).
+- His words, two lines, each learned from a question that found nothing and
+  each in his own files: `owes = invoice` and `money = invoice` (he says owes,
+  money; his chase to the theatre says invoice, and the starter's
+  `owe = invoice` alone found nothing for it). Ruth's number (16) stays
+  unsealed: her email ends "Ruth", then "555-0187", with no word for phone, and
+  every number in his made-up life is 555-0xxx. A `phone = 555` line would fit
+  the demo's fiction, not a word he says, so it isn't his; the question goes to
+  the week's people page, where Ruth is.
+- Traps. T1 the "URGENT ... past due" phishing email is never offered. T2 the
+  2021 house emails are offered for "the papers from when corinne and I split
+  the house" and declined (two of the four; the note that it was done is
+  sealed). T3 Aldous Pell's deafness is sealed only for the question that asks
+  his name; offered for "how damp", declined, and never offered for the ear
+  doctor. T4 the 2024 notice is offered for "did I pay all my taxes" and
+  declined, and is sealed for "that letter saying I owed money", which is the
+  question it answers. T5 the 2023 check-engine note is offered for "is the van
+  due" and declined.
+- The eleven unanswered, and what each is waiting on:
+  - 1 "when did I last do the church baldwin": the 17 September row is there
+    but is the twentieth of 41 passages that tie, and the kernel serves three.
+  - 2 "what did harmon ridge pay me last year": 23 passages are served and none
+    of the four (two invoices, two deposits) is among them; no one of them
+    holds enough of the five words together.
+  - 3 "how many miles ... in 2025" and 18 "how much did I make in 2025" are
+    sums over rows (the van log's miles, the tuning log's fees); his key names
+    nothing, since a passage is not a sum.
+  - 4 "what pills is dad on now": the pharmacy receipts hold neither word.
+  - 6 "did I pay all my taxes this year": the answer is an absence: 2026's
+    ledger has no line for the third quarter, and no bank line pays it.
+  - 9 "nell's new address" and 15 "how damp is too damp" are in no file.
+  - 11 "jobs I had to go back and redo": his rows say `return visit`; the three
+    served are texts with Nell.
+  - 14 "mom's goulash recipe": the note is the fourteenth of 14; texts that ask
+    for the recipe rank above it.
+  - 19 "is it bad that dad's still driving": a judgement; Ruth's email and his
+    own note are not among the 33 passages that hold enough of its words.
+
+### Corwin, 2026-11-04
+
+His 302 files, asked his twenty questions. The papers `fetch.py` would add to
+`sources/` are not in the laid life (nothing it fetches is committed), so no
+entry in his key rests on one.
+
+| | offered | sealed | declined | questions answered |
+|---|---|---|---|---|
+| day one | 55 | 26 | 29 | 13 of 20 |
+| after his words | 59 | 29 | 30 | 15 of 20 |
+
+- Every question is offered something. Sealed: 1 his own reading of Planck, 2
+  Ottilie's objection to the Ehrenfest line and the note that he put it off, 3
+  Dedekind's words (not Frege's), 6 his licence card and the board's reminder
+  (30 November), 8 the Hallett start (7 December), 9 the quote checker's
+  results, 10 rev 4's changes, 11 the zenodo article's catalogue row and the
+  note that kept it, 12 L24 and his note on Einstein-Stern, 14 L30, Weyl on
+  Riemann, 16 Dario's card (A-55102), 18 Kellner's account (40-1187), 20 the
+  Planck hash note, and, after his words, 7 the Brightwire access (to 14
+  November) and 13 Zermelo found.
+- His words, two lines: `find = found` (his todo says "[x] Zermelo found!";
+  the kernel served the todo that says "find Zermelo 1908") and `open =
+  access` (the course's mail and his receipt say access).
+- Traps. T1 the Planck hash note is sealed for the question that asks for it
+  and for no other. T2 Ottilie's batch 3 mail is offered once, for "is the
+  brightwire course still open", and declined. T3 the 2023 CE deficiency and
+  the CE spam are never offered; the week's renewals lists the deficiency
+  as gone by. T4 the todo that says "find Zermelo" is offered for the Zermelo
+  question and declined; the revisions' `[?]` lines are not offered.
+- The three wrong lines of his ledger (L21 Planck, L04 under Frege's name,
+  L47's empty set under Weyl's) are never sealed: his key names none of them,
+  and the test holds that no seal says "physical empty set", "frege-1884" or
+  "Even the vacuum performs vibrations". His twenty questions do not surface
+  the needs behind them (N1 to N3): 1 seals his reading of Planck, not that
+  line 21 is not what Planck says. Of the rest, N6 is answered (6, and the
+  week's renewals), N4 is half there (2 seals Ottilie's objection and his
+  "Later"), and N5's two halves are sealed in two questions and never joined
+  (11 the zenodo article, 12 "NOT SEEN").
+- The five unanswered: 4 "which papers do I still not have" (the catalogue's
+  NOT GOT rows hold none of its words; the three served are ledger headers),
+  5 "where did the vacuum empty set idea come from" (L31, "SPECULATIVE, mine",
+  is the eighth of 16), 15 "when are the open bench slides due" (the email is
+  the eighth of 25: the starter's `due` also reads renewal and expires, which
+  every licence mail holds), 17 "how much did I bill in 2025" (a sum over the
+  year's jobs) and 19 "what's left to do before the talk" (the todo lines
+  hold none of its words).
+
+### What would close the gaps
+
+By [CONTRIBUTING.md](../../CONTRIBUTING.md#when-a-stack-falls-short-build-last):
+what already does it, whether it is in the stack, whether the route points at
+it. Nothing here is built; each is for the maintainer to decide.
+
+| gap | who | what exists | in the stack / route? |
+|---|---|---|---|
+| a right passage below the three served (Hollis 1, 14; Corwin 5, 15) | both | [all-passages](../../adapters/stdlib/all-passages/) ranks every match, not three | not in the week or the route; `--piles` serves Hollis's goulash |
+| the week's invoices step reads `INV-\d+`, which is Teodora's: it reads `INV-2026` off Hollis's `INV-2026-011` (6 paid, 0 overdue) and finds no `TE-` invoice of Corwin's | both | [invoices](../../adapters/stdlib/invoices/) with `--id 'INV-\d{4}-\d+'` finds the theatre's $640.00, 117 days overdue; `--id 'TE-\d{4}-\d+'` reads Corwin's 81 | a stack line per person; week.md is one for everyone |
+| a sum over rows: miles (Hollis 3), fees in a year (Hollis 18, Corwin 17) | both | [mileage](../../adapters/stdlib/mileage/) reads drives written in prose and says "No line of your folder says a drive and how far" of the van log; [amounts](../../adapters/stdlib/amounts/) lists every sum with its line | route sends 17 and 18 to `amounts` and 3 to no step; nothing adds a CSV column by year |
+| what a payer paid (Hollis 2) | Hollis | [bank](../../adapters/stdlib/bank/) reads statements as dated lines | route reads it as "money owed" (invoices, debts), not money in |
+| an absence: the third-quarter estimate never paid (Hollis 6) | Hollis | the week's subscriptions step shows `sep paid conf ... next about 2026-09-15`, a date gone by | no step says a payment is due and absent |
+| a judgement (Hollis 19) | Hollis | none | route's "a judgement" has no step |
+| his father's pills (Hollis 4) | Hollis | `pills = rx` and `dad = imre` in his own words, and `--piles`, which serves both receipts | his words file does not carry them: in plain the three served are texts |
+| the month-first mirror keeps only `.txt`, `.md` and `.html` | Corwin | [day-first](../../adapters/stdlib/day-first/) keeps every file the kernel reads | a month-first one does not exist |
+| the starter's `owe = invoice` alone found nothing for "who still owes me money" | Hollis | his own `owes = invoice` and `money = invoice` | [starter-words](../../adapters/stdlib/starter-words/) is where a general fix would go |
+| a misquote, a wrong citation, a claim resting on another's name (Corwin N1 to N3) | Corwin | [misquote](../../adapters/stdlib/misquote/), [quotes](../../adapters/stdlib/quotes/) and [claim-check](../../adapters/stdlib/claim-check/) hold a line against its source | they need the source, which `fetch.py` would add; none of his questions asks it |
+| his word is not his files' word (Hollis 11 "redo" and `return visit`; Corwin 4 "papers" and the catalogue's `NOT GOT`) | both | [synonyms](../../adapters/stdlib/synonyms/) writes words-list lines from what his files hold; the lines tried by hand (`redo = return`; `have = got`, `papers = citation`) found nothing | not in the stack |
+
+The existing key test for "a person with no key" now names a person no key
+sits beside (`who.txt` is edited), since every made-up life with questions has
+one.
+
+[test_life_box_hollis_corwin.py](test_life_box_hollis_corwin.py) lays each of
+the two once and runs the rest in about eighty seconds.
+
 ## Where it comes from
 
 The [game box](../game-box/), with the binder swapped for a life:
