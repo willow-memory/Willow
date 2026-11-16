@@ -32,7 +32,12 @@ the starter words list a person begins with:
   (the TODAY their make_life.py writes them at), kept in DIR/week/NNN,
   beside NNN.md, the stack as it ran.
 - `ask` asks each of NAME's own questions (demo/NAME/QUESTIONS.md) and
-  hands in every passage served as a suggested answer, citing it. Nothing
+  hands in every passage served as a suggested answer, citing it. A
+  question is first read the way their files spell it: the typos add-on,
+  then accents, each over the box; when that reads it differently
+  ("dermatoligist referal letter" as "dermatologist referral letter") it is
+  asked as read, once, and the claim and the recap say `asked as "..."`.
+  Nothing
   is an answer yet: each waits on the seal. First the route add-on reads
   what kind each question is, and names the steps whose job that kind is
   ("has kirsty paid me yet" is money owed: debts and invoices) with the
@@ -66,6 +71,9 @@ DEMO = ROOT / "demo"
 STARTER = ROOT / "adapters" / "stdlib" / "starter-words" / "starter.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
 ROUTE = ROOT / "adapters" / "stdlib" / "route" / "route.py"
+#: the add-ons that say how a question reads in the files' own spelling, in the order they run
+SPELLING = [ROOT / "adapters" / "stdlib" / "typos" / "typos.py",
+            ROOT / "adapters" / "stdlib" / "accents" / "accents.py"]  # fmt: skip
 ORDERS = {  # a folder's date order, which only its writer knows, and the add-on that marks it
     "day-first": ROOT / "adapters" / "stdlib" / "day-first" / "day_first.py",
     "month-first": ROOT / "adapters" / "stdlib" / "month-first" / "month_first.py",
@@ -101,6 +109,22 @@ def today_of(who: str) -> str:
 
 def questions(who: str) -> list[str]:
     return QUESTION.findall((DEMO / who / "QUESTIONS.md").read_text(encoding="utf-8"))
+
+
+def words_of(text: str) -> list[str]:
+    """A question's words as the kernel splits them: letters and digits."""
+    return re.findall(r"[^\W_]+", text.lower())
+
+
+def read_as(box: Path, q: str) -> str:
+    """The question as the person's files spell it: typos, then accents, each
+    taking the line starting "ask:  " as how the question reads. They only
+    read; asking is ours. The question as written, when nothing changes."""
+    read = q
+    for script in SPELLING:
+        out = py(script, "--box", box, read).stdout
+        read = next((x[6:] for x in out.splitlines() if x.startswith("ask:  ")), read)
+    return read if words_of(read) != words_of(q) else q
 
 
 def who_of(table: Path) -> str:
@@ -236,15 +260,18 @@ def cmd_ask(table: Path) -> int:
     routed = routes(table, questions(who))
     for i, q in enumerate(questions(who), 1):
         kind = f"  ({routed[i]['kind']})" if i in routed else ""
-        bite = py(ROOT / "kernel.py", "bite", "--box", box, "--now", now, q)
+        read = read_as(box, q)  # asked as the files spell it, once
+        bite = py(ROOT / "kernel.py", "bite", "--box", box, "--now", now, read)
+        how = f'\n      asked as "{read}"' if read != q else ""
+        as_ = f', asked as "{read}"' if read != q else ""
         served = (
             json.loads(bite.stdout).get("served", []) if bite.stdout.strip() else []
         )
         props = [json.dumps({"path": f"answers/q{i:02d}-{k}.txt", "data": s["text"], "cites": [s["id"]],
-                             "claim": f"answers question {i}, \"{q}\", from {s['where']}"})  # fmt: skip
+                             "claim": f"answers question {i}, \"{q}\"{as_}, from {s['where']}"})  # fmt: skip
                  for k, s in enumerate(served, 1)]  # fmt: skip
         if not props:
-            print(f"{i:>2}. {q}{kind}\n      nothing in the life holds it\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
+            print(f"{i:>2}. {q}{kind}{how}\n      nothing in the life holds it\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
             continue
         sugg = table / "suggestions.jsonl"
         sugg.write_text("\n".join(props) + "\n", encoding="utf-8")
@@ -254,7 +281,7 @@ def cmd_ask(table: Path) -> int:
         sugg.unlink()
         passed = got.stdout.count("pass ")
         handed += passed
-        print(f"{i:>2}. {q}{kind}\n      {passed} suggested: " + "; ".join(s["where"] for s in served) + "\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
+        print(f"{i:>2}. {q}{kind}{how}\n      {passed} suggested: " + "; ".join(s["where"] for s in served) + "\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
     print(f"\n{handed} answers wait on {who}'s seal; nothing is an answer until then.")
     return kernel.ESCALATE if handed else kernel.ALIVE
 
@@ -275,14 +302,16 @@ def waiting(box: Path) -> list[tuple[str, dict]]:
     return out
 
 
-CLAIM = re.compile(r'^answers question (\d+), "(.*)", from (.+?):(\d+)$')
+CLAIM = re.compile(
+    r'^answers question (\d+), "(.*?)"(?:, asked as "(.*?)")?, from (.+?):(\d+)$'
+)
 
 
 def accepted(key: dict, prop: dict) -> bool:
     m = CLAIM.match(prop["claim"])
     if not m:
         return False
-    q, where = m.group(1), m.group(3)
+    q, where = m.group(1), m.group(4)
     for a in key["answers"].get(q, []):
         f = a["file"]
         if (where == f or (f.endswith("/") and where.startswith(f))) and a.get("says", "") in prop["data"]:  # fmt: skip
@@ -326,9 +355,9 @@ def cmd_recap(table: Path) -> int:
             prop = json.loads((box / "proposals" / f"{r['subject'][9:]}.json").read_text(encoding="utf-8"))  # fmt: skip
             m = CLAIM.match(prop["claim"])
             if m:
-                q = by_q.setdefault(int(m.group(1)), {"q": m.group(2), "seal": [], "decline": [], "wait": []})  # fmt: skip
+                q = by_q.setdefault(int(m.group(1)), {"q": m.group(2), "read": m.group(3) or "", "seal": [], "decline": [], "wait": []})  # fmt: skip
                 q[verdict.get(r["subject"], "wait")].append(
-                    f"{m.group(3)}:{m.group(4)}"
+                    f"{m.group(4)}:{m.group(5)}"
                 )
     asked = questions(who)
     routed = json.loads((table / "route.json").read_text(encoding="utf-8")) if (table / "route.json").is_file() else {}  # fmt: skip
@@ -339,7 +368,9 @@ def cmd_recap(table: Path) -> int:
         if got is None:
             print(f"{i:>2}. {q}\n      nothing in the life holds it\n{see}", end="")
             continue
-        line = f"{i:>2}. {q}\n"
+        line = f"{i:>2}. {q}\n" + (
+            f'      asked as "{got["read"]}"\n' if got["read"] else ""
+        )
         line += "".join(f"      sealed    {w}\n" for w in got["seal"])
         line += "".join(f"      declined  {w}\n" for w in got["decline"])
         line += "".join(f"      waiting   {w}\n" for w in got["wait"])

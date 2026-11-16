@@ -284,8 +284,13 @@ def test_bernadettes_week_finds_her_rego_her_cover_and_her_friend(bern):
 
 
 def test_bernadette_seals_what_her_key_names_and_her_traps_hold(bern):
-    assert "sealed 17 answers and declined 28" in bern["decide"].stdout
-    assert "14 of 20 questions have an answer bernadette sealed" in bern["recap"].stdout
+    # her spelling is read before it is asked (typos, then accents): "jeweler" as
+    # "jeweller" and "dermatoligist referal" as "dermatologist referral" now find
+    # their passages. The letter is a scan, read only with pypdf: without it, one
+    # answer fewer, and one question fewer answered.
+    sealed, answered = (20, 16) if bern["pdf"] else (19, 15)
+    assert f"sealed {sealed} answers and declined 28" in bern["decide"].stdout
+    assert f"{answered} of 20 questions have an answer bernadette sealed" in bern["recap"].stdout  # fmt: skip
     got = answers(bern["recap"].stdout)
     # T2: the budget's estimate and last year's rego are no answer to this year's
     assert got[2]["sealed"] == [] and "Documents/Household budget 2026.xlsx.txt:3" in got[2]["declined"]  # fmt: skip
@@ -307,8 +312,54 @@ def test_bernadette_seals_what_her_key_names_and_her_traps_hold(bern):
     # the right file, the wrong passage: her scone recipe's backlinks, not its recipe
     assert got[12] == {"sealed": [], "declined": ["Notes/Bernie's Vault/Recipes/Scones.md.txt:8",
         "Chats/WhatsApp Chat with Siobhán.txt.txt:103", "Chats/WhatsApp Chat with Siobhán.txt.txt:101"]}  # fmt: skip
-    # her spelling: "dermatoligist referal" holds too few of the letter's words
-    assert got[20] == {"sealed": [], "declined": []}
+    # her spelling, asked as read: the jeweller's quote is sealed (PLANTED.md's
+    # jeweller note); the 8 March note beside it is only the day she rang
+    assert got[11]["sealed"] == ["Mail/Inbox/2026-03-09 Re enquiry - sapphire ring claws.eml.txt:10",
+        "Mail/Inbox/2026-03-09 Re enquiry - sapphire ring claws.eml.txt:1"]  # fmt: skip
+    assert got[11]["declined"] == ["Notes/Bernie's Vault/Daily/2026-03-08.md.txt:6"]
+    # "dermatoligist referal letter": her referral letter is the scan, sealed
+    # where it is read; the note and Dr Rao's page that mention it are declined
+    assert got[20]["declined"] == ["Notes/Bernie's Vault/Daily/2026-02-11.md.txt:6", "Notes/Bernie's Vault/Dr Rao.md.txt:3"]  # fmt: skip
+    assert got[20]["sealed"] == (["Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:1"] if bern["pdf"] else [])  # fmt: skip
+    # no trap is ever sealed: the key names none of their files
+    key = json.loads((HERE / "bernadette.json").read_text())
+    for q, g in got.items():
+        for w in g["sealed"]:
+            assert any(w.startswith(a["file"]) for a in key["answers"][str(q)]), (q, w)
+            assert "pending tax refund" not in w and "rental_fy26_draft" not in w
+            assert "2025-10-07 Registration" not in w and "Lydiard" not in w
+    # PLANTED.md's T3: the cancelled 5 Nov booking is never sealed
+    assert "Calendar/Home.ics.txt:155" not in sum(
+        (g["sealed"] for g in got.values()), []
+    )
+
+
+def test_a_question_spelt_her_way_is_asked_again_as_read(bern):
+    ask = bern["ask"].stdout
+    q20 = ask.split("20. dermatoligist referal letter")[1]
+    assert '\n      asked as "dermatologist referral letter"\n' in q20
+    q11 = ask.split("11. what did the jeweler say")[1].split("12. ")[0]
+    assert 'asked as "what did the jeweller say"' in q11
+    # the claim still says which question it answers, and what was asked
+    claims = [json.loads(p.read_text())["claim"] for p in (bern["table"] / "record" / "proposals").glob("*.json")]  # fmt: skip
+    assert any(c.startswith('answers question 20, "dermatoligist referal letter", asked as "dermatologist referral letter", from ') for c in claims)  # fmt: skip
+    # recap shows the read-as wording under the question
+    recap = bern["recap"].stdout.split("20. dermatoligist referal letter\n")[1]
+    assert recap.startswith('      asked as "dermatologist referral letter"\n')
+
+
+def test_a_question_spelt_as_the_files_spell_it_is_asked_once(bern):
+    ask = bern["ask"].stdout
+    assert ask.count("asked as") == 2  # Q11 and Q20 only, of her twenty
+    assert "12. scone recipe  (a thing you wrote down)\n      asked as" not in ask
+    rows = kernel.read(bern["table"] / "record" / "record.jsonl")[0]
+    assert [r["kind"] for r in rows].count(
+        "bite"
+    ) == 20  # one bite a question: the read form in place of the typed
+    claims = [json.loads(p.read_text())["claim"] for p in (bern["table"] / "record" / "proposals").glob("*.json")]  # fmt: skip
+    assert any(
+        c.startswith('answers question 12, "scone recipe", from ') for c in claims
+    )
 
 
 def test_her_answer_key_holds_her_traps_out():
