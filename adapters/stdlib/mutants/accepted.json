@@ -11,9 +11,6 @@
   "batch-ask": {
     "07d00d17c34c": "The floor under the passage count when averaging lengths: it differs only with one passage, where the average scales every score alike and only the order, which one passage can't change, is returned."
   },
-  "clauses": {
-    "0df2e008ca77": "The width a file of page headings and no text lines falls back to: with no lines, it is never compared to one."
-  },
   "coming-up": {
     "059bb44076f5": "The kernel's dates are exactly eight characters, so d[6:9] is d[6:8]."
   },

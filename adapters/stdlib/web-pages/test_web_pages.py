@@ -53,6 +53,23 @@ def test_a_saved_page_is_its_blocks_under_its_address(tmp_path):
     )
 
 
+def test_a_printed_report_saved_as_a_page_keeps_its_sentences_whole():
+    """A report saved as HTML ends its every printed line with a <br/>: the
+    sentence that runs over a line's end is one passage, not two."""
+    lines = [f"Filler line {i} that the printed report wraps at its own width here."
+             for i in range(30)]  # fmt: skip
+    lines[7] = (
+        "and the 1996 Act scheduled the credit for phaseout and ultimate repeal in"
+    )
+    lines[8] = (
+        "2005.  The credit was renamed and is now in section 30A of the tax code,"
+    )
+    page = "<html><body><p>" + "<br/>".join(lines) + "</p></body></html>"
+    text = web_pages.as_text(page, "https://example.org/report")
+    assert "phaseout and ultimate repeal in 2005.\n" in text
+    assert all(len(line) <= 500 for line in text.splitlines())
+
+
 def test_an_mhtml_page_is_read_from_its_part():
     page, said = web_pages.mhtml(MHTML.encode())
     assert said == "https://example.org/terms"  # the snapshot's, not the part's
