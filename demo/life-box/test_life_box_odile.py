@@ -254,7 +254,16 @@ def test_one_box_seals_the_same_needs_but_answers_a_different_four(one_box):
 def test_the_box_does_not_need_pypdf(odile, no_pypdf):
     """She has no scan: without pypdf, the same counts and the same seals."""
     assert "pdf: unreachable" in no_pypdf["open"].stdout
-    assert "pdf: wrote 0 files" in odile["open"].stdout
+    # with pypdf, the pdf reader finds no scan of hers; where this whole run has
+    # none, it is unreachable in her normal box too, and what follows still holds
+    try:
+        import pypdf  # noqa: F401
+
+        has_pypdf = True
+    except ModuleNotFoundError:
+        has_pypdf = False
+    said = "pdf: wrote 0 files" if has_pypdf else "pdf: unreachable"
+    assert said in odile["open"].stdout
     for part in ("ask", "decide"):
         assert no_pypdf[part].stdout == odile[part].stdout.replace(str(odile["table"]), str(no_pypdf["table"]))  # fmt: skip
     assert answers(no_pypdf["recap"].stdout) == answers(odile["recap"].stdout)
