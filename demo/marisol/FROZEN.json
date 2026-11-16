@@ -1,5 +1,5 @@
 {
- "about": "demo/marisol's freeze 3: each file's SHA-256 when it was frozen, held by test_marisol.py, and the tools' as run. A change is a new freeze, in its own commit, with its reason.",
+ "about": "demo/marisol's freeze 4: each file's SHA-256 when it was frozen, held by test_marisol.py, and the tools' as run. A change is a new freeze, in its own commit, with its reason.",
  "frozen": "2026-11-16",
  "files": {
   "questions.json": "637aa90fcde19ffd8496e7577147bdf7c43258a7c09fbbf2447533db30f1e475",
@@ -29,7 +29,8 @@
   "office.py": "26b138d38480a02a7f507c13807f6aa0edcb4868a35b0df1372c8db8d6dca38c",
   "home-sensors.py": "77f9633849cc6927926a1c2893a360f3b8eec25136cdb4c7eaa31683049d4d3d",
   "all-passages.py": "5fa280eeff27dfe2b877aa34ee428bd4672cbd59f7ed15ce1f87bc9f589a9abf",
-  "pile-rank.py": "3fe92c970b839fc5396a6f196433cf7793871354c748215d017abf02b82e34a4"
+  "pile-rank.py": "3fe92c970b839fc5396a6f196433cf7793871354c748215d017abf02b82e34a4",
+  "clauses.py": "3d98cbbaefe5d17296527fbfd78f23eb97f19b5869a706acddc54c88aeab8992"
  },
  "freezes": [
   {
@@ -54,6 +55,11 @@
     "nsf-award-2305699.json": "5149cbf84b0ccc9426b8cb46db0d045190959cbe4d7d8e77cfef28eee3da9d32",
     "wikipedia-prepa.html": "598d586d3e35a525e6e65450687c0a897e533875acb90d7fbd818a3e6b9d52c7"
    }
+  },
+  {
+   "n": 4,
+   "date": "2026-11-16",
+   "why": "A rerun of every question, freeze 2's and freeze 3's, with the web-pages reader's line breaks fixed: the clauses add-on, whose blocks_of_html web-pages reads a page with, now reads a page that ends twenty lines or more with <br> (a printed report saved as a page) as wrapped lines, one sentence a line, where every <br> had been a passage break. Run 3 found that break had cut the CRS report's 'ultimate repeal in' from '2005.', so no passage held the phrase the repeal question is judged by. The fix is on willow branch ccr-8ddfb123-dbqhkm at 06115537, not yet on main: clauses.py is its file (tools_at_freeze), and every other tool, kernel.py among them, is the file freeze 3 ran. The questions, the hit rule, every pass rule and every expectation are as frozen before; nothing in demo/marisol but this file changes. The sources are the ones run 3 read (freeze 3's sources_fetched, the same hashes). After one dry run with nonsense of run.py and of run3.py (results/dry-run-4.json: every box built, nothing served, every chain verified), and a wiring check that read the boxes' passages and asked nothing: the repeal sentence is one passage in each (web-pages/crs-rs20695.html.txt:48). Said plainly: while checking the fix, on a box of the web-pages mirror alone and not the study's, the author asked the repeal question once of the kernel, all-passages and pile-rank and saw the sentence outside the kernel's first three, 10th in all-passages and 9th in pile-rank. The expectations were not changed after seeing it."
   }
  ]
 }
