@@ -103,6 +103,17 @@ silently. Check each one matched (assert the old text occurs once), never
 replace a string that could be empty, and read the result or run the test
 that should now pass.
 
+## Before you build
+
+When a stack falls short, the first questions are
+([CONTRIBUTING.md](CONTRIBUTING.md#when-a-stack-falls-short-build-last)):
+
+1. Is there an add-on that does this?
+2. Is it in the stack?
+3. Does the route already point at it?
+
+Most gaps are a missing line in a stack, not a missing add-on.
+
 ## The job you're doing
 
 - **An add-on.** Ten steps, each a check that fails when missed;
