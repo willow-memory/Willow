@@ -3,7 +3,7 @@ section: Play
 line: Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools
@@ -62,11 +62,12 @@ else is played.
 
 Exit codes, the kernel's: 0 done, or every game holds; 2 refused.
 
-**Where it comes from:** the-table's backgammon in the SAFE App Store, over
+**Where it comes from:** the-table's backgammon, built in the SAFE App Store
+and now in [Die-Namic](https://github.com/rudi193-cmd/die-namic-games), over
 game-lab's rules. Its single-die moves were checked against game-lab's
 `bg_leg` on 216,372 positions and dice from 300 seeded games, all the same.
-game-lab's self-play did not hold a turn to using as many dice as it can,
-or to the larger die; here both are held, as the game's rules have them.
+game-lab's self-play did not hold a turn to using as many dice as it can, or
+to the larger die; here both are held, as the game's rules have them.
 
 **Never:** throws without writing the row, plays a turn the throw doesn't
 allow, reads the key, or writes the record except through the kernel and

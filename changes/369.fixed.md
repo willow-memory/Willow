@@ -1,0 +1,1 @@
+`play-backgammon`, `play-checkers`, `play-crazy-eights`, `play-hearts`, `play-liars-dice` and `game-master`: each card says where it came from as it is now: the-table and game-lab were built in the SAFE App Store and live in Die-Namic (rudi193-cmd/die-namic-games), where they were lifted out with their history
