@@ -3,7 +3,7 @@ section: Play
 line: Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools

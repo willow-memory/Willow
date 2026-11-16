@@ -3,7 +3,7 @@ section: Play
 line: Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools

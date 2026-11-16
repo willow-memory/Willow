@@ -3,7 +3,7 @@ section: Play
 line: Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools
