@@ -614,7 +614,7 @@ A clause reported with no artifact found SHALL state **why** none was found. "No
 | 2026-11-06 | V | Draft 0.16.0 — V.10, a no is final: a refusal is made with the person's key and recorded; what they refused is not offered again or approved over it, and a refusal that does not prove counts for nothing | *draft — by merge of #323* |
 | 2026-11-06 | VI | Draft 0.16.0 — VI.8, the record keeps acts, not words: a question put to the person's files and the passages it was served are kept by hash and place, never by text; what the person enters on purpose to be recorded is theirs to keep | *draft — by merge of #323* |
 | 2026-11-14 | V | Draft 0.17.0 — V.11, offered once, counted once: what waits, was approved or was refused is not offered again, and is refused with its reason where it would be; what waits is counted once a thing to decide, and every surface counts it the same way | *draft — by merge of #364* |
-| 2026-11-16 | VI | Draft 0.18.0 — VI.9, read where they are kept: the person's files are read in the places they keep them, from several places without gathering copies; a file turned into another form is a new file, beside the person's, never in place of them | *draft — by merge of #0* |
+| 2026-11-16 | VI | Draft 0.18.0 — VI.9, read where they are kept: the person's files are read in the places they keep them, from several places without gathering copies; a file turned into another form is a new file, beside the person's, never in place of them | *draft — by merge of #368* |
 
 ---
 
