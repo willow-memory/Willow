@@ -102,7 +102,9 @@ def test_the_look_ahead_finds_what_her_files_hold(ran):
                       ("2026-10-30", "Mags's birthday"), ("2026-10-31", "TAX DUE")):  # fmt: skip
         assert what in coming.split(f"## {day}")[1].split("## ")[0], day
     assert said["car"] == "2 kinds of job, 16 entries"
-    assert said["home-upkeep"] == "3 kinds of job, 14 entries"
+    # one of her house jobs is in the agent's EOFY statement, a scan: read only with pypdf
+    read_pdf = step(ran["doc"], "pdf")[0]["state"] == "said"
+    assert said["home-upkeep"] == f"3 kinds of job, {14 if read_pdf else 13} entries"
     # her pension, the unit's rent and the tax refund come in: listed, never counted as paid
     assert said["subscriptions"].endswith("; 3 that come in, not counted")
     hide = next(s for s in ran["doc"]["steps"] if s["piece"] == "privacy")
