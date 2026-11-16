@@ -14,7 +14,7 @@ What waits, and where it goes:
                                 one of the `uses` lines is wrong
     uses one that isn't here    a card's `uses` names no built add-on: build
                                 it, or take the name off
-    nothing declares            a file with no kind (the kinds add-on's
+    nothing declares            a file with no kind (the repo-kinds add-on's
                                 count): a declaration, where its subject is
     ideas waiting               on the ideas list, by section: to build or
                                 to leave
@@ -44,9 +44,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(HERE.parent / "kinds"))
+sys.path.insert(0, str(HERE.parent / "repo-kinds"))
 import kernel  # noqa: E402
-import kinds  # noqa: E402
+import repo_kinds  # noqa: E402
 
 NAME = "repo-digest"
 USAGE = "usage: repo_digest.py page [--json] [--root DIR]"
@@ -88,8 +88,8 @@ def uses_of(root: Path, files: list[str]) -> dict[str, list[str]]:
             or not f.endswith("/README.md")
         ):
             continue
-        text = kinds.text_of(root / f)
-        if not text.startswith(kinds.CARD_OPENS):
+        text = repo_kinds.text_of(root / f)
+        if not text.startswith(repo_kinds.CARD_OPENS):
             continue
         line = re.search(r"^uses: (.+)$", text.split("-->", 1)[0], flags=re.M)
         named = [u.strip() for u in line.group(1).split(",")] if line else []
@@ -161,9 +161,9 @@ def count(n: int, one: str, many: str | None = None) -> str:
 
 def ideas(root: Path) -> list[tuple[str, str]]:
     try:
-        entries = json.loads(kinds.text_of(root / kinds.IDEAS) or "[]")
+        entries = json.loads(repo_kinds.text_of(root / repo_kinds.IDEAS) or "[]")
     except ValueError:
-        return [(kinds.IDEAS, "the ideas list can't be read")]
+        return [(repo_kinds.IDEAS, "the ideas list can't be read")]
     by: dict[str, list[str]] = {}
     for e in entries if isinstance(entries, list) else ():
         if isinstance(e, dict) and e.get("name"):
@@ -179,7 +179,7 @@ def ideas(root: Path) -> list[tuple[str, str]]:
 def page(root: Path, files: list[str]) -> tuple[dict, bool]:
     """(the report, whether anything that is wrong waits)."""
     uses = uses_of(root, files)
-    known, _ = kinds.census(root, files)
+    known, _ = repo_kinds.census(root, files)
     steps = steps_up(uses)
     ring_rows = []
     in_ring = {a for ring in rings(uses) for a in ring}
@@ -202,7 +202,7 @@ def page(root: Path, files: list[str]) -> tuple[dict, bool]:
     lost: dict[str, list[str]] = {}
     for f in files:
         if f not in known:
-            lost.setdefault(kinds.folder_of(f), []).append(f)
+            lost.setdefault(repo_kinds.folder_of(f), []).append(f)
     undeclared = [
         (where, f"{count(len(fs), 'file')}, such as {fs[0]}")
         for where, fs in sorted(lost.items(), key=lambda kv: (-len(kv[1]), kv[0]))
@@ -283,7 +283,7 @@ def main(argv: list[str]) -> int:
     except ValueError as why:
         print(why, file=sys.stderr)
         return kernel.REFUSED
-    files = kinds.tracked(root)
+    files = repo_kinds.tracked(root)
     if files is None:
         say(report(NAME, "unreachable", f"git couldn't list the files of {root}", []), as_json)  # fmt: skip
         return kernel.ESCALATE

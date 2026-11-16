@@ -363,8 +363,14 @@ def do_total(opts: dict, ts: str) -> int:
                      "was in any package"}  # fmt: skip
     subj, said = kart.propose(box, f"secure sum total of {rnd[:12]}", prop, now)
     if subj is None:
-        print(said, end="")
-        return refuse("the kernel didn't take the total as a proposal")
+        # the same total, made again from other sums, already waits on the
+        # person: it is offered once and counted once (CONST-V-11)
+        held = kernel.waiting(box, kernel.read(box / "record.jsonl")[0])
+        if kernel.subject_of(prop) in held:
+            subj = kernel.subject_of(prop)
+        else:
+            print(said, end="")
+            return refuse("the kernel didn't take the total as a proposal")
     row = kernel.append(box, ts, "summed", who="secure-sum", round=rnd,
                         packages=[got[p][0] for p in places], total=subj)  # fmt: skip
     print(f"  total          {' '.join(map(str, total))}  from {n} folders, "

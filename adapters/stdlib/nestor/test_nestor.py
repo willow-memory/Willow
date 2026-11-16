@@ -113,3 +113,24 @@ def test_kernel_serves_a_checked_pair(tmp_path):
 def test_a_bad_command_line_is_refused(tmp_path):
     got = mirror(tmp_path / "missing", tmp_path / "m")
     assert got.returncode == 2 and "refused:" in got.stderr
+
+
+def _wal(path: Path) -> None:
+    con = sqlite3.connect(path)
+    con.execute("PRAGMA journal_mode=WAL")
+    con.close()
+
+
+def test_a_wal_database_is_read_and_nothing_is_written_beside_it(tmp_path):
+    """A database in WAL mode opened with mode=ro alone gets a -shm and -wal
+    file beside it: a write to the person's folder. Opened immutable, none."""
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    db = folder / "nestor.db"
+    write_store(db)
+    _wal(db)
+    before = {p.name: p.read_bytes() for p in folder.iterdir()}
+    got = mirror(folder, to)
+    assert got.returncode == 0, got.stderr
+    assert {p.name: p.read_bytes() for p in folder.iterdir()} == before
+    assert any(p.is_file() for p in to.rglob("*"))

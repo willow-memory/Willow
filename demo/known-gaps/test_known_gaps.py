@@ -22,9 +22,17 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent))
+import renamed  # noqa: E402
+
+renamed.bridge()  # scan and predict moved after this study froze: demo/renamed.py
 import trees  # noqa: E402
 
 score = trees.sibling("score")
+# the frozen run hashes each tool at the path it froze; read them where they
+# are now, the same bytes (demo/renamed.py), so the frozen method still runs
+_run = trees.sibling("run")
+_run.TOOLS = tuple(renamed.now(p) for p in _run.TOOLS)
 FROZEN_FILE = HERE / "FROZEN.json"
 pytestmark = pytest.mark.skipif(not shutil.which("git"), reason="needs the git program")
 
@@ -68,7 +76,7 @@ def test_every_frozen_file_is_as_it_was_frozen():
     # every tool the rule and the statistics run on, re-hashed too
     assert set(frozen["tools_at_freeze"]) == set(trees.TOOLS)
     for rel, sha in frozen["tools_at_freeze"].items():
-        got = hashlib.sha256((trees.ROOT / rel).read_bytes()).hexdigest()
+        got = hashlib.sha256((trees.ROOT / renamed.now(rel)).read_bytes()).hexdigest()
         assert got == sha, (
             f"{rel} changed after it was frozen; a change is a new freeze"
         )

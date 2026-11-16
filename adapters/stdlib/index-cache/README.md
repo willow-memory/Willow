@@ -3,16 +3,16 @@ section: Finding things
 line: Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
 source: new
 added: 2026-10-26
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes
 tags: index
-uses: scan
+uses: batch-ask
 -->
 # index-cache
 
-[`scan`](../scan/) indexes a folder once so questions are fast; on a big folder
+[`batch-ask`](../batch-ask/) indexes a folder once so questions are fast; on a big folder
 that first read is the slow step. But a folder usually hasn't changed since last
 time, and then the index already on disk is still the right one. `index-cache`
 keeps a small manifest beside the index — each read file's path and the

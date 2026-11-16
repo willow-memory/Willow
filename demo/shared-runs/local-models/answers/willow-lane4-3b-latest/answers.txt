@@ -1,0 +1,27 @@
+## the reports
+
+jobs: 220
+trajectories: 22
+predicted: 73.7%
+seconds: 336379
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2%
+served: 29
+vulcan: 0
+stepped-on: 169
+computed: 22
+halted: 3
+cost: 0.00
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: 2
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: 1
+
+## account
+
+The sweep was the baseline: 220 jobs over 22 trajectories, dealt to 5 machines in 2 rounds, with a state kept every 100 steps. The baseline alone found 1256518 steps, and 220 of 220 jobs came out the same bytes in every run — 73.7% saving. The shared run found 336379 steps, measured saving 73.2%, and 14 of 220 jobs came out the same bytes on every machine. The check found 1305 kept states stepped again and 20 served jobs run afresh with the same bytes. The project's gravity as it is written is 5 machines, and 14 of 220 jobs came out the same bytes on every one.

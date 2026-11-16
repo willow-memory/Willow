@@ -3,7 +3,7 @@ section: Trust and proof
 line: Answers Nestor records a person has checked, read from a copy of its SQLite store, each citing who checked it and when.
 source: new
 added: 2026-10-31
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes

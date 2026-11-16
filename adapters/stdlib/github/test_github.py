@@ -185,14 +185,14 @@ def test_the_repos_github_folder_holds():
         # cores.py line runs every gate select names for it, uncut
         (
             ".github/workflows/ci.yml",
-            "tests --without tests:strip | tee",
-            "tests | tee",
+            "tests --without tests:strip ${{ steps.stand.outputs.without }} | tee",
+            "tests ${{ steps.stand.outputs.without }} | tee",
             "tests:strip-1 more than once",
         ),  # fmt: skip
         (
             ".github/workflows/ci.yml",
-            "tests --without tests:strip | tee",
-            "tests --without tests:strip --without tests:kernel | tee",
+            "tests --without tests:strip ${{ steps.stand.outputs.without }} | tee",
+            "tests --without tests:strip --without tests:kernel ${{ steps.stand.outputs.without }} | tee",
             "tests:kernel in no job",
         ),  # fmt: skip
         (
@@ -314,6 +314,21 @@ def ci_text() -> str:
 MUTANTS_IF = "    if: ${{ github.event_name != 'pull_request' && !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}\n"
 
 
+def test_a_tests_job_leaves_out_what_stands_only_on_a_pull_request():
+    """The tests job runs every gate on a push; on a pull request its stand
+    step names what stands on main's run (ci-memo), and only there."""
+    ci = ci_text()
+    assert gh.STANDING in ci and gh.split_problems(ci) == []
+    always = ci.replace(
+        "      - id: stand\n", "      - id: stand\n        # (on every event)\n"
+    ).replace(
+        "        if: github.event_name == 'pull_request'\n        run: |\n          fallback() {\n            {\n              echo \"### tests (",
+        '        run: |\n          fallback() {\n            {\n              echo "### tests (',
+    )
+    assert always != ci
+    assert any("isn't only on pull requests" in p for p in gh.split_problems(always))
+
+
 def test_a_push_only_job_needs_a_pull_request_job_that_plans_its_gates():
     ci = ci_text()
     assert ci.count(MUTANTS_IF) == 1, (
@@ -330,7 +345,7 @@ def test_a_push_only_job_needs_a_pull_request_job_that_plans_its_gates():
     assert any("mutants job is skipped on pull requests" in p for p in gh.split_problems(push))  # fmt: skip
     # a job on pull requests only, with no push side, runs its gates on no push
     only = ci.replace(MUTANTS_IF, "    if: github.event_name == 'pull_request'\n")
-    assert any("mutants:again in no job" in p for p in gh.split_problems(only))
+    assert any("mutants:asked-again in no job" in p for p in gh.split_problems(only))
     # a job that runs on pull requests too still stands down on a queued push
     both = ci.replace(MUTANTS_IF, "    if: ${{ !failure() && !cancelled() && needs.queued.outputs.tested != 'true' }}\n")  # fmt: skip
     assert gh.split_problems(both) == []

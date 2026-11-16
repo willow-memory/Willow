@@ -3,7 +3,7 @@ section: Assistants
 line: Suggestions from whatever model your MCP client already runs, asked through MCP sampling, so willow needs no model or key of its own.
 source: new
 added: 2026-11-05
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 hands: your question and the passages served, to the model your MCP client runs
@@ -30,7 +30,7 @@ gets mcp-lite's three tools, plus one that drafts:
 
 **`draft` bites first.** Only the passages the kernel served go to the
 client's model, under the same rule [openai-compatible](../openai-compatible/)
-uses: answer only from them, cite each as [1], [2]. When nothing is served,
+uses: answer only from them, cite each as [1], [2]. When nothing is served, 
 the model is never asked. A reply whose brackets name no served passage is
 returned and proposed to no one. Asked at temperature 0.
 

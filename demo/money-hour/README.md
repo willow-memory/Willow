@@ -107,7 +107,7 @@ run 1 judged:
   by [thesis](../../adapters/stdlib/thesis/); the final draft keeps one slip
   of her own (T6).
 - **One page across the four records**, by
-  [across](../../adapters/stdlib/across/) with digest: what waits on whom.
+  [many-boxes](../../adapters/stdlib/many-boxes/) with digest: what waits on whom.
 - **Three stacks:** [fed.md](fed.md) and [filings.md](filings.md) for the
   desks, and [money-hour.md](money-hour.md) with two new pools (digest,
   history).
@@ -159,3 +159,13 @@ ran them, with each earlier freeze's hashes kept beside its reason; `test_money_
 the wrong shape ($95.8 billion where it prints $95.8B); run.py was fixed to
 read its own form, and nothing else changed. A change now is a new freeze,
 with its reason.
+
+## Renamed after the freeze (2026-11-13)
+
+After this study froze, across was renamed many-boxes and said who-said
+([adapters/renamed.json](../../adapters/renamed.json)). Their scripts were
+renamed with them (many_boxes.py, who_said.py), so run.py, which names the
+old ones, can't find them where it looks. The frozen files still name the
+old ones and are left as they were; its tests don't run them, and nothing a
+rule, a question or a result rests on changed. To re-run the study's own
+scripts by hand, check out aa551412, the commit of its last freeze.

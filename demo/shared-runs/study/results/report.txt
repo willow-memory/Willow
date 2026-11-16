@@ -1,0 +1,25 @@
+# the sweep
+220 jobs over 22 trajectories, dealt to 5 machines in 2 rounds; a state kept every 100 steps.
+Predicted from the sweep alone: 73.3% of the steps need not be stepped.
+
+# the baseline: every job alone, no memory
+2 runs. One run stepped 1256518 steps.
+220 of 220 jobs came out the same bytes in every baseline run.
+With the halts the baseline found, the predicted saving is 73.7%.
+
+# the shared run
+220 of 220 jobs were run, by 10 machine runs.
+22 took nothing from memory, 169 went on from a kept state, 29 were served whole.
+It stepped 336379 steps. Measured saving: 73.2%.
+Trajectories that began and then halted: 3; crowded-coarse-giants, stepped into its halt 1 time; crowded-coarse-three, stepped into its halt 1 time; crowded-three, stepped into its halt 1 time.
+Trajectories refused before a first step: 1; coarse-step.
+
+# the check
+1305 kept states were stepped again; 1305 came out the same bytes.
+20 served jobs were run afresh; 20 came out the same bytes.
+
+# the project's gravity as it is written
+5 machines ran it. 14 of 220 jobs came out the same bytes on every one.
+
+# the machines
+Kinds of processor that ran the jobs: 3; amd x86_64 avx2; intel x86_64 avx2; intel x86_64 avx512.

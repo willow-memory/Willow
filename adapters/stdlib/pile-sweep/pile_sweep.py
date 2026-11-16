@@ -44,7 +44,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
 sys.path.insert(0, str(HERE.parent / "pile-gold"))
 sys.path.insert(0, str(HERE.parent / "pile-rank"))
-sys.path.insert(0, str(HERE.parent / "scan"))
+sys.path.insert(0, str(HERE.parent / "batch-ask"))
 import kernel  # noqa: E402
 import pile_gold  # noqa: E402
 import pile_rank  # noqa: E402
@@ -150,7 +150,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    folder = Path(cfg["pile"])
+    folder = kernel.folder(cfg)
     marked = pile_gold.gold(box, rows)
     where = {c["id"]: span(c) for c in kernel.chunks(folder)}
     asked = []

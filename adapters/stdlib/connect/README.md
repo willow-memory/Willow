@@ -3,12 +3,12 @@ section: Assistants
 line: What a model on this machine says connects two passages of yours, in a few sentences, each number and name it gives checked against them.
 source: new
 added: 2026-11-11
-version: 0.1.0
+version: 0.1.2
 writes: nothing
 network: loopback
 role: suggests
 output: report
-uses: say
+uses: model-sentence
 -->
 # connect
 
@@ -77,7 +77,7 @@ group of the report, in the file's order.
 ## The model is on this machine, or it isn't asked
 
 The model is [Ollama](https://ollama.com)'s, asked the way the
-[say](../say/) add-on asks it: on `127.0.0.1`, `localhost` or `::1` only.
+[model-sentence](../model-sentence/) add-on asks it: on `127.0.0.1`, `localhost` or `::1` only.
 `--host` (or `OLLAMA_HOST`) at any other address is not asked. `--model`
 is the tag, `llama3.2:3b` unless you give one. `--timeout` is the seconds
 to wait for one answer, 60 unless you give more. When nothing answers, the

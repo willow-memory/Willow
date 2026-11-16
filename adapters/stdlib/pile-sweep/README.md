@@ -3,12 +3,12 @@ section: Finding things
 line: Finds the passage length that suits your folder, by asking your answered questions at several lengths and naming the one finding the most.
 source: bot
 added: 2026-10-28
-version: 0.1.0
+version: 0.1.2
 writes: nothing
 network: none
 role: tools
 tags: pile
-uses: pile-gold, pile-rank, scan
+uses: batch-ask, pile-gold, pile-rank
 -->
 # pile-sweep
 

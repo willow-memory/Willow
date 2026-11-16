@@ -29,7 +29,7 @@ and how.
 How a path is placed:
 
   - the import graph: every .py file of the repo is parsed with `ast`; an edge
-    is an `import`, or a string naming a .py file (`HERE / "stale.py"`, how the
+    is an `import`, or a string naming a .py file (`HERE / "stale_answers.py"`, how the
     tests load an add-on's script). A test file that can reach a changed file
     through those edges runs. test_contract.py names every add-on's script, so
     it is left out of the graph and placed by the rules below instead.
@@ -241,7 +241,7 @@ class Graph:
         return out
 
     def named(self, src: str, text: str) -> set[str]:
-        """The repo files a string like "stale.py" or "ci/ci.py" points at."""
+        """The repo files a string like "stale_answers.py" or "ci/ci.py" points at."""
         name = Path(text).name
         if "/" in text:
             return {
@@ -420,8 +420,11 @@ def place(changed: list[str], graph: Graph) -> Plan:
             if py and not is_test(p) and name in targets and name not in plan.mutants:
                 plan.mutants.append(name)
         elif dep := deps_of(p):
-            plan.gate(f"deps:{dep}", p, f"add-on {dep} (deps)")
-            plan.gate(f"deps:{dep}@floor", p, f"add-on {dep} (deps)")
+            if (ROOT / "adapters" / "deps" / dep).is_dir():
+                plan.gate(f"deps:{dep}", p, f"add-on {dep} (deps)")
+                plan.gate(f"deps:{dep}@floor", p, f"add-on {dep} (deps)")
+            else:  # moved or removed: ci.py has no gate by that name now
+                plan.say(p, f"add-on {dep} (deps, removed)")
         elif p.startswith("constitution/"):
             plan.gate("tests:constitution", p, "constitution/")
             plan.gate("tests:coverage", p, "constitution/")

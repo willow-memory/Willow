@@ -5,6 +5,7 @@ reads, and the log kept is this stack's."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 import sys
 from pathlib import Path
@@ -59,7 +60,7 @@ def test_the_stack_asks_the_pinned_pile_and_never_this_checkout():
             assert "<repo>" not in said, f"{name} reads this checkout: {said}"
     asked = [name for name, args in steps() if "<pile>" in " ".join(args)]
     assert asked == [
-        "code-comments", "git-history", "index-cache", "pile-store", "pile-rungs", "kinds", "kinds",
+        "code-comments", "git-history", "index-cache", "pile-store", "pile-rungs", "repo-kinds", "repo-kinds",
     ]  # fmt: skip
     script = (HERE / "rebuild.sh").read_text(encoding="utf-8")
     (pinned,) = re.findall(r"^PINNED=([0-9a-f]{40})$", script, flags=re.M)
@@ -118,7 +119,14 @@ def test_the_questions_are_sixteen_named_lines():
 def test_the_log_kept_is_this_stacks():
     log = (HERE / "results" / "00-stack.txt").read_text(encoding="utf-8")
     ended = re.findall(r"^(\d\d) ([a-z0-9-]+): exit (\d+)", log, flags=re.M)
-    assert [name for _, name, _ in ended] == [name for name, _ in steps()]
+    # the log was kept before some add-ons were renamed: its names, as now
+    renamed = json.loads(
+        (ROOT / "adapters" / "renamed.json").read_text(encoding="utf-8")
+    )
+    now = renamed["names"]
+    assert [now.get(name, name) for _, name, _ in ended] == [
+        name for name, _ in steps()
+    ]
     flagged = [n for n, _, code in ended if code != "0"]
     assert flagged == ["07", "11", "13", "26", "27", "29"]
     assert log.strip().endswith("done: 6 of 33 steps flagged")

@@ -53,10 +53,12 @@ def a_box(tmp: Path, words: Path | None = None) -> tuple[Path, Path]:
 
 
 def seal(box: Path, tmp: Path, question: str) -> None:
-    """Ask, propose an answer citing what was served first, and seal it."""
+    """Ask, propose an answer citing what was served first, and seal it. The
+    claim names the question, so each question's answer is a suggestion of
+    its own: one already approved isn't offered again (CONST-V-11)."""
     served = json.loads(k("bite", "--box", str(box), question).stdout)["served"]
     prop = {"path": "a.md", "data": "March.\n", "cites": [served[0]["id"]],
-            "claim": "the house notes say so"}  # fmt: skip
+            "claim": f"the house notes say so, asked {question!r}"}  # fmt: skip
     f = tmp / "prop.jsonl"
     f.write_text(json.dumps(prop) + "\n")
     subj = k("propose", "--box", str(box), "--file", str(f)).stdout.split()[1]

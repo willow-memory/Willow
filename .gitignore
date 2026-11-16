@@ -17,3 +17,8 @@ out/
 # the CI record and its key (adapters/ci)
 .ci-record/
 .ci-record.key
+
+# a demo reader's own record and key, made by the tour (kernel init)
+/odile.key
+/odile-record*/
+/words.txt

@@ -1,0 +1,45 @@
+<!-- willow-addon
+section: Trust and proof
+line: Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.
+source: new
+added: 2026-10-24
+version: 0.1.0
+writes: nothing
+network: none
+role: page
+tags: everyday
+output: report
+-->
+# record-history
+
+Your record, read out in plain sentences.
+
+    python adapters/stdlib/record-history/record_history.py --box DIR [--days N] [--json]
+
+    record-history: populated, 4 things on your record over 1 day
+    ## 2026-10-24
+      08:00  You asked a question. Nothing in your folder held it.
+      08:01  You asked a question again (2nd time). Nothing in your folder held it.
+      09:20  A suggestion was handed in for dentist.md. It waits for you.
+      09:21  You approved the suggestion for dentist.md.
+
+The record keeps no words, so neither does this:
+- A question is known by its fingerprint, which is how it can say "again".
+- An answer is known by the places it came from (`dentist.txt:1`).
+- An approval is named by the file it writes, never by its text.
+
+A row of a kind it doesn't know is named, not guessed: "A verdict row,
+written by ci."
+
+`--days N` keeps the last N days. `--json` prints the same report as one
+JSON object. **Exit codes:** 0 told (`populated`) or nothing in the window
+(`empty`); 2 refused. Nothing on the record waits on you, so it never says 42. A record that doesn't verify is refused,
+since a history read past a break could tell you something that didn't
+happen.
+
+A suggestion's path is said only while its proposal file is the bytes its
+subject names; a file that isn't, or is gone, is said as "an answer".
+
+**Uses:** the kernel's `read` and `subject_of`; the suggestions' paths in the box.
+
+**Never:** writes anything, or shows a question's words or an answer's text.

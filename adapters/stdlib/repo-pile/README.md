@@ -3,12 +3,12 @@ section: Ways to use it
 line: Public repositories you list, cloned and made askable, keeping only those under a licence an Apache-2.0 project can use.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: record, to
 network: github.com (or the --source you give), to clone the repositories you list
 role: makes
 tags: research
-uses: again, backup, changed, digest, export, history, privacy, quote-check, scan, secrets-audit, stale, todo, xref
+uses: asked-again, backup, batch-ask, digest, export-answers, privacy, quote-check, record-history, ref-check, secrets-audit, stale-answers, todo, what-changed
 -->
 # repo-pile
 
@@ -28,8 +28,8 @@ isn't `<owner>/<repo>` is skipped and said. `build` writes only under `--to`:
 | pile | each kept repo's docs: READMEs, agent notes, licences, `docs/` folders; and each `--notes` file | pile/ |
 | secrets | [secrets-audit](../secrets-audit/) over the pile: where, never the value | |
 | box | the kernel's own `init` over the pile, with `--key` and `--words` | box/ |
-| changed | [changed](../changed/): one fingerprint row of what the pile holds | |
-| index | [scan](../scan/): the pile, and the whole source unless `--no-code-index` | index-pile/, index-code/ |
+| changed | [what-changed](../what-changed/): one fingerprint row of what the pile holds | |
+| index | [batch-ask](../batch-ask/): the pile, and the whole source unless `--no-code-index` | index-pile/, index-code/ |
 | verify | the kernel's own `verify` | |
 
 A second `build` fetches nothing already there, gates every repo again, and
@@ -45,11 +45,11 @@ passages took a minute and a half.
 
 | Verb | Add-ons | What you get |
 |---|---|---|
-| `ask --questions FILE` | [scan](../scan/) | each question of both indexes, as JSON lines; `--rank bm25` to point where to look, `--todo` for the lines each file marks to do, `--top N`, `--words FILE` |
+| `ask --questions FILE` | [batch-ask](../batch-ask/) | each question of both indexes, as JSON lines; `--rank bm25` to point where to look, `--todo` for the lines each file marks to do, `--top N`, `--words FILE` |
 | `bite "question"` | [privacy](../privacy/) | one question through the box itself, on the record |
 | `quote "exact words"` | [quote-check](../quote-check/) | whether the pile holds that quote, and where |
-| `report` | [digest](../digest/), [again](../again/), [stale](../stale/), [export](../export/), [history](../history/) | what the box needs from you, then `verify` |
-| `check` | [xref](../xref/), [todo](../todo/), [secrets-audit](../secrets-audit/) | the pile's health as counts |
+| `report` | [digest](../digest/), [asked-again](../asked-again/), [stale-answers](../stale-answers/), [export-answers](../export-answers/), [record-history](../record-history/) | what the box needs from you, then `verify` |
+| `check` | [ref-check](../ref-check/), [todo](../todo/), [secrets-audit](../secrets-audit/) | the pile's health as counts |
 | `backup --to FOLDER` | [backup](../backup/) | the record zipped and checked; never the key |
 
 What `ask` and `quote` print goes through privacy's scrub unless `--raw`:

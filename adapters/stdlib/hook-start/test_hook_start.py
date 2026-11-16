@@ -16,7 +16,7 @@ SCRIPT = HERE / "hook_start.py"
 KERNEL = HERE.parents[2] / "kernel.py"
 #: what it tells comes from digest, whose stale and coming-up sections each
 #: need that add-on beside it: each test holds it to whichever is here
-BESIDE = {n: (HERE.parent / n).is_dir() for n in ("stale", "coming-up")}
+BESIDE = {n: (HERE.parent / n).is_dir() for n in ("stale-answers", "coming-up")}
 NOW = ["--now", "2026-10-24T00:00:00Z"]
 
 
@@ -107,13 +107,13 @@ def test_what_waits_is_told_as_the_json_a_session_start_hook_reads(tmp_path):
     text = context(got)
     head, *body = text.splitlines()
     said = ["1 waiting"]
-    said += ["1 gone stale"] if BESIDE["stale"] else []
+    said += ["1 gone stale"] if BESIDE["stale-answers"] else []
     said += ["1 coming up"] if BESIDE["coming-up"] else []
     assert head.startswith("hook-start: populated, " + ", ".join(said))
     assert "## Waiting for you" in body
     assert any(ln.startswith("  proposal:") and ln.endswith("  30 October (why: the note)")
                for ln in body)  # fmt: skip
-    assert ("## Gone stale" in body) == BESIDE["stale"]
+    assert ("## Gone stale" in body) == BESIDE["stale-answers"]
     assert ("## Coming up (next 14 days)" in body) == BESIDE["coming-up"]
     assert any(ln.startswith("  car.txt:1 ") and "2026-10-30  The car" in ln
                for ln in body) == BESIDE["coming-up"]  # fmt: skip
@@ -192,3 +192,28 @@ def test_a_long_answer_and_a_long_reason_are_cut_short(tmp_path):
     assert "A" * 99 + "…" in text and "A" * 100 not in text
     why = ("because " + "reason " * 30).split()
     assert f"(why: {' '.join(why)[:99]}…)" in text
+
+
+def test_no_dates_leaves_the_dates_out_and_keeps_what_waits(tmp_path):
+    b = life(tmp_path)
+    text = context(run("--box", str(b), "--no-dates", *NOW))
+    assert text.startswith("hook-start: populated, 1 waiting")
+    assert "## Waiting for you" in text and "## Coming up" not in text
+    assert "car.txt" not in text
+    assert ("## Gone stale" in text) == BESIDE["stale-answers"]
+
+
+def test_no_dates_on_a_box_of_only_dates_prints_nothing(tmp_path):
+    b, _ = init(tmp_path, {"log.txt": "On 2026-10-24 the tests passed.\n"})
+    # copied out alone (tests:alone), coming-up isn't beside it and the hook
+    # has nothing to say, so its output is only read when coming-up is there
+    assert not BESIDE["coming-up"] or "## Coming up" in context(
+        run("--box", str(b), *NOW)
+    )
+    got = run("--box", str(b), "--no-dates", *NOW)
+    assert got.returncode == 0 and got.stdout == "" and got.stderr == ""
+
+
+def test_no_dates_and_days_together_are_refused(tmp_path):
+    b, _ = init(tmp_path, {"a.txt": "x\n"})
+    assert run("--box", str(b), "--no-dates", "--days", "3", *NOW).returncode == 2

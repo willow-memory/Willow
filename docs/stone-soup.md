@@ -39,7 +39,7 @@ each question gets a box over what it's about:
 | `presconf` | the press conference transcripts, folded | what the chair said aloud |
 | `filings` | the 55 latest 10-Ks, folded | what companies say about themselves |
 
-For many questions of one big folder, [scan](../adapters/stdlib/scan/)
+For many questions of one big folder, [batch-ask](../adapters/stdlib/batch-ask/)
 indexes it once (1.25 million passages in 43 seconds) and answers each in
 about ten; split a folder past a few million passages into several indexes,
 or the machine runs out of memory.
@@ -100,7 +100,7 @@ name every questioner, a dated who's-who of the Fed press corps.
 | [claim-check](../adapters/stdlib/claim-check/), [thesis](../adapters/stdlib/thesis/) | held "3-3/4 to 4 percent" by January's 3-1/2 to 3-3/4 | the kernel reads 3-3/4 as 3, 3 and 4; open the cited passage |
 | [pair-drift](../adapters/stdlib/pair-drift/) | before a fix, flagged a summary's correct "$0.27" | it read "from $0.26 to $0.27" as one range; it now reads "from A to B" as a change, so "runs from 302 to 375" reads as a change too: word both sides alike |
 | [dialect](../adapters/deps/dialect/) | listed "wouldn" and "hasn" | a curly apostrophe splits a contraction |
-| [pile-poetry](../adapters/stdlib/pile-poetry/), [quiz](../adapters/stdlib/quiz/) | verse ending "Flickr page", a blank in a press-release header | the page's leftovers are passages too |
+| [verse](../adapters/stdlib/verse/), [play-quiz](../adapters/stdlib/play-quiz/) | verse ending "Flickr page", a blank in a press-release header | the page's leftovers are passages too |
 
 None of these is a reason to leave the add-on out. Each says what the tool
 reads, and a person who knows that reads its answer correctly.

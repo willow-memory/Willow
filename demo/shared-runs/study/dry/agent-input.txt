@@ -1,0 +1,62 @@
+You are given the reports of a run, made by a script from what each machine
+kept. You were not there and can ask no one. Answer from the reports alone.
+
+For each question below, write one line: its name, a colon, and the answer
+as a number or a name. If the reports do not hold the answer, write exactly:
+the reports don't say
+Do not work an answer out from what you know of the world.
+
+Then write a line `## account`, and under it, in at most six sentences,
+what happened in the run. Say no figure the reports do not say.
+
+## the reports
+
+# the sweep
+30 jobs over 6 trajectories, dealt to 5 machines in 2 rounds; a state kept every 100 steps.
+Predicted from the sweep alone: 50.5% of the steps need not be stepped.
+
+# the baseline: every job alone, no memory
+2 runs. One run stepped 10656 steps.
+30 of 30 jobs came out the same bytes in every baseline run.
+With the halts the baseline found, the predicted saving is 52.5%.
+
+# the shared run
+30 of 30 jobs were run, by 8 machine runs.
+9 took nothing from memory, 14 went on from a kept state, 7 were served whole.
+It stepped 5451 steps. Measured saving: 48.8%.
+Trajectories that began and then halted: 1; wwww-crowded, stepped into its halt 1 time.
+Trajectories refused before a first step: 1; vvvv-coarse.
+
+# the check
+17 kept states were stepped again; 17 came out the same bytes.
+7 served jobs were run afresh; 7 came out the same bytes.
+
+# the project's gravity as it is written
+3 machines ran it. 30 of 30 jobs came out the same bytes on every one.
+
+# the machines
+Kinds of processor that ran the jobs: 1; intel x86_64 avx512.
+
+## the questions
+
+jobs: How many jobs were in the sweep?
+trajectories: How many trajectories were they on?
+predicted: What saving of steps was predicted from the sweep alone, in percent?
+seconds: How many seconds did the shared run take in all?
+baseline-steps: How many steps did one baseline run step?
+shared-steps: How many steps did the shared run step?
+measured: What saving of steps was measured, in percent?
+served: How many jobs of the shared run were served whole from memory?
+vulcan: At what step did the trajectory sun-vulcan end?
+stepped-on: How many jobs of the shared run went on from a kept state?
+computed: How many jobs of the shared run took nothing from memory?
+halted: How many trajectories began and then halted?
+cost: What did the run cost, in dollars?
+refused: How many trajectories were refused before a first step?
+states-checked: How many kept states were stepped again?
+afresh: How many served jobs were run afresh?
+graphics: Which machines had a graphics card?
+afresh-same: How many of those came out the same bytes?
+native-same: With the project's gravity as it is written, how many jobs came out the same bytes on every machine?
+kinds: How many kinds of processor ran the jobs?
+busiest: Which machine stepped the most steps?

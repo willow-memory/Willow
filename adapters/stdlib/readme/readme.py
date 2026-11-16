@@ -168,7 +168,7 @@ SECTIONS = [
      " [mcp-lite](adapters/stdlib/mcp-lite/)), and a prompt hook that cites"
      " your passages at each prompt where the host allows it"
      " ([claude-code](adapters/stdlib/claude-code/);"
-     " [hooks-elsewhere](adapters/stdlib/hooks-elsewhere/) for the rest)."),
+     " [hook-elsewhere](adapters/stdlib/hook-elsewhere/) for the rest)."),
     ("Ways to use it", ""),
     ("Play", ""),
     ("For maintainers", ""),
@@ -194,11 +194,11 @@ EXAMPLES = {
     "Finding things": ["on-this-day", "quote-check"],
     "Your own words": ["nicknames", "abbreviations"],
     "Keeping track": ["coming-up", "subscriptions"],
-    "Trust and proof": ["stale", "tip-pin"],
+    "Trust and proof": ["stale-answers", "tip-pin"],
     "Privacy and safety": ["privacy", "secrets-audit"],
     "Assistants": ["claude-code", "mcp"],
     "Ways to use it": ["browse", "print"],
-    "Play": ["quiz", "life"],
+    "Play": ["play-quiz", "play-life"],
     "For maintainers": ["mutants", "ci"],
 }  # fmt: skip
 FIELDS = {"section", "line", "source", "writes", "network", "role", "version"}
@@ -294,6 +294,12 @@ def card(folder: Path) -> dict:
     return fields
 
 
+def old_names() -> dict:
+    """Add-ons renamed, old name to new: adapters/renamed.json."""
+    f = ADAPTERS / "renamed.json"
+    return json.loads(f.read_text(encoding="utf-8"))["names"] if f.is_file() else {}
+
+
 def addons() -> list[dict]:
     """Every add-on, built and planned, each checked; refused on the first
     that doesn't hold together."""
@@ -312,10 +318,13 @@ def addons() -> list[dict]:
             raise Refused(f"{entry['name']} is built, and still in planned.json")
         out.append({**entry, "built": False})
     seen = set()
+    gone = old_names()
     for a in out:
         where = a.get("path") or f"planned.json: {a.get('name')}"
         if not NAME.fullmatch(str(a.get("name", ""))):
             raise Refused(f"{where}: a name is lowercase words joined by -")
+        if a["name"] in gone:
+            raise Refused(f"{where}: {a['name']} was renamed {gone[a['name']]} (adapters/renamed.json); an old name isn't used again, so a stack naming it still finds what it meant")  # fmt: skip
         if a["name"] in seen:
             raise Refused(f"{a['name']} is listed twice")
         seen.add(a["name"])
@@ -569,9 +578,10 @@ def similar_add_on():
     return similar
 
 
-def worked_out(every: list[dict]) -> dict[str, dict]:
-    """Each entry's tags and nearest entries, from the similar add-on."""
-    return similar_add_on().worked_out(every, ROOT)
+def worked_out(every: list[dict], only: set[str] | None = None) -> dict[str, dict]:
+    """Each entry's tags and nearest entries, from the similar add-on (only
+    those named, when `only` is given)."""
+    return similar_add_on().worked_out(every, ROOT, only)
 
 
 def week_worked(listed: list[dict], week: str) -> tuple[dict[str, dict], dict]:
@@ -595,7 +605,7 @@ def week_worked(listed: list[dict], week: str) -> tuple[dict[str, dict], dict]:
     # a new entry against the week's entries and itself: what another pull
     # request adds this week never reaches its line
     base = [a for a in listed if a["name"] in frozen]
-    fresh = {a["name"]: worked_out(base + [a])[a["name"]]
+    fresh = {a["name"]: worked_out(base + [a], {a["name"]})[a["name"]]
              for a in listed if a["name"] not in frozen}  # fmt: skip
     similar = similar_add_on()
     worked = {}

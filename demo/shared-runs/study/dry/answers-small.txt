@@ -1,0 +1,25 @@
+jobs: 30
+trajectories: 6
+predicted: 50.5
+seconds: the reports don't say
+baseline-steps: 10656
+shared-steps: 5451
+measured: 48.8
+served: 7
+vulcan: the reports don't say
+stepped-on: 14
+computed: 9
+halted: 1
+cost: the reports don't say
+refused: 1
+states-checked: 17
+afresh: 7
+graphics: the reports don't say
+afresh-same: 7
+native-same: 30
+kinds: 1
+busiest: the reports don't say
+
+## account
+
+The sweep split 30 jobs over 6 trajectories and dealt them to 5 machines in 2 rounds, keeping a state every 100 steps. Two baseline runs, each job alone with no memory, gave the same bytes for all 30 jobs. The shared run took 8 machine runs: 9 jobs computed from nothing, 14 went on from a kept state, and 7 were served whole from memory. Trajectory wwww-crowded began and then halted, and vvvv-coarse was refused before a first step. The check re-stepped 17 kept states and re-ran 7 served jobs afresh, and all of them came out the same bytes. The project's gravity as written was run on 3 machines, and all 30 jobs matched on every one.

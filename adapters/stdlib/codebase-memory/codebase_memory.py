@@ -3,17 +3,20 @@
     python adapters/stdlib/codebase-memory/codebase_memory.py \\
         mirror --from FOLDER --to MIRROR
 
-Walks FOLDER for `.db` files that hold a code graph (the `symbols` and
-`edges` tables codebase-memory-mcp writes, or a copy of them). Each
-function or method becomes one paragraph: its name, its file and line, and
-what it calls or imports.
+Walks FOLDER for `.db` files that hold a code graph (the tables
+codebase-memory-mcp writes, or a copy of them: `nodes` and `edges` as it
+writes them now, `symbols` and `edges` as it did). Each function or method
+becomes one paragraph: its name, its file and line, and what it calls or
+imports. A name the graph has for a language's own built-ins, which have no
+file, is left out.
 
     vendor_sync_check (function)
     file: tools/vendor_sync_check.py:129
     imports: tools.vendor_sync_check.CheckResult
 
 Each graph is written to MIRROR at the same relative path with `.txt`
-added. A file that is not a graph is skipped and counted. Hidden folders
+added. One too long for the kernel to read as a single file (its cap is a
+megabyte) is cut between functions into `.1.txt`, `.2.txt` and so on. A file that is not a graph is skipped and counted. Hidden folders
 and files are skipped. The original is only read.
 
     wrote 1 files to MIRROR; skipped 0
@@ -27,6 +30,7 @@ import os
 import sqlite3
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 import kernel  # noqa: E402
@@ -41,7 +45,9 @@ def _one_line(value) -> str:
 def graph_text(path: Path) -> str | None:
     """The mirror text for a graph database, or None if it isn't one."""
     try:
-        con = sqlite3.connect(f"file:{path.resolve().as_posix()}?mode=ro", uri=True)
+        con = sqlite3.connect(
+            f"file:{quote(path.resolve().as_posix())}?mode=ro&immutable=1", uri=True
+        )
     except sqlite3.Error:
         return None
     try:
@@ -49,22 +55,63 @@ def graph_text(path: Path) -> str | None:
             r[0]
             for r in con.execute("SELECT name FROM sqlite_master WHERE type='table'")
         }
-        if not {"symbols", "edges"} <= tables:
+        if {"nodes", "edges"} <= tables:
+            symbols, outs = _nodes(con)
+        elif not {"symbols", "edges"} <= tables:
             return None
-        symbols = con.execute(
-            "SELECT fqn, name, kind, file_path, start_line FROM symbols "
-            "WHERE kind IN ('function', 'method') ORDER BY fqn"
-        ).fetchall()
-        outs: dict[str, list[str]] = {}
-        for src, tgt, kind in con.execute(
-            "SELECT source_fqn, target_fqn, edge_type FROM edges "
-            "ORDER BY source_fqn, target_fqn"
-        ):
-            outs.setdefault(src, []).append(f"{kind} {_one_line(tgt)}")
+        else:
+            symbols, outs = _symbols(con)
     except sqlite3.Error:
         return None
     finally:
         con.close()
+    return _paragraphs(symbols, outs)
+
+
+#: the edges of the graph as it is written now that say what a function
+#: reaches for, and the word each is said with
+REACHES = {"CALLS": "call", "IMPORTS": "import", "INHERITS": "inherit"}
+
+
+def _nodes(con) -> tuple[list, dict[str, list[str]]]:
+    """The functions and methods of a graph kept as `nodes` and `edges`, in
+    the shape of the older tables: (fqn, name, kind, file, line) rows, and
+    what each reaches."""
+    symbols = con.execute(
+        "SELECT qualified_name, name, lower(label), file_path, start_line FROM nodes "
+        "WHERE label IN ('Function', 'Method') AND file_path NOT LIKE '<%' "
+        "ORDER BY qualified_name"
+    ).fetchall()
+    outs: dict[str, list[str]] = {}
+    marks = ", ".join("?" * len(REACHES))
+    for src, tgt, kind in con.execute(
+        "SELECT s.qualified_name, t.qualified_name, e.type FROM edges e "
+        "JOIN nodes s ON s.id = e.source_id JOIN nodes t ON t.id = e.target_id "
+        f"WHERE e.type IN ({marks}) ORDER BY s.qualified_name, t.qualified_name",
+        sorted(REACHES),
+    ):
+        said = f"{REACHES[kind]} {_one_line(tgt)}"
+        if said not in outs.setdefault(src, []):
+            outs[src].append(said)
+    return symbols, outs
+
+
+def _symbols(con) -> tuple[list, dict[str, list[str]]]:
+    """The same from a graph kept as `symbols` and `edges`."""
+    symbols = con.execute(
+        "SELECT fqn, name, kind, file_path, start_line FROM symbols "
+        "WHERE kind IN ('function', 'method') ORDER BY fqn"
+    ).fetchall()
+    outs: dict[str, list[str]] = {}
+    for src, tgt, kind in con.execute(
+        "SELECT source_fqn, target_fqn, edge_type FROM edges "
+        "ORDER BY source_fqn, target_fqn"
+    ):
+        outs.setdefault(src, []).append(f"{kind} {_one_line(tgt)}")
+    return symbols, outs
+
+
+def _paragraphs(symbols: list, outs: dict[str, list[str]]) -> str:
     paras = []
     for fqn, name, kind, file_path, start in symbols:
         lines = [f"{_one_line(name) or _one_line(fqn)} ({_one_line(kind)})"]
@@ -81,6 +128,31 @@ def graph_text(path: Path) -> str | None:
     n = len(paras)
     head = f"code graph: {n} function{'s' if n != 1 else ''}\n\n"
     return head + ("\n".join(paras) if paras else "")
+
+
+def parts(text: str, most: int = kernel.MAX_FILE) -> list[str]:
+    """A graph's text as the files it is written to: one, when the kernel
+    will read a file that long; else cut between functions into parts that
+    each fit, every part saying which it is. The kernel leaves out a file
+    over its size cap without a word, so a whole graph in one file is a
+    mirror nothing can ask."""
+    if len(text.encode("utf-8")) <= most:
+        return [text]
+    head, _, body = text.partition("\n\n")
+    room = most - len(head.encode("utf-8")) - 64
+    out: list[list[str]] = [[]]
+    size = 0
+    for para in body.split("\n\n"):
+        n = len(para.encode("utf-8")) + 2
+        if out[-1] and size + n > room:
+            out.append([])
+            size = 0
+        out[-1].append(para)
+        size += n
+    return [
+        f"{head}, part {i} of {len(out)}\n\n" + "\n\n".join(ps).rstrip("\n") + "\n"
+        for i, ps in enumerate(out, 1)
+    ]
 
 
 def _sources(folder: Path) -> list[Path]:
@@ -110,9 +182,12 @@ def mirror(src: Path, dst: Path) -> tuple[int, int]:
                 skipped += 1
                 continue
             rel = path.relative_to(src)
-            target = dst.joinpath(rel.parent, rel.name + ".txt")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(text.encode("utf-8"))
+            cut = parts(text)
+            for i, part in enumerate(cut, 1):
+                name = f"{rel.name}.txt" if len(cut) == 1 else f"{rel.name}.{i}.txt"
+                target = dst.joinpath(rel.parent, name)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(part.encode("utf-8"))
         except OSError:
             skipped += 1
             continue

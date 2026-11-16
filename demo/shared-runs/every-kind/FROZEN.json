@@ -1,0 +1,27 @@
+{
+ "about": "The freeze of an addition to demo/shared-runs' first study: every job of its sweep run alone on other machines. Committed before any of the three named machines ran the sweep alone. A change is a new freeze, with its reason.",
+ "frozen": "2026-11-12",
+ "made_after": "the first study was run and judged; each of the two AVX-512 machines had already run 20 of these jobs afresh and found them the same",
+ "files": {
+  "every_kind.py": "2b0eef617dd9f5ede4aae3c4264a67823b33b82123e8b5d949164f07cf95af12"
+ },
+ "from_the_first_study": {
+  "plan.json": "73bdf4e767856805923db276d1349dde9ec3fcb70aded8116b076ea12d861d0f",
+  "starts.json": "68bfc3a18cc2e369b26d5a9105a9820c1a37b7c7ecc1d674787fcdc851f4f012",
+  "runner.py": "0f9b5b62aa0540c9459c9b1a4ebde1ed2f4e14993fee79a746d27712be22b088",
+  "sweep.py": "2c8b8537366d0ec70f532ce4cf2f5189b12fa401a615e91140ec29f15e85904a"
+ },
+ "truth": {
+  "study/runs/baseline-1/acts.jsonl": "5799edd2b60fa87217ddb88d5a657a1f7d721e48e7c90f51f60ef95adb675e34"
+ },
+ "machines": [
+  "cloud-session",
+  "laptop",
+  "phone"
+ ],
+ "rules": {
+  "E1": "passes when every added machine ran every job of the plan alone and each came to the same outcome, step and SHA-256 as the first baseline; a machine that ran fewer is not tested; one job otherwise fails",
+  "E2": "measured, no threshold: the jobs run in full, from their start, on each kind of processor, and on how many kinds each job was"
+ },
+ "said_beforehand": "E1 is expected to pass for the two AVX-512 machines. Of the phone nothing is known, and its NumPy is linked to another linear-algebra library, so it differs from the rest in two things."
+}

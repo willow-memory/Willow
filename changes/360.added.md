@@ -1,0 +1,1 @@
+`copy-in`: new files from another folder or device (a phone's Download, say) copied into yours, each logged with its SHA-256; a second run copies only what is new, nothing is deleted, and a changed file comes in beside the first

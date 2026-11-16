@@ -18,11 +18,11 @@
 - index-cache -- --from {box}-commits --to <scratch>/kept/index-commits
 # want 4: ask every question of all three at once, with the kernel's own answers.
 # Needs steps 3 to 5: their indexes.
-- scan -- scan --index <scratch>/kept/index-repo --index <scratch>/kept/index-code --index <scratch>/kept/index-commits --questions <scratch>/questions.txt --words <scratch>/words.txt
+- batch-ask -- scan --index <scratch>/kept/index-repo --index <scratch>/kept/index-code --index <scratch>/kept/index-commits --questions <scratch>/questions.txt --words <scratch>/words.txt
 
 ## what was found, and what wasn't
 # want 5: one line a question, so 48 answers can be read at a look. Needs step 6's answers.
-- glance -- --of {06} --questions <scratch>/questions.txt --words <scratch>/words.txt
+- batch-glance -- --of {06} --questions <scratch>/questions.txt --words <scratch>/words.txt
 # want 6: for each question that found nothing, why: which words no file holds,
 # so the words list is written from what was missed. Needs step 6's answers.
 - why-not -- --box {box} --questions <scratch>/questions.txt --of {06}
@@ -42,7 +42,7 @@
 - claim-check -- --box {box} "the same folder gives the same bytes"
 # want 11: every link and quoted line in the repository still there and still
 # saying it, since a remembered thing that points nowhere is worse than none.
-- xref -- --box {box}
+- ref-check -- --box {box}
 
 ## asked another way
 # want 12: the passages themselves read once and kept in one file, so the
@@ -58,7 +58,7 @@
 - fixity -- --box {box}
 # want 15: the kernel's own file named as the archives name it: a name any
 # machine computes from the bytes alone, with nothing sent.
-- ids -- --box {box} kernel.py
+- world-ids -- --box {box} kernel.py
 
 ## computed twice, to see that once would do
 # want 16: a real computation to try the idea on: an N-body simulation, run by
@@ -95,7 +95,7 @@
 # what waits, when its record was last checked.
 - box-health -- --box {box}
 # want 26: the record in plain sentences, to see what this whole run left on it.
-- history -- --box {box}
+- record-history -- --box {box}
 
 ## what was written about it, held to it
 # want 27: the design note this work ended in, sentence by sentence, put to
@@ -111,10 +111,10 @@
 # want 29: that page again, less the rows that are in tests, fixtures, made-up
 # people's files and frozen ones: what is left is the repository's own.
 # Needs step 30's report.
-- kinds -- sift --of {30.json} --root <pile>
+- repo-kinds -- sift --of {30.json} --root <pile>
 # want 30: the same sift of the references that don't hold, most of which
 # are file names a test makes up. Needs step 13's report.
-- kinds -- sift --of {13.json} --root <pile>
+- repo-kinds -- sift --of {13.json} --root <pile>
 
 ## what the run leaves behind it
 # want 31: the run itself on the record, which the first 28 steps left two

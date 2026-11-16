@@ -58,7 +58,7 @@ made-up beekeeper's six years of notes:
 ```
 $ git clone https://github.com/willow-memory/Willow && cd Willow
 $ python kernel.py test
-kernel: the twelve beats held
+kernel: the fourteen beats held
 $ python demo/odile/make_life.py
 $ python kernel.py init --box odile-record --pile demo/odile/life --key odile.key
 $ python kernel.py bite --box odile-record "how are the bees"
@@ -141,23 +141,23 @@ says how to pick one up:
 - **Finding things:** more ways to look: every match, this date in past years, an exact quote, by meaning, past typos. For example [on-this-day](adapters/stdlib/on-this-day/) and [quote-check](adapters/stdlib/quote-check/).
 - **Your own words:** teaching it the words you use, so a question finds what your files call it. For example [nicknames](adapters/stdlib/nicknames/) and [abbreviations](adapters/stdlib/abbreviations/).
 - **Keeping track:** dates coming up, numbers over time, to-dos, care logs, invoices, forecasts and flashcards. For example [coming-up](adapters/stdlib/coming-up/) and [subscriptions](adapters/stdlib/subscriptions/).
-- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. For example [stale](adapters/stdlib/stale/) and [tip-pin](adapters/stdlib/tip-pin/).
+- **Trust and proof:** answers you can check later: exports, stale answers, what changed, signed and encrypted records. For example [tip-pin](adapters/stdlib/tip-pin/).
 - **Privacy and safety:** phone numbers, card numbers and keys hidden in answers, or found sitting in files. For example [privacy](adapters/stdlib/privacy/) and [secrets-audit](adapters/stdlib/secrets-audit/).
 - **Assistants:** AI assistants that can ask and suggest, but never approve. For example [claude-code](adapters/stdlib/claude-code/) and [mcp](adapters/deps/mcp/).
 - **Ways to use it:** other ways in: pipes, your shell and your editor, plain sentences, a page on this machine, answers read aloud. For example [browse](adapters/stdlib/browse/) and [print](adapters/stdlib/print/).
-- **Play:** seeded, replayable games on the record, such as dice and the Game of Life. For example [quiz](adapters/stdlib/quiz/) and [life](adapters/stdlib/life/).
+- **Play:** seeded, replayable games on the record, such as dice and the Game of Life.
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. For example [mutants](adapters/stdlib/mutants/) and [ci](adapters/stdlib/ci/).
 <!-- /willow:summary -->
 
 <!-- willow:front show=pick week=2026-W46 -->
 **Add-on of the week**
 
-**[fixity](adapters/stdlib/fixity/)** \
-Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot.
+**[budget](adapters/stdlib/budget/)** \
+Spending against the budget you wrote down, month by month, from your statements.
 
-*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 351 built add-ons in name order.*
+*Drawn for 2026-W46: SHA-256 of "willow add-on of the week 2026-W46", modulo the 318 built add-ons in name order.*
 
-[Every add-on, 351 built of 537, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 318 built of 483, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
@@ -233,6 +233,7 @@ willow's own.
 | Never stores your words | `CONST-VI-8` | `kernel.py test`: after the whole cycle, the log holds no word a question or a suggestion said |
 | Never gives a suggestion as an answer until it's approved | `CONST-0-1`, `CONST-0-2` | `kernel.py test`: a suggestion without a seal is listed as waiting, not given |
 | Never accepts a forged approval | `CONST-0-4` | `kernel.py test`: a seal with the right shape and a re-hashed chain is still rejected |
+| Offers each suggestion once, and counts what waits on you once | `CONST-V-11` | `kernel.py test`: a suggestion you approved, declined or that already waits is refused when proposed again, with why; one passed twice in an older record is still one waiting |
 | Never offers again what you declined, or approves over it | `CONST-V-10` | `kernel.py test`: a decline that doesn't prove changes nothing; one that does ends the offer, and a seal after it is refused |
 | Never serves an approval for a question you didn't seal it for | `CONST-0-4` | `test_kernel.py`: a record rewritten and re-hashed can't change, strip or re-point the question a seal names |
 | Never writes past a change | `CONST-0-5` | `kernel.py test`: one edited field in one past line, and every command refuses |
@@ -319,7 +320,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,200 lines)
+├── kernel.py                 the whole program (about 1,440 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

@@ -1,0 +1,23 @@
+{
+ "jobs": "220",
+ "trajectories": "22",
+ "predicted": "73.3",
+ "seconds": "the reports don't say",
+ "baseline-steps": "1.25652e+06",
+ "shared-steps": "336379",
+ "measured": "73.2",
+ "served": "29",
+ "vulcan": "the reports don't say",
+ "stepped-on": "169",
+ "computed": "22",
+ "halted": "3",
+ "cost": "the reports don't say",
+ "refused": "1",
+ "states-checked": "1305",
+ "afresh": "20",
+ "graphics": "the reports don't say",
+ "afresh-same": "20",
+ "native-same": "14",
+ "kinds": "3",
+ "busiest": "the reports don't say"
+}

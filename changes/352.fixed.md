@@ -1,0 +1,1 @@
+`restack`: what the branch wrote of the files it added is kept by a function of its own, held by a test that runs in under a second, so the mutation run that broke it no longer sat through seven minutes of other tests before failing (it ran past the time CI allows on main, after #347).

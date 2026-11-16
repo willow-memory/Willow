@@ -317,7 +317,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     if many is not None:
         return several(pile, many, alias or {}, as_json)
     state, said, groups = one(pile, args[0], alias or {})

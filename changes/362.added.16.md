@@ -1,0 +1,1 @@
+`crazy-eights`: Crazy Eights on the record for four seats, hands open and the deck seeded by the record's tip; following suit or rank, the wild 8 naming a suit, drawing only when nothing plays, and the stalled hand held to game-lab's rules

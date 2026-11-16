@@ -3,7 +3,7 @@ section: Finding things
 line: When the answer is 'not enough to say', which words found nothing, and what kind of file would have answered.
 source: new
 added: 2026-10-29
-version: 0.1.1
+version: 0.1.3
 writes: nothing
 network: none
 role: tools
@@ -31,7 +31,7 @@ the same question of the same folder, the kernel's own way, and says why.
       kind of file  a dated note, an event or a deadline, with the date on the line
 
 **A whole list of questions.** `--questions FILE` takes a file of them, one
-a line, or a name, a tab, then the question, the way [scan](../scan/) takes
+a line, or a name, a tab, then the question, the way [batch-ask](../batch-ask/) takes
 them. Each question that finds nothing is explained under a heading of its
 own, its name and the question; one your files do hold is left out:
 

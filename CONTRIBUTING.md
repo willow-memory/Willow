@@ -152,6 +152,16 @@ that adds one entry to [adapters/planned.json](adapters/planned.json):
 }
 ```
 
+- `name` says what it does or what it says, in a person's words (`debts`,
+  `coming-up`, `stale-answers`), not how it works. One or two words, three
+  when two would collide. A reader is named for the format or source it
+  reads (`pdf`, `mastodon`). A first word shared by several add-ons is a
+  family, the same kind of thing run the same way: `hook-`, `words-`,
+  `bot-`, `pile-`, `port-` (the kernel in another language), `forecast-`,
+  `play-` and `model-`. Don't start a name with another add-on's word
+  unless it's one of these; a new family is the maintainer's to add. A
+  name [adapters/renamed.json](adapters/renamed.json) gave up isn't used
+  again, so a stack that still names it finds what it meant.
 - `kind` is `stdlib` if it needs nothing installed, else `deps`, with a
   `needs` line naming each install and its licence.
 - `tags` is optional: one tag of your own. The rest (needs an install or not,
@@ -186,6 +196,19 @@ willow-bot posts the same list in its status comment, read from the run's
 `similar` artifact. That list is a suggestion; only
 the maintainer decides. CI does refuse an idea with the same line as one
 already listed.
+
+### When a stack falls short, build last
+
+Willow has hundreds of add-ons, and most gaps are a step missing from a
+stack, not a gap in willow. Ask, in this order:
+
+1. Is there an add-on that does this? (`similar.py near`, and ADDONS.md)
+2. Is it in the stack?
+3. Does the route already point at it?
+
+A question the route sends to a step the stack doesn't run (`see people: not
+in this week`) wants one line in the stack, not new code. Build only when all
+three say no.
 
 ## Pick one up
 

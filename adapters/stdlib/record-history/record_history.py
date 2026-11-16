@@ -1,0 +1,191 @@
+"""record_history.py: your record, in plain sentences. Python 3.9+.
+
+    python adapters/stdlib/record-history/record_history.py --box DIR [--days N] [--now TS] [--json]
+
+Each row of the record, oldest first, said as what happened, by day, as a
+report (output: report; see adapters/stdlib/ci/README.md): a group a day,
+each row the time and the sentence:
+
+    record-history: populated, 5 things on your record over 1 day
+    ## 2026-10-24
+      09:12  You started your record.
+      09:13  You asked a question. Your files held it: dentist.txt:1.
+      09:14  You asked a question again (2nd time). Nothing in your folder held it.
+      09:20  A suggestion was handed in for dentist.md. It waits for you.
+      09:21  You approved the suggestion for dentist.md.
+
+The record keeps no words, so neither does this: a question is told apart
+from another by its fingerprint, which is how "again" is known, and an
+answer by the places it came from. What you approved is named by the file
+it writes, never by its text. With --days, only the last N days, counted
+back from --now (today unless given).
+
+It reads the record and nothing else of yours, and writes nothing. A record
+that doesn't verify is refused: a history read past a break could tell you
+something that didn't happen.
+
+Exit codes, the kernel's: 0 told (`populated`) or nothing in the window
+(`empty`); 2 refused. Nothing on the record waits on you, so it never says 42.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+from datetime import date, timedelta
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+import kernel  # noqa: E402
+
+
+NAME = "record-history"
+
+
+# ── the report: the shape every report add-on prints (ci/README.md) ─────────
+def report(addon: str, state: str, said: str, groups: list) -> dict:
+    """A report: its state, one line said, and each group's rows (where,
+    what); a group named None comes first and has no heading."""
+    return {"addon": addon, "state": state, "said": said,
+            "groups": [{"name": g, "rows": [{"where": w, "what": x} for w, x in rows]}
+                       for g, rows in groups if rows]}  # fmt: skip
+
+
+def report_text(doc: dict) -> str:
+    """A report as every report add-on prints it: the same twenty lines each
+    keeps, held to this one by test_contract.py."""
+    rows = [r for g in doc["groups"] for r in g["rows"]]
+    w = min(max((len(r["where"]) for r in rows), default=0), 60)
+    out = [f"{doc['addon']}: {doc['state']}, {doc['said']}"]
+    for g in doc["groups"]:
+        if g["name"] is not None:
+            out.append(f"## {g['name']}")
+        out += [f"  {r['where']:<{w}}  {r['what']}".rstrip() for r in g["rows"]]
+    return "\n".join(out)
+
+
+def say(doc: dict, as_json: bool) -> None:
+    print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
+
+
+def nth(n: int) -> str:
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def places(served: list[dict], most: int = 3) -> str:
+    where = [s["where"] for s in served if not s.get("echo")]
+    shown = ", ".join(where[:most])
+    return shown + (f" and {len(where) - most} more" if len(where) > most else "")
+
+
+def proposal_path(box: Path, subject: str) -> str:
+    """A suggestion's path, said only while its file is the bytes the subject
+    names (the path is in the subject's hash); otherwise just "an answer"."""
+    try:
+        prop = json.loads((box / "proposals" / f"{subject[9:]}.json").read_text())
+        if kernel.subject_of(prop) != subject:
+            return "an answer"
+        return str(prop.get("path") or "an answer")
+    except (OSError, ValueError, KeyError, TypeError):
+        return "an answer"
+
+
+def sentences(box: Path, rows: list[dict]) -> list[tuple[str, str]]:
+    """(timestamp, sentence) for each row, oldest first."""
+    asked: dict[str, int] = {}
+    out = []
+    for r in rows:
+        kind = r["kind"]
+        if kind == "boot":
+            said = "You started your record."
+        elif kind == "bite":
+            k = r.get("bite_key", "")
+            asked[k] = asked.get(k, 0) + 1
+            again = f" again ({nth(asked[k])} time)" if asked[k] > 1 else ""
+            if r.get("answered_by"):
+                what = proposal_path(box, r["answered_by"])
+                said = f"You asked a question{again}. Your approved answer for {what} answered it."
+            elif any(not s.get("echo") for s in r.get("served", [])):
+                said = f"You asked a question{again}. Your files held it: {places(r['served'])}."
+            elif r.get("served"):
+                said = f"You asked a question{again}. Your files only asked it back."
+            else:
+                said = f"You asked a question{again}. Nothing in your folder held it."
+        elif kind == "proposal":
+            if r.get("verdict") == "pass":
+                what = proposal_path(box, r.get("subject", ""))
+                said = f"A suggestion was handed in for {what}. It waits for you."
+            else:
+                said = f"A suggestion was turned away at the door: {r.get('why', 'no reason kept')}."
+        elif kind == "seal":
+            said = f"You approved the suggestion for {proposal_path(box, r.get('subject', ''))}."
+        elif kind == "decline":
+            said = f"You turned down the suggestion for {proposal_path(box, r.get('subject', ''))}."
+        elif kind == "out":
+            n = r.get("waiting", 0)
+            said = ("You looked at what was waiting: "
+                    + (f"{n} suggestion{'s' if n != 1 else ''}." if n else "nothing."))  # fmt: skip
+        elif kind == "changed" and r.get("first"):
+            n = len(r.get("files", {}))
+            said = f"You fingerprinted your folder: {n} file{'s' if n != 1 else ''}."
+        elif kind == "changed":
+            counts = [(len(r.get(k, [])), k) for k in ("new", "edited", "deleted")]
+            said = (
+                "You checked what changed in your folder: "
+                + (", ".join(f"{n} {k}" for n, k in counts if n) or "nothing had")
+                + "."
+            )
+        else:
+            said = f"A {kind} row, written by {r.get('who', 'something')}."
+        out.append((str(r.get("ts", "")), said))
+    return out
+
+
+def main(argv: list[str]) -> int:
+    as_json = "--json" in argv
+    argv = [a for a in argv if a != "--json"]
+    opts, args, it = {}, [], iter(argv)
+    for a in it:
+        if a in ("--box", "--days", "--now"):
+            opts[a] = next(it, "")
+        else:
+            args.append(a)
+    days = opts.get("--days")
+    if not opts.get("--box") or args or (days is not None and not days.isdigit()):
+        print(__doc__.split("\n\n")[1], file=sys.stderr)
+        return kernel.REFUSED
+    box = Path(opts["--box"])
+    if not (box / "kernel.json").exists():
+        print("refused: not a kernel box; init first", file=sys.stderr)
+        return kernel.REFUSED
+    rows, breaks = kernel.read(box / "record.jsonl")
+    if breaks:
+        print(
+            "refused: the record doesn't verify:", *breaks, sep="\n  ", file=sys.stderr
+        )
+        return kernel.REFUSED
+    lines = sentences(box, rows)
+    if days is not None:
+        ts = opts.get("--now") or kernel.now()
+        try:
+            today = date(int(ts[:4]), int(ts[5:7]), int(ts[8:10]))
+        except ValueError:
+            print(f"refused: --now {ts!r} isn't a date, YYYY-MM-DD", file=sys.stderr)
+            return kernel.REFUSED
+        since = (today - timedelta(days=int(days))).isoformat()
+        lines = [(t, s) for t, s in lines if t[:10] > since]
+    if not lines:
+        say(report(NAME, "empty", "nothing on your record in that window", []), as_json)
+        return kernel.ALIVE
+    by_day: dict[str, list] = {}
+    for ts, said in lines:
+        by_day.setdefault(ts[:10] or "undated", []).append((ts[11:16] or "--:--", said))
+    n, d = len(lines), len(by_day)
+    said = (f"{n} thing{'s' if n != 1 else ''} on your record "
+            f"over {d} day{'s' if d != 1 else ''}")  # fmt: skip
+    say(report(NAME, "populated", said, list(by_day.items())), as_json)
+    return kernel.ALIVE
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

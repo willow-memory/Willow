@@ -102,3 +102,42 @@ def test_a_bad_command_line_and_a_folder_that_is_no_box_are_refused(tmp_path):
     assert got.returncode == 2 and "fuzzy_dates.py" in got.stderr
     got = run(str(HERE / "fuzzy_dates.py"), "--box", str(tmp_path))
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+def test_early_or_late_in_a_year_reads_as_the_year_with_the_phrase_kept():
+    assert reads("organized late in 1893") == [("1893", "late in 1893")]
+    assert reads("early in 1894 it opened") == [("1894", "early in 1894")]
+    assert reads("very early in the year 1873") == [("1873", "early in the year 1873")]
+    assert reads("in the early part of 1872") == [("1872", "the early part of 1872")]
+    assert reads("the latter part of 1872") == [("1872", "the latter part of 1872")]
+    assert reads("the first part of 1850") == [("1850", "the first part of 1850")]
+    assert reads("the last part of 1850") == [("1850", "the last part of 1850")]
+    assert reads("at the close of 1872") == [("1872", "the close of 1872")]
+    assert reads("the end of the year 1869") == [("1869", "the end of the year 1869")]
+    assert reads("the beginning of 1850") == [("1850", "the beginning of 1850")]
+    assert reads("EARLY IN 1881") == [("1881", "EARLY IN 1881")]
+
+
+def test_a_year_said_as_two_digits_leaves_its_century_unspecified():
+    assert reads("in '70. Mrs. B") == [("XX70", "in '70")]
+    assert reads("the one of '64.") == [("XX64", "of '64")]
+    assert reads("an orchard in ’88 that") == [("XX88", "in ’88")]  # curly
+    assert reads("the spring of '79 we broke") == [("XX79-21", "spring of '79")]
+    assert reads("winter '80") == [("XX80-24", "winter '80")]
+    # a season keeps the one reading: the shorter "of '79" inside it is not a second
+    assert len(reads("In the spring of '79 we broke")) == 1
+
+
+def test_what_looks_like_these_but_is_not_one_reads_as_nothing():
+    for text in ("in '60s style", "the '60s", "price in '150", "in 'em all",
+                 "early in the morning", "late in life", "the end of 18",
+                 "early in 800", "close of 12345", "at the end of the line",
+                 "in '7", "of '123"):  # fmt: skip
+        assert reads(text) == [], text
+    # the decade shapes are the same as before, and are not read twice
+    assert reads("late 1880s") == [("188X", "late 1880s")]
+    assert reads("the 1860s and early in 1861") == [
+        ("186X", "the 1860s"), ("1861", "early in 1861")]  # fmt: skip
+    # a year said in full after a doubt word is still the old reading
+    assert reads("about 1880 and late in 1881") == [
+        ("1880~", "about 1880"), ("1881", "late in 1881")]  # fmt: skip

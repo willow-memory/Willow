@@ -1,0 +1,11 @@
+{
+ "about": "The lies to be told to the first study's own memory, proposed and not frozen. The honest run is the one kept in ../study/runs; nothing in it is written to.",
+ "plan": "../study/plan.json",
+ "starts": "../study/starts.json",
+ "seed": "shared-runs: the lies",
+ "arms": [
+  {"name": "as-run", "check_one_in": 8, "draw_one_in": 10},
+  {"name": "everything", "check_one_in": 1, "draw_one_in": 1}
+ ],
+ "trials": {"none": 3, "one-bit": 12, "last-bit": 8, "false-halt": 8, "no-halt": 3, "stepped-otherwise": 6}
+}

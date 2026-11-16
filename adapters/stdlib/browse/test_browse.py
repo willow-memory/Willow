@@ -73,8 +73,11 @@ class Open:
         return r, text
 
     def start(self):
-        r, _ = self.req("GET", f"/start?key={self.willow.token}", cookie=False)
-        assert r.status == 303 and r.getheader("Location") == "/"
+        r, text = self.req("GET", f"/start?key={self.willow.token}", cookie=False)
+        # a page that moves on itself, not a redirect: a phone's link from
+        # another app is a cross-site start, and the cookie stays off a redirect
+        assert r.status == 200 and r.getheader("Location") is None
+        assert '<meta http-equiv=refresh content="0;url=/">' in text
         self.cookie = r.getheader("Set-Cookie").split(";")[0]
         return r
 
@@ -772,7 +775,7 @@ def test_a_step_that_printed_nothing_says_so_and_no_run_is_no_page(
 
 
 # ── a question goes to the steps whose job it is, and a miss says why ───────
-LOOK_HERE = (br.STDLIB / "look" / "look.py").is_file()
+LOOK_HERE = (br.STDLIB / "run-answer" / "run_answer.py").is_file()
 WHY_NOT_HERE = (br.STDLIB / "why-not" / "why_not.py").is_file()
 
 
@@ -785,7 +788,7 @@ def a_kept_run(tmp_path: Path, **steps: str) -> Path:
     return run
 
 
-@pytest.mark.skipif(not LOOK_HERE, reason="the look add-on isn't here")
+@pytest.mark.skipif(not LOOK_HERE, reason="the run-answer add-on isn't here")
 def test_a_question_a_step_answers_shows_that_steps_lines_above_your_files(tmp_path):
     run = a_kept_run(
         tmp_path, debts="Dana owes you $40 <soon>\n", invoices="overdue  Theatre\n"
@@ -809,7 +812,7 @@ def test_a_question_a_step_answers_shows_that_steps_lines_above_your_files(tmp_p
         s.close()
 
 
-@pytest.mark.skipif(not LOOK_HERE, reason="the look add-on isn't here")
+@pytest.mark.skipif(not LOOK_HERE, reason="the run-answer add-on isn't here")
 def test_a_step_the_run_lacks_is_said_and_a_thing_written_down_gets_no_card(tmp_path):
     run = a_kept_run(tmp_path, debts="Dana owes you $40\n")
     s = opened(make_box(tmp_path), run=run)
@@ -1000,7 +1003,7 @@ def test_the_script_is_the_file_beside_browse_and_needs_this_starts_cookie(site)
 # ── an index, when one is given and current ─────────────────────────────────
 INDEX_HERE = all(
     (br.STDLIB / d / f).is_file()
-    for d, f in (("scan", "scan.py"), ("index-cache", "index_cache.py"))
+    for d, f in (("batch-ask", "scan.py"), ("index-cache", "index_cache.py"))
 )
 
 
@@ -1043,7 +1046,7 @@ def test_an_index_that_isnt_there_is_refused_before_anything_listens(tmp_path, c
     assert br.main(["--box", str(b), "--index"]) == 2
 
 
-FAIR_HERE = all((br.STDLIB / n).is_dir() for n in ("fair-merge", "scan"))
+FAIR_HERE = all((br.STDLIB / n).is_dir() for n in ("fair-merge", "batch-ask"))
 
 
 def scan_index(tmp_path: Path, name: str, **files: str) -> Path:
@@ -1053,7 +1056,7 @@ def scan_index(tmp_path: Path, name: str, **files: str) -> Path:
         (src / f"{f}.txt").write_text(text)
     at = tmp_path / name
     got = subprocess.run(
-        [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index", "--from", str(src), "--to", str(at)],
+        [sys.executable, str(br.STDLIB / "batch-ask" / "scan.py"), "index", "--from", str(src), "--to", str(at)],
         capture_output=True, text=True,
     )  # fmt: skip
     assert got.returncode == 0, got.stderr
@@ -1344,7 +1347,7 @@ def test_a_project_put_beside_the_open_one_is_asked_too_and_taken_away_again(tmp
         before = {p: p.read_bytes() for p in home.rglob("*") if p.is_file()}
         (home / "house" / "mine" / "notes.index").parent.mkdir(exist_ok=True)
         subprocess.run(
-            [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index",
+            [sys.executable, str(br.STDLIB / "batch-ask" / "scan.py"), "index",
              "--from", str(home / "house" / "pile"), "--to", str(home / "house" / "mine" / "notes.index")],
             capture_output=True, check=True,
         )  # fmt: skip
@@ -1375,7 +1378,7 @@ def test_only_another_project_under_home_goes_beside_and_switching_clears_it(tmp
     home = two_projects(tmp_path)
     for name in ("garden", "house"):
         subprocess.run(
-            [sys.executable, str(br.STDLIB / "scan" / "scan.py"), "index",
+            [sys.executable, str(br.STDLIB / "batch-ask" / "scan.py"), "index",
              "--from", str(home / name / "pile"), "--to", str(home / name / "ix")],
             capture_output=True, check=True,
         )  # fmt: skip
@@ -1412,7 +1415,7 @@ def test_a_home_that_isnt_there_is_refused_before_anything_listens(tmp_path, cap
 
 # ── a model's sentence about an answer, held to what code said ──────────────
 SAY_HERE = all((br.STDLIB / d / f).is_file()
-               for d, f in (("say", "say.py"), ("say-check", "say_check.py")))  # fmt: skip
+               for d, f in (("model-sentence", "model_sentence.py"), ("sentence-check", "sentence_check.py")))  # fmt: skip
 FACT = "Your files hold 1 passage for it; the first is at dentist.txt:1"
 
 
@@ -1486,7 +1489,7 @@ def test_a_model_that_cant_be_asked_is_said_and_codes_line_is_the_reply(tmp_path
         r, part = s.req("GET", "/say?turn=1")
         assert r.status == 200, "a voice that fails never takes the page with it"
         assert (
-            "<span class=why>not asked: the say add-on couldn&#x27;t: RuntimeError</span>"
+            "<span class=why>not asked: the model-sentence add-on couldn&#x27;t: RuntimeError</span>"
             in part
         )
         _, text = s.req("GET", "/")
@@ -1514,6 +1517,159 @@ def test_with_no_model_named_none_is_asked_and_small_talk_is_never_said(tmp_path
         t.close()
 
 
+@pytest.mark.skipif(not SAY_HERE, reason="the say or say-check add-on isn't here")
+def test_a_say_is_about_the_turn_it_names_and_no_other(tmp_path):
+    s = opened(make_box(tmp_path), say="tiny:1b")
+    asked = []
+    s.willow.sayer = lambda prompt: asked.append(prompt) or "The dentist [b1]."
+    try:
+        s.post("/ask", q="when is the dentist")
+        s.post("/ask", q="what should I bring to the dentist")
+        s.req("GET", "/say?turn=1")
+        (prompt,) = asked
+        assert "The human asked: when is the dentist" in prompt
+        assert "bring" not in prompt
+    finally:
+        s.close()
+
+
 def test_a_say_with_no_model_named_is_refused(tmp_path, capsys):
     b = make_box(tmp_path)
     assert br.main(["--box", str(b), "--say"]) == 2
+
+
+BOXES_HERE = PROJECTS_HERE and (br.STDLIB / "boxes-here" / "boxes_here.py").is_file()
+
+
+def nav_of(s) -> str:
+    _, text = s.req("GET", "/")
+    return text[text.index("<nav>") : text.index("</nav>")]
+
+
+@pytest.mark.skipif(not BOXES_HERE, reason="the boxes-here or projects add-on isn't here")  # fmt: skip
+def test_a_box_already_in_a_folder_is_found_ticked_kept_and_opened_where_it_is(
+    tmp_path,
+):
+    home = two_projects(tmp_path)
+    away = two_projects(tmp_path / "away")  # boxes somewhere else on the machine
+    kept = tmp_path / "kept.json"
+    s = opened(home / "garden" / "box", home=home, boxes=kept)
+    try:
+        nav = nav_of(s)
+        assert "<p class=proj>Elsewhere</p>" in nav
+        assert '<a href="/find">Find boxes in a folder</a>' in nav
+        assert str(away) not in nav and not kept.exists()
+        _, text = s.req("GET", "/find")
+        assert '<form class=find method=post action="/find">' in text
+        assert "name=box" not in text
+        _, text = s.post("/find", folder=str(away))
+        house, garden = away / "house" / "box", away / "garden" / "box"
+        assert f"<h2>Already in {away}</h2>" in text
+        assert f'<input type=checkbox name=box value="{house}"> <b>house</b>' in text
+        assert f'<input type=checkbox name=box value="{garden}"> <b>garden</b>' in text
+        assert "1 row: 0 asked, 0 approved, 0 waiting" in text
+        assert not kept.exists(), "looking keeps nothing"
+        r, _ = s.req("POST", "/keep", [("box", str(house)), ("box", str(garden)),
+                                       ("token", s.willow.token)])  # fmt: skip
+        assert r.status == 303 and r.getheader("Location") == "/"
+        assert json.loads(kept.read_text()) == [
+            {"box": str(garden)},
+            {"box": str(house)},
+        ]
+        nav = nav_of(s)
+        assert (
+            f'name=box value="{house}"><button class=link title="{house}">house' in nav
+        )
+        _, text = s.post("/find", folder=str(away))
+        assert "<span class=pill>kept</span> <b>house</b>" in text
+        assert "type=checkbox" not in text, "a box already kept isn't offered again"
+        before = sorted(p.name for p in (away / "house").iterdir())
+        r, _ = s.post("/switch", box=str(house))
+        assert r.status == 303 and s.willow.box == house
+        nav = nav_of(s)
+        assert "<p class=proj>house</p>" in nav
+        assert f'<a class=on title="{house}">house' in nav
+        _, text = s.post("/ask", q="when does the roofer come")
+        assert "The roofer comes on Friday." in text
+        rows = (house / "record.jsonl").read_text().splitlines()
+        assert json.loads(rows[-1])["kind"] == "bite", "it is asked where it is"
+        assert sorted(p.name for p in (away / "house").iterdir()) == before, (
+            "nothing is copied in or moved out"
+        )
+        r, _ = s.post("/keep", box=str(garden), off="1")
+        assert r.status == 303
+        assert [b["box"] for b in json.loads(kept.read_text())] == [str(house)]
+        assert (garden / "kernel.json").is_file(), "dropped from the list, not deleted"
+    finally:
+        s.close()
+
+
+@pytest.mark.skipif(not BOXES_HERE, reason="the boxes-here or projects add-on isn't here")  # fmt: skip
+def test_only_a_box_on_the_list_is_opened_and_what_waits_or_is_gone_is_said(tmp_path):
+    home = two_projects(tmp_path)
+    away = two_projects(tmp_path / "away")
+    house, garden = away / "house" / "box", away / "garden" / "box"
+    kept = tmp_path / "kept.json"
+    kept.write_text(json.dumps([{"box": str(house)},
+                                {"box": str(garden)}]))  # fmt: skip
+    s = opened(home / "garden" / "box", home=home, boxes=kept)
+    try:
+        for at in (str(home / "house" / "box"), str(away), "../house"):
+            r, text = s.post("/switch", box=at)
+            assert r.status == 404 and "no box kept by that place" in text, at
+        assert s.willow.box == home / "garden" / "box"
+        r, _ = s.req("POST", "/switch", {"box": str(house), "token": "wrong"})
+        assert r.status == 403
+        r, _ = s.req("POST", "/keep", {"box": str(house), "off": "1", "token": "wrong"})
+        assert r.status == 403 and len(json.loads(kept.read_text())) == 2
+        (garden / "kernel.json").unlink()
+        nav = nav_of(s)
+        assert "garden <span class='pill wait'>gone</span>" in nav
+        r, _ = s.post("/switch", box=str(garden))
+        assert r.status == 404, "a box that is gone isn't opened"
+        r, text = s.post("/keep", box=str(tmp_path))
+        assert r.status == 409 and "is not a box" in text
+        r, text = s.req("POST", "/keep", {"token": s.willow.token})
+        assert r.status == 409 and "No box was ticked." in text
+        _, text = s.post("/find", folder=str(tmp_path / "nope"))
+        assert "nope isn't a folder on this machine" in text
+        (tmp_path / "bare" / "a" / "b" / "c" / "d").mkdir(parents=True)
+        _, text = s.post("/find", folder=str(tmp_path / "bare"))
+        assert "No box is in" in text and "kernel.py init" in text
+        assert "<h2>Not looked in</h2>" in text and "it is 3 folders down" in text
+    finally:
+        s.close()
+
+
+def test_with_no_list_no_box_elsewhere_is_listed_found_or_kept(site, tmp_path):
+    site.start()
+    _, text = site.req("GET", "/")
+    assert "Elsewhere" not in text and "/find" not in text
+    _, text = site.req("GET", "/find")
+    assert "started without a list" in text
+    r, text = site.post("/keep", box=str(tmp_path))
+    assert r.status == 409 and "without a list" in text
+    r, _ = site.post("/switch", box=str(tmp_path))
+    assert r.status == 404
+    b = site.willow.box
+    assert br.main(["--box", str(b), "--no-open", "--boxes"]) == 2
+    nope = tmp_path / "nope" / "k.json"
+    assert br.main(["--box", str(b), "--boxes", str(nope), "--no-open"]) == 2
+
+
+def test_a_suggestion_passed_twice_in_an_older_record_is_owed_once(tmp_path):
+    """The kernel now refuses a re-proposal (CONST-V-11); a record from
+    before that may hold one subject passed twice, and it is owed once."""
+    b = make_box(tmp_path)
+    got = json.loads(k("bite", "--box", str(b), *NOW, "when is the dentist").stdout)
+    row = {"path": "dentist.md", "data": "Tuesday at 3pm.",
+           "cites": [got["served"][0]["id"]], "claim": "the dentist note"}  # fmt: skip
+    (tmp_path / "r.jsonl").write_text(json.dumps(row) + "\n")
+    out = k("propose", "--box", str(b), "--file", str(tmp_path / "r.jsonl"), *NOW)
+    subj = out.stdout.split()[1]
+    held = next(
+        r for r in br.kernel.read(b / "record.jsonl")[0] if r.get("subject") == subj
+    )
+    br.kernel.append(b, NOW[1], "proposal", subject=subj, verdict="pass",
+                     bite_row=held["bite_row"])  # fmt: skip
+    assert br.Willow(b, None).owed() == ([subj], [])

@@ -1,0 +1,1 @@
+`browse`: with `--boxes FILE`, boxes kept somewhere else on this machine are listed in the left panel under "Elsewhere", each with how many suggestions wait on it, and opened where they are. "Find boxes in a folder" shows the boxes already in a folder you name, and the ones you tick are kept on the list by `boxes-here`.

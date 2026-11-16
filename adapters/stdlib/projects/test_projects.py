@@ -716,3 +716,18 @@ def test_it_writes_nothing_and_says_the_same_twice(tmp_path):
     assert projects("--home", home).stdout == first.stdout
     assert projects("--home", home, "--json").returncode == first.returncode == 42
     assert snapshot(tmp_path) == before
+
+
+def test_a_suggestion_passed_twice_in_an_older_record_waits_once(tmp_path):
+    """The kernel now refuses a re-proposal (CONST-V-11); a record from
+    before that may hold one subject passed twice, and it is counted once."""
+    spec = importlib.util.spec_from_file_location("kernel_for_projects", KERNEL)
+    kn = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(kn)
+    home = tmp_path / "home"
+    b = record(home / "garden")
+    (subj,) = suggest(b, "Six hours.")
+    held = next(r for r in kn.read(b / "record.jsonl")[0] if r.get("subject") == subj)
+    kn.append(b, NOW[1], "proposal", subject=subj, verdict="pass",
+              bite_row=held["bite_row"])  # fmt: skip
+    assert listed(home) == {"garden": {"box": "4 rows: 1 asked, 0 approved, 1 waiting"}}

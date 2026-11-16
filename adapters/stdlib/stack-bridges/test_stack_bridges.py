@@ -25,8 +25,8 @@ CARDS_HERE = all(
     for kind, name in (
         ("stdlib", "fixity"),
         ("stdlib", "backup"),
-        ("stdlib", "glance"),
-        ("deps", "dp"),
+        ("stdlib", "batch-glance"),
+        ("deps", "noised-count"),
     )
 )
 REPO_HERE = (ROOT / "demo" / "kept" / "stack.md").is_file()
@@ -41,9 +41,9 @@ STACK = """# a stack
 ## read
 - code-comments -- mirror --from PILE --to {box}-code
 - index-cache -- --from {box}-code --to S/kept/index
-- scan -- scan --index S/kept/index --questions S/q.txt
+- batch-ask -- scan --index S/kept/index --questions S/q.txt
 ## look
-- glance -- --of {03} --questions S/q.txt
+- batch-glance -- --of {03} --questions S/q.txt
 - star-system -- --repo R --to S/out/a/star.md
 - diverge -- S/out/a S/out/b
 - backup -- --box {box} --to S/usb
@@ -77,8 +77,8 @@ def test_each_step_is_tied_to_the_step_whose_output_or_place_it_names(tmp_path):
     assert doc["said"] == "9 steps, 5 bridges, 3 deep; 4 rest on no other"
     assert rows(doc, "what each step takes") == {
         "02 index-cache": "01 code-comments: what it wrote, {box}-code",
-        "03 scan": "02 index-cache: what it wrote, index",
-        "04 glance": "03 scan: its output",
+        "03 batch-ask": "02 index-cache: what it wrote, index",
+        "04 batch-glance": "03 batch-ask: its output",
         "06 diverge": "05 star-system: what it wrote, star.md",
         "08 three-two-one": "07 backup: what it wrote, usb",
     }
@@ -97,12 +97,12 @@ def test_the_order_is_by_depth_with_the_longest_way_down_and_the_record_said(tmp
     )
     assert order["1 step deep"] == "3: 02 index-cache, 06 diverge, 08 three-two-one"
     assert (
-        order["2 steps deep"] == "1: 03 scan"
-        and order["3 steps deep"] == "1: 04 glance"
+        order["2 steps deep"] == "1: 03 batch-ask"
+        and order["3 steps deep"] == "1: 04 batch-glance"
     )
     assert (
         order["the longest way down"]
-        == "04 glance → 03 scan → 02 index-cache → 01 code-comments"
+        == "04 batch-glance → 03 batch-ask → 02 index-cache → 01 code-comments"
     )
     assert order["write the record"].startswith(
         "1: 09 fixity; a step that names the record after"
@@ -247,10 +247,13 @@ def test_on_the_repos_own_stacks_every_bridge_holds():
         kept.returncode == 0
         and doc["said"] == "33 steps, 28 bridges, 3 deep; 11 rest on no other"
     )
-    assert rows(doc, "what each step takes")["07 glance"] == "06 scan: its output"
+    assert (
+        rows(doc, "what each step takes")["07 batch-glance"]
+        == "06 batch-ask: its output"
+    )
     assert (
         rows(doc, "the order")["the longest way down"]
-        == "07 glance → 06 scan → 04 index-cache → 01 code-comments"
+        == "07 batch-glance → 06 batch-ask → 04 index-cache → 01 code-comments"
     )
     for file in sorted((ROOT / "adapters/stdlib/stack/examples").glob("*.md")):
         got = run("--stack", str(file))
@@ -274,7 +277,7 @@ def test_its_own_example_has_the_bridges_its_card_says():
     )
     assert rows(doc, "the order")["write the record"].startswith("1: 08 fixity; ")
     assert (
-        rows(doc, "what each step takes")["09 history"]
+        rows(doc, "what each step takes")["09 record-history"]
         == "08 fixity: the record as it left it"
     )
 
@@ -302,6 +305,40 @@ def test_a_step_naming_the_record_after_one_that_writes_it_takes_the_record():
     )
     assert stack_bridges.record_bridges(steps, writes=lambda name: False) == {}
     assert stack_bridges.record_bridges(steps, writes=lambda name: None) == {}
+
+
+def test_a_record_named_by_its_folder_is_a_bridge_between_steps_naming_that_folder():
+    steps = [("w", ["--box", "boxes/sources"]), ("a", ["root", "--box", "boxes/sources"]),
+             ("b", ["--box", "boxes/links"]), ("c", ["--box", "{box}"]),
+             ("w", ["--box", "./boxes/links/"]), ("d", ["--box", "boxes/links", "--top", "3"]),
+             ("e", ["--in", "boxes/sources"]), ("f", ["--box"])]  # fmt: skip
+    got = stack_bridges.record_bridges(steps, writes=lambda name: name == "w")
+    assert got == {2: 1, 6: 5}, (
+        "only the same folder's writer; {box} is not a folder named; "
+        "a folder given to another option is not a record"
+    )
+    assert [stack_bridges.record_of(args) for _, args in steps] == [
+        "boxes/sources", "boxes/sources", "boxes/links", "{box}",
+        "boxes/links", "boxes/links", None, None,
+    ]  # fmt: skip
+    assert stack_bridges.record_of(["--box", "/"]) == "/"
+    assert stack_bridges.record_of(["--box", "{box}", "--from", "x"]) == "{box}"
+    assert stack_bridges.record_of(["--from", "{box}", "--box", "kept"]) == "kept"
+
+
+@needs_cards
+def test_a_stack_that_names_its_record_by_folder_has_its_bridges_found(tmp_path):
+    doc, code = doc_of(
+        tmp_path,
+        "# s\n\n## one\n- glance -- --box boxes/sources\n- fixity -- --box boxes/sources\n"
+        "- merkle -- root --box boxes/sources\n- glance -- --box boxes/links\n",
+    )
+    assert code == 0 and doc["state"] == "populated", doc
+    assert rows(doc, "what each step takes") == {
+        "03 merkle": "02 fixity: the record as it left it"
+    }
+    assert rows(doc, "the order")["write the record"].startswith("1: 02 fixity; ")
+
     assert stack_bridges.writes_record("no-such-add-on") is None
     assert stack_bridges.writes_record("stack") is False, (
         "the one card that is always beside it"
@@ -330,10 +367,12 @@ def test_the_record_makes_a_step_deeper_and_is_said_beside_what_else_it_takes(tm
 def test_whether_an_add_on_writes_the_record_is_read_off_its_card():
     assert (
         stack_bridges.writes_record("fixity") is True
-        and stack_bridges.writes_record("glance") is False
+        and stack_bridges.writes_record("batch-glance") is False
     )
     assert stack_bridges.writes_record("backup") is False, (
         "it writes to a place, not the record"
     )
     assert stack_bridges.writes_record("no-such-add-on") is None
-    assert stack_bridges.writes_record("dp") is True, "an add-on in deps has a card too"
+    assert stack_bridges.writes_record("noised-count") is True, (
+        "an add-on in deps has a card too"
+    )

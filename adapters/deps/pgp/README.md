@@ -3,7 +3,7 @@ section: Trust and proof
 line: Signs exports and reports with your PGP key, verifiable anywhere.
 source: new
 added: 2026-10-30
-version: 0.1.0
+version: 0.1.1
 needs: the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause
 programs: gpg
 floor: python-gnupg 0.4.6
@@ -17,7 +17,7 @@ An export or a report, signed with your own PGP key, so anyone with your
 public key can check it came from you and hasn't changed.
 
     pip install -r adapters/deps/pgp/requirements.txt
-    python adapters/stdlib/export/export.py --box DIR > answers.md
+    python adapters/stdlib/export-answers/export_answers.py --box DIR > answers.md
     python adapters/deps/pgp/pgp.py sign answers.md --to answers.md.asc [--key ID]
     python adapters/deps/pgp/pgp.py verify answers.md answers.md.asc
 

@@ -226,7 +226,7 @@ def test_the_gates_run_in_one_fixed_order_and_cover_every_part():
         "tests:constitution", "tests:coverage",
         *(f"ports:{p}" for p in ci.PORTS),
         *sorted([*(f"demo:{p}" for p in ci.people()), "demo:craft-assembly", "demo:five-repos",
-                 "demo:google-privacy-2026-10-16", "demo:known-gaps", "demo:novelty", "demo:ofrenda-frozen",
+                 "demo:game-box", "demo:game-box-end", "demo:google-privacy-2026-10-16", "demo:known-gaps", "demo:novelty", "demo:ofrenda-frozen",
                  "demo:php2shell", "demo:redteam", "demo:share", "demo:small-models", "demo:stack",
                  "demo:stewart-crossover-frozen", "demo:teodora-words",
                  *(g for g, _, _ in ci.demo_tests()[len(ci.DEMO_TESTS):])]),
@@ -294,7 +294,7 @@ def test_a_gate_weighs_what_its_tests_took():
     mine = ci.gate_weight("mutants:ci")
     assert mine == round(ci.MUTANT_COPY + ci.MUTANT_BREAKS * ci.TIMES_TO_RUNNER * own)
     assert mine > 10 * ci.gate_weight("mutants:accents"), "ci's tests are the slow ones"
-    chunk = ci.chunks(ci.adapter_tests(), ci.ADAPTER_CHUNKS)[2]
+    chunk = ci.adapter_parts()[2]
     median = sorted(times.values())[len(times) // 2]
     want = ci.TIMES_TO_RUNNER * sum(times.get(f, median) for f in chunk)
     assert ci.gate_weight("tests:adapters-3") == round(want)

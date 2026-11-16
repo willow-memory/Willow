@@ -1,0 +1,1 @@
+`backgammon`: backgammon on the record, every throw dice's own row and every turn held to it: as many dice as can be used, the larger when only one can, the bar first, bearing off from home; gammons and backgammons scored

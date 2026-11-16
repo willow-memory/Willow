@@ -7,7 +7,7 @@ repo's own add-ons, stopping only where a person is needed. Python 3.9+.
 
 Commit your change, with its changelog entry (changes/+<branch>.<kind>.md,
 changes/README.md says how), then run it. Everything that needs no host is
-ready's (adapters/stdlib/ready): its `check`, then its `run` of the steps
+ready's (adapters/stdlib/pr-ready): its `check`, then its `run` of the steps
 (ready/steps.md, or `--steps`), held to the other open pull requests, then
 its `body`. This adds GitHub's part around them: the open pull requests to
 hold the branch to, the push, the pull request opened (or the one already
@@ -49,7 +49,7 @@ STDLIB = ROOT / "adapters" / "stdlib"
 sys.path.insert(0, str(ROOT))
 import kernel  # noqa: E402
 
-READY = STDLIB / "ready" / "ready.py"
+READY = STDLIB / "pr-ready" / "pr_ready.py"
 USAGE = (
     "usage: create_pr.py [--base BRANCH] [--title TEXT] [--footer TEXT]"
     " [--repo OWNER/NAME] [--steps FILE]"
@@ -85,7 +85,7 @@ def git(*args: str, check: bool = True) -> str:
 
 
 def ready(*args: str, capture: bool = False) -> str:
-    """ready.py with these args, its output passed through (or kept, with
+    """pr_ready.py with these args, its output passed through (or kept, with
     `capture`); a refusal or a stop is passed on with ready's own exit code."""
     got = subprocess.run([sys.executable, str(READY), *args], cwd=ROOT,
                          capture_output=capture, text=True)  # fmt: skip
@@ -114,9 +114,9 @@ def slug_of(remote: str) -> str:
 
 
 def by_hand(base: str) -> str:
-    return ("by hand: python adapters/stdlib/ready/ready.py run --base"
-            f" {base} --open <each open branch> --to FILE; ready.py body --base {base}"
-            " --from FILE; push and open it; ready.py opened --base"
+    return ("by hand: python adapters/stdlib/pr-ready/pr_ready.py run --base"
+            f" {base} --open <each open branch> --to FILE; pr_ready.py body --base {base}"
+            " --from FILE; push and open it; pr_ready.py opened --base"
             f" {base} --pr <its number>; push again")  # fmt: skip
 
 

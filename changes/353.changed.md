@@ -1,0 +1,1 @@
+`similar`, `readme`: an entry new this week is worked out alone, against every entry, instead of the whole list worked out again for each one and all but its line thrown away: `readme.py check` went from 23.5 s to 3.5 s with the same bytes made, and `restack`'s tests, which make the list again several times a test, from 405 s to 123 s.

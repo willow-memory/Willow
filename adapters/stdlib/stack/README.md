@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.4.1
+version: 0.6.1
 writes: to
 network: none
 role: ways
@@ -11,7 +11,7 @@ role: ways
 # stack
 
 One document from a **stack of add-on steps** over a box. Where
-[`across`](../across/) runs one document add-on over many boxes, `stack` runs
+[`many-boxes`](../many-boxes/) runs one document add-on over many boxes, `stack` runs
 many heterogeneous steps over one box and composes what each prints — pooled,
 and ordered tallest-first. It is the input side of the serve layer in
 `docs/design/serve.md`: the operator's stack, before any seal.
@@ -24,7 +24,7 @@ A markdown file, pools and steps:
 
     ## a pool heading
     - digest -- --box {box}
-    - export -- --box {box}
+    - export-answers -- --box {box}
 
     ## another pool
     - timeline -- --box {box} --to {box}-notes "mould landlord"
@@ -42,10 +42,12 @@ written out to share by [stack-share](../stack-share/).
 
 ## pools and peaks
 
-The order is the stacking order — **peaks first**. Each step's **mass** is how
-many non-blank lines it printed; a pool's mass is its steps' together. Pools,
-and the steps within them, run tallest first, because mass is what decides
-attention: the reader meets the biggest stack first. The document is markdown —
+The steps run in the order the stack file lists them, pool by pool, so a
+step that needs another's output comes after it. The document is then stacked
+**peaks first**. Each step's **mass** is how many non-blank lines it printed;
+a pool's mass is its steps' together. Pools, and the steps within them, are
+printed tallest first, because mass is what decides attention: the reader
+meets the biggest stack first. The document is markdown —
 a `##` per pool, each step's output fenced under it, a step flagged `(exit N)`
 when it didn't run clean.
 
@@ -53,7 +55,9 @@ when it didn't run clean.
 
 A stack of slow steps (a model, a big index) prints nothing until the last
 one ends, because the page is ordered by what every step made. `--to FOLDER`
-keeps the run as it happens:
+keeps the run as it happens. FOLDER is made when it isn't there yet, so a new
+run is one command; the folder it goes in must be there, so a mistyped path
+is refused rather than made:
 
     <FOLDER>/00-stack.txt     a line as each step starts, a line as it ends
     <FOLDER>/01-todo.txt      the first step's output
@@ -89,8 +93,8 @@ A later step can be given what an earlier one made. In a step's args, a
 step's number in braces is the file that step's output was kept in:
 
     ## what I asked
-    - scan -- scan --index my.index --questions my-questions.txt
-    - glance -- --of {01} --questions my-questions.txt
+    - batch-ask -- scan --index my.index --questions my-questions.txt
+    - batch-glance -- --of {01} --questions my-questions.txt
 
 `{01}` is step 01's output, 01 being its place in the stack file, counted
 from the top. `{01.json}` is its report as data, for a step that printed
@@ -107,6 +111,11 @@ refused before anything runs:
 A step whose earlier step kept nothing is not run, and the log and the page
 say so (`not run: step 1 (scan) kept nothing to hand on`); it is flagged,
 and the steps after it still run.
+
+A step that writes a file can name `{run}`, the folder the run is kept in,
+so each run writes its own and a file kept from last time is never in the
+way: `- timeline -- --box {box} --to {run}/springs.txt "springs"`. It too
+needs the run kept, and is refused before anything runs without `--to`.
 
 A backslash in a step's args has to sit inside quotes. Outside them the
 line is read the way a shell reads it, which drops the backslash without a

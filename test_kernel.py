@@ -1,4 +1,4 @@
-"""kernel.py, the smallest script for anyone: its twelve beats hold, the whole
+"""kernel.py, the smallest script for anyone: its thirteen beats hold, the whole
 loop runs on the command line, and what it serves is what its rules say."""
 
 from __future__ import annotations
@@ -29,15 +29,22 @@ def cli(*argv: str) -> subprocess.CompletedProcess:
 
 def test_its_twelve_beats_hold():
     p = cli("test")
-    assert p.returncode == 0 and "twelve beats held" in p.stdout, p.stderr
+    assert p.returncode == 0 and "fourteen beats held" in p.stdout, p.stderr
 
 
-#: For each beat Draft 0.16 added, a break planted in a copy of the kernel,
+#: For each beat Draft 0.16, 0.17 and 0.18 added, a break planted in a copy of the kernel,
 #: and the beat that must catch it: a check that cannot fail is no check
 #: (CONST-IV-9). Each is the one promise its clause makes, broken.
 PLANTED = {
     # CONST-V-10: out offers a proposal the person declined
-    "# 7.": ('and r["subject"] not in no', ""),
+    "# 7.": ("and s not in no and", "and"),
+    # CONST-V-11: the door offers again what was sealed, declined or waits
+    "# 11./door": (
+        'why = offered(box, read(box / "record.jsonl")[0], subject_of(prop))',
+        "why = None",
+    ),
+    # CONST-V-11: what waits is counted once a row, not once a thing to decide
+    "# 11./once": ("out[s] = r", "out[f\"{s} {r['n']}\"] = r"),
     # CONST-IV-10: the order follows the process's hash seed
     "# 8.": ("key=lambda s: (-s[0],", "key=lambda s: (hash(s[2]) % 3, -s[0],"),
     # CONST-III-6: the core reaches for an add-on, quietly
@@ -46,6 +53,21 @@ PLANTED = {
         "from fractions import Fraction\n\ntry:\n"
         "    import adapters.stdlib.todo  # noqa: F401\nexcept ImportError:\n"
         "    pass\n",
+    ),
+    # CONST-VI-9: a source's passages lose their source's name
+    "# 14./named": (
+        """out += [{**c, "path": f"{name}/{c['path']}", "source": name} for c in part]""",
+        "out += part",
+    ),
+    # CONST-VI-9: a source's name is a word every one of its passages holds
+    "# 14./words": (
+        'return c["path"][len(c["source"]) + 1 :] if c.get("source") else c["path"]',
+        'return c["path"]',
+    ),
+    # CONST-VI-9: a list of files is read as the whole folder it sits in
+    "# 14./listed": (
+        'part = list_chunks(at) if cfg["sources"][name].startswith("@") else chunks(at)',
+        'part = chunks(at.parent) if cfg["sources"][name].startswith("@") else chunks(at)',
     ),
     # CONST-VI-8: a bite's row keeps the question's words
     "# 10.": (
@@ -72,7 +94,7 @@ def test_each_new_beat_fails_on_its_planted_break(tmp_path, beat):
     lines = broken.read_text(encoding="utf-8").split("\n")
     beats = [i for i, ln in enumerate(lines, 1) if re.match(r"\s*# \d+\. ", ln)]
     at = re.findall(rf'"{re.escape(str(broken))}", line (\d+)', p.stderr)[-1]
-    mine = next(i for i in beats if lines[i - 1].strip().startswith(beat))
+    mine = next(i for i in beats if lines[i - 1].strip().startswith(beat.split("/")[0]))
     after = [i for i in beats if i > mine]
     assert mine < int(at) < (after[0] if after else len(lines)), p.stderr
 
@@ -828,3 +850,169 @@ def test_a_propose_whose_every_suggestion_is_refused_does_not_exit_0(tmp_path):
     got = cli("propose", *b, "--file", str(rows))
     assert "refused" in got.stdout
     assert got.returncode == 42
+
+
+def test_offered_once_counted_once(tmp_path):
+    """V.11 on the command line: a suggestion proposed again is refused at
+    the door, with why, whether it waits, was sealed or was declined; and a
+    record from before the door, with one subject passed twice, is counted
+    once (CONST-V-11)."""
+    pile, box, key = tmp_path / "pile", tmp_path / "box", tmp_path / "keys" / "me.key"
+    pile.mkdir()
+    (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    cli("init", *b, "--pile", str(pile), "--key", str(key))
+    got = cli("bite", *b, "when does the bus leave the square")
+    cite = json.loads(got.stdout)["served"][0]["id"]
+    rows = tmp_path / "rows.jsonl"
+    yes = {"path": "bus.md", "data": "Seven.", "cites": [cite], "claim": "notes.md"}
+    no = {**yes, "path": "ferry.md", "data": "Noon."}
+    wait = {**yes, "path": "tram.md", "data": "Eight."}
+    rows.write_text("".join(json.dumps(x) + "\n" for x in (yes, no, wait, wait)))
+    got = cli("propose", *b, "--file", str(rows))
+    said = got.stdout.splitlines()
+    assert got.returncode == 42 and said[3].startswith(
+        "refused  line 3: already waiting on your seal, row "
+    ), said
+    assert cli("seal", *b, k.subject_of(yes)).returncode == 0
+    assert cli("decline", *b, k.subject_of(no)).returncode == 0
+    sealed_file = box / "proposals" / f"{k.subject_of(yes)[9:]}.json"
+    before = sealed_file.read_text()
+    got = cli("bite", *b, "the bus from the square at seven")  # other words
+    assert cite in got.stdout
+    got = cli("propose", *b, "--file", str(rows))
+    said = got.stdout.splitlines()
+    assert [x.split(": ")[1].rsplit(" ", 1)[0] for x in said] == [
+        "you approved it at row",
+        "you declined it at row",
+        "already waiting on your seal, row",
+        "already waiting on your seal, row",
+    ], said
+    record = k.read(box / "record.jsonl")[0]
+    refused = [
+        r for r in record if r["kind"] == "proposal" and r["verdict"] == "refused"
+    ]
+    assert len(refused) == 5 and all(r["why"] for r in refused)
+    assert sealed_file.read_text() == before, "a refused one writes no file"
+    # a record from before the door: the same subject passed twice
+    first = next(r for r in record if r.get("subject") == k.subject_of(wait))
+    k.append(box, "2026-10-22T00:00:00Z", "proposal", subject=first["subject"],
+             verdict="pass", bite_row=first["bite_row"])  # fmt: skip
+    got = cli("out", *b)
+    assert got.returncode == 42 and got.stdout.count("waiting on your seal") == 1
+    assert "; 1 waiting" in got.stdout
+
+
+def test_a_box_reads_its_sources_where_they_are(tmp_path):
+    pile, law, notes = tmp_path / "pile", tmp_path / "law", tmp_path / "notes"
+    for d in (pile, law, notes):
+        d.mkdir()
+    (pile / "garden.md").write_text("Tomatoes want six hours of sun.\n")
+    (law / "charter.md").write_text("The shed is painted every fourth spring.\n")
+    (notes / "roof.md").write_text("The roof estimate was 4200.\n")
+    lst = tmp_path / "list.txt"
+    lst.write_text(f"{notes / 'roof.md'}\n")
+    box = tmp_path / "box"
+    b = ["--box", str(box), "--now", "2026-11-16T00:00:00Z"]
+    got = cli("init", *b, "--pile", str(pile), "--from", f"law={law}",
+              "--from", f"notes=@{lst}", "--key", str(tmp_path / "k"))  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    cfg = k.config(box)
+    assert cfg["sources"] == {
+        "law": str(law.resolve()),
+        "notes": "@" + str(lst.resolve()),
+    }
+    boot = k.read(box / "record.jsonl")[0][0]
+    assert boot["pile_sha256"] == k.h256(str(pile.resolve()))
+    assert boot["sources_sha256"] == k.h256(k.canon(cfg["sources"]))
+    assert [c["path"] for c in k.pile_of_box(cfg)] == [
+        "garden.md",
+        "law/charter.md",
+        "notes/roof.md",
+    ]
+    said = json.loads(cli("bite", *b, "when is the shed painted").stdout)
+    assert [x["where"] for x in said["served"]] == ["law/charter.md:1"]
+    # sources alone, no pile folder
+    only = tmp_path / "only"
+    got = cli(
+        "init", "--box", str(only), "--from", f"law={law}", "--key", str(tmp_path / "k")
+    )
+    assert got.returncode == 0, got.stderr
+    assert "pile" not in k.config(only)
+    assert [c["path"] for c in k.pile_of_box(k.config(only))] == ["law/charter.md"]
+
+
+def test_a_box_of_one_folder_reads_as_it_always_has(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "garden.md").write_text(
+        "Tomatoes want six hours of sun.\n\nWater at the root.\n"
+    )
+    box = tmp_path / "box"
+    assert (
+        cli(
+            "init", "--box", str(box), "--pile", str(pile), "--key", str(tmp_path / "k")
+        ).returncode
+        == 0
+    )
+    cfg = k.config(box)
+    assert set(cfg) == {"key", "pile"}
+    assert k.pile_of_box(cfg) == k.chunks(pile)
+    assert k.folder(cfg) == Path(cfg["pile"])
+    assert "sources_sha256" not in k.read(box / "record.jsonl")[0][0]
+
+
+def test_a_reader_of_one_folder_refuses_a_box_of_sources(tmp_path):
+    law = tmp_path / "law"
+    law.mkdir()
+    with pytest.raises(ValueError, match="CONST-VI-9"):
+        k.folder({"key": "k", "pile": str(tmp_path), "sources": {"law": str(law)}})
+    with pytest.raises(ValueError, match="CONST-VI-9"):
+        k.folder({"key": "k", "sources": {"law": str(law)}})
+
+
+@pytest.mark.parametrize(
+    "froms, why",
+    [
+        (["law"], "a source is NAME=FOLDER or NAME=@LIST"),
+        (["a/b={law}"], "a source's name is plain"),
+        ([".x={law}"], "a source's name is plain"),
+        (["law={law}", "law={law}"], "a source's name is given once"),
+        (["law={tmp}/none"], "is not a folder"),
+        (["law=@{tmp}/none.txt"], "a list of files is a file, and isn't there"),
+        (["law=@{gone}"], "names 1 file that aren't there"),
+        (["garden.md={law}"], "the pile already holds that name at its top"),
+    ],
+)
+def test_a_bad_source_is_refused_and_no_box_is_made(tmp_path, froms, why):
+    pile, law = tmp_path / "pile", tmp_path / "law"
+    pile.mkdir()
+    law.mkdir()
+    (pile / "garden.md").write_text("Sun.\n")
+    gone = tmp_path / "gone.txt"
+    gone.write_text(f"{tmp_path / 'missing.md'}\n")
+    box = tmp_path / "box"
+    args = [
+        x for f in froms for x in ("--from", f.format(law=law, tmp=tmp_path, gone=gone))
+    ]
+    got = cli(
+        "init",
+        "--box",
+        str(box),
+        "--pile",
+        str(pile),
+        *args,
+        "--key",
+        str(tmp_path / "k"),
+    )
+    assert got.returncode == 2 and why in got.stderr, got.stderr
+    assert not (box / "k.json").exists()
+
+
+def test_a_source_is_named_only_when_the_box_is_made(tmp_path):
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    box = tmp_path / "box"
+    cli("init", "--box", str(box), "--pile", str(pile), "--key", str(tmp_path / "k"))
+    got = cli("bite", "--box", str(box), "--from", f"x={pile}", "a question")
+    assert got.returncode == 2

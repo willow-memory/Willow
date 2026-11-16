@@ -12,7 +12,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 IC = HERE / "index_cache.py"
-SCAN = HERE.parent / "scan" / "scan.py"
+SCAN = HERE.parent / "batch-ask" / "scan.py"
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:

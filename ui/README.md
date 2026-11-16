@@ -15,8 +15,18 @@ way a person does:
    only ever reads them.
 2. **What the kernel does on its own.** Each folder read the kernel's way,
    before any add-on, as counts: how many files it can read, the passages
-   that makes, and how many it can't, by kind, with the readers that could
-   read them, one click to add. Never a passage, never a file's name.
+   that makes, and how many it can't, by kind. For each kind, the readers
+   whose cards name it are tried on up to four of its files of 8 MB or
+   less, copied to a folder removed after, beside a file of the kind with
+   nothing in it: a reader that takes some of yours and not the nonsense
+   knows their shape (office, a .docx; mastodon, an outbox .json), and is
+   offered with how many it took, one click to add; one that takes the
+   nonsense too reads any file of the kind (json-paths), and is said in a
+   line of its own. A card's word alone isn't taken for yours: a .zip is
+   anything, so a .zip no reader took says so beside its readers. What
+   helps comes first (the kinds a reader took), then what the cards say,
+   then a line each for the kinds no reader here reads and the text it
+   skips. Never a passage, never a file's name.
 3. **Start from an example**, the folders the stack add-on ships, each step
    with the options it runs with (hover one to see in the tree what it
    would add), or **pick add-ons** by what you want done, in your own words,

@@ -3,7 +3,7 @@ section: Trust and proof
 line: Where two copies part, your record and its backup zip or two copies of a folder, down to the first row, file and line that differ.
 source: bot
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools
@@ -32,7 +32,7 @@ Each side is a folder or a `.zip`. It narrows level by level:
 
 Hidden folders are left out, as the kernel leaves them out. A key is never
 read: a file that a box's kernel.json names as its key is skipped if it
-sits inside what's compared (as [start](../start/) puts it, beside the box).
+sits inside what's compared (as [first-run](../first-run/) puts it, beside the box).
 "The same" means every file, byte for byte.
 
 **Where it comes from:** [willow-bot's diverge](https://github.com/willow-memory/willow-bot/blob/main/one-script/onescript/diverge.py), which finds where two

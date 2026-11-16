@@ -1,0 +1,212 @@
+We are given the reports and must answer each question from the reports alone.
+
+Let's go through each question one by one.
+
+1. jobs: How many jobs were in the sweep?
+   The report says: "220 jobs over 22 trajectories, dealt to 5 machines in 2 rounds"
+   So the sweep had 220 jobs.
+
+2. trajectories: How many trajectories were they on?
+   The report says: "220 jobs over 22 trajectories"
+   So there were 22 trajectories.
+
+3. predicted: What saving of steps was predicted from the sweep alone, in percent?
+   The report says: "Predicted from the sweep alone: 73.3% of the steps need not be stepped."
+   So the predicted saving is 73.3%.
+
+4. seconds: How many seconds did the shared run take in all?
+   The report does not mention seconds at all. It says: "It stepped 336379 steps." but no time in seconds. 
+   Therefore, the reports don't say.
+
+5. baseline-steps: How many steps did one baseline run step?
+   The report says: "One run stepped 1256518 steps."
+   So one baseline run stepped 1256518 steps.
+
+6. shared-steps: How many steps did the shared run step?
+   The report says: "It stepped 336379 steps." (for the shared run)
+   So the shared run stepped 336379 steps.
+
+7. measured: What saving of steps was measured, in percent?
+   The report says: "Measured saving: 73.2%"
+   So the measured saving is 73.2%.
+
+8. served: How many jobs of the shared run were served whole from memory?
+   The report says: "29 were served whole."
+   So 29 jobs were served whole.
+
+9. vulcan: At what step did the trajectory sun-vulcan end?
+   The report does not mention "sun-vulcan" at all. It mentions trajectories that began and then halted: 
+   "crowded-coarse-giants, stepped into its halt 1 time; crowded-coarse-three, stepped into its halt 1 time; crowded-three, stepped into its halt 1 time."
+   But no trajectory named "sun-vulcan". 
+   Therefore, the reports don't say.
+
+10. stepped-on: How many jobs of the shared run went on from a kept state?
+    The report says: "169 went on from a kept state"
+    So 169 jobs went on from a kept state.
+
+11. computed: How many jobs of the shared run took nothing from memory?
+    The report says: "22 took nothing from memory"
+    So 22 jobs took nothing from memory.
+
+12. halted: How many trajectories began and then halted?
+    The report says: "Trajectories that began and then halted: 3"
+    So 3 trajectories began and then halted.
+
+13. cost: What did the run cost, in dollars?
+    The report does not mention cost in dollars at all. 
+    Therefore, the reports don't say.
+
+14. refused: How many trajectories were refused before a first step?
+    The report says: "Trajectories refused before a first step: 1"
+    So 1 trajectory was refused before a first step.
+
+15. states-checked: How many kept states were stepped again?
+    The report says: "1305 kept states were stepped again"
+    So 1305 kept states were stepped again.
+
+16. afresh: How many served jobs were run afresh?
+    The report says: "20 served jobs were run afresh"
+    So 20 served jobs were run afresh.
+
+17. graphics: Which machines had a graphics card?
+    The report says: "Kinds of processor that ran the jobs: 3; amd x86_64 avx2; intel x86_64 avx2; intel x86_64 avx512."
+    But note: the report does not mention graphics cards at all. It only lists processor kinds (and they are all x86_64). 
+    Therefore, the reports don't say.
+
+18. afresh-same: How many of those came out the same bytes?
+    The report says: "20 served jobs were run afresh; 20 came out the same bytes."
+    So 20 came out the same bytes.
+
+19. native-same: With the project's gravity as it is written, how many jobs came out the same bytes on every machine?
+    The report says: "14 of 220 jobs came out the same bytes on every one."
+    So 14 jobs came out the same bytes on every machine.
+
+20. kinds: How many kinds of processor ran the jobs?
+    The report says: "3; amd x86_64 avx2; intel x86_64 avx2; intel x86_64 avx512."
+    So there were 3 kinds of processor.
+
+21. busiest: Which machine stepped the most steps?
+    The report does not specify which machine stepped the most steps. It says the shared run was run by 10 machine runs, but no breakdown of steps per machine.
+    Therefore, the reports don't say.
+
+Now, we write the answers for each question in the required format.
+
+For each question, we write:
+  [question name]: [answer]
+
+If the reports don't say, we write: "the reports don't say"
+
+Then, we write a line `## account`, and under it (at most six sentences) what happened.
+
+Let's write the answers:
+
+jobs: 220
+trajectories: 22
+predicted: 73.3
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+Now, the account:
+
+We have to write at most six sentences about what happened in the run.
+
+From the reports:
+
+- The sweep ran 220 jobs over 22 trajectories, distributed to 5 machines in 2 rounds, with a state kept every 100 steps. It predicted that 73.3% of steps need not be stepped.
+- The baseline (every job alone, no memory) ran 2 times and stepped 1,256,518 steps per run. All 220 jobs produced the same bytes in every baseline run, and with halts, the predicted saving was 73.7%.
+- The shared run ran 220 jobs by 10 machine runs: 22 jobs took nothing from memory, 169 went on from a kept state, and 29 were served whole. It stepped 336,379 steps and achieved a measured saving of 73.2%. Three trajectories began and then halted (crowded-coarse-giants, crowded-coarse-three, crowded-three), one trajectory (coarse-step) was refused before a first step.
+- The check: 1305 kept states were stepped again and produced the same bytes, and 20 served jobs were run afresh and produced the same bytes.
+- The project's gravity (as written) showed that 14 jobs came out the same bytes on every machine (the 5 machines).
+- The machines used were 3 kinds: amd x86_64 avx2, intel x86_64 avx2, and intel x86_64 avx512.
+
+We write the account in at most six sentences.
+
+Let's try:
+
+The run began with a sweep of 220 jobs across 22 trajectories, distributed to 5 machines over 2 rounds, keeping a state every 100 steps. This sweep predicted that 73.3% of steps could be skipped. The baseline run (each job alone, no memory) took 1,256,518 steps per run and produced identical output for all 220 jobs. The shared run, using 10 machine runs, stepped 336,379 steps and achieved a measured saving of 73.2%, with 22 jobs taking no memory, 169 continuing from a kept state, and 29 served whole. Three trajectories began and halted immediately, and one trajectory (coarse-step) was refused before starting. The project's gravity showed 14 jobs produced identical output across all 5 machines.
+
+But note: we must not infer from the world. We have to stick to the reports.
+
+We have to be careful: the reports say that the shared run had 10 machine runs, but we don't know the breakdown per machine. Also, the project's gravity says 14 jobs came out the same bytes on every machine (meaning every one of the 5 machines?).
+
+Let's write the account in 4-5 sentences to be safe.
+
+Account:
+
+The sweep ran 220 jobs across 22 trajectories over 2 rounds, with a state saved every 100 steps, predicting 73.3% of steps could be skipped. The baseline run (each job alone) stepped 1,256,518 steps per run and produced identical output for all 220 jobs. The shared run used 10 machine runs to step 336,379 steps, achieving a measured saving of 73.2%, with 22 jobs taking no memory, 169 continuing from a kept state, and 29 served whole. Three trajectories began and halted immediately, and one trajectory (coarse-step) was refused before starting. The project's gravity showed 14 jobs produced identical output across all 5 machines.
+
+This is 5 sentences.
+
+Let's check the numbers:
+
+- The baseline run: one run stepped 1256518 steps -> so 1,256,518
+- The shared run: 336,379 steps
+- 22 jobs took nothing from memory
+- 169 went on from a kept state
+- 29 served whole
+- 3 trajectories began and halted
+- 1 trajectory refused before a first step
+- 14 jobs same on every machine
+
+We are good.
+
+Now, write the answers.
+
+We have to write each answer in one line.
+
+Format:
+
+jobs: 220
+trajectories: 22
+predicted: 73.3
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+Then:
+
+## account
+The sweep ran 220 jobs across 22 trajectories over 2 rounds, with a state saved every 100 steps, predicting 73.3% of steps could be skipped. The baseline run (each job alone) stepped 1,256,518 steps per run and produced identical output for all 220 jobs. The shared run used 10 machine runs to step 336,379 steps, achieving a measured saving of 73.2%, with 22 jobs taking no memory, 169 continuing from a kept state, and 29 served whole. Three trajectories began and halted immediately, and one trajectory (coarse-step) was refused before starting. The project's gravity showed 14 jobs produced identical output across all 5 machines.
+
+But note: the report says the shared run was run by 10 machine runs (so 10 machines? or 10 runs? The report says: "220 of 220 jobs were run, by 10 machine runs." -> so 10 runs, meaning 10 machines? We'll say "10 machine runs" as in the report.
+
+Also, the report says: "Trajectories that began and then halted: 3" and "Trajectories refused before a first step: 1". We mention the one trajectory (coarse-step) as the refused one.
+
+Let's write the account.
+
+We are to write at most six sentences. The above has 5.
+
+We'll write exactly that.
+
+Now, output the entire answer.

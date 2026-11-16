@@ -69,7 +69,7 @@ def check(box: Path) -> tuple[int, list[dict]]:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return kernel.REFUSED, [{"refused": b} for b in breaks]
-    here = {c["id"]: c for c in kernel.chunks(Path(kernel.config(box)["pile"]))}
+    here = {c["id"]: c for c in kernel.pile_of_box(kernel.config(box))}
     out = []
     for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
         prop, _, why = kernel.standing(box, rows, subj, row)

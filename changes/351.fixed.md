@@ -1,0 +1,1 @@
+`robinhood`: the first sign-in no longer fails with "Authorization response missing iss parameter": the issuer Robinhood sends back with the code (RFC 9207) is handed on to the MCP SDK, which checks it is the server it signed in to

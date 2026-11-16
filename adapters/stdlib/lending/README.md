@@ -3,7 +3,7 @@ section: Keeping track
 line: Things you lent, to whom and when, and which are still out.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

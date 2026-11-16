@@ -1,0 +1,23 @@
+ 1  none               nothing; machine 1
+ 2  none               nothing; machine 0
+ 3  one-bit            uuuu at step 60; machine 2
+ 4  one-bit            qqqq at step 40; machine 1
+ 5  one-bit            zzzz at step 60; machine 2
+ 6  one-bit            zzzz at step 30; machine 2
+ 7  one-bit            wwww at step 110; machine 2
+ 8  one-bit            qqqq at step 10; machine 1
+ 9  one-bit            uuuu at step 90; machine 2
+10  one-bit            uuuu at step 50; machine 2
+11  last-bit           wwww at step 120; machine 2
+12  last-bit           uuuu at step 90; machine 2
+13  last-bit           zzzz at step 155; machine 2
+14  last-bit           qqqq at step 155; machine 1
+15  false-halt         uuuu at step 60; machine 2
+16  false-halt         wwww at step 90; machine 2
+17  false-halt         qqqq at step 90; machine 1
+18  false-halt         zzzz at step 60; machine 2
+19  no-halt            vvvv-halts at step 71; machine 2
+20  stepped-otherwise  xxxx at step 10; machine 2
+21  stepped-otherwise  zzzz at step 10; machine 2
+22  stepped-otherwise  uuuu at step 10; machine 2
+22 trials an arm; arms: as-run (a state in 4, a served job in 3), everything (a state in 1, a served job in 1)

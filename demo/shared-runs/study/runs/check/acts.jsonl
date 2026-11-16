@@ -1,0 +1,675 @@
+{"from": 0, "mode": "check", "same": true, "step": 100, "stepped": 100, "trajectory": "crowded-coarse-giants"}
+{"from": 9900, "mode": "check", "same": true, "step": 10000, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 11200, "mode": "check", "same": true, "step": 11250, "stepped": 50, "trajectory": "crowded-earth-venus"}
+{"from": 11500, "mode": "check", "same": true, "step": 11600, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 11800, "mode": "check", "same": true, "step": 11900, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 12000, "mode": "check", "same": true, "step": 12100, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 12900, "mode": "check", "same": true, "step": 13000, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 13200, "mode": "check", "same": true, "step": 13300, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 13400, "mode": "check", "same": true, "step": 13500, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 13800, "mode": "check", "same": true, "step": 13900, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 14300, "mode": "check", "same": true, "step": 14400, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 15400, "mode": "check", "same": true, "step": 15500, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 16700, "mode": "check", "same": true, "step": 16800, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 2300, "mode": "check", "same": true, "step": 2400, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 3200, "mode": "check", "same": true, "step": 3300, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 3700, "mode": "check", "same": true, "step": 3800, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 4030, "mode": "check", "same": true, "step": 4100, "stepped": 70, "trajectory": "crowded-earth-venus"}
+{"from": 4600, "mode": "check", "same": true, "step": 4700, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 5200, "mode": "check", "same": true, "step": 5300, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 5400, "mode": "check", "same": true, "step": 5500, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 5700, "mode": "check", "same": true, "step": 5800, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 5800, "mode": "check", "same": true, "step": 5900, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 6000, "mode": "check", "same": true, "step": 6100, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 6160, "mode": "check", "same": true, "step": 6200, "stepped": 40, "trajectory": "crowded-earth-venus"}
+{"from": 6800, "mode": "check", "same": true, "step": 6900, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 7900, "mode": "check", "same": true, "step": 8000, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 8100, "mode": "check", "same": true, "step": 8200, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 9500, "mode": "check", "same": true, "step": 9600, "stepped": 100, "trajectory": "crowded-earth-venus"}
+{"from": 0, "mode": "check", "same": true, "step": 100, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 900, "mode": "check", "same": true, "step": 1000, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 10200, "mode": "check", "same": true, "step": 10300, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 12100, "mode": "check", "same": true, "step": 12200, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 12700, "mode": "check", "same": true, "step": 12800, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 13800, "mode": "check", "same": true, "step": 13900, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 14400, "mode": "check", "same": true, "step": 14500, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 14600, "mode": "check", "same": true, "step": 14700, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 1520, "mode": "check", "same": true, "step": 1600, "stepped": 80, "trajectory": "crowded-giants"}
+{"from": 16000, "mode": "check", "same": true, "step": 16100, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 16300, "mode": "check", "same": true, "step": 16400, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 16500, "mode": "check", "same": true, "step": 16600, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 16700, "mode": "check", "same": true, "step": 16800, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 17100, "mode": "check", "same": true, "step": 17200, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 1700, "mode": "check", "same": true, "step": 1800, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 2400, "mode": "check", "same": true, "step": 2500, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 2675, "mode": "check", "same": true, "step": 2700, "stepped": 25, "trajectory": "crowded-giants"}
+{"from": 300, "mode": "check", "same": true, "step": 310, "stepped": 10, "trajectory": "crowded-giants"}
+{"from": 3100, "mode": "check", "same": true, "step": 3200, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 3400, "mode": "check", "same": true, "step": 3500, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 310, "mode": "check", "same": true, "step": 400, "stepped": 90, "trajectory": "crowded-giants"}
+{"from": 4000, "mode": "check", "same": true, "step": 4030, "stepped": 30, "trajectory": "crowded-giants"}
+{"from": 6000, "mode": "check", "same": true, "step": 6100, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 6200, "mode": "check", "same": true, "step": 6300, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 7200, "mode": "check", "same": true, "step": 7300, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 7300, "mode": "check", "same": true, "step": 7400, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 7500, "mode": "check", "same": true, "step": 7600, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 8100, "mode": "check", "same": true, "step": 8200, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 8700, "mode": "check", "same": true, "step": 8800, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 8800, "mode": "check", "same": true, "step": 8900, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 9500, "mode": "check", "same": true, "step": 9600, "stepped": 100, "trajectory": "crowded-giants"}
+{"from": 2400, "mode": "check", "same": true, "step": 2500, "stepped": 100, "trajectory": "crowded-three"}
+{"from": 3700, "mode": "check", "same": true, "step": 3800, "stepped": 100, "trajectory": "crowded-three"}
+{"from": 10400, "mode": "check", "same": true, "step": 10500, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 10700, "mode": "check", "same": true, "step": 10800, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 11500, "mode": "check", "same": true, "step": 11600, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 11900, "mode": "check", "same": true, "step": 12000, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 13600, "mode": "check", "same": true, "step": 13700, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 1300, "mode": "check", "same": true, "step": 1400, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 14300, "mode": "check", "same": true, "step": 14400, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 14800, "mode": "check", "same": true, "step": 14900, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 15300, "mode": "check", "same": true, "step": 15400, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 15900, "mode": "check", "same": true, "step": 16000, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 16100, "mode": "check", "same": true, "step": 16200, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 17300, "mode": "check", "same": true, "step": 17400, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 17800, "mode": "check", "same": true, "step": 17900, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 2675, "mode": "check", "same": true, "step": 2700, "stepped": 25, "trajectory": "proxima-close-mars"}
+{"from": 3100, "mode": "check", "same": true, "step": 3200, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 3400, "mode": "check", "same": true, "step": 3500, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 4000, "mode": "check", "same": true, "step": 4030, "stepped": 30, "trajectory": "proxima-close-mars"}
+{"from": 4400, "mode": "check", "same": true, "step": 4500, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 4600, "mode": "check", "same": true, "step": 4700, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 4800, "mode": "check", "same": true, "step": 4900, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 6600, "mode": "check", "same": true, "step": 6700, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 6800, "mode": "check", "same": true, "step": 6900, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 600, "mode": "check", "same": true, "step": 700, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 7600, "mode": "check", "same": true, "step": 7700, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 9300, "mode": "check", "same": true, "step": 9400, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 9600, "mode": "check", "same": true, "step": 9700, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 9700, "mode": "check", "same": true, "step": 9800, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 9800, "mode": "check", "same": true, "step": 9900, "stepped": 100, "trajectory": "proxima-close-mars"}
+{"from": 10400, "mode": "check", "same": true, "step": 10500, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 12700, "mode": "check", "same": true, "step": 12800, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 13000, "mode": "check", "same": true, "step": 13100, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 13500, "mode": "check", "same": true, "step": 13600, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 14800, "mode": "check", "same": true, "step": 14900, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 1400, "mode": "check", "same": true, "step": 1500, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 15100, "mode": "check", "same": true, "step": 15200, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 15600, "mode": "check", "same": true, "step": 15700, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 16700, "mode": "check", "same": true, "step": 16800, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 17200, "mode": "check", "same": true, "step": 17300, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 17800, "mode": "check", "same": true, "step": 17900, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 1800, "mode": "check", "same": true, "step": 1900, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 2500, "mode": "check", "same": true, "step": 2600, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 2600, "mode": "check", "same": true, "step": 2675, "stepped": 75, "trajectory": "proxima-close"}
+{"from": 2800, "mode": "check", "same": true, "step": 2900, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 3200, "mode": "check", "same": true, "step": 3300, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 4200, "mode": "check", "same": true, "step": 4300, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 5100, "mode": "check", "same": true, "step": 5200, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 6200, "mode": "check", "same": true, "step": 6300, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 7200, "mode": "check", "same": true, "step": 7300, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 7800, "mode": "check", "same": true, "step": 7900, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 8500, "mode": "check", "same": true, "step": 8600, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 9000, "mode": "check", "same": true, "step": 9100, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 9200, "mode": "check", "same": true, "step": 9300, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 9300, "mode": "check", "same": true, "step": 9400, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 9400, "mode": "check", "same": true, "step": 9500, "stepped": 100, "trajectory": "proxima-close"}
+{"from": 11250, "mode": "check", "same": true, "step": 11300, "stepped": 50, "trajectory": "rigel-wide-neptune"}
+{"from": 11400, "mode": "check", "same": true, "step": 11500, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 13300, "mode": "check", "same": true, "step": 13400, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 13600, "mode": "check", "same": true, "step": 13700, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 14000, "mode": "check", "same": true, "step": 14100, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 14200, "mode": "check", "same": true, "step": 14300, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 14800, "mode": "check", "same": true, "step": 14900, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 15500, "mode": "check", "same": true, "step": 15600, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 16000, "mode": "check", "same": true, "step": 16100, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 16700, "mode": "check", "same": true, "step": 16800, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 16900, "mode": "check", "same": true, "step": 17000, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 17200, "mode": "check", "same": true, "step": 17300, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 17600, "mode": "check", "same": true, "step": 17700, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 2600, "mode": "check", "same": true, "step": 2675, "stepped": 75, "trajectory": "rigel-wide-neptune"}
+{"from": 4500, "mode": "check", "same": true, "step": 4600, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 4800, "mode": "check", "same": true, "step": 4900, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 5300, "mode": "check", "same": true, "step": 5400, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 6700, "mode": "check", "same": true, "step": 6800, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 745, "mode": "check", "same": true, "step": 800, "stepped": 55, "trajectory": "rigel-wide-neptune"}
+{"from": 8600, "mode": "check", "same": true, "step": 8700, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 9600, "mode": "check", "same": true, "step": 9700, "stepped": 100, "trajectory": "rigel-wide-neptune"}
+{"from": 10900, "mode": "check", "same": true, "step": 11000, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 1100, "mode": "check", "same": true, "step": 1200, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 1500, "mode": "check", "same": true, "step": 1520, "stepped": 20, "trajectory": "rigel-wide"}
+{"from": 16600, "mode": "check", "same": true, "step": 16700, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 16700, "mode": "check", "same": true, "step": 16800, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 17600, "mode": "check", "same": true, "step": 17700, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 1700, "mode": "check", "same": true, "step": 1800, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 2100, "mode": "check", "same": true, "step": 2200, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 2300, "mode": "check", "same": true, "step": 2400, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 2500, "mode": "check", "same": true, "step": 2600, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 3000, "mode": "check", "same": true, "step": 3100, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 4500, "mode": "check", "same": true, "step": 4600, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 5200, "mode": "check", "same": true, "step": 5300, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 6100, "mode": "check", "same": true, "step": 6160, "stepped": 60, "trajectory": "rigel-wide"}
+{"from": 700, "mode": "check", "same": true, "step": 745, "stepped": 45, "trajectory": "rigel-wide"}
+{"from": 8200, "mode": "check", "same": true, "step": 8300, "stepped": 100, "trajectory": "rigel-wide"}
+{"from": 10900, "mode": "check", "same": true, "step": 11000, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 11100, "mode": "check", "same": true, "step": 11200, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 12100, "mode": "check", "same": true, "step": 12200, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 13100, "mode": "check", "same": true, "step": 13200, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 14200, "mode": "check", "same": true, "step": 14300, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 14700, "mode": "check", "same": true, "step": 14800, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 16400, "mode": "check", "same": true, "step": 16500, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 17700, "mode": "check", "same": true, "step": 17800, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 1700, "mode": "check", "same": true, "step": 1800, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 4400, "mode": "check", "same": true, "step": 4500, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 4500, "mode": "check", "same": true, "step": 4600, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 5100, "mode": "check", "same": true, "step": 5200, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 7200, "mode": "check", "same": true, "step": 7300, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 8000, "mode": "check", "same": true, "step": 8090, "stepped": 90, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 8500, "mode": "check", "same": true, "step": 8600, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 9300, "mode": "check", "same": true, "step": 9400, "stepped": 100, "trajectory": "sirius-earth-jupiter-saturn"}
+{"from": 10800, "mode": "check", "same": true, "step": 10900, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 12000, "mode": "check", "same": true, "step": 12100, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 12800, "mode": "check", "same": true, "step": 12900, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 13900, "mode": "check", "same": true, "step": 14000, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 14200, "mode": "check", "same": true, "step": 14300, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 15600, "mode": "check", "same": true, "step": 15700, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 15800, "mode": "check", "same": true, "step": 15900, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 16200, "mode": "check", "same": true, "step": 16300, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 2400, "mode": "check", "same": true, "step": 2500, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 2675, "mode": "check", "same": true, "step": 2700, "stepped": 25, "trajectory": "sirius-earth-jupiter"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 4300, "mode": "check", "same": true, "step": 4400, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 4400, "mode": "check", "same": true, "step": 4500, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 5200, "mode": "check", "same": true, "step": 5300, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 5900, "mode": "check", "same": true, "step": 6000, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 6100, "mode": "check", "same": true, "step": 6160, "stepped": 60, "trajectory": "sirius-earth-jupiter"}
+{"from": 600, "mode": "check", "same": true, "step": 700, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 7000, "mode": "check", "same": true, "step": 7100, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 7300, "mode": "check", "same": true, "step": 7400, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 8400, "mode": "check", "same": true, "step": 8500, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 9000, "mode": "check", "same": true, "step": 9100, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 9400, "mode": "check", "same": true, "step": 9500, "stepped": 100, "trajectory": "sirius-earth-jupiter"}
+{"from": 10900, "mode": "check", "same": true, "step": 11000, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 11000, "mode": "check", "same": true, "step": 11100, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 11400, "mode": "check", "same": true, "step": 11500, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 12100, "mode": "check", "same": true, "step": 12200, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 13000, "mode": "check", "same": true, "step": 13100, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 13500, "mode": "check", "same": true, "step": 13600, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 14900, "mode": "check", "same": true, "step": 15000, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 16600, "mode": "check", "same": true, "step": 16700, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 1800, "mode": "check", "same": true, "step": 1900, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 100, "mode": "check", "same": true, "step": 200, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 2700, "mode": "check", "same": true, "step": 2800, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 2900, "mode": "check", "same": true, "step": 3000, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 300, "mode": "check", "same": true, "step": 310, "stepped": 10, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 3200, "mode": "check", "same": true, "step": 3300, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 3300, "mode": "check", "same": true, "step": 3400, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 3700, "mode": "check", "same": true, "step": 3800, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 5000, "mode": "check", "same": true, "step": 5100, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 5300, "mode": "check", "same": true, "step": 5400, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 5700, "mode": "check", "same": true, "step": 5800, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 5800, "mode": "check", "same": true, "step": 5900, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 500, "mode": "check", "same": true, "step": 600, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 6600, "mode": "check", "same": true, "step": 6700, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 6900, "mode": "check", "same": true, "step": 7000, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 7000, "mode": "check", "same": true, "step": 7100, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 7300, "mode": "check", "same": true, "step": 7400, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 7500, "mode": "check", "same": true, "step": 7600, "stepped": 100, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 745, "mode": "check", "same": true, "step": 800, "stepped": 55, "trajectory": "sun-earth-jupiter-saturn"}
+{"from": 0, "mode": "check", "same": true, "step": 100, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 11250, "mode": "check", "same": true, "step": 11300, "stepped": 50, "trajectory": "sun-earth-jupiter"}
+{"from": 11400, "mode": "check", "same": true, "step": 11500, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 12300, "mode": "check", "same": true, "step": 12400, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 12900, "mode": "check", "same": true, "step": 13000, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 13500, "mode": "check", "same": true, "step": 13600, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 15000, "mode": "check", "same": true, "step": 15100, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 1520, "mode": "check", "same": true, "step": 1600, "stepped": 80, "trajectory": "sun-earth-jupiter"}
+{"from": 15900, "mode": "check", "same": true, "step": 16000, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 16200, "mode": "check", "same": true, "step": 16300, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 16400, "mode": "check", "same": true, "step": 16500, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 16800, "mode": "check", "same": true, "step": 16900, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 17700, "mode": "check", "same": true, "step": 17800, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 2400, "mode": "check", "same": true, "step": 2500, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 2500, "mode": "check", "same": true, "step": 2600, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 5000, "mode": "check", "same": true, "step": 5100, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 5200, "mode": "check", "same": true, "step": 5300, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 5600, "mode": "check", "same": true, "step": 5700, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 6160, "mode": "check", "same": true, "step": 6200, "stepped": 40, "trajectory": "sun-earth-jupiter"}
+{"from": 6400, "mode": "check", "same": true, "step": 6500, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 600, "mode": "check", "same": true, "step": 700, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 6900, "mode": "check", "same": true, "step": 7000, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 7000, "mode": "check", "same": true, "step": 7100, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 7500, "mode": "check", "same": true, "step": 7600, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 8400, "mode": "check", "same": true, "step": 8500, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 8500, "mode": "check", "same": true, "step": 8600, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 8800, "mode": "check", "same": true, "step": 8900, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 9200, "mode": "check", "same": true, "step": 9300, "stepped": 100, "trajectory": "sun-earth-jupiter"}
+{"from": 9900, "mode": "check", "same": true, "step": 10000, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 11000, "mode": "check", "same": true, "step": 11100, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 11250, "mode": "check", "same": true, "step": 11300, "stepped": 50, "trajectory": "sun-earth"}
+{"from": 11600, "mode": "check", "same": true, "step": 11700, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 12100, "mode": "check", "same": true, "step": 12200, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 12200, "mode": "check", "same": true, "step": 12300, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 12900, "mode": "check", "same": true, "step": 13000, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 1300, "mode": "check", "same": true, "step": 1400, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 14800, "mode": "check", "same": true, "step": 14900, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 1400, "mode": "check", "same": true, "step": 1500, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 15200, "mode": "check", "same": true, "step": 15300, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 15400, "mode": "check", "same": true, "step": 15500, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 16600, "mode": "check", "same": true, "step": 16700, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 17100, "mode": "check", "same": true, "step": 17200, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 17600, "mode": "check", "same": true, "step": 17700, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 2400, "mode": "check", "same": true, "step": 2500, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 2700, "mode": "check", "same": true, "step": 2800, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 310, "mode": "check", "same": true, "step": 400, "stepped": 90, "trajectory": "sun-earth"}
+{"from": 4300, "mode": "check", "same": true, "step": 4400, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 4900, "mode": "check", "same": true, "step": 5000, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 8000, "mode": "check", "same": true, "step": 8090, "stepped": 90, "trajectory": "sun-earth"}
+{"from": 8600, "mode": "check", "same": true, "step": 8700, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 8800, "mode": "check", "same": true, "step": 8900, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 8900, "mode": "check", "same": true, "step": 9000, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 9500, "mode": "check", "same": true, "step": 9600, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 9600, "mode": "check", "same": true, "step": 9700, "stepped": 100, "trajectory": "sun-earth"}
+{"from": 10500, "mode": "check", "same": true, "step": 10600, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 10700, "mode": "check", "same": true, "step": 10800, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 11000, "mode": "check", "same": true, "step": 11100, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 12200, "mode": "check", "same": true, "step": 12300, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 1200, "mode": "check", "same": true, "step": 1300, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 13100, "mode": "check", "same": true, "step": 13200, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 13500, "mode": "check", "same": true, "step": 13600, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 13900, "mode": "check", "same": true, "step": 14000, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 14700, "mode": "check", "same": true, "step": 14800, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 1400, "mode": "check", "same": true, "step": 1500, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 15300, "mode": "check", "same": true, "step": 15400, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 15800, "mode": "check", "same": true, "step": 15900, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 16100, "mode": "check", "same": true, "step": 16200, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 16700, "mode": "check", "same": true, "step": 16800, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 17800, "mode": "check", "same": true, "step": 17900, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 310, "mode": "check", "same": true, "step": 400, "stepped": 90, "trajectory": "sun-eight"}
+{"from": 4200, "mode": "check", "same": true, "step": 4300, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 4800, "mode": "check", "same": true, "step": 4900, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 5100, "mode": "check", "same": true, "step": 5200, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 5300, "mode": "check", "same": true, "step": 5400, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 5800, "mode": "check", "same": true, "step": 5900, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 6000, "mode": "check", "same": true, "step": 6100, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 6100, "mode": "check", "same": true, "step": 6160, "stepped": 60, "trajectory": "sun-eight"}
+{"from": 6300, "mode": "check", "same": true, "step": 6400, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 7400, "mode": "check", "same": true, "step": 7500, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 7600, "mode": "check", "same": true, "step": 7700, "stepped": 100, "trajectory": "sun-eight"}
+{"from": 8090, "mode": "check", "same": true, "step": 8100, "stepped": 10, "trajectory": "sun-eight"}
+{"from": 900, "mode": "check", "same": true, "step": 1000, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 11000, "mode": "check", "same": true, "step": 11100, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 11700, "mode": "check", "same": true, "step": 11800, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 12200, "mode": "check", "same": true, "step": 12300, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 12900, "mode": "check", "same": true, "step": 13000, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 1400, "mode": "check", "same": true, "step": 1500, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 15100, "mode": "check", "same": true, "step": 15200, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 15300, "mode": "check", "same": true, "step": 15400, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 2100, "mode": "check", "same": true, "step": 2200, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 2675, "mode": "check", "same": true, "step": 2700, "stepped": 25, "trajectory": "sun-giants-pluto"}
+{"from": 3100, "mode": "check", "same": true, "step": 3200, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 3200, "mode": "check", "same": true, "step": 3300, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 4300, "mode": "check", "same": true, "step": 4400, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 4600, "mode": "check", "same": true, "step": 4700, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 5100, "mode": "check", "same": true, "step": 5200, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 6300, "mode": "check", "same": true, "step": 6400, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 700, "mode": "check", "same": true, "step": 745, "stepped": 45, "trajectory": "sun-giants-pluto"}
+{"from": 7600, "mode": "check", "same": true, "step": 7700, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 7700, "mode": "check", "same": true, "step": 7800, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 8300, "mode": "check", "same": true, "step": 8400, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 8500, "mode": "check", "same": true, "step": 8600, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 800, "mode": "check", "same": true, "step": 900, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 9400, "mode": "check", "same": true, "step": 9500, "stepped": 100, "trajectory": "sun-giants-pluto"}
+{"from": 900, "mode": "check", "same": true, "step": 1000, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 12300, "mode": "check", "same": true, "step": 12400, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 12400, "mode": "check", "same": true, "step": 12500, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 1200, "mode": "check", "same": true, "step": 1300, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 12900, "mode": "check", "same": true, "step": 13000, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 13100, "mode": "check", "same": true, "step": 13200, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 13200, "mode": "check", "same": true, "step": 13300, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 13600, "mode": "check", "same": true, "step": 13700, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 13700, "mode": "check", "same": true, "step": 13800, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 14400, "mode": "check", "same": true, "step": 14500, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 14500, "mode": "check", "same": true, "step": 14575, "stepped": 75, "trajectory": "sun-giants"}
+{"from": 15700, "mode": "check", "same": true, "step": 15800, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 1520, "mode": "check", "same": true, "step": 1600, "stepped": 80, "trajectory": "sun-giants"}
+{"from": 2800, "mode": "check", "same": true, "step": 2900, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 200, "mode": "check", "same": true, "step": 300, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 3900, "mode": "check", "same": true, "step": 4000, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 4200, "mode": "check", "same": true, "step": 4300, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 6600, "mode": "check", "same": true, "step": 6700, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 7700, "mode": "check", "same": true, "step": 7800, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 7800, "mode": "check", "same": true, "step": 7900, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 8500, "mode": "check", "same": true, "step": 8600, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 8600, "mode": "check", "same": true, "step": 8700, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 8700, "mode": "check", "same": true, "step": 8800, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 800, "mode": "check", "same": true, "step": 900, "stepped": 100, "trajectory": "sun-giants"}
+{"from": 9900, "mode": "check", "same": true, "step": 10000, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 10100, "mode": "check", "same": true, "step": 10200, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 11400, "mode": "check", "same": true, "step": 11500, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 13800, "mode": "check", "same": true, "step": 13900, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 14000, "mode": "check", "same": true, "step": 14100, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 16000, "mode": "check", "same": true, "step": 16100, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 16200, "mode": "check", "same": true, "step": 16300, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 17200, "mode": "check", "same": true, "step": 17300, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 1800, "mode": "check", "same": true, "step": 1900, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 1900, "mode": "check", "same": true, "step": 2000, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 2100, "mode": "check", "same": true, "step": 2200, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 2400, "mode": "check", "same": true, "step": 2500, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 2900, "mode": "check", "same": true, "step": 3000, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 3000, "mode": "check", "same": true, "step": 3100, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 3200, "mode": "check", "same": true, "step": 3300, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 4100, "mode": "check", "same": true, "step": 4200, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 4600, "mode": "check", "same": true, "step": 4700, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 6160, "mode": "check", "same": true, "step": 6200, "stepped": 40, "trajectory": "sun-inner-jupiter"}
+{"from": 6300, "mode": "check", "same": true, "step": 6400, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 6700, "mode": "check", "same": true, "step": 6800, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 8090, "mode": "check", "same": true, "step": 8100, "stepped": 10, "trajectory": "sun-inner-jupiter"}
+{"from": 8300, "mode": "check", "same": true, "step": 8400, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 8900, "mode": "check", "same": true, "step": 9000, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 9200, "mode": "check", "same": true, "step": 9300, "stepped": 100, "trajectory": "sun-inner-jupiter"}
+{"from": 10400, "mode": "check", "same": true, "step": 10500, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 11900, "mode": "check", "same": true, "step": 12000, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 12100, "mode": "check", "same": true, "step": 12200, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 12500, "mode": "check", "same": true, "step": 12600, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 14400, "mode": "check", "same": true, "step": 14500, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 14575, "mode": "check", "same": true, "step": 14600, "stepped": 25, "trajectory": "sun-inner"}
+{"from": 17400, "mode": "check", "same": true, "step": 17500, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 17800, "mode": "check", "same": true, "step": 17900, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 2100, "mode": "check", "same": true, "step": 2200, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 300, "mode": "check", "same": true, "step": 310, "stepped": 10, "trajectory": "sun-inner"}
+{"from": 3500, "mode": "check", "same": true, "step": 3600, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 4030, "mode": "check", "same": true, "step": 4100, "stepped": 70, "trajectory": "sun-inner"}
+{"from": 5900, "mode": "check", "same": true, "step": 6000, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 7300, "mode": "check", "same": true, "step": 7400, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 7900, "mode": "check", "same": true, "step": 8000, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 8100, "mode": "check", "same": true, "step": 8200, "stepped": 100, "trajectory": "sun-inner"}
+{"from": 11100, "mode": "check", "same": true, "step": 11200, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 11700, "mode": "check", "same": true, "step": 11800, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 1100, "mode": "check", "same": true, "step": 1200, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 12500, "mode": "check", "same": true, "step": 12600, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 14000, "mode": "check", "same": true, "step": 14100, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 14800, "mode": "check", "same": true, "step": 14900, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 1400, "mode": "check", "same": true, "step": 1500, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 17800, "mode": "check", "same": true, "step": 17900, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 17900, "mode": "check", "same": true, "step": 18000, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 1800, "mode": "check", "same": true, "step": 1900, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 200, "mode": "check", "same": true, "step": 300, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 3800, "mode": "check", "same": true, "step": 3900, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 5700, "mode": "check", "same": true, "step": 5800, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 6000, "mode": "check", "same": true, "step": 6100, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 7900, "mode": "check", "same": true, "step": 8000, "stepped": 100, "trajectory": "sun-mars-ceres-jupiter"}
+{"from": 10000, "mode": "check", "same": true, "step": 10100, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 10100, "mode": "check", "same": true, "step": 10200, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 10600, "mode": "check", "same": true, "step": 10700, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 12800, "mode": "check", "same": true, "step": 12900, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 13300, "mode": "check", "same": true, "step": 13400, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 14100, "mode": "check", "same": true, "step": 14200, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 14300, "mode": "check", "same": true, "step": 14400, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 14500, "mode": "check", "same": true, "step": 14575, "stepped": 75, "trajectory": "sun-mars-ceres"}
+{"from": 14900, "mode": "check", "same": true, "step": 15000, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 15000, "mode": "check", "same": true, "step": 15100, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 15400, "mode": "check", "same": true, "step": 15500, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 17800, "mode": "check", "same": true, "step": 17900, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 17900, "mode": "check", "same": true, "step": 18000, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 100, "mode": "check", "same": true, "step": 200, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 2675, "mode": "check", "same": true, "step": 2700, "stepped": 25, "trajectory": "sun-mars-ceres"}
+{"from": 5000, "mode": "check", "same": true, "step": 5100, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 7000, "mode": "check", "same": true, "step": 7100, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 7600, "mode": "check", "same": true, "step": 7700, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 7700, "mode": "check", "same": true, "step": 7800, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 8300, "mode": "check", "same": true, "step": 8400, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 8600, "mode": "check", "same": true, "step": 8700, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 8900, "mode": "check", "same": true, "step": 9000, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"from": 9300, "mode": "check", "same": true, "step": 9400, "stepped": 100, "trajectory": "sun-mars-ceres"}
+{"asked": 2675, "ended": 0, "from": 0, "job": "coarse-step@2675", "mode": "afresh", "outcome": "refused", "seconds": 0.0003, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": false, "trajectory": "coarse-step", "tried_halt": true}
+{"asked": 8090, "ended": 0, "from": 0, "job": "coarse-step@8090", "mode": "afresh", "outcome": "refused", "seconds": 0.0002, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": false, "trajectory": "coarse-step", "tried_halt": true}
+{"asked": 11250, "ended": 11250, "from": 0, "job": "crowded-earth-venus@11250", "mode": "afresh", "outcome": "ended", "seconds": 11.4451, "sha256": "eeeab6ae15537b9d6cb7d6294a06b47c7567620a4c84a392dfed56b93aa95c62", "stepped": 11250, "took": false, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 0, "job": "crowded-giants@4030", "mode": "afresh", "outcome": "ended", "seconds": 4.0861, "sha256": "f4938bf70da0ed9a9a026845f4fbf5c060dee612ea154b48d2db53b35fd0af66", "stepped": 4030, "took": false, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 0, "job": "proxima-close-mars@4030", "mode": "afresh", "outcome": "ended", "seconds": 4.2061, "sha256": "3de5726fd81022c6c146f6a96bc7cd9fed1c38b5e01f33eebef8d35974966b0c", "stepped": 4030, "took": false, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 0, "job": "proxima-close@2675", "mode": "afresh", "outcome": "ended", "seconds": 2.7656, "sha256": "0cff27eca3b4b4e6a23df98f09cd537b1dbcb2b6c549f767392194f9b3d82a6c", "stepped": 2675, "took": false, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 0, "job": "rigel-wide-neptune@2675", "mode": "afresh", "outcome": "ended", "seconds": 2.7547, "sha256": "1d81f08bab3703ddefc663ffe1c96be3a297b7249dce2add1156ec22e0f8eb19", "stepped": 2675, "took": false, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 0, "job": "rigel-wide@1520", "mode": "afresh", "outcome": "ended", "seconds": 1.5322, "sha256": "dffa1cee306c77fb56986c47c92cea085ab54388a7eac30df067b7889fc39e3b", "stepped": 1520, "took": false, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 0, "job": "rigel-wide@745", "mode": "afresh", "outcome": "ended", "seconds": 0.7533, "sha256": "3c819cec58d247c6d4e565a9e953cfe582cb7fc6daf7412bd6a71a0f47c0fdb8", "stepped": 745, "took": false, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 0, "job": "sirius-earth-jupiter-saturn@8090", "mode": "afresh", "outcome": "ended", "seconds": 8.3139, "sha256": "b9e89733a0f6352d6cd5943325cb98a5666170e7b13db212284c638ef1138d95", "stepped": 8090, "took": false, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 0, "job": "sirius-earth-jupiter@6160", "mode": "afresh", "outcome": "ended", "seconds": 6.1876, "sha256": "57017cf8a482982a3bee5df11b1c39bdfd28e69407dfbe8caa3bf082daae8d5f", "stepped": 6160, "took": false, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-earth-jupiter-saturn@310", "mode": "afresh", "outcome": "ended", "seconds": 0.3215, "sha256": "89ec70ac23c6e9fb20265a24b2c67ff29a18849723d6c6770e7a9f993ce449a1", "stepped": 310, "took": false, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 0, "job": "sun-earth@8090", "mode": "afresh", "outcome": "ended", "seconds": 8.0673, "sha256": "7e8545c2fe66017f6d1bf0c746021a5d55d1cb9f6e66c4a3f60dbdc6ec377dbf", "stepped": 8090, "took": false, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 0, "job": "sun-eight@6160", "mode": "afresh", "outcome": "ended", "seconds": 7.059, "sha256": "70b803425379796e0f34924b9575496dbac0f520af572f06cad92f4ee7ec0a6c", "stepped": 6160, "took": false, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 0, "job": "sun-giants-pluto@745", "mode": "afresh", "outcome": "ended", "seconds": 0.7818, "sha256": "55c1dc973990e5cdac4e2295e434bc6e99af05acb844e9d0f3a697a69fa18476", "stepped": 745, "took": false, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 0, "job": "sun-giants@14575", "mode": "afresh", "outcome": "ended", "seconds": 15.2019, "sha256": "c4a45d48a567241334d84dc3b4ea2369b30fec6580ff91e0d33e027cfb3ff00a", "stepped": 14575, "took": false, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-inner@310", "mode": "afresh", "outcome": "ended", "seconds": 0.3269, "sha256": "f06f68dfa826810e6aaebd0256f3624bc8da97279b7ed440b753d4f43968b085", "stepped": 310, "took": false, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 0, "job": "sun-mars-ceres-jupiter@18000", "mode": "afresh", "outcome": "ended", "seconds": 18.4411, "sha256": "fb37014b57a6ae1a978ac29101c57a6ab3dbf4514cbdc74face9099a0a5d03cf", "stepped": 18000, "took": false, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 0, "job": "sun-mars-ceres@14575", "mode": "afresh", "outcome": "ended", "seconds": 14.8267, "sha256": "a964c8c81bb6c95a802c86bcc93a68e404003b03eb8b8959ebd6e13fd895652c", "stepped": 14575, "took": false, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 0, "job": "sun-mars-ceres@18000", "mode": "afresh", "outcome": "ended", "seconds": 18.3055, "sha256": "7f2ce3f85a5212115e87ecd57a1eae2bfbb17b7ef978c4720b6594fdefeef504", "stepped": 18000, "took": false, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-earth@310", "mode": "native", "outcome": "ended", "seconds": 0.3283, "sha256": "9b66e25c4a83228e7f473572863f9b0e6c95ec6e05849322ee54ebcf8f0a8c84", "stepped": 310, "took": false, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-earth@745", "mode": "native", "outcome": "ended", "seconds": 0.4513, "sha256": "b9dfa390097df283757ca385fb430690c006ed024cb8f1a26b5257c59dd35154", "stepped": 435, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-earth@1520", "mode": "native", "outcome": "ended", "seconds": 0.8071, "sha256": "afe2b2501ec797ab45623d5c23543f18843de39f68238c18e3a1839facf54b06", "stepped": 775, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-earth@2675", "mode": "native", "outcome": "ended", "seconds": 1.2025, "sha256": "d65748d1e0904fcbb2ff227eb5201a7b7b852cd1731863d85c89a4235e0890ae", "stepped": 1155, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-earth@4030", "mode": "native", "outcome": "ended", "seconds": 1.4086, "sha256": "4924104b0391fedffaf4c11f2fde7ce22d40408c94e99a2567ab256055030c44", "stepped": 1355, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-earth@6160", "mode": "native", "outcome": "ended", "seconds": 2.2207, "sha256": "3b177859da80a3816189bfb91687b8469c8900d21e7086ed79fd869306887c62", "stepped": 2130, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-earth@8090", "mode": "native", "outcome": "ended", "seconds": 2.0574, "sha256": "8ec045d12ea973d609b8f86ca75562118b83244725989e9553908dbe8aa1371f", "stepped": 1930, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-earth@11250", "mode": "native", "outcome": "ended", "seconds": 3.3166, "sha256": "354fd8502bcc79189cbcf242b9f6b6df5dd067d444d81242ceca443d176dace4", "stepped": 3160, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-earth@14575", "mode": "native", "outcome": "ended", "seconds": 3.5198, "sha256": "55f3edabfa81e2a2dfa13130f3421e3ab7e6313e5057fcb738b6e73e0bb0a17c", "stepped": 3325, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-earth@18000", "mode": "native", "outcome": "ended", "seconds": 3.6445, "sha256": "4b95c5a96d9b20d664c1a6fcf4ca7e30c276bd7e84fd68c329874edc6ee14d25", "stepped": 3425, "took": true, "trajectory": "sun-earth", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-earth-jupiter@310", "mode": "native", "outcome": "ended", "seconds": 0.3302, "sha256": "e22d105b56c9c92d34ba418223673db7037264f8b373f25a3fefbcf9156d83e8", "stepped": 310, "took": false, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-earth-jupiter@745", "mode": "native", "outcome": "ended", "seconds": 0.4721, "sha256": "d61d27cb08a8c1085cdc26cb9c926b3c750ad633489182d8009c68b137a42ef6", "stepped": 435, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-earth-jupiter@1520", "mode": "native", "outcome": "ended", "seconds": 0.8295, "sha256": "69beb5d47461276162138beec147ee679b6f620139ba887b1d3fa76dd1f0076a", "stepped": 775, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-earth-jupiter@2675", "mode": "native", "outcome": "ended", "seconds": 1.2608, "sha256": "49e40220a831f0f9334701e6c3db139c62dea4af4e28039842bed31be48947df", "stepped": 1155, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-earth-jupiter@4030", "mode": "native", "outcome": "ended", "seconds": 1.4456, "sha256": "c9cfff61e805428ba2cd9d1ae56b7c12f59c8daa2c8fdeb997907fe6ebbc47a7", "stepped": 1355, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-earth-jupiter@6160", "mode": "native", "outcome": "ended", "seconds": 2.2831, "sha256": "749cf77be5c67c1e63e25c8cdacd7dd69a0b8f7723f810204d982b06ead237c3", "stepped": 2130, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-earth-jupiter@8090", "mode": "native", "outcome": "ended", "seconds": 2.1118, "sha256": "df95593552ebd918f9094fe736436cd7c567624c25701ed11fbd9ea2a2ecdceb", "stepped": 1930, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-earth-jupiter@11250", "mode": "native", "outcome": "ended", "seconds": 3.3688, "sha256": "84ed497c562f2e63f6566b03b48393fddda83381c0a913ccf4bd4799501f45ec", "stepped": 3160, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-earth-jupiter@14575", "mode": "native", "outcome": "ended", "seconds": 3.5659, "sha256": "740c7e15106f38515e87b1a7d5207c04cd676df5fc89c02426822117a28673de", "stepped": 3325, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-earth-jupiter@18000", "mode": "native", "outcome": "ended", "seconds": 3.698, "sha256": "c55def69bc37315bd3d5cae201aa7c6183b0194d9b88919bef53bd154075ddad", "stepped": 3425, "took": true, "trajectory": "sun-earth-jupiter", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-earth-jupiter-saturn@310", "mode": "native", "outcome": "ended", "seconds": 0.3285, "sha256": "dd412d8bcdcec88c99105d4fb8e5ef6bd149d440728f0c85ae89bf0cda3bb3c3", "stepped": 310, "took": false, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-earth-jupiter-saturn@745", "mode": "native", "outcome": "ended", "seconds": 0.473, "sha256": "b1d474801afc97c315c750b3a9fecef4becb2627fb653c08afa1f390949e6a11", "stepped": 435, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-earth-jupiter-saturn@1520", "mode": "native", "outcome": "ended", "seconds": 0.8439, "sha256": "9d84fd61254a5bd1dcf5e96399da4de49df6be79a1282b4b0d1dbf53105a9cd5", "stepped": 775, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-earth-jupiter-saturn@2675", "mode": "native", "outcome": "ended", "seconds": 1.2601, "sha256": "402d802137c24843575902691979d7ce63902db599410c236fcbd29ae02c722a", "stepped": 1155, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-earth-jupiter-saturn@4030", "mode": "native", "outcome": "ended", "seconds": 1.4597, "sha256": "4d730108e330b6e27157ebb1ca0c1229fbe3363e3e09c1b2b389d9f9a322848f", "stepped": 1355, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-earth-jupiter-saturn@6160", "mode": "native", "outcome": "ended", "seconds": 2.3173, "sha256": "f4ca2051a7a4a7655928890f745a9167831096f56dcfb06e12a07f9f05545e65", "stepped": 2130, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-earth-jupiter-saturn@8090", "mode": "native", "outcome": "ended", "seconds": 2.134, "sha256": "231113d2c3f7175e0dd2a3b8c718f6a28cedea33526a879be356fc17dfce6399", "stepped": 1930, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-earth-jupiter-saturn@11250", "mode": "native", "outcome": "ended", "seconds": 3.3892, "sha256": "dc2a2f86f960de34787c3940a16557aab21911225d8c87694dd537d1a6dc68a4", "stepped": 3160, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-earth-jupiter-saturn@14575", "mode": "native", "outcome": "ended", "seconds": 3.5978, "sha256": "ced6c8d21c3a2e592820a41f84ac4ede484b470a0b0bb554be8789626c7cd58f", "stepped": 3325, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-earth-jupiter-saturn@18000", "mode": "native", "outcome": "ended", "seconds": 3.7567, "sha256": "0cf6434837a76f221cea81691a4afbf9a17af92a2f6f49c99730f900bade72d2", "stepped": 3425, "took": true, "trajectory": "sun-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-inner@310", "mode": "native", "outcome": "ended", "seconds": 0.3368, "sha256": "698ff60284752ac824468a6bd99a9ccbc26d3366bb7f0186372958bcf6c35b57", "stepped": 310, "took": false, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-inner@745", "mode": "native", "outcome": "ended", "seconds": 0.4726, "sha256": "7b30d6058dbad443d2ece29145bffc757354e4fc5865048d495a4fe1aec3c9c1", "stepped": 435, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-inner@1520", "mode": "native", "outcome": "ended", "seconds": 0.8522, "sha256": "4430d5d00afd4baa79e6d4afb058dd1aa974ec1edc00de4bb2991d29df27a1b5", "stepped": 775, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-inner@2675", "mode": "native", "outcome": "ended", "seconds": 1.2822, "sha256": "2613106e9d3f53dfcc5308e071d6a0eecfaf7f910790b541a0c4fc24bbdf6211", "stepped": 1155, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-inner@4030", "mode": "native", "outcome": "ended", "seconds": 1.4824, "sha256": "976cd718689aab7a01db9ffb9c36ba8d08431650eaf41ee61a5f73c9b3ab6d60", "stepped": 1355, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-inner@6160", "mode": "native", "outcome": "ended", "seconds": 2.3406, "sha256": "6853cc8e49a84f59a9e4fd58bf1c3bb057f89a37fc25107926bff889bafc6c8b", "stepped": 2130, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-inner@8090", "mode": "native", "outcome": "ended", "seconds": 2.1393, "sha256": "c4bfbe1ae82ac7beb88545e2e7c030d5a431420e6312e447c847a31ad55ddfd1", "stepped": 1930, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-inner@11250", "mode": "native", "outcome": "ended", "seconds": 3.5153, "sha256": "d16c9d3b9fecd82c08d28b939fa36b4dc004d1050cc95616b95d03c9d04ee787", "stepped": 3160, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-inner@14575", "mode": "native", "outcome": "ended", "seconds": 3.6384, "sha256": "60ecd84f0d23581d1b0a3f765b315e1377d13671ab6fc0cb0fd1b6a10e6129d7", "stepped": 3325, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-inner@18000", "mode": "native", "outcome": "ended", "seconds": 3.7753, "sha256": "7090ed0a67823fa89b6fb0f2c870ad0a44a79ae9d58cf117d9b7e7c12b5341e3", "stepped": 3425, "took": true, "trajectory": "sun-inner", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-inner-jupiter@310", "mode": "native", "outcome": "ended", "seconds": 0.3456, "sha256": "d2a072c5015ec44c62a6ad01f00b719ab7f9f6b8bc10895aef9c9885ceb41513", "stepped": 310, "took": false, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-inner-jupiter@745", "mode": "native", "outcome": "ended", "seconds": 0.4892, "sha256": "fd5eda113f35b35541dc2e06726bdb61a89e710a283750ea327b4558da5144a3", "stepped": 435, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-inner-jupiter@1520", "mode": "native", "outcome": "ended", "seconds": 0.8602, "sha256": "d60a31da4f81147b67effe508779595261972ff85fcec35088b98360a95f6964", "stepped": 775, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-inner-jupiter@2675", "mode": "native", "outcome": "ended", "seconds": 1.2958, "sha256": "5e57f93b2ac7d6fc365ce4a3d4cad1213491e953a1e03290b8ad50193f3c5188", "stepped": 1155, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-inner-jupiter@4030", "mode": "native", "outcome": "ended", "seconds": 1.5135, "sha256": "cf98af7f820bb52f9c76d3a0c97ed2dcdf48243918024cf8d37720e9e76e066f", "stepped": 1355, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-inner-jupiter@6160", "mode": "native", "outcome": "ended", "seconds": 2.3652, "sha256": "e8fa615323042849e82b594fc855bf2c49bd5490a48dd615cd8ce1de3ebe282f", "stepped": 2130, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-inner-jupiter@8090", "mode": "native", "outcome": "ended", "seconds": 2.1647, "sha256": "9362cdc009ab62c108ee94e7f7b21a8ff2da1a849870fc72b60a64a8d632385a", "stepped": 1930, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-inner-jupiter@11250", "mode": "native", "outcome": "ended", "seconds": 3.57, "sha256": "19623213763666ae20a9baacc6260a34f08e53ff104f2efcabdf156771b77889", "stepped": 3160, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-inner-jupiter@14575", "mode": "native", "outcome": "ended", "seconds": 3.6909, "sha256": "c7d7c342205fec5bb684320ce2aa6a8cc230f59f37fb14873ef624fe0cce9390", "stepped": 3325, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-inner-jupiter@18000", "mode": "native", "outcome": "ended", "seconds": 3.8274, "sha256": "6c0d728845c7d638281475c6f0baf37283ad85e9b9860a7db9660f58b9d7d418", "stepped": 3425, "took": true, "trajectory": "sun-inner-jupiter", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-giants@310", "mode": "native", "outcome": "ended", "seconds": 0.3405, "sha256": "f7293a8193de332d8bce33fab6c26d14483e89f9384004189a7fefdeea345402", "stepped": 310, "took": false, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-giants@745", "mode": "native", "outcome": "ended", "seconds": 0.4765, "sha256": "2467d1f28b2117f8a23ed9c7aa0fb7af0098b0471b5c60e7a8cbebcb60b7781b", "stepped": 435, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-giants@1520", "mode": "native", "outcome": "ended", "seconds": 0.8452, "sha256": "aca3fd22a97d5cff4497da4f61a15006045ea6cc438a91ffeefb8194f49b7ceb", "stepped": 775, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-giants@2675", "mode": "native", "outcome": "ended", "seconds": 1.2472, "sha256": "59d9823fa6791996d00493321a42ca5fecf402a97ceab61e5d10fee33a3aa344", "stepped": 1155, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-giants@4030", "mode": "native", "outcome": "ended", "seconds": 1.4667, "sha256": "ffdb255b2f9cde93428905a2665ece4af6cb25f4381c02754f214b8a2251dc50", "stepped": 1355, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-giants@6160", "mode": "native", "outcome": "ended", "seconds": 2.3227, "sha256": "898c50b145413420d0b71ec1be3e27a87857220936f260191dcb8bd423e534b9", "stepped": 2130, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-giants@8090", "mode": "native", "outcome": "ended", "seconds": 2.1023, "sha256": "6d902c5eb0ccc0246ef476704ab9de978f122d68870fe212bc7c8ffcf5636eca", "stepped": 1930, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-giants@11250", "mode": "native", "outcome": "ended", "seconds": 3.4776, "sha256": "eaf1288908a06fdd63eeda834734d31c491de8d0b1ee611c4d2fb478288b6609", "stepped": 3160, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-giants@14575", "mode": "native", "outcome": "ended", "seconds": 3.6082, "sha256": "a4ef33ed0cb04d40cd158f02e7823727a7e6f4f8dd2cdb00254ab5231dc3d4ba", "stepped": 3325, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-giants@18000", "mode": "native", "outcome": "ended", "seconds": 3.7816, "sha256": "5ee770084740dc753391ad98811ed3d6d29ecc081f4d05d63c9af3f795376342", "stepped": 3425, "took": true, "trajectory": "sun-giants", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-giants-pluto@310", "mode": "native", "outcome": "ended", "seconds": 0.3408, "sha256": "6a115022b57c43d31f7b492d11921fd44dc372f87ba391ed4bd75fcf610378a0", "stepped": 310, "took": false, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-giants-pluto@745", "mode": "native", "outcome": "ended", "seconds": 0.4741, "sha256": "1daf7ba15ea98389da00fff1fa4a6b508a90de4439cebc0771ed13695d5f6049", "stepped": 435, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-giants-pluto@1520", "mode": "native", "outcome": "ended", "seconds": 0.8597, "sha256": "338f4fecef71e880066432b58980073cddddb889c98fdac25c7488efdbdd1b5a", "stepped": 775, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-giants-pluto@2675", "mode": "native", "outcome": "ended", "seconds": 1.2775, "sha256": "9c4a2ef3ab21b6e5cae5a1b12011e5f1e4cacf4fabb7020ac2e5e63342f7c2e9", "stepped": 1155, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-giants-pluto@4030", "mode": "native", "outcome": "ended", "seconds": 1.5017, "sha256": "66e2fe2ea98ff0977b1514ea737f9e0eb1369dbf31454598bfc10ee32b68ced6", "stepped": 1355, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-giants-pluto@6160", "mode": "native", "outcome": "ended", "seconds": 2.3494, "sha256": "032976015f4c385586bc030e97937510497a01a7cafc79651f9ef3c8fe91de9d", "stepped": 2130, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-giants-pluto@8090", "mode": "native", "outcome": "ended", "seconds": 2.135, "sha256": "8d8ce8664f56cb100114e5a671ec0c1e19743d76d09a15a7b7a1227f36f8ef1b", "stepped": 1930, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-giants-pluto@11250", "mode": "native", "outcome": "ended", "seconds": 3.5578, "sha256": "058c1b9d48ca931f8658a19bfb5deedb3efbd22d054062c4c1af9a6e355df5db", "stepped": 3160, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-giants-pluto@14575", "mode": "native", "outcome": "ended", "seconds": 3.6925, "sha256": "983166169f01249653becbb2a2f90ec600eca3c4151a75b6ebb4313c0a40d359", "stepped": 3325, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-giants-pluto@18000", "mode": "native", "outcome": "ended", "seconds": 3.8301, "sha256": "2348de2871995889b406bd9c1dcb46ccdadec35b6abc41b02a35ee73ad3981c8", "stepped": 3425, "took": true, "trajectory": "sun-giants-pluto", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-mars-ceres@310", "mode": "native", "outcome": "ended", "seconds": 0.3279, "sha256": "474c483cfa2e8a21e83a0176ffe32964425a8ae6543f6e60af6a0231d93d12fe", "stepped": 310, "took": false, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-mars-ceres@745", "mode": "native", "outcome": "ended", "seconds": 0.4546, "sha256": "253b04c9db43b1487473178bd25077c3c7e602b005065af0324fc64bf4794bc4", "stepped": 435, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-mars-ceres@1520", "mode": "native", "outcome": "ended", "seconds": 0.8217, "sha256": "d29076ac3c637c19be6910d9098c3fe3e9cde396869ece3d5011c95104a954ea", "stepped": 775, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-mars-ceres@2675", "mode": "native", "outcome": "ended", "seconds": 1.2213, "sha256": "608110639a6133e61c7352702236b2661ba6e0bec0992f834a9a0b023399fecb", "stepped": 1155, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-mars-ceres@4030", "mode": "native", "outcome": "ended", "seconds": 1.4301, "sha256": "c85eac77092095db37f5b720c9705f0d1114df980a4039f83b7c9a69fe13cfa5", "stepped": 1355, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-mars-ceres@6160", "mode": "native", "outcome": "ended", "seconds": 2.2651, "sha256": "2c46bcddcb70ace82f5a8197344752c98a3b5007bb51bf22b10f6fbd999084d6", "stepped": 2130, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-mars-ceres@8090", "mode": "native", "outcome": "ended", "seconds": 2.0575, "sha256": "9dbd1037ef723d677fe202ad9fe36d52d1d190caa454ecf283b48d5cfc58751b", "stepped": 1930, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-mars-ceres@11250", "mode": "native", "outcome": "ended", "seconds": 3.3837, "sha256": "572528fa1c270c8be74f1988780cc0125c3801f671d2ed5e043d8a8c43c30c0c", "stepped": 3160, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-mars-ceres@14575", "mode": "native", "outcome": "ended", "seconds": 3.524, "sha256": "85ca431f4352c86492d6fc3d776dbdbc2c8b2639495a0c6a8e96af052733c7d5", "stepped": 3325, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-mars-ceres@18000", "mode": "native", "outcome": "ended", "seconds": 3.6344, "sha256": "2e6321e8b24b52381fe006516626462e7bee3c18a3512f2650046ba2e533fd2b", "stepped": 3425, "took": true, "trajectory": "sun-mars-ceres", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-mars-ceres-jupiter@310", "mode": "native", "outcome": "ended", "seconds": 0.3608, "sha256": "ca2ddb618bac086d319c799676a33f859ddc6f178d9b466a07a36a502d494c3a", "stepped": 310, "took": false, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-mars-ceres-jupiter@745", "mode": "native", "outcome": "ended", "seconds": 0.4642, "sha256": "e914c3825e508d56347fc651b96595c7883b7bb3b4f91b11716dcdb44d382252", "stepped": 435, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-mars-ceres-jupiter@1520", "mode": "native", "outcome": "ended", "seconds": 0.8366, "sha256": "19da96e9dc1f3a7334a14da3a5ac5422c7aeb82a0167a2f4acb58911ccdac332", "stepped": 775, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-mars-ceres-jupiter@2675", "mode": "native", "outcome": "ended", "seconds": 1.2248, "sha256": "8ef47073e1e4e55a20bda33d7663a0236e2239046871c7c51d54f6044259adc8", "stepped": 1155, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-mars-ceres-jupiter@4030", "mode": "native", "outcome": "ended", "seconds": 1.4473, "sha256": "d26734b3d33a43af433711c4eabc9424018d05c72a4a05590a1300eec0464d73", "stepped": 1355, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-mars-ceres-jupiter@6160", "mode": "native", "outcome": "ended", "seconds": 2.2873, "sha256": "f6f250fd17ab76bf37a70b696ca48eb5ff0bc5c8eba4fbb931c49c5c51537130", "stepped": 2130, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-mars-ceres-jupiter@8090", "mode": "native", "outcome": "ended", "seconds": 2.0693, "sha256": "1929b43424784a2e06fe3e7b5f463274e652869daf0c4301c3133e5b412863b0", "stepped": 1930, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-mars-ceres-jupiter@11250", "mode": "native", "outcome": "ended", "seconds": 3.4272, "sha256": "ca4c609c36dfe846cf7fcf523a3ef5d461af5535ee8d47870c3a9472bdfa4924", "stepped": 3160, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-mars-ceres-jupiter@14575", "mode": "native", "outcome": "ended", "seconds": 3.5507, "sha256": "ca9d4aee3cffe5c4d4d4210b53fff6b01c60c806a0f6708c1b232819b5c4455f", "stepped": 3325, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-mars-ceres-jupiter@18000", "mode": "native", "outcome": "ended", "seconds": 3.6556, "sha256": "90003af82eb12ef86368afb1c467ea59a63f7e08b9a0134ab9ec1ab162d56a2e", "stepped": 3425, "took": true, "trajectory": "sun-mars-ceres-jupiter", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sun-eight@310", "mode": "native", "outcome": "ended", "seconds": 0.366, "sha256": "f06ac5861fcdd0c03e9fe60674b95cd95b70619950eff48e1d1249536ec23cc4", "stepped": 310, "took": false, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sun-eight@745", "mode": "native", "outcome": "ended", "seconds": 0.5572, "sha256": "06de343dfc782fffa6ea18e21642fcc23b6e53c648406d217b7a2000c524c25b", "stepped": 435, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sun-eight@1520", "mode": "native", "outcome": "ended", "seconds": 0.9399, "sha256": "a4f49badaac681b7705cded2a502947e1602282e8ea9009c2156e5fc7a741236", "stepped": 775, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sun-eight@2675", "mode": "native", "outcome": "ended", "seconds": 1.3811, "sha256": "a58d11bcf91203409596d8935baf107335167d3df4820f1a85109cc510e3e0f3", "stepped": 1155, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sun-eight@4030", "mode": "native", "outcome": "ended", "seconds": 1.63, "sha256": "15f3bde9f796ea5114984aef6270b159b2332da0a9028b93d331e3425cc1b23c", "stepped": 1355, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sun-eight@6160", "mode": "native", "outcome": "ended", "seconds": 2.5456, "sha256": "cec474c260aeec026fb2fd5168bafd382940b6b8d7c458bf89af388bc9c0f108", "stepped": 2130, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sun-eight@8090", "mode": "native", "outcome": "ended", "seconds": 2.3115, "sha256": "b93d3795acbe3d01a79f2b6834d4222ac8aed989cb0aac536fe0e06e6d37a0d4", "stepped": 1930, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sun-eight@11250", "mode": "native", "outcome": "ended", "seconds": 3.8356, "sha256": "7e3c6e1bccaf3248f9cd1bb358cd9dae01d36f05323c9cbb2daa52644947b6d7", "stepped": 3160, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sun-eight@14575", "mode": "native", "outcome": "ended", "seconds": 4.0046, "sha256": "b37ec8b4ff84a888a672e0c5f3211f81dbf4be4426bcffb9594ac628f1202665", "stepped": 3325, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sun-eight@18000", "mode": "native", "outcome": "ended", "seconds": 4.1602, "sha256": "933edaeaefa6e20bd41c7f65de1c049ec2294aa074522bef54c03a9cc6522ff2", "stepped": 3425, "took": true, "trajectory": "sun-eight", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sirius-earth-jupiter@310", "mode": "native", "outcome": "ended", "seconds": 0.3271, "sha256": "6bf5842aafdb9dcecfdb050811c03fddeb0d3cb222a9d72ad7fff3362a1286af", "stepped": 310, "took": false, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sirius-earth-jupiter@745", "mode": "native", "outcome": "ended", "seconds": 0.4575, "sha256": "9c6955ddc27d8ce21f64cc62415bd30f8568ce8460da75db1083a8d29589bb85", "stepped": 435, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sirius-earth-jupiter@1520", "mode": "native", "outcome": "ended", "seconds": 0.8238, "sha256": "c492df2f80beb94ef5bc1f9a32adc63709d0f2b1f60261447a2aaa41e7aea16d", "stepped": 775, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sirius-earth-jupiter@2675", "mode": "native", "outcome": "ended", "seconds": 1.23, "sha256": "c860d096f21fc704fcf9b58f0fdd691da5aa9b90b7ead817ea7c12f214aec1e8", "stepped": 1155, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sirius-earth-jupiter@4030", "mode": "native", "outcome": "ended", "seconds": 1.431, "sha256": "97fbbd680b8fdb2928e40eeac19dd86f717411e1e4e561f9bc53756c7b7f1549", "stepped": 1355, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sirius-earth-jupiter@6160", "mode": "native", "outcome": "ended", "seconds": 2.2416, "sha256": "e887a4cbc7586aa6ff02cf282e0327b78babb60f08602e0868cf32eaea2bb550", "stepped": 2130, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sirius-earth-jupiter@8090", "mode": "native", "outcome": "ended", "seconds": 2.054, "sha256": "373edcc7d46ac336f3788d6a430c6bf6e37c9c9b632b6fffe6b7e8fcf4e589dd", "stepped": 1930, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sirius-earth-jupiter@11250", "mode": "native", "outcome": "ended", "seconds": 3.3707, "sha256": "78b932fd33985724792ad105793d68d2ec20fd8a30283d4a25f5fb3a4e413528", "stepped": 3160, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sirius-earth-jupiter@14575", "mode": "native", "outcome": "ended", "seconds": 3.5112, "sha256": "622de786392aafca1de0004cd8b935b1e4e32b28fb3cc1dba7c214f6d2931394", "stepped": 3325, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sirius-earth-jupiter@18000", "mode": "native", "outcome": "ended", "seconds": 3.6289, "sha256": "fca87404d9540d4d835d83707b5f2a7f164af3e9bcd3be5974329f311f632a24", "stepped": 3425, "took": true, "trajectory": "sirius-earth-jupiter", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "sirius-earth-jupiter-saturn@310", "mode": "native", "outcome": "ended", "seconds": 0.351, "sha256": "64c5c3728cb22e0bdb62a4acccf2f508bb9f657f02f982b1a5bf20b2773cd989", "stepped": 310, "took": false, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "sirius-earth-jupiter-saturn@745", "mode": "native", "outcome": "ended", "seconds": 0.4661, "sha256": "c3a395a02a45bf8c4fa6a492ca5ac934c6376505094ee7e2c5e9f3d0b2018438", "stepped": 435, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "sirius-earth-jupiter-saturn@1520", "mode": "native", "outcome": "ended", "seconds": 0.8292, "sha256": "a6dada1c03916c0f54f8104ad2c4df5e27ee6b4dd8a69fbfd37c0dd11f4d38a0", "stepped": 775, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "sirius-earth-jupiter-saturn@2675", "mode": "native", "outcome": "ended", "seconds": 1.2393, "sha256": "2081b9cac3dcea6320e90f1c88ca4af032b2d985962e06a380a65f83343911bd", "stepped": 1155, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "sirius-earth-jupiter-saturn@4030", "mode": "native", "outcome": "ended", "seconds": 1.4605, "sha256": "e1545e4566014abcaa3898eb0355f06bd9ceaa385d55cb3aec5febc62180b142", "stepped": 1355, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "sirius-earth-jupiter-saturn@6160", "mode": "native", "outcome": "ended", "seconds": 2.2964, "sha256": "8be61f0c504bea3a5cd222ca0b0e69565fbc5804dfc3f8524104a4529dbe4111", "stepped": 2130, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "sirius-earth-jupiter-saturn@8090", "mode": "native", "outcome": "ended", "seconds": 2.0583, "sha256": "df5c6858f905c8f5e068bab6c314911b4dee4a78a6ff61f1b2437e77ce82af8c", "stepped": 1930, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "sirius-earth-jupiter-saturn@11250", "mode": "native", "outcome": "ended", "seconds": 3.4255, "sha256": "e61c0d18c2749b5702be47fb116d2e498b8139a79ed713f738cc515e8b63d563", "stepped": 3160, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "sirius-earth-jupiter-saturn@14575", "mode": "native", "outcome": "ended", "seconds": 3.5746, "sha256": "0d2480521f6451dd0b0ea769ea91dd38bf327f5ebea763224f0aeffbe097c723", "stepped": 3325, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "sirius-earth-jupiter-saturn@18000", "mode": "native", "outcome": "ended", "seconds": 3.6752, "sha256": "f3c74e86e6d34113dc848785c39cbc165d6d24fdd4fd01b406ba124cd79754b7", "stepped": 3425, "took": true, "trajectory": "sirius-earth-jupiter-saturn", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "proxima-close@310", "mode": "native", "outcome": "ended", "seconds": 0.343, "sha256": "3e8a66bf68d2cf0489b33c4ff61d805d9c1a68ff53536ed8727c5a8d4b696001", "stepped": 310, "took": false, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "proxima-close@745", "mode": "native", "outcome": "ended", "seconds": 0.5038, "sha256": "247f32602fa9ea5003258379d44d1076466bfedba6a67b8bc17a1a4f6dda7987", "stepped": 435, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "proxima-close@1520", "mode": "native", "outcome": "ended", "seconds": 0.8381, "sha256": "351f9a1710d07be27a0489cc26b5f54f95126f497f3f94e1594fe3b8900644b6", "stepped": 775, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "proxima-close@2675", "mode": "native", "outcome": "ended", "seconds": 1.2268, "sha256": "0ccf5e161bf54dd1e6145361ef84b3409aeda9284f5d710a1501b4f76464f854", "stepped": 1155, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "proxima-close@4030", "mode": "native", "outcome": "ended", "seconds": 1.4568, "sha256": "b128e42ce485741588611e8d71278e77263054510689dc3d935a76cba6c21cc6", "stepped": 1355, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "proxima-close@6160", "mode": "native", "outcome": "ended", "seconds": 2.2894, "sha256": "33ffc6da1b32b7af6c18ad8811fe36af912fd9ba5a2c4a61d8002da76faeeba6", "stepped": 2130, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "proxima-close@8090", "mode": "native", "outcome": "ended", "seconds": 2.078, "sha256": "9b5c811116fb96d01086d69fe2e945b5d58204c4c817aa31fdfc89395ceb79b6", "stepped": 1930, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "proxima-close@11250", "mode": "native", "outcome": "ended", "seconds": 3.426, "sha256": "21537f0e684047319c613247ede067ae3aec3cf4e2c915240f2015dd7cd239b1", "stepped": 3160, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "proxima-close@14575", "mode": "native", "outcome": "ended", "seconds": 3.565, "sha256": "d3ec796153185f4e03d9ee0549d209ffe0c27b5795943138278725966c73da81", "stepped": 3325, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "proxima-close@18000", "mode": "native", "outcome": "ended", "seconds": 3.6989, "sha256": "51ab57674e5f90efa61e20e62b6e44fe0fa27d3df5e2fc3b2814c703200b00dd", "stepped": 3425, "took": true, "trajectory": "proxima-close", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "proxima-close-mars@310", "mode": "native", "outcome": "ended", "seconds": 0.3334, "sha256": "20195bb7ca02b341c98864e50437b2bee96ef4ead6b70ddd7f2ec3b80d406c16", "stepped": 310, "took": false, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "proxima-close-mars@745", "mode": "native", "outcome": "ended", "seconds": 0.4731, "sha256": "713f030b138dd0ace1716c1c0e25aa5dec80a6f53a96034af60f42f83fc37d17", "stepped": 435, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "proxima-close-mars@1520", "mode": "native", "outcome": "ended", "seconds": 0.8761, "sha256": "bc9a2b2b47d96f88a3d974a3b620221f8e39c7c1ce6b0e3b51e02a267d24c89b", "stepped": 775, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "proxima-close-mars@2675", "mode": "native", "outcome": "ended", "seconds": 1.2612, "sha256": "c51605437c452384d0dad31bdd31b55f4670f330442387d07fdca5747852147f", "stepped": 1155, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "proxima-close-mars@4030", "mode": "native", "outcome": "ended", "seconds": 1.4692, "sha256": "aeeb41a75dc7b16933976ce21ca85e50104583d2db8a6295735038139ea0c576", "stepped": 1355, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "proxima-close-mars@6160", "mode": "native", "outcome": "ended", "seconds": 2.3203, "sha256": "e14249dcee0d86956f6e7c28d890511f1e87db969d40de99b80faef21af52d4f", "stepped": 2130, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "proxima-close-mars@8090", "mode": "native", "outcome": "ended", "seconds": 2.1023, "sha256": "6debf568bc7f7927394210e865a24828b24a37003b43f57b69dff9cf9843bca3", "stepped": 1930, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "proxima-close-mars@11250", "mode": "native", "outcome": "ended", "seconds": 3.4908, "sha256": "cc831e0276ac16143c44b86c49ced60ca06efcddba0c593d358babc2552d052a", "stepped": 3160, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "proxima-close-mars@14575", "mode": "native", "outcome": "ended", "seconds": 3.5894, "sha256": "24e8b2879907c100c9f963fb8266b3d1a291db722ca92fae9aff7d2d26dcebac", "stepped": 3325, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "proxima-close-mars@18000", "mode": "native", "outcome": "ended", "seconds": 3.7084, "sha256": "12af705fda3c273691ec1641e17267faa42f2717d0eabff4fa93f58abcdf4589", "stepped": 3425, "took": true, "trajectory": "proxima-close-mars", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "rigel-wide@310", "mode": "native", "outcome": "ended", "seconds": 0.3306, "sha256": "d12c241c5992e3b28508ba3efa6d0aa0d876a314ca771125f2f309385908d0c2", "stepped": 310, "took": false, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "rigel-wide@745", "mode": "native", "outcome": "ended", "seconds": 0.4671, "sha256": "09263a0c4ce9810a3fd16d0c59e6553f25d6f10a26772e2fb7ba38d43e7823d7", "stepped": 435, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "rigel-wide@1520", "mode": "native", "outcome": "ended", "seconds": 0.8616, "sha256": "48bf3fec74440e5dc5996373d0d5b57c97fca0bb389f1c6520850ae92750f83e", "stepped": 775, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "rigel-wide@2675", "mode": "native", "outcome": "ended", "seconds": 1.2386, "sha256": "cbfb72f1d1a92c6944c8977cf5a5ba037fe1a136eaf449900c5f0858964128b7", "stepped": 1155, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "rigel-wide@4030", "mode": "native", "outcome": "ended", "seconds": 1.4579, "sha256": "6f84802d8fcc466b1a39bab217bf0f146e054462f03bc150bcf922ab64ae5f3a", "stepped": 1355, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "rigel-wide@6160", "mode": "native", "outcome": "ended", "seconds": 2.2694, "sha256": "87b9e5278456012be5816b6a84b3f639d883f414d722ae85c8d1e0a90b788760", "stepped": 2130, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "rigel-wide@8090", "mode": "native", "outcome": "ended", "seconds": 2.0597, "sha256": "c76180f0195544acc165821e5eaccc30bace9c78d73490941d2cc3c208ea269e", "stepped": 1930, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "rigel-wide@11250", "mode": "native", "outcome": "ended", "seconds": 3.3893, "sha256": "95972c58144feaa6d4d1e914c164da7f11317ba5aad3bc0a7b193679a3756462", "stepped": 3160, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "rigel-wide@14575", "mode": "native", "outcome": "ended", "seconds": 3.521, "sha256": "58f6cf087485b6fe9f991147609ce8eee0a2370b9094e8a6c704b61550148bcc", "stepped": 3325, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "rigel-wide@18000", "mode": "native", "outcome": "ended", "seconds": 3.6341, "sha256": "f8df0b5ae23d300c7c9771ef9c39345111cfd5243d6f5a5a801d6b1a2deb7d47", "stepped": 3425, "took": true, "trajectory": "rigel-wide", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "rigel-wide-neptune@310", "mode": "native", "outcome": "ended", "seconds": 0.3395, "sha256": "bd567dc6c18293b1401440f59ad2a1381e10a671284f25e0c1db444d7fd46f80", "stepped": 310, "took": false, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "rigel-wide-neptune@745", "mode": "native", "outcome": "ended", "seconds": 0.4702, "sha256": "06e22604886bc5bb102edfb50f9db6502af61647c5b6bc5e3c975081cd422d4e", "stepped": 435, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "rigel-wide-neptune@1520", "mode": "native", "outcome": "ended", "seconds": 0.8315, "sha256": "76caf50f7b7322a78b371b2271c79e2dc373cd65b4900972738f22ba667daa12", "stepped": 775, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "rigel-wide-neptune@2675", "mode": "native", "outcome": "ended", "seconds": 1.2814, "sha256": "7887d73c660a330e34127522eebe2ccf117d21c195c98f498e07c0d442308ba9", "stepped": 1155, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "rigel-wide-neptune@4030", "mode": "native", "outcome": "ended", "seconds": 1.45, "sha256": "4f9be4653b919ec3d8c6694d00d3145111b68c7777812da48b736a9fed8bfa37", "stepped": 1355, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "rigel-wide-neptune@6160", "mode": "native", "outcome": "ended", "seconds": 2.2914, "sha256": "a66890f2188c89a3aa8647cf8fd364028e2773932578ecce9fb5f68e69e8c640", "stepped": 2130, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "rigel-wide-neptune@8090", "mode": "native", "outcome": "ended", "seconds": 2.0661, "sha256": "aae5980a64c3331443e6c508c5bd6188a40f40557e622ec6868d24af7459acd3", "stepped": 1930, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "rigel-wide-neptune@11250", "mode": "native", "outcome": "ended", "seconds": 3.3956, "sha256": "6b7ed5e3eeee2328722c9d0aa4f3313c0c7fa1191c45f082145cf9d465d0313f", "stepped": 3160, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "rigel-wide-neptune@14575", "mode": "native", "outcome": "ended", "seconds": 3.6131, "sha256": "f729b6f223d679209c5a52cdba93e28fb6625cb8bed02236b9369dad0a64a9c8", "stepped": 3325, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "rigel-wide-neptune@18000", "mode": "native", "outcome": "ended", "seconds": 3.6819, "sha256": "fb7eb12e419cee66d068810b32220f473b53bb1710790cfb596b9e49a3950554", "stepped": 3425, "took": true, "trajectory": "rigel-wide-neptune", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "crowded-earth-venus@310", "mode": "native", "outcome": "ended", "seconds": 0.3253, "sha256": "c987e89017905ac403cec846ee917a550b88943fc432140214947194eafd7c2b", "stepped": 310, "took": false, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "crowded-earth-venus@745", "mode": "native", "outcome": "ended", "seconds": 0.4638, "sha256": "801bcce2f81580006ace566d2cbf407f4cf8bca3fad693bf5b9b5ec07828d598", "stepped": 435, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "crowded-earth-venus@1520", "mode": "native", "outcome": "ended", "seconds": 0.8346, "sha256": "15b739295eafba3261abd590dcb279c5e4e2fad1415ad9de7e843128546d9cfa", "stepped": 775, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "crowded-earth-venus@2675", "mode": "native", "outcome": "ended", "seconds": 1.2222, "sha256": "69ffb3b45a154876f75d28cee738d4286b35ff88205c12be5c54f15384c0936a", "stepped": 1155, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "crowded-earth-venus@4030", "mode": "native", "outcome": "ended", "seconds": 1.4622, "sha256": "b879738a3bea09bc82f26a1e7a7f2d2302831093aef2a402cdbc05a4bd25fec4", "stepped": 1355, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "crowded-earth-venus@6160", "mode": "native", "outcome": "ended", "seconds": 2.2823, "sha256": "17aa9effbd509b4ee94f4da6307dcd2ae1780e54edba81be16754ade585dc985", "stepped": 2130, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "crowded-earth-venus@8090", "mode": "native", "outcome": "ended", "seconds": 2.0319, "sha256": "cd97f118541a4995238872723a104e6637fcd9830fb1e9f86eea2face5de83fa", "stepped": 1930, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "crowded-earth-venus@11250", "mode": "native", "outcome": "ended", "seconds": 3.363, "sha256": "854f0ded7ddd40fb9e0d5f885b554899545828ae9f42e40cd6e9848155b33708", "stepped": 3160, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "crowded-earth-venus@14575", "mode": "native", "outcome": "ended", "seconds": 3.5743, "sha256": "b5a50ee11f6fa55fed1be535d27f4bd7d78fa51200eaa46b332739011191f0f7", "stepped": 3325, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "crowded-earth-venus@18000", "mode": "native", "outcome": "ended", "seconds": 3.6621, "sha256": "29a3f2ffb47ce3ab664379ab219447f054a2b8015d0881caaf080c15ea978d2e", "stepped": 3425, "took": true, "trajectory": "crowded-earth-venus", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "crowded-giants@310", "mode": "native", "outcome": "ended", "seconds": 0.328, "sha256": "b6a8ba955dc461e64949134f75cebb597270b6e5c2fa35fae567d1a43c7d5373", "stepped": 310, "took": false, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "crowded-giants@745", "mode": "native", "outcome": "ended", "seconds": 0.4654, "sha256": "636a2384daa5f414d760f567805e30d6240df71603fa3d8fe98caaef237592dc", "stepped": 435, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "crowded-giants@1520", "mode": "native", "outcome": "ended", "seconds": 0.8198, "sha256": "d202ed55d23bfdad6ee62615c22ab3e341c5c4fa1f814f38df3024c605be2490", "stepped": 775, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "crowded-giants@2675", "mode": "native", "outcome": "ended", "seconds": 1.2521, "sha256": "62e73d500215a93e3a4615b72aabe72b621f8a1bc3418ed9a2485afefbc679d9", "stepped": 1155, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "crowded-giants@4030", "mode": "native", "outcome": "ended", "seconds": 1.4751, "sha256": "fdaa4d6202c80c02ab1c705d5a348fa693628f063c2a3b7a62a665b3b9b53bfb", "stepped": 1355, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 6160, "ended": 6160, "from": 4030, "job": "crowded-giants@6160", "mode": "native", "outcome": "ended", "seconds": 2.2715, "sha256": "bdca3ec79123003843913eb30a30adf6f60fba1115ef95765cc9928fe4fae0a9", "stepped": 2130, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 8090, "ended": 8090, "from": 6160, "job": "crowded-giants@8090", "mode": "native", "outcome": "ended", "seconds": 2.0676, "sha256": "0f9f72d03db6b2c2e773703dc028c92fb6ca36f9db0f3f9655a00f14813d332d", "stepped": 1930, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 11250, "ended": 11250, "from": 8090, "job": "crowded-giants@11250", "mode": "native", "outcome": "ended", "seconds": 3.4032, "sha256": "f6c342555d8c0249c1d3fb804be16f89ee11185a452a385d6c4ad606e63aac87", "stepped": 3160, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 14575, "ended": 14575, "from": 11250, "job": "crowded-giants@14575", "mode": "native", "outcome": "ended", "seconds": 3.5799, "sha256": "e2be9bb21923c26a216168ff16a0ae2fcc35f2d38e2b17c71b82f2bfb3a08243", "stepped": 3325, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 18000, "ended": 18000, "from": 14575, "job": "crowded-giants@18000", "mode": "native", "outcome": "ended", "seconds": 3.6292, "sha256": "c70f39c8a8761b2490838c7b3c5c0ce3a01cd9c17fb537c87799d936365370f4", "stepped": 3425, "took": true, "trajectory": "crowded-giants", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "crowded-three@310", "mode": "native", "outcome": "ended", "seconds": 0.334, "sha256": "a0bcbe7a0504cd6a3059ad72e1ba39427612be8f068f754f497861b374901045", "stepped": 310, "took": false, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 745, "ended": 745, "from": 310, "job": "crowded-three@745", "mode": "native", "outcome": "ended", "seconds": 0.4852, "sha256": "aab612a4da051eb82e783e37758376bd5dac0fd34ada71bd8a5f32e6058c141d", "stepped": 435, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 1520, "ended": 1520, "from": 745, "job": "crowded-three@1520", "mode": "native", "outcome": "ended", "seconds": 0.8268, "sha256": "ac9241468cec733f9fe3b571f2be9595df6dc3d9e9ae8379cdd8206a9a35d1b2", "stepped": 775, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 2675, "ended": 2675, "from": 1520, "job": "crowded-three@2675", "mode": "native", "outcome": "ended", "seconds": 1.2306, "sha256": "e45bddd4e87560431d7fa564f519b852e97fd9d54608cfac8a929bf0bf748aab", "stepped": 1155, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 4030, "ended": 4030, "from": 2675, "job": "crowded-three@4030", "mode": "native", "outcome": "ended", "seconds": 1.4562, "sha256": "d594d504e96567a0c87397784b3e13c35872ba99d64d03f0a68b280f361be5b0", "stepped": 1355, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 6160, "ended": 5492, "from": 4030, "job": "crowded-three@6160", "mode": "native", "outcome": "halted", "seconds": 1.6085, "sha256": "2656b45259b384ddc977a255ef01cccb848ff312d2800480104c186da0f60af2", "stepped": 1462, "took": true, "trajectory": "crowded-three", "tried_halt": true}
+{"asked": 8090, "ended": 5492, "from": 5492, "job": "crowded-three@8090", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "2656b45259b384ddc977a255ef01cccb848ff312d2800480104c186da0f60af2", "stepped": 0, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 11250, "ended": 5492, "from": 5492, "job": "crowded-three@11250", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "2656b45259b384ddc977a255ef01cccb848ff312d2800480104c186da0f60af2", "stepped": 0, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 14575, "ended": 5492, "from": 5492, "job": "crowded-three@14575", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "2656b45259b384ddc977a255ef01cccb848ff312d2800480104c186da0f60af2", "stepped": 0, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 18000, "ended": 5492, "from": 5492, "job": "crowded-three@18000", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "2656b45259b384ddc977a255ef01cccb848ff312d2800480104c186da0f60af2", "stepped": 0, "took": true, "trajectory": "crowded-three", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "crowded-coarse-giants@310", "mode": "native", "outcome": "ended", "seconds": 0.327, "sha256": "74045aa4e4496cf803a221de126b4f3639046ccafa4d3521f3a89b688d134977", "stepped": 310, "took": false, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 745, "ended": 327, "from": 310, "job": "crowded-coarse-giants@745", "mode": "native", "outcome": "halted", "seconds": 0.0181, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 17, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": true}
+{"asked": 1520, "ended": 327, "from": 327, "job": "crowded-coarse-giants@1520", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 2675, "ended": 327, "from": 327, "job": "crowded-coarse-giants@2675", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 4030, "ended": 327, "from": 327, "job": "crowded-coarse-giants@4030", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 6160, "ended": 327, "from": 327, "job": "crowded-coarse-giants@6160", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 8090, "ended": 327, "from": 327, "job": "crowded-coarse-giants@8090", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 11250, "ended": 327, "from": 327, "job": "crowded-coarse-giants@11250", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 14575, "ended": 327, "from": 327, "job": "crowded-coarse-giants@14575", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 18000, "ended": 327, "from": 327, "job": "crowded-coarse-giants@18000", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "b4f57e15e3849a16baab3aa9f2b2e6a2b4fec53d8ce50ad5418d73631942dbf9", "stepped": 0, "took": true, "trajectory": "crowded-coarse-giants", "tried_halt": false}
+{"asked": 310, "ended": 310, "from": 0, "job": "crowded-coarse-three@310", "mode": "native", "outcome": "ended", "seconds": 0.3309, "sha256": "ff65c1ff6e6c0101dd13f617adc5f3fbd67b344b7b4dc1c44c16b1594e2ecdf2", "stepped": 310, "took": false, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 745, "ended": 425, "from": 310, "job": "crowded-coarse-three@745", "mode": "native", "outcome": "halted", "seconds": 0.1229, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 115, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": true}
+{"asked": 1520, "ended": 425, "from": 425, "job": "crowded-coarse-three@1520", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 2675, "ended": 425, "from": 425, "job": "crowded-coarse-three@2675", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 4030, "ended": 425, "from": 425, "job": "crowded-coarse-three@4030", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 6160, "ended": 425, "from": 425, "job": "crowded-coarse-three@6160", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 8090, "ended": 425, "from": 425, "job": "crowded-coarse-three@8090", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 11250, "ended": 425, "from": 425, "job": "crowded-coarse-three@11250", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 14575, "ended": 425, "from": 425, "job": "crowded-coarse-three@14575", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 18000, "ended": 425, "from": 425, "job": "crowded-coarse-three@18000", "mode": "native", "outcome": "halted", "seconds": 0.0, "sha256": "851400aaa805ab035d50327e7685c39c457424e99197faa8ec8d78fb978ad31d", "stepped": 0, "took": true, "trajectory": "crowded-coarse-three", "tried_halt": false}
+{"asked": 310, "ended": 0, "from": 0, "job": "coarse-step@310", "mode": "native", "outcome": "refused", "seconds": 0.0002, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": false, "trajectory": "coarse-step", "tried_halt": true}
+{"asked": 745, "ended": 0, "from": 0, "job": "coarse-step@745", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 1520, "ended": 0, "from": 0, "job": "coarse-step@1520", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 2675, "ended": 0, "from": 0, "job": "coarse-step@2675", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 4030, "ended": 0, "from": 0, "job": "coarse-step@4030", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 6160, "ended": 0, "from": 0, "job": "coarse-step@6160", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 8090, "ended": 0, "from": 0, "job": "coarse-step@8090", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 11250, "ended": 0, "from": 0, "job": "coarse-step@11250", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 14575, "ended": 0, "from": 0, "job": "coarse-step@14575", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}
+{"asked": 18000, "ended": 0, "from": 0, "job": "coarse-step@18000", "mode": "native", "outcome": "refused", "seconds": 0.0, "sha256": "e930f4c140c10978ce586cbe6828f4278a30fd38a5715a8704fa355c4867b6c5", "stepped": 0, "took": true, "trajectory": "coarse-step", "tried_halt": false}

@@ -138,11 +138,11 @@ def test_base_finds_the_stdlib_add_ons_a_branch_changed():
 
 
 def test_a_real_add_on_on_the_real_demo_people_holds():
-    """dice, on every demo person's folder as make_life.py writes it."""
-    got = subprocess.run([sys.executable, str(HERE / "realdata.py"), "run", "dice"],
+    """play-dice, on every demo person's folder as make_life.py writes it."""
+    got = subprocess.run([sys.executable, str(HERE / "realdata.py"), "run", "play-dice"],
                          capture_output=True, text=True, timeout=300)  # fmt: skip
     assert got.returncode == 0, got.stdout + got.stderr
-    assert "dice on odile: held" in got.stdout
+    assert "play-dice on odile: held" in got.stdout
 
 
 @pytest.mark.parametrize("argv", [[], ["run"], ["go", "dice"], ["run", "--base"],

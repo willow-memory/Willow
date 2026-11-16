@@ -56,7 +56,7 @@ TOP = 6
 
 def scan_addon():
     """The scan add-on's module, from its source beside this one."""
-    sys.path.insert(0, str(STDLIB / "scan"))
+    sys.path.insert(0, str(STDLIB / "batch-ask"))
     import scan
 
     return scan
@@ -240,14 +240,27 @@ def main(argv: list[str]) -> int:
             if why is not None:
                 print(f"refused: {why}", file=sys.stderr)
                 return kernel.REFUSED
-        pile = Path(cfg["pile"])
-        everything = kernel.chunks(pile)
+        try:  # the pile folder and every source the box reads (CONST-VI-9)
+            everything = kernel.pile_of_box(cfg)
+        except ValueError as e:
+            print(f"refused: {e}", file=sys.stderr)
+            return kernel.REFUSED
+        names = (
+            [n for n, _ in sources_of_pile(Path(cfg["pile"]))] if "pile" in cfg else []
+        )
+        names = sorted(
+            set(names) | set(kernel.sources(cfg)), key=lambda n: (n != ".", n)
+        )
         lists = []
-        for name, folder in sources_of_pile(pile):
+        for name in names:
             mine = [
                 c
                 for c in everything
-                if (c["path"].split("/")[0] == name if folder else "/" not in c["path"])
+                if (
+                    c["path"].split("/")[0] == name
+                    if name != "."
+                    else "/" not in c["path"]
+                )
             ]
             lists.append((name, ranked(mine, args[0], alias or {})))
     else:

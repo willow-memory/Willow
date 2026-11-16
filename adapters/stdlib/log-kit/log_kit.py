@@ -215,7 +215,7 @@ def run(spec: dict, argv: list[str], doc: str) -> int:
         return kernel.REFUSED
     if "--words" in takes:
         spec = {**spec, "words": words}
-    found = gather(kernel.chunks(Path(kernel.config(box)["pile"])), spec)
+    found = gather(kernel.pile_of_box(kernel.config(box)), spec)
     if not found:
         print(spec["none"])
         return kernel.ESCALATE

@@ -69,7 +69,7 @@ def main(argv: list[str]) -> int:
     if not kernel.words(argv[2]):
         print("refused: a quote with no words", file=sys.stderr)
         return kernel.REFUSED
-    hits = find(kernel.chunks(Path(kernel.config(box)["pile"])), argv[2])
+    hits = find(kernel.pile_of_box(kernel.config(box)), argv[2])
     if not hits:
         print("Not in your folder, in those words and that order.")
         return kernel.ESCALATE

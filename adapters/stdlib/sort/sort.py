@@ -189,7 +189,7 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return kernel.REFUSED
-    found = sort(kernel.chunks(Path(kernel.config(box)["pile"])), cats)
+    found = sort(kernel.pile_of_box(kernel.config(box)), cats)
     if not found:
         say(report(NAME, "empty", "no file here the kernel reads", []), as_json)
         return kernel.ALIVE

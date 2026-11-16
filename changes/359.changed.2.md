@@ -1,0 +1,1 @@
+`web-pages`: `--body-only` leaves a saved page's menus out (any nav, footer or aside, and any element whose role says navigation, contentinfo or complementary), so a county page's department list stops answering every question about the county; without it nothing changes

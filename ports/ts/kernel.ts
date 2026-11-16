@@ -701,6 +701,7 @@ interface Chunk {
   line: number;
   text: string;
   id: string;
+  source?: string;
 }
 
 const chunkJson = (c: Chunk): J => obj(["path", c.path], ["line", BigInt(c.line)], ["text", c.text], ["id", c.id]);
@@ -730,6 +731,41 @@ function suffix(name: string): string {
 /** UTF-8, strictly, as Python's bytes.decode: a BOM is kept as a character. */
 const UTF8 = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
 
+/** One file's paragraphs, as chunks cuts them; none when the kernel doesn't read it. */
+function chunked(p: string, relPath: string, name: string): Chunk[] {
+  let text: string;
+  try {
+    const st = fs.statSync(p);
+    if (!st.isFile() || st.size > T.MAX_FILE) return [];
+    const raw = fs.readFileSync(p);
+    if (raw.subarray(0, T.SNIFF).includes(0)) return [];
+    text = UTF8.decode(raw);
+  } catch {
+    return [];
+  }
+  if ([".html", ".htm"].includes(suffix(name).toLowerCase())) text = htmlText(text);
+  const out: Chunk[] = [];
+  const lines = [...splitlines(text), ""];
+  let para: string[] = [];
+  let start = 1;
+  let size = 0;
+  lines.forEach((line, k) => {
+    const i = k + 1;
+    if (para.length && (blank(line) || size + len(line) > T.MAX_CHUNK)) {
+      const body = para.join("\n");
+      out.push({ path: relPath, line: start, text: body, id: h256(body) });
+      para = [];
+      size = 0;
+    }
+    if (!blank(line)) {
+      if (!para.length) start = i;
+      para.push(take(line, T.MAX_CHUNK));
+      size += len(para[para.length - 1]) + 1;
+    }
+  });
+  return out;
+}
+
 function chunks(pile: string): Chunk[] {
   const all: string[][] = [];
   walk(pile, [], all);
@@ -744,37 +780,85 @@ function chunks(pile: string): Chunk[] {
       continue;
     }
     if (!st.isFile() || rel.some((part) => part.startsWith("."))) continue;
-    let text: string;
-    try {
-      if (st.size > T.MAX_FILE) continue;
-      const raw = fs.readFileSync(p);
-      if (raw.subarray(0, T.SNIFF).includes(0)) continue;
-      text = UTF8.decode(raw);
-    } catch {
-      continue;
-    }
-    if ([".html", ".htm"].includes(suffix(rel[rel.length - 1]).toLowerCase())) text = htmlText(text);
-    const relPath = rel.join("/");
-    const lines = [...splitlines(text), ""];
-    let para: string[] = [];
-    let start = 1;
-    let size = 0;
-    lines.forEach((line, k) => {
-      const i = k + 1;
-      if (para.length && (blank(line) || size + len(line) > T.MAX_CHUNK)) {
-        const body = para.join("\n");
-        out.push({ path: relPath, line: start, text: body, id: h256(body) });
-        para = [];
-        size = 0;
-      }
-      if (!blank(line)) {
-        if (!para.length) start = i;
-        para.push(take(line, T.MAX_CHUNK));
-        size += len(para[para.length - 1]) + 1;
-      }
-    });
+    out.push(...chunked(p, rel.join("/"), rel[rel.length - 1]));
   }
   return out;
+}
+
+// ── sources: the person's files, read where they are kept (CONST-VI-9) ─────
+/** The files a list names, in its order, each once. */
+function listed(lst: string): string[] {
+  const out: string[] = [];
+  for (const raw of splitlines(UTF8.decode(fs.readFileSync(lst)))) {
+    const line = strip(raw);
+    if (line && !line.startsWith("#")) {
+      const f = resolved(path.isAbsolute(line) ? line : path.join(path.dirname(resolved(lst)), line));
+      if (!out.includes(f)) out.push(f);
+    }
+  }
+  return out;
+}
+
+const isFile = (p: string) => {
+  try {
+    return fs.statSync(p).isFile();
+  } catch {
+    return false;
+  }
+};
+
+/** os.path.commonpath of absolute paths, part by part. */
+function commonPath(ps: string[]): string {
+  const split = ps.map((p) => p.split(path.sep));
+  const first = split[0];
+  let n = 0;
+  while (n < first.length && split.every((s) => s[n] === first[n])) n++;
+  return first.slice(0, n).join(path.sep) || path.sep;
+}
+
+function listChunks(lst: string): Chunk[] {
+  const files = listed(lst);
+  if (!files.length) return [];
+  const root = commonPath(files.map((f) => path.dirname(f)));
+  const rels = files.map((f) => [path.relative(root, f).split(path.sep), f] as [string[], string]);
+  rels.sort((a, b) => byParts(a[0], b[0]));
+  const out: Chunk[] = [];
+  for (const [rel, f] of rels) {
+    if (!rel.some((part) => part.startsWith("."))) out.push(...chunked(f, rel.join("/"), rel[rel.length - 1]));
+  }
+  return out;
+}
+
+/** Everything the box reads: its pile folder, then each source in name order, each as NAME/path. */
+function pileOfBox(cfg: JMap): Chunk[] {
+  const out: Chunk[] = cfg.has("pile") ? chunks(cfg.get("pile") as string) : [];
+  const tops = new Set(out.map((c) => c.path.split("/")[0]));
+  const srcs = (cfg.get("sources") as JMap | undefined) ?? new Map<string, J>();
+  for (const name of [...srcs.keys()].sort(byCodePoint)) {
+    if (tops.has(name)) throw new Error(`the source ${name} has the name of a file or folder at the top of the pile`);
+    const at = srcs.get(name) as string;
+    const part = at.startsWith("@") ? listChunks(at.slice(1)) : chunks(at);
+    out.push(...part.map((c) => ({ ...c, path: `${name}/${c.path}`, source: name })));
+  }
+  return out;
+}
+
+/** NAME=FOLDER or NAME=@LIST as [name, where], or why not. */
+function sourceOf(given: string): [string, string] | string {
+  const eq = given.indexOf("=");
+  const name = eq < 0 ? given : given.slice(0, eq);
+  const at = eq < 0 ? "" : given.slice(eq + 1);
+  if (eq < 0 || !name || at === "" || at === "@") return `${given}: a source is NAME=FOLDER or NAME=@LIST`;
+  if (name.includes("/") || name.includes("\\") || name.startsWith(".")) return `${name}: a source's name is plain, no / and not starting with .`;
+  const where = at.startsWith("@") ? at.slice(1) : at;
+  if (at.startsWith("@")) {
+    if (!isFile(where)) return `${where}: a list of files is a file, and isn't there`;
+    const gone = listed(where).filter((f) => !isFile(f));
+    if (gone.length) return `${where} names ${gone.length} file${gone.length === 1 ? "" : "s"} that aren't there, the first ${gone[0]}`;
+    return [name, "@" + resolved(where)];
+  }
+  if (!fs.existsSync(where) || !fs.statSync(where).isDirectory()) return `${where} is not a folder`;
+  return [name, resolved(where)];
 }
 
 /** An exact rational, for the rank's scores. */
@@ -904,6 +988,9 @@ function newest(t: string): string {
 }
 
 /** kernel.py's dates: each chunk's date, carried down its file; 0 for none. */
+/** A chunk's path as its own folder names it: a source's name is no word of it (CONST-VI-9). */
+const ownPath = (c: Chunk): string => (c.source ? c.path.slice(c.source.length + 1) : c.path);
+
 function dates(pile: Chunk[]): number[] {
   const out: number[] = [];
   let path: string | null = null;
@@ -911,7 +998,7 @@ function dates(pile: Chunk[]): number[] {
   for (const c of pile) {
     if (c.path !== path) {
       path = c.path;
-      cur = newest(c.path);
+      cur = newest(ownPath(c));
     }
     const t = newest(c.text);
     if (t > cur) cur = t;
@@ -926,7 +1013,7 @@ function rank(pile: Chunk[], bite: string, alias: Alias): Chunk[] {
   const when = dates(pile);
   const held: [Chunk, Set<string>, number][] = [];
   pile.forEach((c, k) => {
-    const toks = forms([...words(c.text), ...words(c.path)]); // a folder's name is the person's word too
+    const toks = forms([...words(c.text), ...words(ownPath(c))]); // a folder's name is the person's word too
     const h = new Set([...want].filter((w) => heldBy(w, toks, alias)));
     if (BigInt(h.size) * T.HOLD[1] >= T.HOLD[0] * BigInt(want.size)) held.push([c, h, when[k]]);
   });
@@ -970,7 +1057,7 @@ function look(pile: Chunk[], bite: string, served: Chunk[], alias: Alias): J[] {
   };
   if (!want.length) out.push(hint("every word is a common one: name the thing you mean", null, null));
   const every = new Set<string>();
-  for (const c of pile) for (const w of forms([...words(c.text), ...words(c.path)])) every.add(w);
+  for (const c of pile) for (const w of forms([...words(c.text), ...words(ownPath(c))])) every.add(w);
   const absent = want.filter((w) => !heldBy(w, every, alias));
   for (const w of want) {
     // said, so a match their list made is never taken for theirs
@@ -1183,13 +1270,34 @@ function readKey(file: string, box: string): [Buffer | null, string | null] {
   }
 }
 
-function init(box: string, pile: string, key: string, ts: string, wl: string | null): number {
+function init(box: string, pile: string | null, key: string, ts: string, wl: string | null, froms: string[] = []): number {
   if (fs.existsSync(path.join(box, "record.jsonl"))) {
     console.error("refused: this box already has a record");
     return REFUSED;
   }
-  if (!fs.existsSync(pile) || !fs.statSync(pile).isDirectory()) {
+  if (pile !== null && (!fs.existsSync(pile) || !fs.statSync(pile).isDirectory())) {
     console.error(`refused: ${pile} is not a folder`);
+    return REFUSED;
+  }
+  const found = new Map<string, string>();
+  for (const given of froms) {
+    const got = sourceOf(given);
+    if (typeof got === "string") {
+      console.error(`refused: ${got}`);
+      return REFUSED;
+    }
+    if (found.has(got[0])) {
+      console.error(`refused: ${got[0]}: a source's name is given once`);
+      return REFUSED;
+    }
+    if (pile !== null && fs.existsSync(path.join(pile, got[0]))) {
+      console.error(`refused: ${got[0]}: the pile already holds that name at its top`);
+      return REFUSED;
+    }
+    found.set(got[0], got[1]);
+  }
+  if (pile === null && !found.size) {
+    console.error("refused: a box reads a pile folder, sources, or both");
     return REFUSED;
   }
   if (inside(key, box)) {
@@ -1213,10 +1321,20 @@ function init(box: string, pile: string, key: string, ts: string, wl: string | n
     }
   }
   fs.mkdirSync(box, { recursive: true });
-  const cfg: JMap = obj(["pile", resolved(pile)], ["key", resolved(key)]);
+  const cfg: JMap = obj(["key", resolved(key)]);
+  const placed: [string, J][] = [];
+  if (pile !== null) {
+    cfg.set("pile", resolved(pile));
+    placed.push(["pile_sha256", h256(cfg.get("pile") as string)]);
+  }
+  if (found.size) {
+    const srcs: JMap = new Map([...found.entries()].sort((a, b) => byCodePoint(a[0], b[0])));
+    cfg.set("sources", srcs);
+    placed.push(["sources_sha256", h256(canon(srcs))]);
+  }
   if (wl !== null) cfg.set("words", resolved(wl));
   fs.writeFileSync(path.join(box, "kernel.json"), dumpsDefault(cfg, true) + "\n");
-  const row = append(box, ts, "boot", "kernel", obj(["loop", "open"], ["pile_sha256", h256(cfg.get("pile") as string)]));
+  const row = append(box, ts, "boot", "kernel", obj(["loop", "open"], ...placed));
   console.log(`ready: record started, row ${row.get("n")} ${(row.get("hash") as string).slice(0, 16)}`);
   return ALIVE;
 }
@@ -1242,6 +1360,34 @@ function sealed(box: string, rows: JMap[], act = "seal"): Map<string, JMap> {
 }
 
 const declined = (box: string, rows: JMap[]) => sealed(box, rows, "decline");
+
+// What waits on the person: each proposal that passed the door, neither
+// sealed nor declined, by subject, its first passing row, in the order first
+// proposed. Counted once a thing to decide (CONST-V-11).
+function waiting(box: string, rows: JMap[]): Map<string, JMap> {
+  const good = sealed(box, rows);
+  const no = declined(box, rows);
+  const out = new Map<string, JMap>();
+  for (const r of rows) {
+    if (r.get("kind") === "proposal" && r.get("verdict") === "pass") {
+      const s = r.get("subject") as string;
+      if (!good.has(s) && !no.has(s) && !out.has(s)) out.set(s, r);
+    }
+  }
+  return out;
+}
+
+// Why a suggestion that passed the door isn't offered again, or null: what
+// waits, was sealed or was declined is offered once (CONST-V-11).
+function offered(box: string, rows: JMap[], subj: string): string | null {
+  const ways: [string, Map<string, JMap>][] = [
+    ["you approved it at row", sealed(box, rows)],
+    ["you declined it at row", declined(box, rows)],
+    ["already waiting on your seal, row", waiting(box, rows)],
+  ];
+  for (const [why, held] of ways) if (held.has(subj)) return `${why} ${held.get(subj)!.get("n")}`;
+  return null;
+}
 
 function refusedBreaks(r: Read): boolean {
   if (!r.breaks.length) return false;
@@ -1311,7 +1457,13 @@ function bite(box: string, text: string, ts: string): number {
     alias = got!;
     listed.push(["words_sha256", sha]);
   }
-  const pile = chunks(cfg.get("pile") as string);
+  let pile: Chunk[];
+  try {
+    pile = pileOfBox(cfg);
+  } catch (e) {
+    console.error(`refused: ${(e as Error).message}`);
+    return REFUSED;
+  }
   const served = rank(pile, text, alias);
   const refs = served.map((c) => obj(["id", c.id], ["where", `${c.path}:${c.line}`], ["echo", echo(text, c.text)]));
   const answers = served.filter((_, i) => !refs[i].get("echo"));
@@ -1348,7 +1500,8 @@ function propose(box: string, lines: string[], ts: string): number {
     } catch {
       prop = undefined;
     }
-    const why = door(prop, served);
+    let why = door(prop, served);
+    if (why === null) why = offered(box, read(path.join(box, "record.jsonl")).rows, subjectOf(prop as JMap));
     if (why === null) {
       const p = prop as JMap;
       const subj = subjectOf(p);
@@ -1455,16 +1608,14 @@ function out(box: string, ts: string): number {
   const r = read(path.join(box, "record.jsonl"));
   if (refusedBreaks(r)) return REFUSED;
   const good = sealed(box, r.rows);
-  const no = declined(box, r.rows);
-  const waiting = r.rows
-    .filter((row) => row.get("kind") === "proposal" && row.get("verdict") === "pass"
-      && !good.has(row.get("subject") as string) && !no.has(row.get("subject") as string))
-    .map((row) => row.get("subject") as string);
+  // what they declined is not offered again (CONST-V-10), and what waits is
+  // counted once (CONST-V-11)
+  const owed = [...waiting(box, r.rows).keys()];
   const tip = r.rows.length ? r.rows[r.rows.length - 1].get("hash")! : T.GENESIS;
-  append(box, ts, "out", "kernel", obj(["waiting", BigInt(waiting.length)], ["tip", tip]));
-  for (const s of waiting) console.log(`waiting on your seal: ${s}`);
-  console.log(`${r.rows.length + 1} rows; ${good.size} sealed; ${waiting.length} waiting`);
-  return waiting.length ? ESCALATE : ALIVE;
+  append(box, ts, "out", "kernel", obj(["waiting", BigInt(owed.length)], ["tip", tip]));
+  for (const s of owed) console.log(`waiting on your seal: ${s}`);
+  console.log(`${r.rows.length + 1} rows; ${good.size} sealed; ${owed.length} waiting`);
+  return owed.length ? ESCALATE : ALIVE;
 }
 
 // ── the vectors: every case, answered, for compare.py ──────────────────────
@@ -1553,6 +1704,7 @@ const now = () => new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const USAGE =
   "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.\n" +
   "    python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]\n" +
+  "    python kernel.py init    --box DIR [--pile FOLDER] --from NAME=FOLDER|NAME=@LIST ... --key FILE\n" +
   "    python kernel.py bite    --box DIR \"your question\"\n" +
   "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
   "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
@@ -1574,8 +1726,10 @@ function main(argv: string[]): number {
   const verb = argv[0] ?? "";
   const opts = new Map<string, string>();
   const args: string[] = [];
+  const froms: string[] = [];
   for (let i = 1; i < argv.length; i++) {
     if (["--box", "--pile", "--key", "--file", "--now", "--words"].includes(argv[i])) opts.set(argv[i], argv[++i] ?? "");
+    else if (argv[i] === "--from") froms.push(argv[++i] ?? "");
     else args.push(argv[i]);
   }
   if (!opts.get("--box")) {
@@ -1584,8 +1738,19 @@ function main(argv: string[]): number {
   }
   const box = opts.get("--box")!;
   const ts = opts.get("--now") || now();
-  if (verb === "init" && opts.get("--pile") && opts.get("--key") && !args.length)
-    return init(box, opts.get("--pile")!, opts.get("--key")!, ts, opts.get("--words") || null);
+  if (
+    verb === "init" &&
+    (opts.get("--pile") || froms.length) &&
+    !froms.includes("") &&
+    (!opts.has("--pile") || opts.get("--pile")) &&
+    opts.get("--key") &&
+    !args.length
+  )
+    return init(box, opts.get("--pile") || null, opts.get("--key")!, ts, opts.get("--words") || null, froms);
+  if (froms.length) {
+    console.error(USAGE);
+    return REFUSED;
+  }
   if (!fs.existsSync(path.join(box, "kernel.json"))) {
     console.error("refused: not a kernel box; init first");
     return REFUSED;

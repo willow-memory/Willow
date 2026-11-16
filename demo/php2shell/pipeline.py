@@ -27,7 +27,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "scan"))
+sys.path.insert(0, str(ROOT / "adapters" / "stdlib" / "batch-ask"))
 sys.path.insert(0, str(ROOT / "adapters" / "deps" / "latent"))
 sys.path.insert(0, str(HERE))
 import kernel  # noqa: E402

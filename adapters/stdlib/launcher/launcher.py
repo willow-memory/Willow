@@ -97,7 +97,7 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     question = args[0].strip() if args else ""
     found: list[dict] = []
-    pile_dir = Path(kernel.config(box)["pile"])
+    pile_dir = kernel.folder(kernel.config(box))
     if question:
         cfg = kernel.config(box)
         alias: dict = {}

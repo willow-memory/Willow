@@ -196,6 +196,14 @@ def fragments(
     return out
 
 
+def added_words(ref: str, mine: str) -> dict[str, str]:
+    """What the branch wrote of the files it added, from its FILES.md, given
+    REF's: a path REF's tree already has keeps REF's words, and a path the
+    branch left without words has none to put back."""
+    theirs = described(ref)
+    return {p: w for p, w in described(mine).items() if p not in theirs and w}
+
+
 def described(text: str) -> dict[str, str]:
     """Each path FILES.md's tree names, and the words on its line."""
     out, stack = {}, []
@@ -471,8 +479,7 @@ def settle(work: Path) -> list[str]:
             # wrote of the files it added: a tree in groups.py's order isn't
             # merged line by line, since the two sides' order differs
             _, ref, mine = stages(work, n)
-            theirs = described(ref)
-            KEEP[work] = {p: w for p, w in described(mine).items() if p not in theirs and w}  # fmt: skip
+            KEEP[work] = added_words(ref, mine)
             git("checkout", "--theirs", "--", n, cwd=work)
         elif n == "adapters/planned.json":
             p.write_text(planned(*stages(work, n)), encoding="utf-8")

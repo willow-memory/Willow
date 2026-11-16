@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you as a Python script, run on CPython for WebAssembly over your folder read-only: one runtime, the same answer anywhere.
 source: new
 added: 2026-11-04
-version: 0.1.0
+version: 0.1.2
 needs: wasi-python; Apache-2.0
 floor: wasi-python 0.1.0a5; the rule names its first release, 0.1.0a3, which installs without wasmtime, so run() refuses until wasi-python[run] is asked for; 0.1.0a5 is the first that brings it
 writes: record, to
@@ -37,7 +37,7 @@ your door with `kart.py take`, which puts it there as a proposal of yours,
 waiting on your seal. `run` runs only a job you sealed, and refuses one
 asking for the network. What it printed is proposed as an answer of yours,
 waiting on your seal, under kart/results/ with the claim kart's results
-carry, so `kart gather` adds them, and [dp](../dp/) and
+carry, so `kart gather` adds them, and [noised-count](../noised-count/) and
 [secure-sum](../secure-sum/) take them as they take kart's.
 
 **What it sees.** The script runs as `python -c`, `{pile}` in it being

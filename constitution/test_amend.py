@@ -219,29 +219,31 @@ def test_a_draft_steps_by_its_bump(draft, bump, want):
 
 
 def test_the_drafts_made_here_go_from_two_parts_to_three():
-    """0.10 to 0.15 were made the old way and keep their numbers; this
-    branch's four amendments make one draft, 0.16.0, a minor step."""
+    """0.10 to 0.15 were made the old way and keep their numbers; #323's four
+    amendments make one draft, 0.16.0, a minor step, V.11 makes 0.17.0 and
+    VI.9 makes 0.18.0."""
     drafts = [a["draft"] for a in EVERY]
     assert drafts[:6] == ["0.10", "0.11", "0.12", "0.13", "0.14", "0.15"]
-    assert set(drafts[6:]) == {"0.16.0"} and LATEST == "0.16.0"
+    assert drafts[6:10] == ["0.16.0"] * 4
+    assert drafts[10:] == ["0.17.0", "0.18.0"] and LATEST == "0.18.0"
 
 
 def test_one_pull_requests_amendments_make_one_draft_by_their_largest_bump(folder):
-    add(folder, bump="patch", pr=500, draft="0.17.0")
-    n = add(folder, bump="minor", pr=500, draft="0.17.0")
+    add(folder, bump="patch", pr=500, draft="0.19.0")
+    n = add(folder, bump="minor", pr=500, draft="0.19.0")
     law = am.build(LAW, am.amendments(folder))
-    assert am.problems(law, folder) == [] and "> Draft 0.17.0. " in law
-    assert " → 0.17.0 (amendment 11; amendment 12)" in law
+    assert am.problems(law, folder) == [] and "> Draft 0.19.0. " in law
+    assert " → 0.19.0 (amendment 13; amendment 14)" in law
     rows = [r for r in am.history(law) if "by merge of #500" in r]
-    assert len(rows) == 2 and all("Draft 0.17.0 —" in r for r in rows)
+    assert len(rows) == 2 and all("Draft 0.19.0 —" in r for r in rows)
     # each the patch it would be alone: refused, the larger bump decides
     (folder / f"{n:04d}.md").unlink()
     (folder / f"{n - 1:04d}.md").unlink()
-    add(folder, bump="patch", pr=500, draft="0.16.1")
-    add(folder, bump="minor", pr=500, draft="0.16.1")
+    add(folder, bump="patch", pr=500, draft="0.18.1")
+    add(folder, bump="minor", pr=500, draft="0.18.1")
     got = am.problems(LAW, folder)
     assert any(
-        "make 0.17.0 from 0.16.0, by their largest bump, minor" in p for p in got
+        "make 0.19.0 from 0.18.0, by their largest bump, minor" in p for p in got
     ), got
 
 
@@ -249,18 +251,18 @@ def test_two_pull_requests_make_two_drafts(folder):
     add(folder, bump="patch")
     add(folder, bump="patch")
     law = am.build(LAW, am.amendments(folder))
-    assert am.problems(law, folder) == [] and "> Draft 0.16.2. " in law
+    assert am.problems(law, folder) == [] and "> Draft 0.18.2. " in law
 
 
 @pytest.mark.parametrize(
     "head, says",
     [
-        ("draft: 0.17\n", "has three parts and a bump"),  # the old way, after the new
-        ("draft: 0.17.0\nbump: some\n", "with a bump of major, minor or patch"),
-        ("draft: 0.17.0\n", "with a bump of major, minor or patch"),  # no bump
-        ("draft: 0.17\nbump: minor\n", "MAJOR.MINOR.PATCH"),
-        ("draft: 0.18.0\nbump: minor\n", "make 0.17.0 from 0.16.0"),  # skips one
-        ("draft: 0.16.1\nbump: minor\n", "make 0.17.0 from 0.16.0"),  # too small
+        ("draft: 0.19\n", "has three parts and a bump"),  # the old way, after the new
+        ("draft: 0.19.0\nbump: some\n", "with a bump of major, minor or patch"),
+        ("draft: 0.19.0\n", "with a bump of major, minor or patch"),  # no bump
+        ("draft: 0.19\nbump: minor\n", "MAJOR.MINOR.PATCH"),
+        ("draft: 0.20.0\nbump: minor\n", "make 0.19.0 from 0.18.0"),  # skips one
+        ("draft: 0.18.1\nbump: minor\n", "make 0.19.0 from 0.18.0"),  # too small
     ],
 )
 def test_a_versioned_draft_that_doesnt_follow_is_refused(folder, head, says):

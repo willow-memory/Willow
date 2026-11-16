@@ -1,0 +1,11 @@
+{
+ "about": "The dry run's lies: told to the made-up sweep, to find the wiring's breaks. Not the study's.",
+ "plan": "dry-plan.json",
+ "starts": "dry-starts.json",
+ "seed": "qqqq lies",
+ "arms": [
+  {"name": "as-run", "check_one_in": 4, "draw_one_in": 3},
+  {"name": "everything", "check_one_in": 1, "draw_one_in": 1}
+ ],
+ "trials": {"none": 2, "one-bit": 8, "last-bit": 4, "false-halt": 4, "no-halt": 1, "stepped-otherwise": 3}
+}

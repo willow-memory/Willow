@@ -97,6 +97,16 @@ def test_described_reads_each_path_and_its_words_from_the_nesting():
     assert "adapters/stdlib/mail/README.md" in got, "read past a cut"
 
 
+def test_only_the_files_the_branch_added_keep_its_words():
+    ref = "willow/\n├── adapters/\n│   ├── stdlib/\n" + TREE.format(n="gaps") + CLOSE
+    mine = ref.replace("gaps.py    it", "gaps.py    the branch's") + (
+        "│   │   ├── mail/\n│   │   │   ├── mail.py    new\n"
+        "│   │   │   ├── empty.py\n" + CLOSE
+    )
+    got = rs.added_words(ref, mine)
+    assert got == {"adapters/stdlib/mail/mail.py": "new"}, got
+
+
 def test_keep_words_puts_back_what_the_branch_wrote_at_files_pys_column():
     text = "willow/\n├── adapters/\n│   ├── stdlib/\n" + TREE.format(n="gaps") + CLOSE
     made = text.replace("gaps.py    it", "gaps.py")

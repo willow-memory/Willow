@@ -1,0 +1,24 @@
+jobs: 220
+trajectories: 22
+predicted: 73.3%
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2%
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+## account
+The run involved a series of experiments to assess the efficiency of a computational model. The sweep phase, which dealt with 220 jobs over 22 trajectories, predicted that 73.3% of the steps could be skipped. The baseline run, where each job was processed independently without memory, stepped through 1256518 steps and found that 73.7% of the steps could be saved. The shared run, which utilized 10 machines, stepped through 336379 steps and measured a saving of 73.2%. Trajectories that began and then halted were noted, with three trajectories halting due to specific conditions. The project's gravity, as written, indicated that 14 out of 220 jobs produced the same results on every machine. The run involved three types of processors: AMD x86_64 AVX2, Intel x86_64 AVX2, and Intel x86_64 AVX512. The shared run served 29 jobs whole from memory, and 169 jobs continued from a kept state. One trajectory refused before a first step. The kept states were stepped again, and 20 served jobs were run afresh, all of which came out the same bytes. The run cost and the busiest machine are not specified in the reports.

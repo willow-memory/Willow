@@ -14,6 +14,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent))
+import renamed  # noqa: E402
+
+renamed.bridge()  # scan and predict moved after this study froze: demo/renamed.py
 import fetch  # noqa: E402
 import pipeline  # noqa: E402
 import score  # noqa: E402

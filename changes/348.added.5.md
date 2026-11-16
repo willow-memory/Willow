@@ -1,0 +1,1 @@
+`demo/shared-runs/door/wagers/`: twelve claims about the runs to come, each with a likelihood, written down with the forecasts add-on before any of them is run, with the choices and noes behind the door's machine kept by the decisions add-on, and the record's tip pinned. A scratch box; none is settled, since a wager is settled only by a seal.

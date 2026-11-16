@@ -1,0 +1,12 @@
+0.97	On the maintainer's laptop, machine 3's first round of the first study through door/machine.py, cut by a budget and taken up again, comes to the same 30 acts and 891 kept states as Kaggle's round-1-machine-3, byte for byte.
+0.90	On the phone (arm64 neon, NumPy 2.1.3), the same run comes to the same 30 acts and 891 kept states, byte for byte.
+0.93	The whole first-study sweep through door/machine.py, each second-round machine given only its own place's first-round folder, steps 336379 steps over the ten shared runs.
+0.92	A check by door/machine.py over those ten folders finds every kept state the same and every halt it names a halt: three halts, three that halt.
+0.70	That check steps between 330000 and 345000 steps.
+0.90	Each of those ten folders is under 2 MB.
+0.95	Sealing and verifying a machine's folder takes under one part in a hundred of the time that machine spent stepping.
+0.85	A secret made in Kaggle's settings and attached to a notebook is read by a later run of it, and its value is in no output file.
+0.60	Of the first ten times a machine's part is pushed again to Kaggle to go on, at least one comes back on another kind of processor and is refused.
+0.85	At ten times the sweep, with every signer enrolled, the shared run saves between 72.2 and 74.2 in a hundred of the steps run alone.
+0.85	When the lies study is run, the arm that checks every kept state against the one before hands out no wrong job.
+0.75	The first run on Kaggle of a notebook made for door/machine.py ends clean the first time it is pushed.

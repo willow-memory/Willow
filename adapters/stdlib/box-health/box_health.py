@@ -168,7 +168,7 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
     fine.append(
         f"{len(rows)} row{'s' if len(rows) != 1 else ''} hold{'' if len(rows) != 1 else 's'}"
     )
-    good, no = kernel.sealed(box, rows), kernel.declined(box, rows)
+    good = kernel.sealed(box, rows)
     forged = [
         r["n"] for r in rows if r["kind"] == "seal" and r.get("subject") not in good
     ]
@@ -177,15 +177,7 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
         for s, row in good.items()
         if kernel.standing(box, rows, s, row)[2] is not None
     ]
-    waiting = (
-        {
-            r["subject"]
-            for r in rows
-            if r["kind"] == "proposal" and r.get("verdict") == "pass"
-        }
-        - set(good)
-        - set(no)
-    )
+    waiting = kernel.waiting(box, rows)  # once a thing (CONST-V-11)
     fine.append(f"{len(good) - len(drifted)} approved, {len(waiting)} waiting")
     if forged:
         needs.append(
@@ -200,14 +192,14 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
             f"{len(waiting)} suggestion{'s' if len(waiting) != 1 else ''} waiting for you"
         )
     cfg = kernel.config(box)
-    skipped = unreadable(Path(cfg["pile"]))
+    skipped = unreadable(kernel.folder(cfg))
     if skipped:
         parts = []
         for ext, n in sorted(skipped.items(), key=lambda x: (-x[1], x[0])):
             r = reader_for(ext)
             parts.append(f"{n} {ext}" + (f", read by {r}" if r else ""))
         total = sum(skipped.values())
-        big = too_large(Path(cfg["pile"]))
+        big = too_large(kernel.folder(cfg))
         needs.append(
             f"{total} file{'s' if total != 1 else ''} can't be read ({'; '.join(parts)})"
             + (f", {big} of them over {kernel.MAX_FILE // 1_000_000} MB" if big else "")
@@ -252,8 +244,8 @@ def box_report(box: Path, state: str, fine: list[str], needs: list[str]) -> dict
     for each thing that is fine; a box that is ok is `empty`, saying so."""
     if not needs:
         return report(NAME, "empty", f"nothing needs you; {'; '.join(fine)}", [])
-    skipped = unreadable(Path(kernel.config(box)["pile"]))
-    pile = Path(kernel.config(box)["pile"])
+    skipped = unreadable(kernel.folder(kernel.config(box)))
+    pile = kernel.folder(kernel.config(box))
     unread = [
         (ext, f"{n} file{'s' if n != 1 else ''}" + (f", read by {r}" if (r := reader_for(ext)) else ""))
         for ext, n in sorted(skipped.items(), key=lambda x: (-x[1], x[0]))

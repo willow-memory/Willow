@@ -10,7 +10,7 @@ requirements.txt beside this file:
 Each approved answer becomes a page of SITE, `answers/N.html`: the answer,
 the reason its suggestion gave, the passages it cited and where they were,
 and when you approved it. Only approvals that prove under your key are
-written (the kernel's `sealed` and `standing`), as the export add-on does;
+written (the kernel's `sealed` and `standing`), as the export-answers add-on does;
 a forged one never is. Then Pagefind indexes them, into `SITE/pagefind/`,
 and `SITE/index.html` is a search box over them and a list of them all.
 

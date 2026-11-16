@@ -3,7 +3,7 @@ section: Trust and proof
 line: A thesis's claims, each tied to the source that backs it, and a list of the ones with none.
 source: new
 added: 2026-11-01
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools

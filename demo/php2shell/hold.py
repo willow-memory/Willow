@@ -33,7 +33,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [
     str(HERE),
-    str(HERE.parents[1] / "adapters" / "stdlib" / "scan"),
+    str(HERE.parents[1] / "adapters" / "stdlib" / "batch-ask"),
     str(HERE.parents[1]),
 ]
 import kernel  # noqa: E402

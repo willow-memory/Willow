@@ -1,0 +1,33 @@
+{
+ "qqqq": {
+  "toy": {
+   "seed": 11
+  }
+ },
+ "zzzz": {
+  "toy": {
+   "seed": 12
+  }
+ },
+ "xxxx": {
+  "toy": {
+   "seed": 13
+  }
+ },
+ "wwww": {
+  "toy": {
+   "seed": 14
+  }
+ },
+ "vvvv-halts": {
+  "toy": {
+   "seed": 15,
+   "halts_after": 71
+  }
+ },
+ "uuuu": {
+  "toy": {
+   "seed": 16
+  }
+ }
+}

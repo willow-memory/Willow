@@ -145,7 +145,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found = tally(kernel.chunks(Path(kernel.config(box)["pile"])), mmdd)
+    found = tally(kernel.pile_of_box(kernel.config(box)), mmdd)
     if not found:
         print("No line of your folder says a drive and how far.")
         return kernel.ESCALATE

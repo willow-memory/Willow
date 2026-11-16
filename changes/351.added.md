@@ -1,0 +1,1 @@
+`hook-start`: `--no-dates` leaves the dates coming up out, unread, for a box whose pile is records (notes, commits, code), where every line dated today was a record of the day and showed as something coming up

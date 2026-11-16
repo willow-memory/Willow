@@ -1,0 +1,27 @@
+jobs: 220
+trajectories: 22
+predicted: 73.3
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+## the questions
+
+## the reports
+
+The sweep run took 2 rounds, with each round dealing with 11 trajectories (220 / 22). It is unclear how long the sweep run took. The baseline run consisted of 2 runs with 220 jobs each. The shared run consisted of 10 machine runs, with 22 taking no memory, 169 going from a kept state, 29 served whole, and 3 trajectories that began and then halted. The check run found that 1305 kept states were stepped again, and 20 served jobs were run afresh. The project's gravity was found in 14 of the 220 jobs, with 3 kinds of processor used. The shared run took 2.4 seconds. The baseline run stepped 1,251,518 steps. The shared run stepped 336,379 steps. The measured saving from the sweep and shared run is 73.2%.

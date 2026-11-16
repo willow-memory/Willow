@@ -1299,6 +1299,15 @@ func echo(bite, text string) bool {
 type Chunk struct {
 	path, text, id string
 	line           int
+	source         string // a source's name, which places it and is no word of it (CONST-VI-9)
+}
+
+// ownPath is a chunk's path as its own folder names it.
+func ownPath(c *Chunk) string {
+	if c.source == "" {
+		return c.path
+	}
+	return c.path[len(c.source)+1:]
 }
 
 func newChunk(path string, line int, text string) *Chunk {
@@ -1343,6 +1352,59 @@ func suffix(name string) string {
 	return ""
 }
 
+// chunked is one file's paragraphs, as chunks cuts them; none when the
+// kernel doesn't read it.
+func chunked(p, relPath, name string) []*Chunk {
+	out := []*Chunk{}
+	st, err := os.Stat(p)
+	if err != nil || !st.Mode().IsRegular() || st.Size() > int64(MAX_FILE) {
+		return out
+	}
+	raw, err := ioutil.ReadFile(p)
+	if err != nil {
+		return out
+	}
+	head := raw
+	if len(head) > SNIFF {
+		head = head[:SNIFF]
+	}
+	if strings.IndexByte(string(head), 0) >= 0 || !utf8.Valid(raw) {
+		return out
+	}
+	text := string(raw)
+	suf := lower(suffix(name))
+	if suf == ".html" || suf == ".htm" {
+		text = htmlText(text)
+	}
+	lines := append(splitlines(text), "")
+	var para []string
+	start, size := 1, 0
+	for i := 1; i <= len(lines); i++ {
+		line := lines[i-1]
+		if len(para) > 0 && (blank(line) || size+length(line) > MAX_CHUNK) {
+			out = append(out, newChunk(relPath, start, strings.Join(para, "\n")))
+			para, size = nil, 0
+		}
+		if !blank(line) {
+			if len(para) == 0 {
+				start = i
+			}
+			para = append(para, take(line, MAX_CHUNK))
+			size += length(para[len(para)-1]) + 1
+		}
+	}
+	return out
+}
+
+func hiddenPart(rel []string) bool {
+	for _, part := range rel {
+		if strings.HasPrefix(part, ".") {
+			return true
+		}
+	}
+	return false
+}
+
 func chunks(pile string) []*Chunk {
 	var all [][]string
 	walk(pile, nil, &all)
@@ -1351,55 +1413,172 @@ func chunks(pile string) []*Chunk {
 	for _, rel := range all {
 		p := filepath.Join(append([]string{pile}, rel...)...)
 		st, err := os.Stat(p)
-		if err != nil || !st.Mode().IsRegular() {
+		if err != nil || !st.Mode().IsRegular() || hiddenPart(rel) {
 			continue
 		}
-		hid := false
-		for _, part := range rel {
-			hid = hid || strings.HasPrefix(part, ".")
-		}
-		if hid {
+		out = append(out, chunked(p, strings.Join(rel, "/"), rel[len(rel)-1])...)
+	}
+	return out
+}
+
+// ── sources: the person's files, read where they are kept (CONST-VI-9) ────
+
+// listed is the files a list names, in its order, each once.
+func listed(lst string) []string {
+	out := []string{}
+	raw, err := ioutil.ReadFile(lst)
+	if err != nil || !utf8.Valid(raw) {
+		return out
+	}
+	dir := filepath.Dir(resolved(lst))
+	for _, line := range splitlines(string(raw)) {
+		line = strip(line)
+		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
-		if st.Size() > int64(MAX_FILE) {
-			continue
+		f := line
+		if !filepath.IsAbs(f) {
+			f = filepath.Join(dir, f)
 		}
-		raw, err := ioutil.ReadFile(p)
-		if err != nil {
-			continue
+		f = resolved(f)
+		seen := false
+		for _, x := range out {
+			seen = seen || x == f
 		}
-		head := raw
-		if len(head) > SNIFF {
-			head = head[:SNIFF]
-		}
-		if strings.IndexByte(string(head), 0) >= 0 || !utf8.Valid(raw) {
-			continue
-		}
-		text := string(raw)
-		suf := lower(suffix(rel[len(rel)-1]))
-		if suf == ".html" || suf == ".htm" {
-			text = htmlText(text)
-		}
-		relPath := strings.Join(rel, "/")
-		lines := append(splitlines(text), "")
-		var para []string
-		start, size := 1, 0
-		for i := 1; i <= len(lines); i++ {
-			line := lines[i-1]
-			if len(para) > 0 && (blank(line) || size+length(line) > MAX_CHUNK) {
-				out = append(out, newChunk(relPath, start, strings.Join(para, "\n")))
-				para, size = nil, 0
-			}
-			if !blank(line) {
-				if len(para) == 0 {
-					start = i
-				}
-				para = append(para, take(line, MAX_CHUNK))
-				size += length(para[len(para)-1]) + 1
-			}
+		if !seen {
+			out = append(out, f)
 		}
 	}
 	return out
+}
+
+func isFile(p string) bool {
+	st, err := os.Stat(p)
+	return err == nil && st.Mode().IsRegular()
+}
+
+// commonPath is os.path.commonpath of absolute paths, part by part.
+func commonPath(ps []string) string {
+	sep := string(filepath.Separator)
+	first := strings.Split(ps[0], sep)
+	n := len(first)
+	for _, p := range ps[1:] {
+		parts := strings.Split(p, sep)
+		k := 0
+		for k < n && k < len(parts) && parts[k] == first[k] {
+			k++
+		}
+		n = k
+	}
+	root := strings.Join(first[:n], sep)
+	if root == "" {
+		return sep
+	}
+	return root
+}
+
+func listChunks(lst string) []*Chunk {
+	files := listed(lst)
+	out := []*Chunk{}
+	if len(files) == 0 {
+		return out
+	}
+	dirs := make([]string, len(files))
+	for i, f := range files {
+		dirs[i] = filepath.Dir(f)
+	}
+	root := commonPath(dirs)
+	type rel struct {
+		parts []string
+		file  string
+	}
+	var rels []rel
+	for _, f := range files {
+		r, err := filepath.Rel(root, f)
+		if err != nil {
+			continue
+		}
+		rels = append(rels, rel{strings.Split(r, string(filepath.Separator)), f})
+	}
+	sort.SliceStable(rels, func(i, j int) bool { return byParts(rels[i].parts, rels[j].parts) })
+	for _, r := range rels {
+		if !hiddenPart(r.parts) {
+			out = append(out, chunked(r.file, strings.Join(r.parts, "/"), r.parts[len(r.parts)-1])...)
+		}
+	}
+	return out
+}
+
+// pileOfBox is everything the box reads: its pile folder, then each source
+// in name order, each as NAME/path.
+func pileOfBox(cfg *Obj) ([]*Chunk, *string) {
+	out := []*Chunk{}
+	if cfg.Has("pile") {
+		out = chunks(pyStr(get(cfg, "pile")))
+	}
+	tops := map[string]bool{}
+	for _, c := range out {
+		tops[strings.SplitN(c.path, "/", 2)[0]] = true
+	}
+	if v, ok := cfg.Get("sources"); ok {
+		srcs := v.(*Obj)
+		names := srcs.Keys()
+		sort.Strings(names)
+		for _, name := range names {
+			if tops[name] {
+				return nil, str("the source " + name + " has the name of a file or folder at the top of the pile")
+			}
+			at := pyStr(get(srcs, name))
+			var part []*Chunk
+			if strings.HasPrefix(at, "@") {
+				part = listChunks(at[1:])
+			} else {
+				part = chunks(at)
+			}
+			for _, c := range part {
+				x := newChunk(name+"/"+c.path, c.line, c.text)
+				x.source = name
+				out = append(out, x)
+			}
+		}
+	}
+	return out, nil
+}
+
+// sourceOf reads NAME=FOLDER or NAME=@LIST as (name, where), or why not.
+func sourceOf(given string) (string, string, *string) {
+	eq := strings.Index(given, "=")
+	if eq < 0 || eq == 0 || given[eq+1:] == "" || given[eq+1:] == "@" {
+		return "", "", str(given + ": a source is NAME=FOLDER or NAME=@LIST")
+	}
+	name, at := given[:eq], given[eq+1:]
+	if strings.Contains(name, "/") || strings.Contains(name, "\\") || strings.HasPrefix(name, ".") {
+		return "", "", str(name + ": a source's name is plain, no / and not starting with .")
+	}
+	if strings.HasPrefix(at, "@") {
+		l := at[1:]
+		if !isFile(l) {
+			return "", "", str(l + ": a list of files is a file, and isn't there")
+		}
+		var gone []string
+		for _, f := range listed(l) {
+			if !isFile(f) {
+				gone = append(gone, f)
+			}
+		}
+		if len(gone) > 0 {
+			plural := "s"
+			if len(gone) == 1 {
+				plural = ""
+			}
+			return "", "", str(l + " names " + strconv.Itoa(len(gone)) + " file" + plural + " that aren't there, the first " + gone[0])
+		}
+		return name, "@" + resolved(l), nil
+	}
+	if st, err := os.Stat(at); err != nil || !st.IsDir() {
+		return "", "", str(at + " is not a folder")
+	}
+	return name, resolved(at), nil
 }
 
 // ── dates ───────────────────────────────────────────────────────────────────
@@ -1523,7 +1702,7 @@ func dates(pile []*Chunk) []int64 {
 	path, cur := "\x00none", ""
 	for i, c := range pile {
 		if c.path != path {
-			path, cur = c.path, newest(c.path)
+			path, cur = c.path, newest(ownPath(c))
 		}
 		if t := newest(c.text); t > cur {
 			cur = t
@@ -1570,7 +1749,7 @@ func heldBy(w string, toks map[string]bool, al alias) bool {
 }
 
 func toks(c *Chunk) map[string]bool {
-	return forms(append(words(c.text), words(c.path)...))
+	return forms(append(words(c.text), words(ownPath(c))...))
 }
 
 // uniqueWords is dict.fromkeys(words) less FUNCTION: each content word once, in order.
@@ -2125,12 +2304,33 @@ func refuse(msg string) int {
 	return REFUSED
 }
 
-func initBox(box, pile, key, ts string, wl *string) (int, error) {
+func initBox(box string, pile *string, key, ts string, wl *string, froms []string) (int, error) {
 	if _, err := os.Stat(filepath.Join(box, "record.jsonl")); err == nil {
 		return refuse("refused: this box already has a record"), nil
 	}
-	if st, err := os.Stat(pile); err != nil || !st.IsDir() {
-		return refuse("refused: " + pile + " is not a folder"), nil
+	if pile != nil {
+		if st, err := os.Stat(*pile); err != nil || !st.IsDir() {
+			return refuse("refused: " + *pile + " is not a folder"), nil
+		}
+	}
+	found := newObj()
+	for _, given := range froms {
+		name, at, why := sourceOf(given)
+		if why != nil {
+			return refuse("refused: " + *why), nil
+		}
+		if found.Has(name) {
+			return refuse("refused: " + name + ": a source's name is given once"), nil
+		}
+		if pile != nil {
+			if _, err := os.Stat(filepath.Join(*pile, name)); err == nil {
+				return refuse("refused: " + name + ": the pile already holds that name at its top"), nil
+			}
+		}
+		found.Set(name, at)
+	}
+	if pile == nil && len(found.Keys()) == 0 {
+		return refuse("refused: a box reads a pile folder, sources, or both"), nil
 	}
 	if inside(key, box) {
 		return refuse("refused: the key can't live inside the box"), nil
@@ -2158,14 +2358,29 @@ func initBox(box, pile, key, ts string, wl *string) (int, error) {
 	if err := os.MkdirAll(box, 0o777); err != nil {
 		return 0, err
 	}
-	cfg := obj("pile", resolved(pile), "key", resolved(key))
+	cfg := obj("key", resolved(key))
+	placed := obj("loop", "open")
+	if pile != nil {
+		cfg.Set("pile", resolved(*pile))
+		placed.Set("pile_sha256", h256(get(cfg, "pile").(string)))
+	}
+	if len(found.Keys()) > 0 {
+		names := found.Keys()
+		sort.Strings(names)
+		srcs := newObj()
+		for _, n := range names {
+			srcs.Set(n, get(found, n))
+		}
+		cfg.Set("sources", srcs)
+		placed.Set("sources_sha256", h256(canon(srcs)))
+	}
 	if wl != nil {
 		cfg.Set("words", resolved(*wl))
 	}
 	if err := ioutil.WriteFile(filepath.Join(box, "kernel.json"), []byte(dumpsDefault(cfg, true)+"\n"), 0o666); err != nil {
 		return 0, err
 	}
-	row, err := appendRow(box, ts, "boot", "kernel", obj("loop", "open", "pile_sha256", h256(get(cfg, "pile").(string))))
+	row, err := appendRow(box, ts, "boot", "kernel", placed)
 	if err != nil {
 		return 0, err
 	}
@@ -2360,7 +2575,10 @@ func bite(box, text, ts string) (int, error) {
 		al = got
 		listed.Set("words_sha256", sha)
 	}
-	pile := chunks(pyStr(get(cfg, "pile")))
+	pile, why := pileOfBox(cfg)
+	if why != nil {
+		return refuse("refused: " + *why), nil
+	}
 	served := rank(pile, text, al)
 	refs := []interface{}{}
 	var answers []*Chunk
@@ -2406,6 +2624,61 @@ func bite(box, text, ts string) (int, error) {
 	return ESCALATE, nil
 }
 
+// waiting is what waits on the person: each proposal that passed the door,
+// neither sealed nor declined, by subject, its first passing row, in the
+// order first proposed. Counted once a thing to decide (CONST-V-11).
+func waiting(box string, rows []*Obj) (*bySubject, error) {
+	good, err := sealed(box, rows, "seal")
+	if err != nil {
+		return nil, err
+	}
+	no, err := sealed(box, rows, "decline")
+	if err != nil {
+		return nil, err
+	}
+	out := &bySubject{rows: map[string]*Obj{}}
+	for _, r := range rows {
+		if get(r, "kind") == "proposal" && get(r, "verdict") == "pass" {
+			s := pyStr(get(r, "subject"))
+			if !good.has(s) && !no.has(s) && !out.has(s) {
+				out.put(s, r)
+			}
+		}
+	}
+	return out, nil
+}
+
+// offered is why a suggestion that passed the door isn't offered again, or
+// nil: what waits, was sealed or was declined is offered once (CONST-V-11).
+func offered(box string, rows []*Obj, subj string) (*string, error) {
+	good, err := sealed(box, rows, "seal")
+	if err != nil {
+		return nil, err
+	}
+	no, err := sealed(box, rows, "decline")
+	if err != nil {
+		return nil, err
+	}
+	owed, err := waiting(box, rows)
+	if err != nil {
+		return nil, err
+	}
+	for _, w := range []struct {
+		why  string
+		held *bySubject
+	}{
+		{"you approved it at row", good},
+		{"you declined it at row", no},
+		{"already waiting on your seal, row", owed},
+	} {
+		if w.held.has(subj) {
+			why := w.why + " " + pyStr(get(w.held.rows[subj], "n"))
+			return &why, nil
+		}
+	}
+	return nil, nil
+}
+
 func propose(box string, lines []string, ts string) (int, error) {
 	r, err := record(box)
 	if err != nil {
@@ -2438,6 +2711,15 @@ func propose(box string, lines []string, ts string) (int, error) {
 			prop = nil
 		}
 		why := door(prop, served)
+		if why == nil {
+			now, err := record(box)
+			if err != nil {
+				return 0, err
+			}
+			if why, err = offered(box, now.rows, subjectOf(prop.(*Obj))); err != nil {
+				return 0, err
+			}
+		}
 		if why == nil {
 			p := prop.(*Obj)
 			subj := subjectOf(p)
@@ -2641,19 +2923,13 @@ func out(box, ts string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	no, err := sealed(box, r.rows, "decline")
+	// what they declined is not offered again (CONST-V-10), and what waits is
+	// counted once (CONST-V-11)
+	owed, err := waiting(box, r.rows)
 	if err != nil {
 		return 0, err
 	}
-	var waiting []string
-	for _, row := range r.rows {
-		if get(row, "kind") == "proposal" && get(row, "verdict") == "pass" {
-			s := pyStr(get(row, "subject"))
-			if !good.has(s) && !no.has(s) {
-				waiting = append(waiting, s)
-			}
-		}
-	}
+	waiting := owed.order
 	var tip interface{} = GENESIS
 	if len(r.rows) > 0 {
 		tip = get(r.rows[len(r.rows)-1], "hash")
@@ -2879,6 +3155,7 @@ func now() string { return time.Now().UTC().Format("2006-01-02T15:04:05Z") }
 
 const USAGE = `kernel.py: answers questions from your own files. Python 3.9+, stdlib only.
     python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]
+    python kernel.py init    --box DIR [--pile FOLDER] --from NAME=FOLDER|NAME=@LIST ... --key FILE
     python kernel.py bite    --box DIR "your question"
     python kernel.py propose --box DIR --file SUGGESTIONS.jsonl
     python kernel.py seal    --box DIR proposal:<sha256>
@@ -2930,9 +3207,17 @@ func run(argv []string) (int, error) {
 	}
 	opts := map[string]string{}
 	var args []string
+	var froms []string
 	for i := 1; i < len(argv); i++ {
 		a := argv[i]
 		switch a {
+		case "--from":
+			if i+1 < len(argv) {
+				i++
+				froms = append(froms, argv[i])
+			} else {
+				froms = append(froms, "")
+			}
 		case "--box", "--pile", "--key", "--file", "--now", "--words":
 			if i+1 < len(argv) {
 				i++
@@ -2951,12 +3236,24 @@ func run(argv []string) (int, error) {
 	if ts == "" {
 		ts = now()
 	}
-	if verb == "init" && opts["--pile"] != "" && opts["--key"] != "" && len(args) == 0 {
-		var wl *string
+	emptyFrom := false
+	for _, f := range froms {
+		emptyFrom = emptyFrom || f == ""
+	}
+	_, pileGiven := opts["--pile"]
+	if verb == "init" && (opts["--pile"] != "" || len(froms) > 0) && !emptyFrom &&
+		(!pileGiven || opts["--pile"] != "") && opts["--key"] != "" && len(args) == 0 {
+		var wl, pile *string
 		if opts["--words"] != "" {
 			wl = str(opts["--words"])
 		}
-		return initBox(box, opts["--pile"], opts["--key"], ts, wl)
+		if opts["--pile"] != "" {
+			pile = str(opts["--pile"])
+		}
+		return initBox(box, pile, opts["--key"], ts, wl, froms)
+	}
+	if len(froms) > 0 {
+		return refuse(USAGE), nil
 	}
 	if _, err := os.Stat(filepath.Join(box, "kernel.json")); err != nil {
 		return refuse("refused: not a kernel box; init first"), nil

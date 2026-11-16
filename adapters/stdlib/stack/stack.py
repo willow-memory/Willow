@@ -11,9 +11,10 @@ are skipped, so a stack file reads as markdown; a step before any pool is
 refused.
 
 stack runs every step and composes one markdown document: a `##` section per
-pool, each step's output under it in a fenced block. The order is the stacking
-order -- peaks first: pools, and the steps within them, run tallest first, by
-how many lines of output stack up, because that is what a reader meets first.
+pool, each step's output under it in a fenced block. The steps run in the order
+the stack file lists them, pool by pool; the document is then stacked peaks
+first: pools, and the steps within them, printed tallest first, by how many
+lines of output stack up, because that is what a reader meets first.
 A step whose card says `output: report` is asked for its report as JSON and
 printed in the report's one shape (ci/README.md, the report contract); its
 height is its rows, not its lines, and it is flagged by its exit code alone,
@@ -72,8 +73,24 @@ STDLIB = HERE.parent
 sys.path.insert(0, str(STDLIB.parents[1]))
 import kernel  # noqa: E402
 
-NONE_FOUND = {"amounts", "contradictions", "duplicates", "said"}
-FLAGS_ON_ALIVE = {"contradictions"}
+NONE_FOUND = {"amounts", "contradictions", "duplicates", "gaps", "who-said"}
+
+
+def renames() -> dict:
+    """Add-ons renamed, old name to new (adapters/renamed.json); {} when
+    this willow has no such file."""
+    try:
+        doc = json.loads((STDLIB.parent / "renamed.json").read_text(encoding="utf-8"))
+        return dict(doc.get("names", {}))
+    except (OSError, ValueError, AttributeError):
+        return {}
+
+
+RENAMED = renames()
+FLAGS_ON_ALIVE = {
+    "contradictions",
+    "gaps",
+}  # their 0 is something found: a gap, a contradiction
 
 
 def bare_backslash(argstr: str) -> bool:
@@ -191,6 +208,7 @@ def mark(name: str, args: list[str]) -> str:
 
 #: `{03}` or `{03.json}` in a step's args: an earlier step's kept output
 HANDS = re.compile(r"\{(\d+)(\.json)?\}")
+RUN = "{run}"  # the kept run's own folder, for a step that writes a file
 
 
 def hands(args: list[str]) -> list[tuple[int, bool]]:
@@ -203,6 +221,11 @@ def unhandable(flat: list, scripts: dict, kept: bool) -> str | None:
     """Why a stack's hand-ons can't be, or None: said before anything runs.
     `flat` is every step in the stack file's order."""
     for at, (name, args) in enumerate(flat, 1):
+        if not kept and any(RUN in a for a in args):
+            return (
+                f"step {at} ({name}) writes in {RUN}, the run's own folder; "
+                "that needs the run kept: add --to FOLDER"
+            )
         for n, as_json in hands(args):
             tag = f"{{{n:02d}{'.json' if as_json else ''}}}"
             if not kept:
@@ -411,6 +434,7 @@ def mass(text: str) -> int:
 
 def step_result(name: str, code: int) -> tuple[bool, str]:
     """(flagged, note) for a step's exit code, by that add-on's card."""
+    name = RENAMED.get(name, name)
     if code == kernel.ALIVE and name in FLAGS_ON_ALIVE:
         return True, "flagged"
     if code == kernel.ESCALATE and name in NONE_FOUND:
@@ -481,6 +505,10 @@ def main(argv: list[str]) -> int:
         for name, _ in steps:
             if name not in scripts:
                 script = resolve(name)
+                if script is None and (new := RENAMED.get(name)):
+                    script = resolve(new)
+                    if script is not None:
+                        print(f"{name} is now called {new}: ran {new}", file=sys.stderr)
                 if script is None:
                     print(f"refused: the {name} add-on isn't here", file=sys.stderr)
                     return kernel.REFUSED
@@ -495,11 +523,16 @@ def main(argv: list[str]) -> int:
     if "--to" in opts:
         to = Path(opts["--to"])
         if not to.is_dir():
-            print(
-                f"refused: {to} isn't a folder that's there; make it first",
-                file=sys.stderr,
-            )
-            return kernel.REFUSED
+            # a new run's own folder is made here; the folder it goes in
+            # never is, so a mistyped path is refused, not built
+            if to.exists() or not to.parent.is_dir():
+                print(
+                    f"refused: {to} can't be a run's folder: "
+                    + ("it is a file" if to.exists() else f"{to.parent} isn't there"),
+                    file=sys.stderr,
+                )
+                return kernel.REFUSED
+            to.mkdir()
         total = sum(len(steps) for _, steps in pools)
         again = "--resume" in opts and any(to.iterdir())
         if again and not (to / f"{'0' * max(2, len(str(total)))}-stack.txt").is_file():
@@ -543,6 +576,8 @@ def main(argv: list[str]) -> int:
                 live = run.start(nsteps, name, args, str(box)) if run else None
                 if hands(args):
                     args = run.handed(flat, args)[0]
+                if run:
+                    args = [a.replace(RUN, str(run.folder)) for a in args]
                 if report:
                     code, out = run_step(scripts[name], [*args, "--json"], str(box))
                     doc, out = as_report(code, out)
@@ -571,7 +606,7 @@ def main(argv: list[str]) -> int:
 
     doc = compose(ran, str(box))
     print(doc, end="")
-    print(f"\n{flagged} of {nsteps} steps flagged (exit 42).")
+    print(f"\n{flagged} of {nsteps} steps flagged (exit {worst}).")
     if run:
         run.say(f"done: {flagged} of {nsteps} steps flagged")
     return worst

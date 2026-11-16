@@ -85,7 +85,7 @@ def served_for(box: Path, question: str) -> tuple[list[dict], int]:
         alias, _, why = kernel.read_words(Path(cfg["words"]), box)
         if why is not None:
             raise ValueError(why)
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     out, echoes = [], 0
     for c in kernel.rank(pile, question, alias):
         if kernel.echo(question, c["text"]):

@@ -115,7 +115,7 @@ def main(argv: list[str]) -> int:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
     cfg = kernel.config(box)
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     if verb == "words":
         lines = words_lines(pile)
         print("\n".join(lines) if lines else "No word of your files has an accent.")

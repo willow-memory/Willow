@@ -3,11 +3,11 @@ section: For maintainers
 line: What willow's repo needs from GitHub, kept in one folder so it can be taken away.
 source: box
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.2
 writes: nothing
 network: GitHub, through gh, to read the author of a pull request a security report points to, and for create_pr.py to list the open pull requests and open yours
 role: repo
-uses: ci, readme, ready, stack
+uses: ci, pr-ready, readme, stack
 runs-in: repo
 -->
 # github
@@ -24,14 +24,14 @@ kernel and every other add-on run and test the same without it.
 | [host.json](host.json) | how GitHub titles the merge of a pull request, for `adapters/stdlib/ci/whose.py --host` |
 | `report` | a security report's comment: the pull request behind each line the report names, and its author, tagged |
 | `check` | `.github/` held to the repo: one CI run per change (pushes run on main only, a pull request's newer commit cancels the run it replaces, and a push the merge queue already ran stands on that run: every job that runs a gate needs `queued` and stands down), the CI matrix, each of ci.py's gates run by exactly one job and every job on the same Pythons, the idea form, the security form, and the changelog job skipping Dependabot's pull requests and no one else's |
-| [create_pr.py](create_pr.py) | this branch's pull request: GitHub's part around [ready](../ready/)'s steps; see below |
+| [create_pr.py](create_pr.py) | this branch's pull request: GitHub's part around [pr-ready](../pr-ready/)'s steps; see below |
 | `.github/` | GitHub reads it only at the repo's root, so it lives there, but it belongs to this folder and `check` holds it |
 
 **Opening a pull request.** Commit the change, its changelog fragment with
 it (`changes/+<branch>.<kind>.md`, [changes/README.md](../../../changes/README.md)),
 then run `create_pr.py`. Everything that needs no host is
-[ready](../ready/)'s: its `check`, its `run` of
-[steps.md](../ready/steps.md), a [stack](../stack/) of the repo's own
+[pr-ready](../pr-ready/)'s: its `check`, its `run` of
+[steps.md](../pr-ready/steps.md), a [stack](../stack/) of the repo's own
 add-ons in order (`restack` brings main in, [made.py](../ci/made.py) makes
 again every file a script makes, `ci` lints, `test-impact` runs the gates
 the change reaches, `against` holds it to the open pull requests), and its

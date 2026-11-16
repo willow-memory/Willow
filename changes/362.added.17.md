@@ -1,0 +1,1 @@
+`hearts`: Hearts on the record for four seats, hands open and every deal seeded by the record's tip; the passes, following suit, hearts broken, the first trick clean and shooting the moon held to game-lab's rules

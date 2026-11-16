@@ -131,7 +131,12 @@ class Person:
         ]
 
     def job(self, text: str) -> str:
-        """A job taken and sealed, as `kart take` and the person leave one."""
+        """A job taken and sealed, as `kart take` and the person leave one. The
+        same job again is the one already sealed: the kernel offers it once
+        (CONST-V-11)."""
+        done = self.__dict__.setdefault("sealed_jobs", {})
+        if text in done:
+            return done[text]
         run(KERNEL, "bite", "--box", self.box, "my job", *NOW)
         (self.dir / "s.jsonl").write_text(
             json.dumps(
@@ -142,6 +147,7 @@ class Person:
         subj = run(KERNEL, "propose", "--box", self.box, "--file", self.dir / "s.jsonl",
                    *NOW).stdout.split()[1]  # fmt: skip
         self.seal(subj)
+        done[text] = subj
         return subj
 
     def seal(self, subj: str) -> None:

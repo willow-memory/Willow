@@ -1,4 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Put your willow together</title><style>
 /* Willow. Ground: the silvery underside of a willow leaf. Ink: bark. Green: the leaf, for what you've chosen.
    Catkin yellow: only for what is waiting on you. Mono: anything that is a record (paths, counts, tags, options).
@@ -165,6 +166,9 @@ h3{font:600 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.09em;c
 .folder span{flex:1;min-width:0;word-break:break-all;font:13px var(--mono)}.folder small{color:var(--mute);font-variant-numeric:tabular-nums}
 #picker{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:8px;margin-top:8px}
 .ppath{font-family:var(--mono);font-size:12px;word-break:break-all;margin-bottom:6px;color:var(--mute)}
+.pplaces{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.pplaces button{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);color:var(--ink);cursor:pointer}
+.pplaces button.on{background:var(--accl);border-color:var(--acc)}
 .plist{max-height:280px;overflow:auto;border-top:1px solid var(--line)}
 .plist div{padding:5px 6px;cursor:pointer;border-bottom:1px solid var(--line2);font-size:14px}.plist div:hover{background:var(--accl)}.plist .up{color:var(--mute)}
 
@@ -242,9 +246,9 @@ const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Obje
 // (see roleOf); a card's section is what it's about, and shows as the headings inside a role.
 const STAGES=[
  {key:'folders',title:'Your folders',say:'What willow may read. It only ever reads them: it never changes, moves or uploads a file.'},
+ {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
  {key:'reads',title:'What it reads',group:'rank',say:'Readers turn PDFs, email, chats and office files into plain text beside your folder, so the kernel can search them. They run over your folders before anything else. Without any, it reads plain text, markdown and web pages.'},
  {key:'words',title:'What words it knows',group:'rank',say:'Words lists: a language’s common words, its word forms, and your own (the names you call people, your shorthand), so a question finds what your files call it. The kernel uses them on every question.'},
- {key:'kernel',title:'Willow’s kernel',fixed:true,say:'What it does on your folders alone, before any add-on, shown below as counts. Every question comes here. It finds the passages of your files that hold the question’s words and gives up to three, each with its file and line. If none do, it says it doesn’t know. Every step goes on a record that can’t be quietly changed.'},
  {key:'page',title:'What runs on your page',ordered:true,group:'section',say:'The steps that run each time your page is made: what’s coming up, what needs you, what changed. Your page shows what says the most first, whatever their order here; the order only breaks ties, and matters only for a step that writes your record, which runs before the ones after it.'},
  {key:'suggests',title:'What suggests answers',group:'suggests',say:'Models that suggest an answer from your passages, each citing what it read and held until you seal it, and the checks that tell you whether to trust a model first. None of them can approve anything.'},
  {key:'ways',title:'Where you ask from',group:'ways',say:'Your terminal, your editor, an AI assistant such as Claude Code, a page in your browser. Each is set up once, then you ask from there. Without one, you type commands.'},
@@ -284,16 +288,31 @@ function baselines(){const box=el('div',{class:'base'});
  if(!S.folders.length){box.append(el('div',{class:'none',text:'Choose a folder first: this is where you’ll see what the kernel makes of it on its own.'}));return box}
  for(const f of S.folders){const b=BASE[f.path];if(!b){baseline(f.path);continue}
   const sec=el('div',{class:'bfold'},el('div',{class:'bpath',text:f.path}));box.append(sec);
-  if(b.loading){sec.append(el('div',{class:'none',text:'Reading it the way the kernel does…'}));continue}
+  if(b.loading){sec.append(el('div',{class:'none',text:'Reading it the way the kernel does, and trying the readers on a few of its files…'}));continue}
   if(!b.ok){sec.append(el('div',{class:'none',text:b.why}));continue}
   sec.append(el('div',{class:'bline'},el('b',{text:n2(b.read,'file')}),' it can read, making ',el('b',{text:n2(b.passages,'passage')}),' it can answer from.'));
-  const cant=b.cant.reduce((t,c)=>t+c.files,0);
-  if(!cant)sec.append(el('div',{class:'bline ok',text:'Every file it found, it can read.'}));
-  else{sec.append(el('div',{class:'bline',text:n2(cant,'file')+' it can’t read:'}));const ul=el('ul',{class:'bcant'});
-   for(const c of b.cant){const why=Object.entries(c.why).map(([w,n])=>w).join(', ');
-    const adds=c.readers.map(r=>all().includes(r)?el('span',{class:'tag have',text:r+' ✓'}):cantAdd(r)?el('span',{class:'tag',text:r+' ('+cantAdd(r)+')'}):el('button',{class:'link',text:'+ '+r,title:P[r]?.line||'',onclick:()=>addPiece(r)}));
-    ul.append(el('li',{},el('b',{text:c.kind}),' '+c.files+' · '+why+(adds.length?' · could be read by ':c.text?'':' · no reader for it yet'),...adds.flatMap((a,i)=>i?[' ',a]:[a])))}
-   sec.append(ul)}
+  // what helps first: kinds a reader took when tried on a few (it can't read them, or reads them only as plain text);
+  // then kinds a card says it reads but none took; then, a line each, the kinds no reader here reads and the text it skips
+  const cant=b.cant,nCant=cant.reduce((t,c)=>t+c.files,0),fit=(b.better||[]).filter(c=>c.fits.length),loose=(b.better||[]).filter(c=>c.any.length);
+  const taken=cant.filter(c=>(c.fits||[]).length),claimed=cant.filter(c=>!(c.fits||[]).length&&c.readers.length),
+   none=cant.filter(c=>!c.readers.length&&!c.text),skipped=cant.filter(c=>c.text);
+  sec.append(el('div',{class:'bline'+(nCant?'':' ok'),text:nCant?n2(nCant,'file')+' it can’t read, of '+n2(cant.length,'kind')+'.':'Every file it found, it can read.'}));
+  const took=(c,r)=>{const said=' ('+r.took+' of '+c.tried+')';return all().includes(r.name)?el('span',{class:'tag have',text:r.name+' ✓'+said}):cantAdd(r.name)?el('span',{class:'tag',text:r.name+' ('+cantAdd(r.name)+')'}):el('button',{class:'link',text:'+ '+r.name+said,title:P[r.name]?.line||'',onclick:()=>addPiece(r.name)})};
+  const join=a=>a.flatMap((x,i)=>i?[' ',x]:[x]);
+  const list=(head,rows)=>{if(!rows.length)return;sec.append(el('div',{class:'bline',text:head}));const ul=el('ul',{class:'bcant'});rows.forEach(r=>ul.append(r));sec.append(ul)};
+  list('It can’t read these, but a reader took them:',taken.map(c=>el('li',{},el('b',{text:c.kind}),' '+c.files+' · tried on '+c.tried+(c.big?' ('+c.big+' over 8 MB, not tried)':'')+' · taken by ',...join(c.fits.map(r=>took(c,r))))));
+  list('Read as plain text, but a reader knows their shape:',fit.map(c=>el('li',{},el('b',{text:c.kind}),' '+c.files+' · tried on '+c.tried+' · taken by ',...join(c.fits.map(r=>took(c,r))))));
+  // a card's word only: tried here and none taken (said so, or that it needs its install), or one that couldn't be tried
+  const claim=(c,r)=>all().includes(r)?el('span',{class:'tag have',text:r+' ✓'}):cantAdd(r)?el('span',{class:'tag',text:r+' ('+cantAdd(r)+')'}):
+   c.tried&&P[r]?.needs?el('button',{class:'link',text:'+ '+r+' (needs its install)',title:P[r]?.line||'',onclick:()=>addPiece(r)}):
+   c.tried&&P[r]?.network==='none'?el('span',{class:'tag',title:'tried on '+c.tried+' of yours: it took none of them',text:r+' took none'}):
+   el('button',{class:'link',text:'+ '+r,title:P[r]?.line||'',onclick:()=>addPiece(r)});
+  list('A reader’s card says it reads these, but none took them'+(claimed.some(c=>!c.tried)?', or they couldn’t be tried here':'')+':',
+   claimed.map(c=>el('li',{},el('b',{text:c.kind}),' '+c.files+' · '+(c.tried?'tried on '+c.tried+(c.big?' ('+c.big+' over 8 MB, not tried)':'')+' · ':c.big?'none tried, each over 8 MB · ':'')+'could be read by ',...join(c.readers.map(r=>claim(c,r))))));
+  if(none.length)sec.append(el('div',{class:'bline mute',text:'No reader here reads '+n2(none.reduce((t,c)=>t+c.files,0),'file')+' of '+n2(none.length,'kind')+': '+none.map(c=>c.kind+' '+c.files).join(', ')+'.'}));
+  if(skipped.length)sec.append(el('div',{class:'bline mute',text:'Text it skips, which no reader fixes: '+skipped.map(c=>c.kind+' '+c.files+' ('+Object.keys(c.why).map(w=>w.replace('text in another encoding than UTF-8','another encoding').replace(/over the kernel's (\d+) MB a file/,'over $1 MB')).join(', ')+')').join(', ')+'.'}));
+  if(loose.length){const by={};for(const c of loose)for(const r of c.any)(by[r.name]??=[]).push(c.kind);
+   sec.append(el('div',{class:'bline mute',text:'Readers that take any file of a kind, whatever is in it: '+Object.entries(by).map(([n,k])=>n+' ('+k.join(', ')+')').join(', ')+'.'}))}
   if(b.hidden)sec.append(el('div',{class:'bline mute',text:n2(b.hidden,'file')+' in hidden folders, which it never reads.'}))}
  box.append(el('div',{class:'bline mute',text:'Counts only: nothing of what your files say, and none of their names, is shown here.'}));return box}
 // ── saved batches: the add-ons you picked, by name ──────────────────────────
@@ -477,13 +496,14 @@ function stacktree(){const t=document.getElementById('stacktree');t.innerHTML=''
 // ── the shelf: what can go in the chosen stage ──────────────────────────────
 async function browse(path){const r=await api('dirs?path='+encodeURIComponent(path));if(!document.getElementById('ppath'))return;if(!r.ok){say(r.path+': '+r.why,1);return}here=r.path;
  document.getElementById('ppath').textContent=r.path;const l=document.getElementById('plist');l.innerHTML='';
+ const pl=document.getElementById('pplaces');if(pl){pl.innerHTML='';for(const x of r.places||[])pl.append(el('button',{class:x.path===r.path?'on':'',text:x.name,onclick:()=>browse(x.path)}))}
  if(r.parent)l.append(el('div',{class:'up',text:'↑ up to '+r.parent,onclick:()=>browse(r.parent)}));
  for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
-async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(!S.folders.some(f=>f.path===r.path))S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
+async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(S.folders.some(f=>f.path===r.path)){say(r.path+' is already one of your folders');return}S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
 function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');head.innerHTML='';box.innerHTML='';
  if(!s||s.fixed)return;head.append(el('h3',{text:s.key==='folders'?'Add a folder':'Add-ons for this step'}));
  if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
-  box.append(el('div',{id:'picker'},el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
+  box.append(el('div',{id:'picker'},el('div',{class:'pplaces',id:'pplaces'}),el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
  const q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
  const grouped=s.group!=='rank',mine=Object.values(P).filter(p=>stageOf(p)===s.key),inStage=new Set(grouped?[]:mine.map(p=>p.name));
@@ -493,7 +513,7 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
  head.append(el('div',{class:'counts'},el('span',{text:mine.length+' add-on'+(mine.length===1?'':'s')}),el('span',{class:'in',text:nIn+' in your stack'}),nNo?el('span',{text:nNo+' can’t be added yet'}):null,
   nNo?el('button',{class:'link',text:HIDE?'show them':'hide them',onclick:()=>{HIDE=!HIDE;try{localStorage.setItem('willow-canvas-hide',HIDE?'1':'0')}catch(e){}shelf()}}):null));
  // first: for reading, the readers the kernel's counts name for files in your folders; else what the examples run
- const want=new Set(S.folders.flatMap(f=>(BASE[f.path]?.cant||[]).flatMap(c=>c.readers))),first=p=>s.key==='reads'?want.has(p.name):p.in_examples>0;
+ const want=new Set(S.folders.flatMap(f=>[...(BASE[f.path]?.cant||[]).flatMap(c=>c.readers),...(BASE[f.path]?.better||[]).flatMap(c=>c.fits.map(r=>r.name))])),first=p=>s.key==='reads'?want.has(p.name):p.in_examples>0;
  const rank=p=>cantAdd(p.name)?2:first(p)?0:1,order=(a,b)=>rank(P[a])-rank(P[b])||a.localeCompare(b);
  const node=(n,depth,trail)=>{const p=P[n],kids=(under[n]||[]).filter(c=>!trail.includes(c)&&!hidden(c)).sort(order),used=all().includes(n),no=cantAdd(n);
   const cb=el('input',{type:'checkbox',title:no||(used?'take it out':'add it')});cb.checked=used;cb.disabled=!!no&&!used;

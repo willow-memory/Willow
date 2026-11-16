@@ -133,6 +133,10 @@ def verdict_line(gate: str, state: str, why: str | None, skips: str | None) -> s
 
 # ── gates ────────────────────────────────────────────────────────────────────
 def run(argv: tuple, cwd: Path = ROOT, env: dict | None = None) -> tuple[int, str]:
+    if env is None:
+        # the read check is for the gate that asks for it (guarded(reads=True)),
+        # never for a gate run from inside one, as ci.py's own tests do
+        env = {k: v for k, v in os.environ.items() if k != "WILLOW_GUARD_READS"}
     got = subprocess.run(
         argv, cwd=cwd, env=env,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
@@ -174,17 +178,21 @@ def command(*argv: str, needs=None, judge=None, env: dict | None = None):
 GUARD = Path(__file__).resolve().parent / "guard"
 
 
-def guarded(log: Path) -> dict:
+def guarded(log: Path, reads: bool = False) -> dict:
     """The environment the add-on tests run in: the guard (guard/
     sitecustomize.py) loaded into every process they start, its breaches
     written to `log`, and no bytecode written, which is the import system's
-    doing and not the add-on's."""
+    doing and not the add-on's. With `reads`, what they read of the repo is
+    held to each add-on's reach too (reach.py), which ci-memo keys on."""
     env = dict(os.environ)
     env["PYTHONPATH"] = os.pathsep.join(
         p for p in (str(GUARD), env.get("PYTHONPATH", "")) if p
     )
     env["WILLOW_GUARD_LOG"] = str(log)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env.pop("WILLOW_GUARD_READS", None)
+    if reads:
+        env["WILLOW_GUARD_READS"] = "1"
     return env
 
 
@@ -199,7 +207,7 @@ def breaches(log: Path) -> str | None:
     return "; ".join(lines)[:400] if lines else None
 
 
-def guarded_tests(*target: str, junit: str = ""):
+def guarded_tests(*target: str, junit: str = "", reads: bool = False):
     """pytest over `target` under the guard: failing on a failed test, or on
     any breach of a card's promises. With WILLOW_JUNIT_DIR set (CI, on main)
     and a `junit` name, pytest's times are written there as NAME.xml, which
@@ -213,7 +221,7 @@ def guarded_tests(*target: str, junit: str = ""):
         xml = (f"--junitxml={Path(where) / junit}.xml",) if where and junit else ()
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "guard.log"
-            code, said = run((*PYTEST, *target, *xml), env=guarded(log))
+            code, said = run((*PYTEST, *target, *xml), env=guarded(log, reads))
             broke = breaches(log)
         if broke:  # first: a breach is why the tests failed, if they did
             return FAILING, said, f"broke its card's promises: {broke}"
@@ -556,11 +564,21 @@ def mutant_targets() -> list[str]:
 
 
 SHARDS = ROOT / "adapters" / "stdlib" / "test-shards" / "shards.py"
+_reach_spec = importlib.util.spec_from_file_location(
+    "willow_reach_for_ci", Path(__file__).resolve().parent / "reach.py"
+)
+REACH = importlib.util.module_from_spec(_reach_spec)
+_reach_spec.loader.exec_module(REACH)
 #: one pytest over every add-on took eight minutes, and tests:strip ran it
 #: again, so each is cut into gates a job runs a few of: tests:adapters-1 to
 #: -8, tests:strip-1 to -4 (--shard then spreads them over jobs)
 ADAPTER_CHUNKS = 8
 STRIP_CHUNKS = 4
+#: of the adapters chunks, how many hold the add-ons whose tests read past
+#: their reach (reach.py: the repo's own tools, and any add-on reading docs,
+#: lists or demos). The rest hold the ones that read only their reach, so a
+#: change to one of those re-runs its chunk, and ci-memo stands the others.
+ADAPTER_WIDE = 3
 
 
 def load_shards():
@@ -591,27 +609,31 @@ def chunks(files: list[str], n: int, base: Path = ROOT) -> list[list[str]]:
 
 
 #: what a gate costs, in seconds on a CI runner, for the ones TIMES can't
-#: price: from the last green main run (tests:alone ran with tests:adapters-1
-#: in about 540 s, tests:docs with tests:adapters-5 in about 430). A gate it
-#: doesn't list weighs DEFAULT_COST. Only the balance of the shards depends on
-#: these, never which gate runs.
+#: price: from #353's tests (3.14) job, 2026-11-12, its four lanes at once,
+#: each pytest gate's own "passed in", and alone by its lane's end less the
+#: rest (tests:alone about 546 s beside tests:kernel and tests:adapters-7). A
+#: gate it doesn't list weighs DEFAULT_COST. Only the balance of the shards
+#: depends on these, never which gate runs.
 GATE_COST = {
-    "tests:alone": 310,
-    "tests:docs": 340,
-    "tests:kernel": 30,
-    "tests:beats": 20,
-    "tests:ui": 60,
-    "tests:vectors": 30,
-    "tests:constitution": 30,
-    "tests:coverage": 30,
+    "tests:alone": 550,
+    "tests:docs": 90,
+    "tests:kernel": 15,
+    "tests:beats": 5,
+    "tests:ui": 150,
+    "tests:vectors": 10,
+    "tests:constitution": 5,
+    "tests:coverage": 5,
     "lint:check": 10,
     "lint:format": 10,
     "lint:py39": 10,
 }
 DEFAULT_COST = 30
-#: TIMES was taken on a busier box than a CI runner: about this much of a
-#: second there is a second of a runner's
-TIMES_TO_RUNNER = 0.5
+#: TIMES is written by times.py from main's own CI run (since bc34c98d), so
+#: its seconds are already a runner's, taken four lanes at once as cores.py
+#: runs them: a second there is a second here. (It was 0.5 when TIMES was
+#: taken by hand on a busier box; kept at 0.5, it priced every adapter chunk
+#: at half, and the shards put five of them in one lane.)
+TIMES_TO_RUNNER = 1.0
 #: a mutants gate copies the add-on, then runs its tests once per break, and
 #: CI makes six breaks
 MUTANT_BREAKS = 6
@@ -630,7 +652,7 @@ def gate_weight(gate: str) -> int:
     median = known[len(known) // 2] if known else 1.0
     got = re.fullmatch(r"tests:adapters-(\d+)", gate)
     if got and 1 <= int(got.group(1)) <= ADAPTER_CHUNKS:
-        part = chunks(adapter_tests(), ADAPTER_CHUNKS)[int(got.group(1)) - 1]
+        part = adapter_parts()[int(got.group(1)) - 1]
         seconds = TIMES_TO_RUNNER * sum(times.get(f, median) for f in part)
     elif gate.startswith("mutants:"):
         folder = f"adapters/stdlib/{gate[len('mutants:') :]}/"
@@ -639,6 +661,19 @@ def gate_weight(gate: str) -> int:
     else:
         seconds = GATE_COST.get(gate, DEFAULT_COST)
     return max(1, round(seconds))
+
+
+def adapter_parts(base: Path = ROOT) -> list[list[str]]:
+    """The adapters chunks: the tests of add-ons drawn wide (reach.py) cut
+    into ADAPTER_WIDE, the rest into the other chunks, each by time."""
+    tests = adapter_tests(base)
+    wide = {
+        t for t in tests if REACH.reach(str(base), "stdlib/" + t.split("/")[2]) is None
+    }
+    narrow = [t for t in tests if t not in wide]
+    return chunks(sorted(wide), ADAPTER_WIDE, base) + chunks(
+        narrow, ADAPTER_CHUNKS - ADAPTER_WIDE, base
+    )
 
 
 def adapter_tests(base: Path = ROOT) -> list[str]:
@@ -650,11 +685,11 @@ def adapter_tests(base: Path = ROOT) -> list[str]:
     )
 
 
-LIVE = ROOT / "adapters" / "stdlib" / "live" / "live.py"
+LIVE = ROOT / "adapters" / "stdlib" / "ways-live" / "ways_live.py"
 
 
 def live_needs() -> dict[str, tuple[str, ...]]:
-    """Each of live.py's checks and the programs it names, as `live.py list`
+    """Each of ways_live.py's checks and the programs it names, as `ways_live.py list`
     prints them ("vim  needs vim  ...")."""
     got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
     out = {}
@@ -666,7 +701,7 @@ def live_needs() -> dict[str, tuple[str, ...]]:
 
 
 def live_check(name: str):
-    """One of live.py's checks: its program run on the lines its add-on
+    """One of ways_live.py's checks: its program run on the lines its add-on
     prints. A program that isn't installed is unreachable, never a pass."""
 
     def gate() -> tuple[str, str, str | None]:
@@ -687,7 +722,7 @@ def live_check(name: str):
 
 
 def live_checks() -> list[str]:
-    """live.py's checks, by name, as `live.py list` prints them."""
+    """ways_live.py's checks, by name, as `ways_live.py list` prints them."""
     got = subprocess.run([PY, str(LIVE), "list"], capture_output=True, text=True)
     return [line.split()[0] for line in got.stdout.splitlines() if line.strip()]
 
@@ -703,6 +738,11 @@ DEMO_TESTS = (
     # five repositories through the stacks: the stacks, the words list and the
     # records are committed; the runs read the repositories, CI holds the rest
     ("demo:five-repos", "demo/five-repos", ()),
+    # the game box: the GM's binder, a session played by code, offers at the table
+    ("demo:game-box", "demo/game-box/table", ()),
+    # the game box's end of the night: its handwritten page read where ocr can
+    # (tesseract and its requirements), and the night held either way
+    ("demo:game-box-end", "demo/game-box/end", ()),
     # the Google privacy study fetched its sources once; CI holds what it froze
     ("demo:google-privacy-2026-10-16", "demo/google-privacy-2026-10-16", ()),
     # the fleet's own known gaps asked of the code their fixes changed; the
@@ -774,12 +814,12 @@ def gates() -> list[tuple[str, str, object]]:
         ("tests", "tests:kernel", pytest("test_kernel.py")),
         ("tests", "tests:docs", pytest("test_docs.py", "test_docs_fires.py")),
     ]
-    for k, part in enumerate(chunks(adapter_tests(), ADAPTER_CHUNKS), 1):
+    for k, part in enumerate(adapter_parts(), 1):
         out.append(
             (
                 "tests",
                 f"tests:adapters-{k}",
-                guarded_tests(*part, junit=f"adapters-{k}"),
+                guarded_tests(*part, junit=f"adapters-{k}", reads=True),
             )
         )
     # each add-on's tests again, in a copy holding only what its card uses

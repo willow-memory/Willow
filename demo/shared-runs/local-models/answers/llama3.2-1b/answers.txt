@@ -1,0 +1,50 @@
+## the reports
+
+## the sweep
+1: 73.3%
+## the reports don't say
+
+## the baseline: every job alone, no memory
+2: 2
+220
+## the reports don't say
+
+## the shared run
+3: 73.2%
+220
+22
+## the reports don't say
+
+## the check
+4: 1305
+## the reports don't say
+
+## the project's gravity as it is written
+5: 14
+## the reports don't say
+
+## the machines
+6: 3
+## the reports don't say
+
+## the questions
+7: How many jobs were in the sweep?
+8: How many trajectories were they on?
+9: What saving of steps was predicted from the sweep alone, in percent?
+10: How many seconds did the shared run take in all?
+11: What saving of steps was measured, in percent?
+12: How many jobs of the shared run were served whole from memory?
+13: What step did the trajectory sun-vulcan end?
+14: How many jobs of the shared run went on from a kept state?
+15: How many jobs of the shared run took nothing from memory?
+16: How many trajectories began and then halted?
+17: What did the run cost, in dollars?
+18: How many trajectories were refused before a first step?
+19: How many kept states were stepped again?
+20: How many served jobs were run afresh?
+21: Which machines had a graphics card?
+22: How many of those came out the same bytes?
+23: With the project's gravity as it is written, how many jobs came out the same bytes on every machine?
+24: How many kinds of processor ran the jobs?
+25: Which machine stepped the most steps?
+## the reports don't say

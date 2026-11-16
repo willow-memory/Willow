@@ -7,7 +7,7 @@ show, nothing (said as nothing), or couldn't look (said with why):
 
     Waiting for you     suggestions passed the kernel's door, not yet approved
     Gone stale          approved answers whose cited passage changed or went
-                        (the stale add-on's check)
+                        (the stale-answers add-on's check)
     Coming up           dates in your files in the next N days, 14 unless
                         --days says (the coming-up add-on's)
     Asked again         questions asked more than once that your folder
@@ -80,24 +80,21 @@ def section(items: list, why: str = "") -> dict:
 
 
 def waiting(box: Path, rows: list[dict]) -> dict:
-    done = {**kernel.sealed(box, rows), **kernel.declined(box, rows)}
     items = []
-    for r in rows:
-        subj = r.get("subject", "")
-        if r["kind"] == "proposal" and r.get("verdict") == "pass" and subj not in done:
-            try:
-                prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
-            except (OSError, ValueError):
-                prop = {"data": "", "claim": "its file in the box couldn't be read"}
-            items.append({"subject": subj, "answer": prop.get("data", ""),
-                          "why": prop.get("claim", "")})  # fmt: skip
+    for subj in kernel.waiting(box, rows):  # each thing to decide once (CONST-V-11)
+        try:
+            prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+        except (OSError, ValueError):
+            prop = {"data": "", "claim": "its file in the box couldn't be read"}
+        items.append({"subject": subj, "answer": prop.get("data", ""),
+                      "why": prop.get("claim", "")})  # fmt: skip
     return section(items)
 
 
 def gone_stale(box: Path) -> dict:
-    stale = sibling("stale", "stale")
+    stale = sibling("stale-answers", "stale_answers")
     if stale is None:
-        return section([], "the stale add-on isn't here")
+        return section([], "the stale-answers add-on isn't here")
     _, entries = stale.check(box)
     return section([e for e in entries if e.get("gone")])
 
@@ -106,9 +103,9 @@ def coming_up(box: Path, today: date, days: int) -> dict:
     cu = sibling("coming-up", "coming_up")
     if cu is None:
         return section([], "the coming-up add-on isn't here")
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.folder(kernel.config(box))
     return section([{"date": d.isoformat(), "where": where, "line": line}
-                    for d, where, line in cu.coming(pile, today, days)])  # fmt: skip
+                    for d, where, line in cu.coming_in(pile, today, days)])  # fmt: skip
 
 
 def asked_again(rows: list[dict]) -> dict:

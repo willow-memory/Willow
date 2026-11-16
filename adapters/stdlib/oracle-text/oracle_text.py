@@ -20,7 +20,7 @@ that is none of those is kept as written. With no --grammar, a small grammar of
 its own is used.
 
 **Every branch is picked by willow's seeded stream** (sha256-stream/v1, the one
-[tarot](../tarot/) deals from): SHA-256 over the seed and a counter, `below(k)`
+[play-tarot](../play-tarot/) deals from): SHA-256 over the seed and a counter, `below(k)`
 by rejection. The reading numbered i is made from the seed "TEXT:oracle:i"
 alone, so the same seed, grammar and number give the same reading on any
 machine, whoever runs it, and a reading can be made again to check it. Nothing
@@ -44,9 +44,9 @@ from pathlib import Path
 
 STDLIB = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(STDLIB.parents[1]))
-sys.path.insert(0, str(STDLIB / "tarot"))
+sys.path.insert(0, str(STDLIB / "play-tarot"))
 import kernel  # noqa: E402
-import tarot  # noqa: E402
+import play_tarot  # noqa: E402
 
 DEPTH = 40  # nested expansions before rules are called endless
 BUILTIN = {
@@ -143,7 +143,7 @@ def reading(grammar: dict, seed: str, i: int, origin: str = "origin") -> str:
     """The i-th reading of a seed: the origin expanded from the stream alone."""
     if origin not in grammar:
         raise Refused(f"no symbol {origin!r} in the grammar")
-    rng = tarot.Stream(f"{seed}:oracle:{i}".encode())
+    rng = play_tarot.Stream(f"{seed}:oracle:{i}".encode())
     return expand(f"#{origin}#", grammar, rng, {})
 
 

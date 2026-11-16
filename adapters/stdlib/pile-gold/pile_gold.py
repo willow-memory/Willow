@@ -42,7 +42,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
 sys.path.insert(0, str(HERE.parent / "pile-rank"))
-sys.path.insert(0, str(HERE.parent / "scan"))
+sys.path.insert(0, str(HERE.parent / "batch-ask"))
 import kernel  # noqa: E402
 import pile_rank  # noqa: E402
 import scan  # noqa: E402
@@ -137,7 +137,7 @@ def main(argv: list[str]) -> int:
               "sealed; nothing recorded")  # fmt: skip
         return kernel.ESCALATE
     store = Path(opts["--store"]) if "--store" in opts else None
-    pile, where = pile_rank.passages(Path(cfg["pile"]), store)
+    pile, where = pile_rank.passages(kernel.folder(cfg), store)
     dated = (lambda p: [c["date"] for c in p]) if where == "store" else None
     got = score(pile, asked, alias, dated)
     for line in got["lines"]:

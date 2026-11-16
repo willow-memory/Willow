@@ -194,7 +194,7 @@ def test_the_twenty_lines_are_the_stack_add_ons_word_for_word():
     mine = ast.parse(SCRIPT.read_text())
     theirs = ast.parse(
         # the path in one string: test-impact reads a bare "stack.py" as every
-        # file so named, and demo/bernadette has one that imports changed.py
+        # file so named, and demo/bernadette has one that imports what_changed.py
         (ROOT / "adapters/stdlib/stack/stack.py").read_text(encoding="utf-8")
     )
 

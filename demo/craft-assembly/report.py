@@ -458,11 +458,11 @@ def render_checks() -> str:
           f"named by {len(x['rows'])} rows ({', '.join(str(row['n']) for row in x['rows'])})")  # fmt: skip
     w("")
     w("## Every reference in the folder, by xref\n")
-    w("    python adapters/stdlib/xref/xref.py --from demo/craft-assembly\n")
+    w("    python adapters/stdlib/ref-check/ref_check.py --from demo/craft-assembly\n")
     w(
         "    "
         + quiet(
-            ["adapters/stdlib/xref/xref.py", "--from", "demo/craft-assembly"]
+            ["adapters/stdlib/ref-check/ref_check.py", "--from", "demo/craft-assembly"]
         ).replace("\n", "\n    ")
         + "\n"
     )

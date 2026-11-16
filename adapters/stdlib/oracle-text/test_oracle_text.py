@@ -57,7 +57,7 @@ def test_the_modifiers():
 
 
 def test_symbols_modifiers_chains_and_plain_text_expand():
-    rng = ot.tarot.Stream(b"x")
+    rng = ot.play_tarot.Stream(b"x")
     g = only(
         "#animal.a.capitalize# met #box.s.allCaps#, a #x# and a #z.s#. 100% # kept"
     )
@@ -186,7 +186,7 @@ def test_the_sibling_it_reads_through_is_put_at_the_front():
             [sys.executable, "-c", code], capture_output=True, text=True
         ).stdout
     )
-    here = got.index(str(HERE.parent / "tarot"))
+    here = got.index(str(HERE.parent / "play-tarot"))
     root = str(HERE.parents[2])
     assert got[here - 1] == root and got[here + 1] == root, (
         "the sibling is put at the front, so nothing else answers to its name"

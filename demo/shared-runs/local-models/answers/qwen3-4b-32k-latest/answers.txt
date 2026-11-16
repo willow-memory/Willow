@@ -1,0 +1,28 @@
+jobs: 220
+trajectories: 22
+predicted: 73.3
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+## account
+The sweep ran 220 jobs across 22 trajectories on 5 machines in 2 rounds, keeping a state every 100 steps and predicting 73.3% of steps could be skipped.  
+The baseline run (each job alone) stepped 1,256,518 steps for one job, with 220 jobs producing identical bytes in every baseline run and a predicted saving of 73.7%.  
+The shared run executed 220 jobs using 10 machine runs: 22 jobs took no memory, 169 jobs continued from a kept state, and 29 jobs were served whole, stepping 336,379 steps with a measured saving of 73.2%.  
+Three trajectories began and halted, and one trajectory was refused before a first step.  
+Additionally, 1,305 kept states were stepped again and produced identical bytes, and 20 served jobs were run afresh and also produced identical bytes.  
+The project's gravity as written showed 14 jobs produced identical bytes on every machine.

@@ -287,7 +287,7 @@ def main(argv: list[str]) -> int:
         if not (box / "kernel.json").exists():
             print("refused: not a kernel box; init first", file=sys.stderr)
             return kernel.REFUSED
-        source = Path(kernel.config(box)["pile"])
+        source = kernel.folder(kernel.config(box))
     else:
         source = Path(opts["--from"])
         if not source.exists():

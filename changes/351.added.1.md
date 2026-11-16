@@ -1,0 +1,1 @@
+`pieces`: a folder's passages a folder at a time, the same ones and in the same order as the kernel reads them, so a big folder is never held in memory all at once; `coming-up`, `stale`, `digest` and `browse` read through it when it is beside them, where opening a 3.4 GB folder on the page grew it to 12.8 GB and the system stopped it (it now peaks near 130 MB)

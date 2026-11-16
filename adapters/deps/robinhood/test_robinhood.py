@@ -12,6 +12,7 @@ import socket
 import subprocess
 import sys
 import threading
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from types import SimpleNamespace
@@ -242,3 +243,40 @@ def test_only_https_or_this_machine_is_allowed():
     assert not rh.allowed_url("http://agent.robinhood.com/mcp/trading")
     assert not rh.allowed_url("ftp://127.0.0.1/x")
     assert threading  # imported for the sign-in test's server
+
+
+def test_the_sign_ins_return_keeps_its_issuer_for_the_sdk_to_check():
+    """Robinhood's sign-in sends `iss` back with the code, and the SDK
+    refuses a return without it when the server says it sends one: the
+    first real sign-in failed so, with nothing written."""
+    pytest.importorskip("mcp")
+    from mcp.client.auth.exceptions import OAuthFlowError
+    from mcp.client.auth.utils import validate_authorization_response_iss
+    from mcp.shared.auth import OAuthMetadata
+
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+    httpd, thread, got = rh.return_server(port)
+    thread.start()
+    issuer = "https://auth.example.test/"
+    q = urllib.parse.urlencode({"code": "the-code", "state": "st", "iss": issuer})
+    with urllib.request.urlopen(f"http://127.0.0.1:{port}/callback?{q}") as r:
+        assert r.status == 200
+    thread.join(5)
+    httpd.server_close()
+    back = rh.returned(got)
+    assert (back.code, back.state, back.iss) == ("the-code", "st", issuer)
+    meta = OAuthMetadata(
+        issuer=issuer,
+        authorization_endpoint=issuer + "authorize",
+        token_endpoint=issuer + "token",
+        authorization_response_iss_parameter_supported=True,
+    )
+    validate_authorization_response_iss(back.iss, meta)  # the SDK takes it
+    with pytest.raises(OAuthFlowError):
+        validate_authorization_response_iss(rh.returned({"code": "c"}).iss, meta)
+    with pytest.raises(OAuthFlowError):
+        validate_authorization_response_iss(
+            rh.returned({"code": "c", "iss": "https://elsewhere.test/"}).iss, meta
+        )

@@ -1,0 +1,1 @@
+`duplicates`: `--runs` finds runs of 8 words or more that two files share however each broke its paragraphs, cut where the files sharing a stretch change, where the plain mode compares passages the kernel cut differently and found one passage of a hundred shared words

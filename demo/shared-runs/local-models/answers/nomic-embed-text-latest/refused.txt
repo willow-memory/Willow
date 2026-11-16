@@ -1,0 +1,2 @@
+HTTP Error 400: Bad Request
+{"error":"\"nomic-embed-text:latest\" does not support generate"}

@@ -1,0 +1,24 @@
+jobs: 220
+trajectories: 22
+predicted: 73.3%
+seconds: 336379
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2%
+served: 14
+vulcan: 100000000 (the reports don't say)
+stepped-on: 169
+computed: 10
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+## account
+
+The run involved 220 jobs distributed across 22 trajectories using 5 machines. Predicted step savings from the sweep alone were 73.3%. The shared run took 336379 steps, achieving a measured saving of 73.2%. Baseline runs showed significant savings at 73.7%. Machines involved included AMD x86_64 avx2, Intel x86_64 avx2, and Intel x86_64 avx512. The run did not provide information on the cost, the busiest machine, or the step at which the trajectory sun-vulcan ended. 

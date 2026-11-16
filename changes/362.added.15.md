@@ -1,0 +1,1 @@
+`bureau`: bureau, the Bureaucracy homage at UTETY, on the record, seeded by the tip with its own xorshift32 so the browser engine plays the same game; the deadlock proved by `prove`, every move a row carrying its state, and check replaying each game from its seed

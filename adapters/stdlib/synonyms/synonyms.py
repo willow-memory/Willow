@@ -279,7 +279,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    held = passages(kernel.chunks(Path(cfg["pile"])))
+    held = passages(kernel.pile_of_box(cfg))
     ask = None
     if "--embed" in opts:
 

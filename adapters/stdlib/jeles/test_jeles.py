@@ -275,3 +275,24 @@ def test_one_line_and_verified_wording():
         == "human, by ada, 2026-10-01"
     )
     assert jeles._verified(None, None, None) == "unknown"
+
+
+def _wal(path: Path) -> None:
+    con = sqlite3.connect(path)
+    con.execute("PRAGMA journal_mode=WAL")
+    con.close()
+
+
+def test_a_wal_database_is_read_and_nothing_is_written_beside_it(tmp_path):
+    """A database in WAL mode opened with mode=ro alone gets a -shm and -wal
+    file beside it: a write to the person's folder. Opened immutable, none."""
+    folder, to = tmp_path / "f", tmp_path / "m"
+    folder.mkdir()
+    db = folder / "store.db"
+    store(db)
+    _wal(db)
+    before = {p.name: p.read_bytes() for p in folder.iterdir()}
+    got = run(str(SCRIPT), "mirror", "--from", str(folder), "--to", str(to))
+    assert got.returncode == 0, got.stderr
+    assert {p.name: p.read_bytes() for p in folder.iterdir()} == before
+    assert any(p.is_file() for p in to.rglob("*"))

@@ -15,6 +15,10 @@ import pytest
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent))
+import renamed  # noqa: E402
+
+renamed.bridge()  # scan and predict moved after this study froze: demo/renamed.py
 import make_trees  # noqa: E402
 import score  # noqa: E402
 
@@ -210,7 +214,7 @@ def test_scans_bm25_is_phase_2s_baseline(tmp_path):
     import phase2
 
     root = HERE.parents[1]
-    sys.path.insert(0, str(root / "adapters" / "stdlib" / "scan"))
+    sys.path.insert(0, str(root / "adapters" / "stdlib" / "batch-ask"))
     import scan
 
     kernel = phase2.kernel
@@ -221,7 +225,7 @@ def test_scans_bm25_is_phase_2s_baseline(tmp_path):
         for rel, text in files.items():
             (tmp_path / name).mkdir(exist_ok=True)
             (tmp_path / name / rel).write_text(text)
-        subprocess.run([sys.executable, str(root / "adapters/stdlib/scan/scan.py"), "index",
+        subprocess.run([sys.executable, str(root / "adapters/stdlib/batch-ask/scan.py"), "index",
                         "--from", str(tmp_path / name), "--to", str(tmp_path / f"ix-{name}")],
                        check=True, capture_output=True)  # fmt: skip
     before = {c["id"] for c in kernel.chunks(tmp_path / "new")}
@@ -364,7 +368,7 @@ def test_phase4_grep_matches_brute_force(tmp_path):
     import phase4
 
     root = HERE.parents[1]
-    _s.path.insert(0, str(root / "adapters" / "stdlib" / "scan"))
+    _s.path.insert(0, str(root / "adapters" / "stdlib" / "batch-ask"))
     import scan
 
     files = {
@@ -381,7 +385,7 @@ def test_phase4_grep_matches_brute_force(tmp_path):
     sp.run(
         [
             _s.executable,
-            str(root / "adapters/stdlib/scan/scan.py"),
+            str(root / "adapters/stdlib/batch-ask/scan.py"),
             "index",
             "--from",
             str(src),

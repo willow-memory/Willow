@@ -65,18 +65,11 @@ def tally(box: Path) -> dict:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return {"broken": "; ".join(breaks)}
-    done = {**kernel.sealed(box, rows), **kernel.declined(box, rows)}
     return {
         "rows": len(rows),
         "asked": sum(1 for r in rows if r["kind"] == "bite"),
         "approved": len(kernel.sealed(box, rows)),
-        "waiting": sum(
-            1
-            for r in rows
-            if r["kind"] == "proposal"
-            and r.get("verdict") == "pass"
-            and r["subject"] not in done
-        ),
+        "waiting": len(kernel.waiting(box, rows)),  # once a thing (CONST-V-11)
     }
 
 

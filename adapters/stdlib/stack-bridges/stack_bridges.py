@@ -20,11 +20,15 @@ from, and steps at the same depth don't need one another.
 
 A third kind comes from the cards, not the file:
 
-    the record    the step names the record, `{box}`, after a step whose
-                  add-on's card says it writes the record
+    the record    the step names a record after a step whose add-on's
+                  card says it writes the record, and both name the same
+                  one: `{box}`, or the folder given to `--box`
 
 A stack file names the record the same way for a step that adds a row and
 one that only reads, so the card's `writes` line is what tells them apart.
+A record named by its folder is tied only to steps naming that folder:
+whether `{box}` is one of those folders is decided when the stack is run,
+and the file doesn't say.
 A step naming an add-on that isn't here has no card to read, and is said.
 
 And two bridges that can't hold, each said with its step:
@@ -187,20 +191,35 @@ def writes_record(name: str) -> bool | None:
     return None
 
 
+def record_of(args: list[str]) -> str | None:
+    """The record a step names: the folder given to `--box`, as written
+    less a `./` before it and a `/` after; else `{box}` when the step names
+    that anywhere; else None."""
+    for flag, value in zip(args, args[1:]):
+        if flag == "--box" and value != "{box}":
+            folder = value.rstrip("/")
+            while folder.startswith("./"):
+                folder = folder[2:]
+            return folder or value
+    return "{box}" if "{box}" in args else None
+
+
 def record_bridges(
     steps: list[tuple[str, list[str]]], writes=writes_record
 ) -> dict[int, int]:
     """{a step's place: the place of the last step before it that writes the
-    record}, for each step that names the record after one that writes it."""
+    same record}, for each step that names a record after one that writes
+    it."""
     out: dict[int, int] = {}
-    last = None
+    last: dict[str, int] = {}
     for n, (name, args) in enumerate(steps, 1):
-        if "{box}" not in args:
+        record = record_of(args)
+        if record is None:
             continue
-        if last is not None:
-            out[n] = last
+        if record in last:
+            out[n] = last[record]
         if writes(name):
-            last = n
+            last[record] = n
     return out
 
 
@@ -270,7 +289,7 @@ def page(text: str) -> tuple[dict | None, str | None, bool]:
     named = [
         (n, writes_record(name))
         for n, (name, args) in enumerate(steps, 1)
-        if "{box}" in args
+        if record_of(args) is not None
     ]
     writers = [label[n] for n, w in named if w]
     if writers:

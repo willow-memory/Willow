@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: codebase-memory-mcp's code graph, read from a copy of its SQLite file: each function, what calls it, and its file and line.
 source: new
 added: 2026-10-31
-version: 0.1.0
+version: 0.1.2
 writes: to
 network: none
 role: reads
@@ -22,13 +22,18 @@ its file and line.
     name: tools.vendor_sync_check.vendor_sync_check
     edges: import tools.vendor_sync_check.CheckResult
 
-Walks FOLDER for `.db` files that hold a `symbols` table and an `edges`
-table (the graph codebase-memory-mcp writes, or a copy of it). Each
+Walks FOLDER for `.db` files that hold the graph codebase-memory-mcp
+writes, or a copy of it: a `nodes` table and an `edges` table as it writes
+them now, or `symbols` and `edges` as it did. A name the graph keeps for a
+language's own built-ins, which have no file, is left out. Each
 function or method becomes one paragraph, sorted by name. The original is
 only read, and only through SQLite's own read-only open.
 
 Each graph is written to MIRROR at the same relative path with .txt
-added. A file that is not a graph is skipped and counted. Point the
+added. A graph too long for the kernel to read as one file (it leaves
+out a file over a megabyte, without a word) is cut between functions into
+numbered parts (a 1, a 2 and so on before the .txt), each saying which
+part it is. A file that is not a graph is skipped and counted. Point the
 kernel at MIRROR to ask who calls what.
 
 Exit codes, the kernel's: 0 wrote some; 42 nothing readable; 2 refused.

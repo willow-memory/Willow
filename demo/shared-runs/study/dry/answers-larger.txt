@@ -1,0 +1,25 @@
+jobs: 30
+trajectories: 6
+predicted: 50.5
+seconds: the reports don't say
+baseline-steps: 10656
+shared-steps: 5451
+measured: 48.8
+served: 7
+vulcan: the reports don't say
+stepped-on: 14
+computed: 9
+halted: 1
+cost: the reports don't say
+refused: 1
+states-checked: 17
+afresh: 7
+graphics: the reports don't say
+afresh-same: 7
+native-same: 30
+kinds: 1
+busiest: the reports don't say
+
+## account
+
+The sweep was 30 jobs on 6 trajectories, dealt to 5 machines in 2 rounds, and 50.5% of steps were predicted to be skippable from the sweep alone. Each job was first run alone with no memory in 2 baseline runs. One baseline run stepped 10656 steps, and all 30 jobs gave the same bytes in every baseline run. The shared run did all 30 jobs in 8 machine runs and stepped 5451 steps, a measured saving of 48.8%. Of the jobs, 9 took nothing from memory, 14 went on from a kept state and 7 were served whole. One trajectory, wwww-crowded, began and then halted, and one, vvvv-coarse, was refused before a first step. All 17 re-stepped kept states and all 7 served jobs run afresh came out the same bytes, and all 30 jobs came out the same bytes on each of the 3 machines that ran the project's gravity as written. Only one kind of processor, intel x86_64 avx512, ran the jobs.

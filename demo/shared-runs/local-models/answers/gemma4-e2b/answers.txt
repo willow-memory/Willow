@@ -1,0 +1,24 @@
+jobs: 220
+trajectories: 22
+predicted: 73.3%
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2%
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+## account
+The sweep analyzed 220 jobs across 22 trajectories using 5 machines over 2 rounds, identifying that 73.3% of steps need not be taken. A baseline run showed that a single job took 1,256,518 steps. The shared run utilized 10 machine runs to process the jobs, stepping 336,379 steps overall. This run achieved a measured saving of 73.2% compared to the predicted saving. Trajectories were handled in various ways, with 169 going on from a kept state, 22 taking nothing from memory, and 29 being served whole. Three trajectories were observed to begin and then halt. The project's gravity showed that 14 jobs came out the same bytes across every one of the 5 machines used.

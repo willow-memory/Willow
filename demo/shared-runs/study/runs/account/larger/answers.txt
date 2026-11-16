@@ -1,0 +1,24 @@
+jobs: 220
+trajectories: 22
+predicted: 73.3
+seconds: the reports don't say
+baseline-steps: 1256518
+shared-steps: 336379
+measured: 73.2
+served: 29
+vulcan: the reports don't say
+stepped-on: 169
+computed: 22
+halted: 3
+cost: the reports don't say
+refused: 1
+states-checked: 1305
+afresh: 20
+graphics: the reports don't say
+afresh-same: 20
+native-same: 14
+kinds: 3
+busiest: the reports don't say
+
+## account
+The sweep was 220 jobs over 22 trajectories, dealt to 5 machines in 2 rounds, and it predicted 73.3% of steps need not be stepped. The baseline ran every job alone with no memory; one baseline run stepped 1256518 steps, and all 220 jobs came out the same bytes in both baseline runs. The shared run ran all 220 jobs in 10 machine runs: 22 took nothing from memory, 169 went on from a kept state, and 29 were served whole. It stepped 336379 steps, a measured saving of 73.2%. Three trajectories began and then halted, and one (coarse-step) was refused before a first step. The check stepped 1305 kept states again and 20 served jobs afresh, and every one came out the same bytes. With the gravity as written, 14 of 220 jobs agreed on all 5 machines, which ran on 3 kinds of processor.

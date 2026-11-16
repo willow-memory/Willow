@@ -155,6 +155,31 @@ def names_kind(word: str, line: str) -> bool:
     )
 
 
+# Where a person's files usually are, offered first in the picker; only the
+# ones this machine has. /storage/emulated/0 is a phone's own storage, which
+# from Termux is outside home and not reached by going up.
+PLACES = (
+    ("home", "~"),
+    ("Desktop", "~/Desktop"),
+    ("Documents", "~/Documents"),
+    ("Downloads", "~/Downloads"),
+    ("the phone's files", "/storage/emulated/0"),
+)
+
+
+def places() -> list[dict]:
+    """The PLACES this machine has, as {name, path}; names only, no file read."""
+    out = []
+    for name, where in PLACES:
+        p = Path(where).expanduser()
+        try:
+            if p.is_dir():
+                out.append({"name": name, "path": str(p.resolve())})
+        except OSError:
+            continue
+    return out
+
+
 class Canvas:
     def __init__(self, to: Path, willow: Path, box: Path, folders: list[str]):
         # every path whole: steps run from other folders
@@ -163,11 +188,28 @@ class Canvas:
         self.kernel = assemble.load_kernel(self.stack)
         self.folders = folders
         self.similar = self._load_similar()
+        self.new_kinds = self._load("new-kinds", "new_kinds.py", "trial")
         self.job = None
         self.browsers = []
         self._search = None
         self.lock = threading.Lock()
         self._pieces = None
+
+    def _load(self, name: str, script: str, needs: str):
+        """An add-on of the willow this stack came from, as a module; None
+        when that willow hasn't one, or an older one without `needs`."""
+        path = self.willow / "adapters" / "stdlib" / name / script
+        if not path.is_file():
+            return None
+        spec = importlib.util.spec_from_file_location(
+            "willow_" + name.replace("-", "_"), path
+        )
+        mod = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(mod)
+        except Exception:  # an older willow: said in the page as nothing tried
+            return None
+        return mod if hasattr(mod, needs) else None
 
     def _load_similar(self):
         """willow's similar add-on, from the willow this stack came from: its
@@ -352,7 +394,8 @@ class Canvas:
         except OSError as e:
             return {"ok": False, "path": str(p), "why": e.strerror or "can't be read"}
         return {"ok": True, "path": str(p), "parent": str(p.parent) if p.parent != p else None,
-                "dirs": names[:1000], "more": len(names) > 1000}  # fmt: skip
+                "dirs": names[:1000], "more": len(names) > 1000,
+                "places": places()}  # fmt: skip
 
     # ── batches: a named set of add-ons, saved to recall, and deleted for good ─
     def _batches_file(self) -> Path:
@@ -468,7 +511,7 @@ class Canvas:
         if not f["ok"]:
             return f
         k, root = self.kernel, Path(f["path"])
-        read, hidden, kinds = 0, 0, {}
+        read, hidden, kinds, readable, unread = 0, 0, {}, {}, {}
         for p in root.rglob("*"):
             rel = p.relative_to(root)
             if not p.is_file():
@@ -488,11 +531,13 @@ class Canvas:
                     else:
                         raw.decode("utf-8")
                         read += 1
+                        readable.setdefault(ext, []).append(p)
                         continue
             except UnicodeDecodeError:
                 why = "text in another encoding than UTF-8"
             except OSError:
                 why = "couldn't be opened"
+            unread.setdefault(ext, []).append(p)
             kind = kinds.setdefault(ext, {"kind": ext, "files": 0, "why": {}})
             kind["files"] += 1
             kind["why"][why] = kind["why"].get(why, 0) + 1
@@ -501,8 +546,42 @@ class Canvas:
         for c in cant:
             c["readers"] = self.readers_for(c["kind"])
             c["text"] = c["kind"] in TEXT_KINDS
+            # a card saying it reads the kind isn't that it reads yours (a .zip
+            # is a Discord package or anything else): the built ones are tried
+            # on a few, as for text below; `tried` 0 is none could be tried here
+            c.update(self.tried(c["kind"], unread[c["kind"]]) if c["readers"]
+                     else {"tried": 0, "fits": [], "any": [], "big": 0})  # fmt: skip
+        better = []
+        for ext, files in sorted(readable.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+            took = self.tried(ext, files)
+            if took["fits"] or took["any"]:
+                better.append({"kind": ext, "files": len(files),
+                               **took})  # fmt: skip
         return {"ok": True, "path": f["path"], "read": read, "passages": passages,
-                "hidden": hidden, "cant": cant}  # fmt: skip
+                "hidden": hidden, "cant": cant, "better": better}  # fmt: skip
+
+    def tried(self, ext: str, files: list[Path]) -> dict:
+        """For a kind of file, whether the kernel reads it as it is (.json,
+        .csv) or not (.zip, .pdf): the readers that take some of these files, by the new-kinds add-on's
+        trial. Each built reader whose card says it reads the kind runs its
+        own `mirror` on copies of a few of them, beside a file of the kind
+        with nothing in it: `fits` took some of yours and not that, `any`
+        took that too. Counts only, never a file's name or a line of it."""
+        none = {"tried": 0, "fits": [], "any": [], "big": 0}
+        nk = self.new_kinds
+        if nk is None or not ext.startswith("."):
+            return none
+        ps = self.pieces()
+        scripts = {}
+        for n, p in ps.items():
+            if (p["state"] == "built" and p["role"] == "reads"
+                    and p.get("network") == "none" and ext in p.get("reads", [])):  # fmt: skip
+                m = nk.main_of(self.willow / "adapters" / (p["kind"] or "stdlib") / n)
+                if m:
+                    scripts[n] = m
+        t = nk.trial(ext, files, scripts)
+        return {"tried": t["tried"], "fits": t["fits"][:4], "any": t["any"][:4],
+                "big": t.get("big", 0)}  # fmt: skip
 
     def readers_for(self, ext: str) -> list[str]:
         """Reader add-ons that read a kind of file, as their cards' `reads`
@@ -1139,9 +1218,9 @@ def verb(cmd: str, argv: list[str]) -> int:
             lines.append(f"  {p['name']}{mark}: {p['line']}")
             lines += [f"      {u}" for u in p.get("usage", [])]
             lines.append(f"      here because {p['role_why']}")
-        runner = cv.willow / "adapters" / "stdlib" / "ready" / "steps.md"
+        runner = cv.willow / "adapters" / "stdlib" / "pr-ready" / "steps.md"
         if want == "repo" and runner.is_file():
-            lines.append("\nIn order, before a pull request opens: python adapters/stdlib/github/create_pr.py (its steps: adapters/stdlib/ready/steps.md, run by ready)")  # fmt: skip
+            lines.append("\nIn order, before a pull request opens: python adapters/stdlib/github/create_pr.py (its steps: adapters/stdlib/pr-ready/steps.md, run by ready)")  # fmt: skip
         return show(mine, "\n".join(lines))
     if cmd == "needs":
         if not rest or (bad := [n for n in rest if n not in ps]):

@@ -36,7 +36,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
-sys.path.insert(0, str(HERE.parent / "scan"))
+sys.path.insert(0, str(HERE.parent / "batch-ask"))
 import kernel  # noqa: E402
 import scan  # noqa: E402
 

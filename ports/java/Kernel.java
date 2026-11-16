@@ -879,6 +879,7 @@ public final class Kernel {
 
     static final class Chunk {
         final String path, text, id;
+        String source; // a source's name, which places it and is no word of it (CONST-VI-9)
         final int line;
 
         Chunk(String path, int line, String text) {
@@ -897,6 +898,9 @@ public final class Kernel {
             return m;
         }
     }
+
+    /** A chunk's path as its own folder names it: a source's name is no word of it. */
+    static String ownPath(Chunk c) { return c.source == null ? c.path : c.path.substring(c.source.length() + 1); }
 
     /** Path.rglob("*"), sorted as Python sorts paths: by their parts. */
     private static void walk(Path dir, List<String> parts, List<List<String>> out) throws IOException {
@@ -923,6 +927,45 @@ public final class Kernel {
         return (i > 0 && i < name.length() - 1) ? name.substring(i) : "";
     }
 
+    /** One file's paragraphs, as chunks cuts them; none when the kernel doesn't read it. */
+    static List<Chunk> chunked(Path p, String relPath, String name) {
+        List<Chunk> out = new ArrayList<>();
+        String text;
+        try {
+            if (!Files.isRegularFile(p) || Files.size(p) > MAX_FILE) return out;
+            byte[] raw = Files.readAllBytes(p);
+            boolean nul = false;
+            for (int i = 0; i < Math.min(raw.length, SNIFF); i++) nul |= raw[i] == 0;
+            if (nul) return out;
+            text = StandardCharsets.UTF_8.newDecoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .decode(ByteBuffer.wrap(raw)).toString();
+        } catch (IOException e) {
+            return out;
+        }
+        String suf = suffix(name).toLowerCase(java.util.Locale.ROOT);
+        if (suf.equals(".html") || suf.equals(".htm")) text = htmlText(text);
+        List<String> lines = new ArrayList<>(splitlines(text));
+        lines.add("");
+        List<String> para = new ArrayList<>();
+        int start = 1, size = 0;
+        for (int i = 1; i <= lines.size(); i++) {
+            String line = lines.get(i - 1);
+            if (!para.isEmpty() && (blank(line) || size + len(line) > MAX_CHUNK)) {
+                out.add(new Chunk(relPath, start, String.join("\n", para)));
+                para.clear();
+                size = 0;
+            }
+            if (!blank(line)) {
+                if (para.isEmpty()) start = i;
+                para.add(take(line, MAX_CHUNK));
+                size += len(para.get(para.size() - 1)) + 1;
+            }
+        }
+        return out;
+    }
+
     static List<Chunk> chunks(Path pile) throws IOException {
         List<List<String>> all = new ArrayList<>();
         walk(pile, new ArrayList<>(), all);
@@ -935,45 +978,94 @@ public final class Kernel {
             boolean hidden = false;
             for (String part : rel) hidden |= part.startsWith(".");
             if (hidden) continue;
-            String text;
-            try {
-                if (Files.size(p) > MAX_FILE) continue;
-                byte[] raw = Files.readAllBytes(p);
-                boolean nul = false;
-                for (int i = 0; i < Math.min(raw.length, SNIFF); i++) nul |= raw[i] == 0;
-                if (nul) continue;
-                text = StandardCharsets.UTF_8.newDecoder()
-                    .onMalformedInput(CodingErrorAction.REPORT)
-                    .onUnmappableCharacter(CodingErrorAction.REPORT)
-                    .decode(ByteBuffer.wrap(raw)).toString();
-            } catch (CharacterCodingException e) {
-                continue;
-            } catch (IOException e) {
-                continue;
-            }
-            String name = rel.get(rel.size() - 1);
-            String suf = suffix(name).toLowerCase(java.util.Locale.ROOT);
-            if (suf.equals(".html") || suf.equals(".htm")) text = htmlText(text);
-            String relPath = String.join("/", rel);
-            List<String> lines = new ArrayList<>(splitlines(text));
-            lines.add("");
-            List<String> para = new ArrayList<>();
-            int start = 1, size = 0;
-            for (int i = 1; i <= lines.size(); i++) {
-                String line = lines.get(i - 1);
-                if (!para.isEmpty() && (blank(line) || size + len(line) > MAX_CHUNK)) {
-                    out.add(new Chunk(relPath, start, String.join("\n", para)));
-                    para.clear();
-                    size = 0;
-                }
-                if (!blank(line)) {
-                    if (para.isEmpty()) start = i;
-                    para.add(take(line, MAX_CHUNK));
-                    size += len(para.get(para.size() - 1)) + 1;
-                }
+            out.addAll(chunked(p, String.join("/", rel), rel.get(rel.size() - 1)));
+        }
+        return out;
+    }
+
+    // ── sources: the person's files, read where they are kept (CONST-VI-9) ──
+    /** The files a list names, in its order, each once. */
+    static List<Path> listed(Path lst) throws IOException {
+        List<Path> out = new ArrayList<>();
+        Path dir = resolved(lst).getParent();
+        for (String raw : splitlines(Files.readString(lst))) {
+            String line = strip(raw);
+            if (!line.isEmpty() && !line.startsWith("#")) {
+                Path f = Path.of(line);
+                f = resolved(f.isAbsolute() ? f : dir.resolve(f));
+                if (!out.contains(f)) out.add(f);
             }
         }
         return out;
+    }
+
+    static List<Chunk> listChunks(Path lst) throws IOException {
+        List<Path> files = listed(lst);
+        List<Chunk> out = new ArrayList<>();
+        if (files.isEmpty()) return out;
+        Path root = files.get(0).getParent();
+        for (Path f : files) {
+            while (!f.getParent().startsWith(root)) root = root.getParent();
+        }
+        List<Map.Entry<List<String>, Path>> rels = new ArrayList<>();
+        for (Path f : files) {
+            List<String> parts = new ArrayList<>();
+            for (Path x : root.relativize(f)) parts.add(x.toString());
+            rels.add(Map.entry(parts, f));
+        }
+        rels.sort((x, y) -> BY_PARTS.compare(x.getKey(), y.getKey()));
+        for (Map.Entry<List<String>, Path> e : rels) {
+            boolean hidden = false;
+            for (String part : e.getKey()) hidden |= part.startsWith(".");
+            if (!hidden) out.addAll(chunked(e.getValue(), String.join("/", e.getKey()), e.getKey().get(e.getKey().size() - 1)));
+        }
+        return out;
+    }
+
+    /** Everything the box reads: its pile folder, then each source in name order, as NAME/path. */
+    @SuppressWarnings("unchecked")
+    static List<Chunk> pileOfBox(Map<String, Object> cfg) throws IOException {
+        List<Chunk> out = cfg.containsKey("pile") ? chunks(Path.of((String) cfg.get("pile"))) : new ArrayList<>();
+        Set<String> tops = new HashSet<>();
+        for (Chunk c : out) tops.add(c.path.split("/", -1)[0]);
+        Map<String, Object> srcs = (Map<String, Object>) cfg.getOrDefault("sources", new HashMap<String, Object>());
+        List<String> names = new ArrayList<>(srcs.keySet());
+        names.sort(BY_CODE_POINT);
+        for (String name : names) {
+            if (tops.contains(name))
+                throw new IllegalArgumentException("the source " + name + " has the name of a file or folder at the top of the pile");
+            String at = (String) srcs.get(name);
+            List<Chunk> part = at.startsWith("@") ? listChunks(Path.of(at.substring(1))) : chunks(Path.of(at));
+            for (Chunk c : part) {
+                Chunk x = new Chunk(name + "/" + c.path, c.line, c.text);
+                x.source = name;
+                out.add(x);
+            }
+        }
+        return out;
+    }
+
+    /** NAME=FOLDER or NAME=@LIST as {name, where}, or {null, why}. */
+    static String[] sourceOf(String given) throws IOException {
+        int eq = given.indexOf('=');
+        String name = eq < 0 ? given : given.substring(0, eq);
+        String at = eq < 0 ? "" : given.substring(eq + 1);
+        if (eq < 0 || name.isEmpty() || at.isEmpty() || at.equals("@"))
+            return new String[] {null, given + ": a source is NAME=FOLDER or NAME=@LIST"};
+        if (name.contains("/") || name.contains("\\") || name.startsWith("."))
+            return new String[] {null, name + ": a source's name is plain, no / and not starting with ."};
+        Path where = Path.of(at.startsWith("@") ? at.substring(1) : at);
+        if (at.startsWith("@")) {
+            if (!Files.isRegularFile(where)) return new String[] {null, where + ": a list of files is a file, and isn't there"};
+            List<Path> gone = new ArrayList<>();
+            for (Path f : listed(where)) if (!Files.isRegularFile(f)) gone.add(f);
+            if (!gone.isEmpty())
+                return new String[] {null, where + " names " + gone.size() + " file" + (gone.size() == 1 ? "" : "s")
+                    + " that aren't there, the first " + gone.get(0)};
+            return new String[] {name, "@" + resolved(where)};
+        }
+        if (!Files.isDirectory(where)) return new String[] {null, where + " is not a folder"};
+        return new String[] {name, resolved(where).toString()};
     }
 
     /** An exact rational, for the rank's scores. */
@@ -1136,7 +1228,7 @@ public final class Kernel {
         String path = null, cur = "";
         for (int i = 0; i < pile.size(); i++) {
             Chunk c = pile.get(i);
-            if (!c.path.equals(path)) { path = c.path; cur = newest(c.path); }
+            if (!c.path.equals(path)) { path = c.path; cur = newest(ownPath(c)); }
             String t = newest(c.text);
             if (t.compareTo(cur) > 0) cur = t;
             out[i] = cur.isEmpty() ? 0 : Integer.parseInt(cur);
@@ -1155,7 +1247,7 @@ public final class Kernel {
         for (int k = 0; k < pile.size(); k++) {
             Chunk c = pile.get(k);
             List<String> both = new ArrayList<>(words(c.text));
-            both.addAll(words(c.path)); // a folder's name is the person's word too
+            both.addAll(words(ownPath(c))); // a folder's name is the person's word too
             Set<String> toks = forms(both);
             Set<String> h = new HashSet<>();
             for (String w : want) if (heldBy(w, toks, alias)) h.add(w);
@@ -1215,7 +1307,7 @@ public final class Kernel {
         Set<String> every = new HashSet<>();
         for (Chunk c : pile) {
             every.addAll(forms(words(c.text)));
-            every.addAll(forms(words(c.path)));
+            every.addAll(forms(words(ownPath(c))));
         }
         List<String> absent = new ArrayList<>();
         for (String w : want) if (!heldBy(w, every, alias)) absent.add(w);
@@ -1433,13 +1525,34 @@ public final class Kernel {
         return "OSError";
     }
 
-    static int init(Path box, Path pile, Path key, String ts, Path wl) throws IOException {
+    static int init(Path box, Path pile, Path key, String ts, Path wl, List<String> froms) throws IOException {
         if (Files.exists(box.resolve("record.jsonl"))) {
             System.err.println("refused: this box already has a record");
             return REFUSED;
         }
-        if (!Files.isDirectory(pile)) {
+        if (pile != null && !Files.isDirectory(pile)) {
             System.err.println("refused: " + pile + " is not a folder");
+            return REFUSED;
+        }
+        java.util.TreeMap<String, Object> found = new java.util.TreeMap<>(BY_CODE_POINT);
+        for (String given : froms) {
+            String[] got = sourceOf(given);
+            if (got[0] == null) {
+                System.err.println("refused: " + got[1]);
+                return REFUSED;
+            }
+            if (found.containsKey(got[0])) {
+                System.err.println("refused: " + got[0] + ": a source's name is given once");
+                return REFUSED;
+            }
+            if (pile != null && Files.exists(pile.resolve(got[0]))) {
+                System.err.println("refused: " + got[0] + ": the pile already holds that name at its top");
+                return REFUSED;
+            }
+            found.put(got[0], got[1]);
+        }
+        if (pile == null && found.isEmpty()) {
+            System.err.println("refused: a box reads a pile folder, sources, or both");
             return REFUSED;
         }
         if (inside(key, box)) {
@@ -1466,12 +1579,20 @@ public final class Kernel {
         }
         Files.createDirectories(box);
         Map<String, Object> cfg = new LinkedHashMap<>();
-        cfg.put("pile", resolved(pile).toString());
+        Map<String, Object> placed = new LinkedHashMap<>();
+        placed.put("loop", "open");
+        if (pile != null) {
+            cfg.put("pile", resolved(pile).toString());
+            placed.put("pile_sha256", h256((String) cfg.get("pile")));
+        }
         cfg.put("key", resolved(key).toString());
+        if (!found.isEmpty()) {
+            cfg.put("sources", found);
+            placed.put("sources_sha256", h256(canon(found)));
+        }
         if (wl != null) cfg.put("words", resolved(wl).toString());
         Files.writeString(box.resolve("kernel.json"), dumpsDefault(cfg, true) + "\n");
-        Map<String, Object> row = append(box, ts, "boot", "kernel",
-            fields("loop", "open", "pile_sha256", h256((String) cfg.get("pile"))));
+        Map<String, Object> row = append(box, ts, "boot", "kernel", placed);
         System.out.println("ready: record started, row " + row.get("n") + " "
             + ((String) row.get("hash")).substring(0, 16));
         return ALIVE;
@@ -1484,6 +1605,32 @@ public final class Kernel {
 
     static Map<String, Map<String, Object>> declined(Path box, List<Map<String, Object>> rows) throws IOException {
         return sealed(box, rows, "decline");
+    }
+
+    // What waits on the person: each proposal that passed the door, neither
+    // sealed nor declined, by subject, its first passing row, in the order
+    // first proposed. Counted once a thing to decide (CONST-V-11).
+    static Map<String, Map<String, Object>> waiting(Path box, List<Map<String, Object>> rows) throws IOException {
+        Map<String, Map<String, Object>> good = sealed(box, rows), no = declined(box, rows);
+        Map<String, Map<String, Object>> out = new LinkedHashMap<>();
+        for (Map<String, Object> r : rows)
+            if ("proposal".equals(r.get("kind")) && "pass".equals(r.get("verdict"))) {
+                Object s = r.get("subject");
+                if (!good.containsKey(s) && !no.containsKey(s) && !out.containsKey(s)) out.put((String) s, r);
+            }
+        return out;
+    }
+
+    // Why a suggestion that passed the door isn't offered again, or null: what
+    // waits, was sealed or was declined is offered once (CONST-V-11).
+    static String offered(Path box, List<Map<String, Object>> rows, String subj) throws IOException {
+        Map<String, Map<String, Object>> held = sealed(box, rows);
+        if (held.containsKey(subj)) return "you approved it at row " + held.get(subj).get("n");
+        held = declined(box, rows);
+        if (held.containsKey(subj)) return "you declined it at row " + held.get(subj).get("n");
+        held = waiting(box, rows);
+        if (held.containsKey(subj)) return "already waiting on your seal, row " + held.get(subj).get("n");
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -1593,7 +1740,13 @@ public final class Kernel {
             alias = (Map<String, List<String>>) got[0];
             listed.put("words_sha256", got[1]);
         }
-        List<Chunk> pile = chunks(Path.of((String) cfg.get("pile")));
+        List<Chunk> pile;
+        try {
+            pile = pileOfBox(cfg);
+        } catch (IllegalArgumentException e) {
+            System.err.println("refused: " + e.getMessage());
+            return REFUSED;
+        }
         List<Chunk> served = rank(pile, text, alias);
         List<Object> refs = new ArrayList<>();
         List<Chunk> answers = new ArrayList<>();
@@ -1680,6 +1833,8 @@ public final class Kernel {
                 prop = null;
             }
             String why = door(prop, served);
+            if (why == null)
+                why = offered(box, read(box.resolve("record.jsonl")).rows, subjectOf((Map<String, Object>) prop));
             if (why == null) {
                 Map<String, Object> p = (Map<String, Object>) prop;
                 String subj = subjectOf(p);
@@ -1804,12 +1959,10 @@ public final class Kernel {
     static int out(Path box, String ts) throws IOException {
         Read r = read(box.resolve("record.jsonl"));
         if (refusedBreaks(r)) return REFUSED;
-        Map<String, Map<String, Object>> good = sealed(box, r.rows), no = declined(box, r.rows);
-        List<String> waiting = new ArrayList<>();
-        for (Map<String, Object> row : r.rows)
-            if ("proposal".equals(row.get("kind")) && "pass".equals(row.get("verdict"))
-                    && !good.containsKey(row.get("subject")) && !no.containsKey(row.get("subject")))
-                waiting.add((String) row.get("subject"));
+        Map<String, Map<String, Object>> good = sealed(box, r.rows);
+        // what they declined is not offered again (CONST-V-10), and what waits
+        // is counted once (CONST-V-11)
+        List<String> waiting = new ArrayList<>(waiting(box, r.rows).keySet());
         Object tip = r.rows.isEmpty() ? GENESIS : r.rows.get(r.rows.size() - 1).get("hash");
         append(box, ts, "out", "kernel", fields("waiting", BigInteger.valueOf(waiting.size()), "tip", tip));
         for (String s : waiting) System.out.println("waiting on your seal: " + s);
@@ -1978,6 +2131,7 @@ public final class Kernel {
 
     static final String USAGE = "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.\n" +
         "    python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]\n" +
+        "    python kernel.py init    --box DIR [--pile FOLDER] --from NAME=FOLDER|NAME=@LIST ... --key FILE\n" +
         "    python kernel.py bite    --box DIR \"your question\"\n" +
         "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
         "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
@@ -2016,10 +2170,13 @@ public final class Kernel {
         String verb = argv.length > 0 ? argv[0] : "";
         Map<String, String> opts = new HashMap<>();
         List<String> args = new ArrayList<>();
+        List<String> froms = new ArrayList<>();
         for (int i = 1; i < argv.length; i++) {
             String a = argv[i];
             if (List.of("--box", "--pile", "--key", "--file", "--now", "--words").contains(a)) {
                 opts.put(a, i + 1 < argv.length ? argv[++i] : "");
+            } else if (a.equals("--from")) {
+                froms.add(i + 1 < argv.length ? argv[++i] : "");
             } else {
                 args.add(a);
             }
@@ -2031,10 +2188,16 @@ public final class Kernel {
         Path box = Path.of(opts.get("--box"));
         String ts = opts.getOrDefault("--now", "");
         if (ts.isEmpty()) ts = now();
-        if (verb.equals("init") && !opts.getOrDefault("--pile", "").isEmpty()
+        if (verb.equals("init") && (!opts.getOrDefault("--pile", "").isEmpty() || !froms.isEmpty())
+            && !froms.contains("") && (!opts.containsKey("--pile") || !opts.get("--pile").isEmpty())
             && !opts.getOrDefault("--key", "").isEmpty() && args.isEmpty())
-            return init(box, Path.of(opts.get("--pile")), Path.of(opts.get("--key")), ts,
-                opts.getOrDefault("--words", "").isEmpty() ? null : Path.of(opts.get("--words")));
+            return init(box, opts.getOrDefault("--pile", "").isEmpty() ? null : Path.of(opts.get("--pile")),
+                Path.of(opts.get("--key")), ts,
+                opts.getOrDefault("--words", "").isEmpty() ? null : Path.of(opts.get("--words")), froms);
+        if (!froms.isEmpty()) {
+            System.err.println(USAGE);
+            return REFUSED;
+        }
         if (!Files.exists(box.resolve("kernel.json"))) {
             System.err.println("refused: not a kernel box; init first");
             return REFUSED;

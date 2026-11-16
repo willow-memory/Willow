@@ -1,0 +1,161 @@
+{
+ "the first study's own check": {
+  "states": 3473,
+  "state_checks": 41410,
+  "afresh": 121940
+ },
+ "size": {
+  "1 times, 2 rounds": {
+   "jobs": 220,
+   "alone": 1256518,
+   "stepped": 336379,
+   "saving": 73.2,
+   "checking_share": 9.7,
+   "saving_after_the_door": 63.5,
+   "states_kept": 3473,
+   "held_rounds": 0
+  },
+  "10 times, 2 rounds": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 11.3,
+   "saving_after_the_door": 62.0,
+   "states_kept": 34730,
+   "held_rounds": 0
+  },
+  "10 times, 10 rounds": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 12.4,
+   "saving_after_the_door": 60.9,
+   "states_kept": 34730,
+   "held_rounds": 0
+  },
+  "100 times, 10 rounds": {
+   "jobs": 22000,
+   "alone": 125651800,
+   "stepped": 33654755,
+   "saving": 73.2,
+   "checking_share": 12.2,
+   "saving_after_the_door": 61.0,
+   "states_kept": 347300,
+   "held_rounds": 0
+  }
+ },
+ "strangers": {
+  "25 of 25 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 12.4,
+   "saving_after_the_door": 60.9,
+   "states_kept": 34730,
+   "held_rounds": 0
+  },
+  "20 of 25 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 14.5,
+   "saving_after_the_door": 58.7,
+   "states_kept": 34730,
+   "held_rounds": 5
+  },
+  "10 of 25 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 20.4,
+   "saving_after_the_door": 52.8,
+   "states_kept": 34730,
+   "held_rounds": 15
+  },
+  "0 of 25 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 31.8,
+   "saving_after_the_door": 41.4,
+   "states_kept": 34730,
+   "held_rounds": 25
+  },
+  "0 of 50 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 35.7,
+   "saving_after_the_door": 37.5,
+   "states_kept": 34730,
+   "held_rounds": 50
+  },
+  "0 of 5 enrolled": {
+   "jobs": 2200,
+   "alone": 12565180,
+   "stepped": 3364870,
+   "saving": 73.2,
+   "checking_share": 18.6,
+   "saving_after_the_door": 54.6,
+   "states_kept": 34730,
+   "held_rounds": 5
+  }
+ },
+ "checked": {
+  "every state, no job afresh": {
+   "lies": 60,
+   "found": 60,
+   "wrong_jobs_handed_out": 0,
+   "never_found": 0,
+   "checking_share": 26.7,
+   "saving_after_the_door": 46.5
+  },
+  "every state and every served job": {
+   "lies": 60,
+   "found": 60,
+   "wrong_jobs_handed_out": 0,
+   "never_found": 0,
+   "checking_share": 116.6,
+   "saving_after_the_door": -43.4
+  },
+  "as the study: a state in 8, a job in 10": {
+   "lies": 60,
+   "found": 24,
+   "wrong_jobs_handed_out": 175,
+   "never_found": 117,
+   "checking_share": 12.4,
+   "saving_after_the_door": 60.9
+  },
+  "a state in 8, no job afresh": {
+   "lies": 60,
+   "found": 5,
+   "wrong_jobs_handed_out": 202,
+   "never_found": 202,
+   "checking_share": 3.4,
+   "saving_after_the_door": 69.9
+  },
+  "a state in 64, a job in 100": {
+   "lies": 60,
+   "found": 2,
+   "wrong_jobs_handed_out": 217,
+   "never_found": 212,
+   "checking_share": 1.7,
+   "saving_after_the_door": 71.5
+  },
+  "nothing": {
+   "lies": 60,
+   "found": 0,
+   "wrong_jobs_handed_out": 219,
+   "never_found": 219,
+   "checking_share": 0.0,
+   "saving_after_the_door": 73.2
+  }
+ }
+}
