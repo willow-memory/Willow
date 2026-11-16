@@ -2403,6 +2403,7 @@ willow/
 │   │   ├── teodora.json
 │   │   ├── week.md           the week, over a life
 │   │   ├── test_life_box.py
+│   │   ├── test_life_box_studies.py
 │   │   └── README.md         the life box: the game box, with a person's life for its binder
 │   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
