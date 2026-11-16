@@ -26,7 +26,11 @@ answer should be the one sentence that says so, not the paragraph around it.
 **mirror** writes each .txt, .md, .html or .htm under FOLDER to
 `MIRROR/<same path>.txt`, one sentence a paragraph:
 
-- a web page is read as its blocks: paragraphs, headings, list items;
+- a web page is read as its blocks: paragraphs, headings, list items. A
+  `<br>` ends a block, except on a page that ends twenty lines or more with
+  one, a printed report saved as a page: its lines are read as the pdf
+  mirror's wrapped lines are, below, and a short line that follows a
+  sentence's end (a heading) starts a block of its own;
 - the [pdf](../../deps/pdf/) add-on's mirror (lines wrapped at the page's
   width, under `== page N`) is read as wrapped lines. A short line, a
   heading or a paragraph's last, ends its block unless the next line goes on

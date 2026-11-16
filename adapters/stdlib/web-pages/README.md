@@ -33,6 +33,13 @@ a first line saying where the page came from, then the page's blocks
 (paragraphs, headings, list items), one paragraph each, so an answer lands
 on the paragraph that says it.
 
+A `<br>` ends a block too, as an address's or a name's lines want it to,
+except on a page that ends twenty lines or more with one: that is a printed
+report saved as a page, every printed line ended with a `<br>`, and its
+lines are read as wrapped lines (a short line ends a paragraph unless the
+next goes on in lower case), one sentence a line. A sentence that ran over
+a printed line's end is then one passage, not two.
+
 **Where it came from** is the first of: the `saved from url=` note a
 browser writes into an .html it saves (Internet Explorer's Mark of the Web),
 except `about:internet`, which marks a zone, not an address; an .mhtml's
