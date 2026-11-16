@@ -3,7 +3,7 @@ section: Trust and proof
 line: Figures a summary says that its full text doesn't: a draft and its packet side by side, ranges and billions read as written.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

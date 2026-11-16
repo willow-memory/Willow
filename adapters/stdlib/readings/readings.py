@@ -348,7 +348,7 @@ def bite(argv: list[str]) -> int:
     box = Path(opts["--box"])
     cfg = kernel.config(box)
     alias = kernel.read_words(Path(cfg["words"]), box)[0] if "words" in cfg else {}
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     at = {f"{c['path']}:{c['line']}": c for c in pile}
     served = [at[s["where"]] for s in doc["served"] if not s["echo"]]
     today = newest((opts.get("--now") or kernel.now())[:10])

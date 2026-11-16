@@ -141,7 +141,7 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     ts = opts.get("--now") or kernel.now()
     day = ts[:10]
-    words = field(kernel.chunks(Path(kernel.config(box)["pile"])))
+    words = field(kernel.pile_of_box(kernel.config(box)))
     if not words:
         print("Your folder has no five-letter words to play.")
         return kernel.ESCALATE

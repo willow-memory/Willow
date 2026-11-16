@@ -299,7 +299,7 @@ def main(argv: list[str]) -> int:
         )
         return kernel.REFUSED
     now = day(opts.get("--now", "")) or datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    files = texts(Path(kernel.config(box)["pile"]))
+    files = texts(kernel.folder(kernel.config(box)))
     found = ledgers(files, pattern)
     from_files(files, pattern, found)
     mentions(files, pattern, found)

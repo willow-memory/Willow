@@ -668,7 +668,7 @@ def main(argv: list[str]) -> int:
         print("refused:", e, file=sys.stderr)
         return kernel.REFUSED
     sealed, stacks = on_record(box, rec)
-    lines, where_from = commands(str(kernel.config(box)["pile"]))
+    lines, where_from = commands(str(kernel.folder(kernel.config(box))))
     STEPS.update(lines)
     out = plan(cards, cards.scan(a.sentence), shape, rec, sealed)
     out["cards"]["commands"] = where_from

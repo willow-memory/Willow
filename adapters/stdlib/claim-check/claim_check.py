@@ -84,7 +84,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    got = check(kernel.chunks(Path(cfg["pile"])), want, alias, top)
+    got = check(kernel.pile_of_box(cfg), want, alias, top)
     for c, held in got["all"]:
         print(f"all parts    {c['path']}:{c['line']}   {', '.join(held)}")
     for c, held in got["some"]:

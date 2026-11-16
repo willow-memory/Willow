@@ -95,7 +95,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     today = (opts.get("--now") or kernel.now())[:10].replace("-", "")
-    hits = on_this_day(kernel.chunks(Path(kernel.config(box)["pile"])), today)
+    hits = on_this_day(kernel.pile_of_box(kernel.config(box)), today)
     if not hits:
         said = f"nothing dated {today[4:6]}-{today[6:]} in an earlier year"
         say(report(NAME, "empty", said, []), as_json)

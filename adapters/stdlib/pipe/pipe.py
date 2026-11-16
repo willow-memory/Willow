@@ -43,7 +43,7 @@ def ask(box: Path, question: str, now: str | None) -> tuple[int, dict | None, st
     return code, doc, err.getvalue() or out.getvalue()
 
 
-def grep_lines(doc: dict, pile: Path) -> list[str]:
+def grep_lines(doc: dict, cfg: dict) -> list[str]:
     """A bite as grep prints matches: path:line: the passage's first line."""
     if doc.get("state") == "sealed":
         return [f"approved: {doc['answer']}"]
@@ -52,7 +52,7 @@ def grep_lines(doc: dict, pile: Path) -> list[str]:
         path, _, line = s["where"].rpartition(":")
         first = (s["text"].splitlines() or [""])[0].strip()
         echo = " (only asks your question back)" if s["echo"] else ""
-        out.append(f"{pile / path}:{line}: {first}{echo}")
+        out.append(f"{kernel.place(cfg, path)}:{line}: {first}{echo}")
     return out
 
 
@@ -85,9 +85,9 @@ def main(argv: list[str], stdin=None, stdout=None) -> int:
         return kernel.REFUSED
     box = Path(opts["box"])
     try:
-        pile = Path(
-            json.loads((box / "kernel.json").read_text(encoding="utf-8"))["pile"]
-        )
+        cfg = json.loads((box / "kernel.json").read_text(encoding="utf-8"))
+        if "pile" not in cfg and "sources" not in cfg:
+            raise KeyError("pile")
     except (OSError, ValueError, KeyError):
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
@@ -100,7 +100,7 @@ def main(argv: list[str], stdin=None, stdout=None) -> int:
         code, doc, said = ask(box, question, opts["now"])
         codes.append(code)
         if opts["grep"]:
-            lines = grep_lines(doc, pile) if doc else [f"refused: {said.strip()}"]
+            lines = grep_lines(doc, cfg) if doc else [f"refused: {said.strip()}"]
             for ln in lines:
                 print(ln, file=stdout)
         else:

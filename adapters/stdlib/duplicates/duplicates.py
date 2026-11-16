@@ -201,7 +201,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     if opts.get("--runs"):
         found = runs_of(pile)
         if not found:

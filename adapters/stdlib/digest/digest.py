@@ -103,7 +103,7 @@ def coming_up(box: Path, today: date, days: int) -> dict:
     cu = sibling("coming-up", "coming_up")
     if cu is None:
         return section([], "the coming-up add-on isn't here")
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     return section([{"date": d.isoformat(), "where": where, "line": line}
                     for d, where, line in cu.coming_in(pile, today, days)])  # fmt: skip
 

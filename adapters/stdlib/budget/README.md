@@ -3,7 +3,7 @@ section: Keeping track
 line: Spending against the budget you wrote down, month by month, from your statements.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

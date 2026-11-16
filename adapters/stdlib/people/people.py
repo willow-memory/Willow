@@ -173,7 +173,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     names = persons(pile)
     if not names:
         print("No word of your folder does what the files do with a name.")

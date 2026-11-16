@@ -109,7 +109,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     unknown, known = dialect.dialect(
         pile, lambda w: wordfreq.zipf_frequency(w, lang), int(opts["--top"])
     )

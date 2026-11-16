@@ -121,7 +121,7 @@ def do_prove(box: Path, n: int, to: Path) -> int:
     lines = lines_of(box)
     if not 0 <= n < len(lines):
         raise Refused(f"the record has rows 0 to {len(lines) - 1}, not {n}")
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     for name, under in (("your folder", pile), ("the box", box)):
         if to.resolve().is_relative_to(under.resolve()):
             raise Refused(f"FILE is inside {name}")

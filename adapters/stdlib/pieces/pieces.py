@@ -138,7 +138,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     n, files, most, where, k = 0, set(), 0, "", 0
-    for got in folders(Path(kernel.config(box)["pile"])):
+    for got in folders(kernel.folder(kernel.config(box))):
         k += 1
         n += len(got)
         files.update(c["path"] for c in got)

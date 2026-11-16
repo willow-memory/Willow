@@ -88,7 +88,7 @@ def main(argv: list[str]) -> int:
     if not quotes:
         print(f"no quotations of {MIN_WORDS} words or more in {doc}")
         return kernel.ALIVE
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     tally = {"as written": 0, "almost": 0, "not there": 0}
     for q in quotes:
         verdict, place, kept, diffs = check(pile, q)

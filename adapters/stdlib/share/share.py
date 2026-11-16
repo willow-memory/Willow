@@ -153,7 +153,7 @@ def new_file(to: Path, text: str, mode: int, box: Path | None = None) -> str | N
     never into a folder that isn't there, never in the box or its folder."""
     if box is not None:
         for name, root in (
-            ("your folder", Path(kernel.config(box)["pile"])),
+            ("your folder", kernel.folder(kernel.config(box))),
             ("the box", box),
         ):
             if to.resolve().is_relative_to(root.resolve()):

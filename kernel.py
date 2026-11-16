@@ -1,5 +1,6 @@
 """kernel.py: answers questions from your own files. Python 3.9+, stdlib only.
     python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]
+    python kernel.py init    --box DIR [--pile FOLDER] --from NAME=FOLDER|NAME=@LIST ... --key FILE
     python kernel.py bite    --box DIR "your question"
     python kernel.py propose --box DIR --file SUGGESTIONS.jsonl
     python kernel.py seal    --box DIR proposal:<sha256>
@@ -8,7 +9,10 @@
     python kernel.py out     --box DIR
     python kernel.py test
 
-The pile (--pile) is your own folder, and it is only ever read. The box
+The pile (--pile) is your own folder, and it is only ever read. Your files
+may live in several places instead, or as well: each --from is a source,
+a folder or a list of files (one path a line), read where it is, never
+copied; its passages are named under NAME. The box
 (--box) is a folder this script keeps its record in. The key (--key) is a
 file of 32 random bytes, readable only by you and kept outside the box: it
 is what approves an answer.
@@ -275,12 +279,58 @@ def read_words(path: Path, box: Path) -> tuple[dict | None, str, str | None]:
     return (None, "", why) if why else (alias, hashlib.sha256(raw).hexdigest(), None)
 
 
-def init(box: Path, pile: Path, key: Path, ts: str, wl: Path | None = None) -> int:
+def source_of(given: str) -> tuple[str, str] | str:
+    """(name, folder or @list) from NAME=FOLDER or NAME=@LIST, or why not."""
+    name, eq, at = given.partition("=")
+    if not eq or not name or at in ("", "@"):
+        return f"{given}: a source is NAME=FOLDER or NAME=@LIST"
+    if "/" in name or "\\" in name or name.startswith("."):
+        return f"{name}: a source's name is plain, no / and not starting with ."
+    where = Path(at[1:] if at.startswith("@") else at)
+    if at.startswith("@"):
+        if not where.is_file():
+            return f"{where}: a list of files is a file, and isn't there"
+        gone = [f for f in listed(where) if not f.is_file()]
+        if gone:
+            return f"{where} names {len(gone)} file{'' if len(gone) == 1 else 's'} that aren't there, the first {gone[0]}"
+        return name, "@" + str(where.resolve())
+    if not where.is_dir():
+        return f"{where} is not a folder"
+    return name, str(where.resolve())
+
+
+def init(
+    box: Path,
+    pile: Path | None,
+    key: Path,
+    ts: str,
+    wl: Path | None = None,
+    froms: list[str] | None = None,
+) -> int:
     if (box / "record.jsonl").exists():
         print("refused: this box already has a record", file=sys.stderr)
         return REFUSED
-    if not pile.is_dir():
+    if pile is not None and not pile.is_dir():
         print(f"refused: {pile} is not a folder", file=sys.stderr)
+        return REFUSED
+    found: dict[str, str] = {}
+    for given in froms or []:
+        got = source_of(given)
+        if isinstance(got, str):
+            print(f"refused: {got}", file=sys.stderr)
+            return REFUSED
+        if got[0] in found:
+            print(f"refused: {got[0]}: a source's name is given once", file=sys.stderr)
+            return REFUSED
+        if pile is not None and (pile / got[0]).exists():
+            print(
+                f"refused: {got[0]}: the pile already holds that name at its top",
+                file=sys.stderr,
+            )
+            return REFUSED
+        found[got[0]] = got[1]
+    if pile is None and not found:
+        print("refused: a box reads a pile folder, sources, or both", file=sys.stderr)
         return REFUSED
     if key.resolve().is_relative_to(box.resolve()):
         print("refused: the key can't live inside the box", file=sys.stderr)
@@ -294,11 +344,18 @@ def init(box: Path, pile: Path, key: Path, ts: str, wl: Path | None = None) -> i
         with os.fdopen(fd, "w") as f:
             f.write(secrets.token_hex(32) + "\n")
     box.mkdir(parents=True, exist_ok=True)
-    cfg = {"pile": str(pile.resolve()), "key": str(key.resolve())}
+    cfg = {"key": str(key.resolve())}
+    placed = {}
+    if pile is not None:
+        cfg["pile"] = str(pile.resolve())
+        placed["pile_sha256"] = h256(cfg["pile"])
+    if found:  # where each source is read, never a copy of it (CONST-VI-9)
+        cfg["sources"] = found
+        placed["sources_sha256"] = h256(canon(found))
     if wl is not None:
         cfg["words"] = str(wl.resolve())
     (box / "kernel.json").write_text(json.dumps(cfg, sort_keys=True) + "\n")
-    row = append(box, ts, "boot", loop="open", pile_sha256=h256(cfg["pile"]))
+    row = append(box, ts, "boot", loop="open", **placed)
     print(f"ready: record started, row {row['n']} {row['hash'][:16]}")
     return ALIVE
 
@@ -378,6 +435,32 @@ def echo(bite: str, text: str) -> bool:
     return any(tuple(ws[i : i + n]) in runs for i in range(len(ws) - n + 1))
 
 
+def _chunked(p: Path, rel: str) -> list[dict]:
+    """One file's paragraphs, as `chunks` cuts them; none when it is not text
+    the kernel reads (too big, a binary, not UTF-8, not there)."""
+    try:  # text by what it holds, not by its name: a newcomer's TODO,
+        # deploy.bat and login.php are theirs to ask about
+        if p.stat().st_size > MAX_FILE or b"\0" in (raw := p.read_bytes())[:SNIFF]:
+            return []
+        text = raw.decode("utf-8")
+    except (OSError, UnicodeDecodeError):
+        return []
+    if p.suffix.lower() in (".html", ".htm"):
+        text = html_text(text)
+    out, para, start, size = [], [], 1, 0
+    for i, line in enumerate(text.splitlines() + [""], 1):
+        if para and (not line.strip() or size + len(line) > MAX_CHUNK):
+            body = "\n".join(para)  # a paragraph, or a run of one under the cap
+            out.append({"path": rel, "line": start, "text": body, "id": h256(body)})
+            para, size = [], 0
+        if line.strip():
+            if not para:
+                start = i
+            para.append(line[:MAX_CHUNK])
+            size += len(para[-1]) + 1
+    return out
+
+
 def chunks(pile: Path) -> list[dict]:
     """Every paragraph of every text file under `pile` (any name; UTF-8 with no
     NUL byte in its first `SNIFF` bytes), cut into runs of at most
@@ -389,29 +472,86 @@ def chunks(pile: Path) -> list[dict]:
         rel = p.relative_to(pile)
         if not p.is_file() or any(part.startswith(".") for part in rel.parts):
             continue
-        try:  # text by what it holds, not by its name: a newcomer's TODO,
-            # deploy.bat and login.php are theirs to ask about
-            if p.stat().st_size > MAX_FILE or b"\0" in (raw := p.read_bytes())[:SNIFF]:
-                continue
-            text = raw.decode("utf-8")
-        except (OSError, UnicodeDecodeError):
-            continue
-        if p.suffix.lower() in (".html", ".htm"):
-            text = html_text(text)
-        para, start, size = [], 1, 0
-        for i, line in enumerate(text.splitlines() + [""], 1):
-            if para and (not line.strip() or size + len(line) > MAX_CHUNK):
-                body = "\n".join(para)  # a paragraph, or a run of one under the cap
-                out.append(
-                    {"path": str(rel), "line": start, "text": body, "id": h256(body)}
-                )
-                para, size = [], 0
-            if line.strip():
-                if not para:
-                    start = i
-                para.append(line[:MAX_CHUNK])
-                size += len(para[-1]) + 1
+        out += _chunked(p, str(rel))
     return out
+
+
+# ── sources: the person's files, read where they are kept (CONST-VI-9) ─────
+def listed(lst: Path) -> list[Path]:
+    """The files a list names, in its order, each once: one path a line, a
+    blank line or a # line skipped, a relative path from the list's folder."""
+    out: list[Path] = []
+    for line in lst.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            f = Path(line)
+            f = (f if f.is_absolute() else lst.parent / f).resolve()
+            if f not in out:
+                out.append(f)
+    return out
+
+
+def list_chunks(lst: Path) -> list[dict]:
+    """A list's files read where they are, each named by its path from the
+    folder the listed files share, in that name's order, as `chunks` orders a
+    folder's; a file not there now is read as nothing, as a deleted one is."""
+    files = listed(lst)
+    if not files:
+        return []
+    root = Path(os.path.commonpath([str(f.parent) for f in files]))
+    out = []
+    for rel, f in sorted((f.relative_to(root), f) for f in files):
+        if not any(part.startswith(".") for part in rel.parts):
+            out += _chunked(f, str(rel))
+    return out
+
+
+def sources(cfg: dict) -> dict[str, Path]:
+    """The box's sources, {name: folder or list}, a list as its file."""
+    return {
+        k: Path(v[1:] if v.startswith("@") else v)
+        for k, v in cfg.get("sources", {}).items()
+    }
+
+
+def pile_of_box(cfg: dict) -> list[dict]:
+    """Everything the box reads: its pile folder's passages, as `chunks` reads
+    them, then each source's in name order, each named NAME/ and its path.
+    ValueError when a source's name is a name at the top of the pile folder,
+    since their passages could not be told apart."""
+    out = chunks(Path(cfg["pile"])) if "pile" in cfg else []
+    tops = {Path(c["path"]).parts[0] for c in out}
+    for name, at in sorted(sources(cfg).items()):
+        if name in tops:
+            raise ValueError(
+                f"the source {name} has the name of a file or folder at the top of the pile"
+            )
+        part = list_chunks(at) if cfg["sources"][name].startswith("@") else chunks(at)
+        out += [{**c, "path": f"{name}/{c['path']}", "source": name} for c in part]
+    return out
+
+
+def place(cfg: dict, rel: str) -> Path:
+    """Where a passage's file is: a path the pile names (`law/charter.md`)
+    as the file it was read from, in its source or the pile folder."""
+    name, _, rest = rel.partition("/")
+    at = cfg.get("sources", {}).get(name)
+    if at is None or not rest:
+        return Path(cfg["pile"]) / rel
+    if not at.startswith("@"):
+        return Path(at) / rest
+    files = listed(Path(at[1:]))
+    return Path(os.path.commonpath([str(f.parent) for f in files])) / rest
+
+
+def folder(cfg: dict) -> Path:
+    """The box's one pile folder, for a reader that walks a folder itself;
+    ValueError when the box reads sources, which such a reader would miss."""
+    if cfg.get("sources") or "pile" not in cfg:
+        raise ValueError(
+            "this box reads its files where they are kept, from several places; this reads one folder (CONST-VI-9)"
+        )
+    return Path(cfg["pile"])
 
 
 def _digits(text: str, i: int) -> int:
@@ -496,10 +636,17 @@ def newest(text: str) -> str:
     return best
 
 
+def own_path(c: dict) -> str:
+    """A chunk's path as its own folder names it: a source's name places a
+    passage and is no word of it (CONST-VI-9), or a source named "recipes"
+    would hand every passage in it the word for free (#366)."""
+    return c["path"][len(c["source"]) + 1 :] if c.get("source") else c["path"]
+
+
 def toks(c: dict) -> set[str]:
     """A chunk's words: its text's and its path's. A folder's name is the
     person's word too: Laszlo's care log never says "Dad", its folder does."""
-    return forms(words(c["text"]) + words(c["path"]))
+    return forms(words(c["text"]) + words(own_path(c)))
 
 
 def held_by(w: str, toks: set[str], alias: dict) -> bool:
@@ -587,7 +734,7 @@ def dates(pile: list[dict]) -> list[int]:
     out, path, cur = [], None, ""
     for c in pile:
         if c["path"] != path:
-            path, cur = c["path"], newest(c["path"])
+            path, cur = c["path"], newest(own_path(c))
         cur = max(cur, newest(c["text"]))
         out.append(int(cur or 0))
     return out
@@ -785,8 +932,12 @@ def bite(box: Path, text: str, ts: str) -> int:
             print(f"refused: {why}", file=sys.stderr)
             return REFUSED
         listed = {"words_sha256": sha}
-    pile = chunks(Path(cfg["pile"]))
-    served = rank(pile, text, alias)
+    try:
+        passages = pile_of_box(cfg)
+    except ValueError as e:
+        print(f"refused: {e}", file=sys.stderr)
+        return REFUSED
+    served = rank(passages, text, alias)
     refs = [
         {
             "id": c["id"],
@@ -801,7 +952,7 @@ def bite(box: Path, text: str, ts: str) -> int:
     state = "populated" if answers else "echo" if refs else "empty"
     doc = {"state": state, "bite_key": k}
     doc["served"] = [{**r, "text": c["text"]} for r, c in zip(refs, served)]
-    if hints := look(pile, text, served if answers else [], alias):
+    if hints := look(passages, text, served if answers else [], alias):
         doc["look"] = hints  # printed for them; the record keeps no words
     print(json.dumps(doc, ensure_ascii=False))
     return ALIVE if answers else ESCALATE
@@ -1199,7 +1350,38 @@ def test() -> None:
         )
         assert quiet(verify, box)[0] == REFUSED
         assert quiet(bite, box, "how much sun do tomatoes want", ts)[0] == REFUSED
-    print("kernel: the thirteen beats held")
+        # 14. read where they are kept (CONST-VI-9): a box of its pile and two
+        #     sources, a folder and a list, answers from each where it is,
+        #     each passage named under its source, and an edit to the original
+        #     after the box was made is what the next bite reads
+        law, notes, both = t / "law", t / "notes", t / "both"
+        law.mkdir()
+        notes.mkdir()
+        (law / "charter.md").write_text("The shed is painted every fourth spring.\n")
+        (notes / "roof.md").write_text("The roof estimate was 4200.\n")
+        (notes / "not-listed.md").write_text("The roof estimate was 9999.\n")
+        lst = t / "chosen.txt"
+        lst.write_text("# the one asked for\nnotes/roof.md\n")
+        froms = [f"law={law}", f"chosen=@{lst}"]
+        assert (
+            quiet(init, both, pile, t / "keys" / "two.key", ts, None, froms)[0] == ALIVE
+        )
+        cfg = config(both)
+        got = [(c["path"], c["text"]) for c in pile_of_box(cfg)]
+        assert ("law/charter.md", "The shed is painted every fourth spring.") in got
+        assert ("chosen/roof.md", "The roof estimate was 4200.") in got
+        assert not any("9999" in x for _, x in got)
+        mine = [c for c in pile_of_box(cfg) if c["path"].startswith("law/")]
+        assert [(c["line"], c["text"], c["id"]) for c in mine] == [
+            (c["line"], c["text"], c["id"]) for c in chunks(law)
+        ]
+        # a source's name places a passage and is no word of it (#366)
+        assert "law" not in toks(mine[0]) and "charter" in toks(mine[0])
+        (notes / "roof.md").write_text("The roof estimate is now 4300.\n")
+        said = json.loads(quiet(bite, both, "the roof estimate", ts)[1])
+        assert [x["where"] for x in said["served"]] == ["chosen/roof.md:1"]
+        assert "4300" in said["served"][0]["text"]
+    print("kernel: the fourteen beats held")
 
 
 # ── the command line ────────────────────────────────────────────────────────
@@ -1210,19 +1392,33 @@ def main(argv: list[str]) -> int:
     verb, rest = (argv[0], argv[1:]) if argv else ("", [])
     opts: dict[str, str] = {}
     args: list[str] = []
+    froms: list[str] = []
     it = iter(rest)
     for a in it:
         if a in ("--box", "--pile", "--key", "--file", "--now", "--words"):
             opts[a] = next(it, "")
+        elif a == "--from":
+            froms.append(next(it, ""))
         else:
             args.append(a)
     if "--box" not in opts or not opts["--box"]:
         print(__doc__.split("\n\n")[0], file=sys.stderr)
         return REFUSED
     box, ts = Path(opts["--box"]), opts.get("--now") or now()
-    if verb == "init" and opts.get("--pile") and opts.get("--key") and not args:
+    if (
+        verb == "init"
+        and (opts.get("--pile") or froms)
+        and "" not in froms
+        and ("--pile" not in opts or opts["--pile"])
+        and opts.get("--key")
+        and not args
+    ):
         wl = Path(opts["--words"]) if opts.get("--words") else None
-        return init(box, Path(opts["--pile"]), Path(opts["--key"]), ts, wl)
+        pile_at = Path(opts["--pile"]) if opts.get("--pile") else None
+        return init(box, pile_at, Path(opts["--key"]), ts, wl, froms)
+    if froms:  # a source is named when the box is made, and only then
+        print(__doc__.split("\n\n")[0], file=sys.stderr)
+        return REFUSED
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return REFUSED

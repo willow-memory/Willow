@@ -270,7 +270,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     today = ymd((opts.get("--now") or kernel.now())[:10].replace("-", ""))
-    hits = coming_in(Path(kernel.config(box)["pile"]), today, int(days))
+    hits = coming_in(kernel.folder(kernel.config(box)), today, int(days))
     end = today + timedelta(days=int(days))
     if not hits:
         say(

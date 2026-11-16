@@ -134,7 +134,7 @@ def main(argv: list[str]) -> int:
     if breaks:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     try:
         found = matches(sg, pile, args[0], opts["--lang"])
     except RuntimeError as exc:

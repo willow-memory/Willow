@@ -144,7 +144,7 @@ def from_files(box: Path, question: str):
         if why is not None:
             return "", [], why
         alias = alias or {}
-    served = kernel.rank(kernel.chunks(Path(cfg["pile"])), question, alias, PASSAGES)
+    served = kernel.rank(kernel.pile_of_box(cfg), question, alias, PASSAGES)
     if not served:
         return "your files hold nothing for it; why-not says why", [], None
     want = list(

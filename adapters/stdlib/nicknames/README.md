@@ -3,7 +3,7 @@ section: Your own words
 line: The names you call people, mapped to who they are, so 'Mum' finds Margaret.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: words

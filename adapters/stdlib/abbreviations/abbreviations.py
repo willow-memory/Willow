@@ -144,10 +144,10 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     cfg = kernel.config(box)
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     if verb == "lines":
         to = Path(opts["--to"])
-        for name, root in (("your folder", Path(cfg["pile"])), ("the box", box)):
+        for name, root in (("your folder", kernel.folder(cfg)), ("the box", box)):
             if to.resolve().is_relative_to(root.resolve()):
                 print(f"refused: FILE is inside {name}", file=sys.stderr)
                 return kernel.REFUSED

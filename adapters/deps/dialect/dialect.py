@@ -128,7 +128,7 @@ def main(argv: list[str]) -> int:
     if breaks:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     unknown, known = dialect(
         pile, lambda w: wordfreq.zipf_frequency(w, lang), int(opts["--top"])
     )

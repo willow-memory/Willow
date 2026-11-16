@@ -129,7 +129,7 @@ def main(argv: list[str]) -> int:
     if breaks:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     try:
         found = hits(rg, pile, args[0], fold)
     except RuntimeError as exc:

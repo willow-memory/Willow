@@ -72,7 +72,7 @@ def annotations(
     box: Path, rows: list[dict], base: str | None
 ) -> tuple[list[dict], int, int]:
     """(the annotations, approvals left out, citations left out)."""
-    by_id = {c["id"]: c for c in kernel.chunks(Path(kernel.config(box)["pile"]))}
+    by_id = {c["id"]: c for c in kernel.pile_of_box(kernel.config(box))}
     out, left, gone = [], 0, 0
     for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
         prop, _, why = kernel.standing(box, rows, subj, row)

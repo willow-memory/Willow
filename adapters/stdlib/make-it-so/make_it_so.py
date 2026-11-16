@@ -74,7 +74,7 @@ def parse(argv: list[str], flags: tuple[str, ...]) -> tuple[dict, list[str]] | N
 def pile_of(box: Path) -> Path | str:
     if not (box / "kernel.json").exists():
         return "not a kernel box; init first"
-    return Path(kernel.config(box)["pile"]).resolve()
+    return kernel.folder(kernel.config(box)).resolve()
 
 
 def plan(argv: list[str]) -> int:

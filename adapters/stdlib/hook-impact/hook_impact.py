@@ -107,7 +107,7 @@ def target_of(raw: str) -> Path | None:
 
 
 def look(box: Path, target: Path) -> list[tuple[str, int, str]]:
-    pile_dir = Path(kernel.config(box)["pile"])
+    pile_dir = kernel.folder(kernel.config(box))
     return places(kernel.chunks(pile_dir), target, pile_dir)
 
 

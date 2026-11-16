@@ -153,7 +153,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     found = tally(
-        kernel.chunks(Path(kernel.config(box)["pile"])), day_arg(since), day_arg(until)
+        kernel.pile_of_box(kernel.config(box)), day_arg(since), day_arg(until)
     )
     if not found:
         print("No line of your folder says work and a length of time.")

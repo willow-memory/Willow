@@ -141,7 +141,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found = logs(kernel.chunks(Path(kernel.config(box)["pile"])))
+    found = logs(kernel.pile_of_box(kernel.config(box)))
     if not found:
         print("Nothing dated in your folder: no file named by a date, and no "
               "line that starts with one.")  # fmt: skip

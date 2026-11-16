@@ -163,7 +163,7 @@ def main(argv: list[str]) -> int:
         print(f"refused: --from {origin} is not a folder", file=sys.stderr)
         return kernel.REFUSED
     cfg = kernel.config(box)
-    pile_dir = Path(cfg["pile"])
+    pile_dir = kernel.folder(cfg)
     maps: dict = {}
     pile = kernel.chunks(pile_dir)
     by_id = {c["id"]: c for c in pile}

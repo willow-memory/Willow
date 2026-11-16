@@ -41,7 +41,7 @@ def ranked(box: Path, question: str, top: int = EVERY) -> list[dict]:
         alias, _, why = kernel.read_words(Path(cfg["words"]), box)
         if why is not None:
             raise ValueError(why)
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     return kernel.rank(pile, question, alias, top)
 
 

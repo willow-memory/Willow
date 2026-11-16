@@ -169,7 +169,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     held, unheld, skipped = [], [], 0
     for line, sentence in claims(text):
         want = claim_check.parts(sentence)

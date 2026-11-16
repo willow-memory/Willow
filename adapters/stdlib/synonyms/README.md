@@ -3,7 +3,7 @@ section: Your own words
 line: Words-list lines for a word no file holds: the dictionary's other words that your files do hold.
 source: new
 added: 2026-11-09
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: loopback
 role: words

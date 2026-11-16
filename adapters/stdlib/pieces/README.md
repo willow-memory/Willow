@@ -3,7 +3,7 @@ section: Finding things
 line: Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once.
 source: new
 added: 2026-11-11
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: tools
