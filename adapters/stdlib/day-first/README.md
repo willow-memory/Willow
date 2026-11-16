@@ -51,7 +51,7 @@ form, since they read one way only.
 **Otherwise it is your word, not its finding.** A month-first file with no
 day over 12 can't show its order, so run on one it reads 03/11/2026 as the
 3rd of November. Only you know who wrote the folder. On teodora's demo
-folder, written in England, it gives 939 dates their ISO form, among them
+folder, written in England, it gives 938 dates their ISO form, among them
 her insurance ending 03/11/2026 and her car's MOT running out 09/11/2026,
 which coming-up and renewals then find.
 
