@@ -1396,7 +1396,7 @@ func chunked(p, relPath, name string) []*Chunk {
 	return out
 }
 
-func hidden(rel []string) bool {
+func hiddenPart(rel []string) bool {
 	for _, part := range rel {
 		if strings.HasPrefix(part, ".") {
 			return true
@@ -1413,7 +1413,7 @@ func chunks(pile string) []*Chunk {
 	for _, rel := range all {
 		p := filepath.Join(append([]string{pile}, rel...)...)
 		st, err := os.Stat(p)
-		if err != nil || !st.Mode().IsRegular() || hidden(rel) {
+		if err != nil || !st.Mode().IsRegular() || hiddenPart(rel) {
 			continue
 		}
 		out = append(out, chunked(p, strings.Join(rel, "/"), rel[len(rel)-1])...)
@@ -1502,7 +1502,7 @@ func listChunks(lst string) []*Chunk {
 	}
 	sort.SliceStable(rels, func(i, j int) bool { return byParts(rels[i].parts, rels[j].parts) })
 	for _, r := range rels {
-		if !hidden(r.parts) {
+		if !hiddenPart(r.parts) {
 			out = append(out, chunked(r.file, strings.Join(r.parts, "/"), r.parts[len(r.parts)-1])...)
 		}
 	}
