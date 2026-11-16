@@ -144,7 +144,8 @@ Run 3 found the repeal miss was the web-pages reader's: it made every `<br>`
 a passage break, and the saved CRS report ends each printed line with one.
 The fix reads a page that ends twenty lines or more with `<br>` as wrapped
 lines, one sentence a line (in the clauses add-on, which web-pages reads
-pages with; willow branch `ccr-8ddfb123-dbqhkm`, not yet on main). Freeze 4
+pages with; on willow branch `ccr-8ddfb123-dbqhkm` at the freeze, merged to
+main since as #370, the same `clauses.py`, so run 4 reruns from here). Freeze 4
 changed nothing in this folder but FROZEN.json: the questions, rules and
 expectations are as they were, and every tool but `clauses.py` is the file
 freeze 3 ran. Its dry runs with nonsense (`results/dry-run-4.json`) served
