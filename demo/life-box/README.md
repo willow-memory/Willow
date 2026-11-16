@@ -16,16 +16,18 @@ with a key made for them.
     python demo/life-box/life_box.py open   --who bernadette --table DIR --read --dates day-first
     python demo/life-box/life_box.py open   --who bernadette --table DIR --read --dates day-first --piles
     python demo/life-box/life_box.py week   --table DIR
+    python demo/life-box/life_box.py words  --table DIR
     python demo/life-box/life_box.py ask    --table DIR
     python demo/life-box/life_box.py decide --table DIR
     python demo/life-box/life_box.py recap  --table DIR
 
 | piece | what it is |
 |---|---|
-| [life_box.py](life_box.py) | the five steps: lay the life, run the week, ask the questions (each read the way the files spell it), decide them, say what was made true |
+| [life_box.py](life_box.py) | the six steps: lay the life, run the week, add her own words on day two, ask the questions (each read the way the files spell it), decide them, say what was made true |
 | [week.md](week.md) | the game box's prep sheet made for a life: what's coming in three weeks, what runs out, what the car and the house need, what's waiting on me, who owes me and whom I owe, what goes out every month, where things stand, the money in my files, what's new, does the box hold |
 | [teodora.json](teodora.json) | Teodora's answer key: for each of her twenty questions, the files (and the words in them) she would seal as its answer, written from her [PLANTED.md](../teodora/PLANTED.md) |
 | [bernadette.json](bernadette.json) | Bernadette's, the same for her twenty, written from [hers](../bernadette/PLANTED.md) and her files as willow's readers mirror them |
+| [bernadette-words.txt](bernadette-words.txt) | Bernadette's own words, kept beside her answer key: only her lines, each with a comment saying whose file uses her word and what it says instead. `words` adds them to the starter list on day two |
 
 ## The seal, for someone made up
 
@@ -263,6 +265,62 @@ questions. Teodora's eleven are there from three.
 
 [test_life_box.py](test_life_box.py) runs all of it in about a hundred
 seconds.
+
+## Day two: her own words
+
+A starter list is general, and a person's own words are theirs: learned from
+what found nothing, which is only known once the questions have been asked.
+Two of Bernadette's twenty found nothing useful on day one, because she says
+one thing and her files another:
+
+- 2, "how much is the car rego this year": her calendar says "Car rego due"
+  and her chat "Did you do the rego love?", but the notice VicRoads sent says
+  Registration, and the amount, $912.40, is in the notice.
+- 6, "total rent from the geelong unit last financial year": her own sheet,
+  "Rental unit 2025-26", says FY and the agent's statement says EOFY, and the
+  amount, 21840, is on the sheet.
+
+The starter list is not tuned to a folder (its card says why), so these two
+lines are hers, in `bernadette-words.txt`: `rego = registration` and
+`financial = fy, eofy`. Then, with the table she already has:
+
+    python demo/life-box/life_box.py words  --table DIR
+    python demo/life-box/life_box.py ask    --table DIR
+    python demo/life-box/life_box.py decide --table DIR
+    python demo/life-box/life_box.py recap  --table DIR
+
+`words` writes DIR/words.txt again, the starter list and then her lines,
+readable only by her, and says what it added. It remakes no box: every box
+of the life was laid pointing at that one file, and the kernel reads the file
+at each bite, so each box keeps its record exactly as it was (every seal and
+decline still there, `kernel.py verify` holding) and from its next bite on says
+which list it read, by SHA-256. A box laid pointing at no list at all is what
+the [later-words](../../adapters/stdlib/later-words/) add-on makes again. A
+person with no words file of their own is refused, and nothing changes.
+
+`ask` asked again asks only the questions with no sealed answer: the seventeen (sixteen on one
+box) she already has are said to be answered and left alone (the kernel would only
+answer each from its seal, a bite that serves nothing). The rest are asked
+again with her words; a passage she already declined is refused by the
+kernel (V.10), not offered twice. A flag would have made the person say what the box
+already knows; asking only what is open is the same on a first ask, where
+nothing is sealed, so nothing about day one changed.
+
+Measured (offered / sealed / declined / questions answered,
+of 20), the first ask and then the second:
+
+| | first | after her words | without pypdf: first | after |
+|---|---|---|---|---|
+| piles | 81 / 22 / 59 / 17 | 86 / 24 / 62 / 19 | 80 / 22 / 58 / 16 | 84 / 24 / 60 / 18 |
+| one box | 50 / 20 / 30 / 16 | 54 / 22 / 32 / 18 | 49 / 19 / 30 / 15 | 52 / 21 / 31 / 17 |
+
+Question 2 is offered the 2026 notice's `Mail/Inbox/2026-10-06 Registration
+renewal notice SUBARU FORESTER 1XY4KD.eml.txt:10`, which holds "$912.40", and
+her key names it: sealed. With piles it is offered last year's notice too (the
+trap, "2025-10-07 Registration...") and the budget's estimate, and both are
+declined. Question 6 is offered `Documents/Rental unit 2025-26.xlsx.txt:3`,
+which holds "21840", and her key names it: sealed. The statement's own scan
+and the sheet's expenses are declined.
 
 ## Where it comes from
 

@@ -19,13 +19,13 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **383 of 606 built** · 545 need no install · 61 need one
+`█████████████░░░░░░░` **383 of 605 built** · 544 need no install · 61 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
 | Reading more kinds of files | 99 | 43 | 132 | 10 |
 | Finding things | 41 | 17 | 48 | 10 |
-| Your own words | 21 | 8 | 26 | 3 |
+| Your own words | 21 | 7 | 25 | 3 |
 | Keeping track | 46 | 18 | 62 | 2 |
 | Trust and proof | 34 | 33 | 58 | 9 |
 | Privacy and safety | 15 | 4 | 17 | 2 |
@@ -793,6 +793,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="accents"></a>[**accents**](adapters/stdlib/accents/) \
   A word typed without its accent read as your files write it, and the words-list lines that make it last. \
   *new* `no-install` `offline` · near: abbreviations, stems, synonyms
+- <a id="later-words"></a>[**later-words**](adapters/stdlib/later-words/) \
+  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
+  *new* `no-install` `offline` · near: synonyms, asked-again, hook-pin
 - <a id="nicknames"></a>[**nicknames**](adapters/stdlib/nicknames/) \
   The names you call people, mapped to who they are, so 'Mum' finds Margaret. \
   *new* `no-install` `offline` · near: starter-words, abbreviations, notes
@@ -865,9 +868,6 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-ja"></a>**words-ja** (idea) \
   Japanese, which has no spaces: a small segmenter of its own and a common-words list. \
   *new* `no-install` `offline` `common` `segmenter` · near: words-zh, words-hi, words-it
-- <a id="words-later"></a>**words-later** (idea) \
-  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
-  *new* `no-install` `offline` · near: ask-later, starter-words, record-sync
 - <a id="words-zh"></a>**words-zh** (idea) \
   Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. \
   *new* `no-install` `offline` `common` `segmenter` · near: words-ja, words-hi, copies

@@ -759,6 +759,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
     "land": ("land.py", ["--of", "{pile}/sort.json", "--from", "{pile}", "--to", "{tmp}/landed", "--dry-run"]),
+    "later-words": ("later_words.py", ["--box", "{box}", "--words", "{tmp}/my-words.txt", "--to", "{tmp}/again"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
@@ -986,6 +987,13 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
                    capture_output=True)  # fmt: skip
     fill = {"box": str(box), "pile": str(pile), "tmp": str(tmp_path)}
     good = [a.format(**fill) for a in argv]
+    if (
+        name == "later-words"
+    ):  # a list readable only by its owner: the kernel refuses any other
+        (tmp_path / "my-words.txt").write_text(
+            "rego = registration\n", encoding="utf-8"
+        )
+        (tmp_path / "my-words.txt").chmod(0o600)
     assert run(script, *good).returncode in (0, 42), "the command that works"
     if name == "starter-words":
         (tmp_path / "words.txt").unlink()

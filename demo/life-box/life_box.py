@@ -2,6 +2,7 @@
 
     python demo/life-box/life_box.py open   --who NAME --table DIR [--read] [--dates day-first|month-first] [--piles]
     python demo/life-box/life_box.py week   --table DIR
+    python demo/life-box/life_box.py words  --table DIR
     python demo/life-box/life_box.py ask    --table DIR
     python demo/life-box/life_box.py decide --table DIR
     python demo/life-box/life_box.py recap  --table DIR
@@ -68,6 +69,23 @@ the starter words list a person begins with:
   and the other piles are not asked. A question left with no content word is
   asked as it is. A pile is named for its own folder's last part, so the top
   level's loose files are never named.
+- `words` is day two: a starter list is general, and a person's own words
+  are theirs, learned from the questions that found nothing. For a NAME that
+  has a NAME-words.txt beside this (bernadette-words.txt: only their lines,
+  each with a comment saying whose file uses their word, and what it says
+  instead), it writes DIR/words.txt again as the starter list and then their
+  lines, readable only by them, and says what was added. Every box of the life
+  was made pointing at that one file, and the kernel reads it at each bite,
+  so no box is made again (a box that points at no list is what later-words
+  is for) and no record changes: the rows already there stay as they were,
+  and from the next bite on each row names the new list by its SHA-256.
+  A NAME with no such file is refused, and nothing changes. Then `ask`
+  again.
+- `ask`, asked again, asks only the questions with no sealed answer yet: a
+  question already answered is said so and left alone, since asking it
+  would only add bites that serve nothing (the kernel answers a sealed
+  question from the seal). A question that was offered, and declined, or
+  found nothing, is asked again, with the words it has now.
 - `decide` is NAME, deciding: every suggestion is sealed with NAME's key if
   NAME's answer key (NAME.json, beside this) names its file, and what it
   must say, for that question; every other is declined. It runs only for a
@@ -246,6 +264,20 @@ def boxes_of(table: Path) -> list[Path]:
     return [table / "records" / p["slug"] for p in piles_of(table)] or [box_of(table)]
 
 
+def sealed_answers(table: Path) -> dict[int, list[str]]:
+    """Each question number with a sealed answer in any box, and where each
+    answer is: read from the claim of the proposal that was sealed."""
+    out: dict[int, list[str]] = {}
+    for box in boxes_of(table):
+        rows, _ = kernel.read(box / "record.jsonl")
+        for r in rows:
+            if r["kind"] == "seal":
+                prop = json.loads((box / "proposals" / f"{r['subject'][9:]}.json").read_text(encoding="utf-8"))  # fmt: skip
+                if m := CLAIM.match(prop["claim"]):
+                    out.setdefault(int(m.group(1)), []).append(f"{m.group(4)}:{m.group(5)}")  # fmt: skip
+    return out
+
+
 def read_life(life: Path, to: Path) -> list[str]:
     """Every reader over the life into one mirror, then the files no reader
     took copied beside them; what each reader said, one line each."""
@@ -350,6 +382,42 @@ def cmd_open(
     return kernel.ALIVE
 
 
+STARTER_LIST = ROOT / "adapters" / "stdlib" / "starter-words" / "words.txt"
+
+
+def cmd_words(table: Path) -> int:
+    who = who_of(table)
+    own = HERE / f"{who}-words.txt"
+    if not own.is_file():
+        return fail(f"{who} has no words of their own beside this ({own.name}): the starter list stays as it is")  # fmt: skip
+    words = table / "words.txt"
+    for box in boxes_of(table):
+        cfg = kernel.config(box)
+        if "words" not in cfg or Path(cfg["words"]).resolve() != words.resolve():
+            return fail(f"{box.name} reads no words list at {words}: make it again with later-words first")  # fmt: skip
+    starter = STARTER_LIST.read_text(encoding="utf-8")
+    theirs = own.read_text(encoding="utf-8")
+    text = (
+        f"{starter.rstrip(chr(10))}\n\n# {who}'s own words, from {own.name}\n{theirs}"
+    )
+    why = kernel.parse_words(text)[1]
+    if why:
+        return fail(f"{own.name}: {why}")
+    if words.read_text(encoding="utf-8") == text:
+        print(f"{words} already holds {who}'s own words; nothing changed.")
+        return kernel.ALIVE
+    words.write_text(text, encoding="utf-8")
+    words.chmod(0o600)
+    added = kernel.parse_words(theirs)[0]
+    print(
+        f"{who}'s own words, added to the starter list at {words} (readable only by them):"
+    )
+    for w, ts in sorted(added.items()):
+        print(f"  {w} = {', '.join(ts)}")
+    print("No record changed; each box reads the list at its next bite. Ask again.")
+    return kernel.ALIVE
+
+
 def cmd_week(table: Path) -> int:
     who = who_of(table)
     n = len(list((table / "week").glob("[0-9][0-9][0-9]"))) + 1 if (table / "week").is_dir() else 1  # fmt: skip
@@ -399,7 +467,14 @@ def cmd_ask(table: Path) -> int:
     piles = piles_of(table)
     handed = 0
     routed = routes(table, questions(who))
+    done = sealed_answers(table)
     for i, q in enumerate(questions(who), 1):
+        if i in done:  # asked again: an answered question is left alone
+            print(
+                f"{i:>2}. {q}\n      already answered: sealed, {'; '.join(done[i])}\n",
+                end="",
+            )
+            continue
         kind = f"  ({routed[i]['kind']})" if i in routed else ""
         read = read_as(box, q)  # asked as the files spell it, once
         how = f'\n      asked as "{read}"' if read != q else ""
@@ -426,7 +501,10 @@ def cmd_ask(table: Path) -> int:
             continue
         handed += passed
         print(f"{i:>2}. {q}{kind}{how}\n      {passed} suggested: " + "; ".join(s["where"] for s in served) + "\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
-    print(f"\n{handed} answers wait on {who}'s seal; nothing is an answer until then.")
+    left = f" {len(done)} questions already have a sealed answer and were not asked again." if done else ""  # fmt: skip
+    print(
+        f"\n{handed} answers wait on {who}'s seal; nothing is an answer until then.{left}"
+    )
     return kernel.ESCALATE if handed else kernel.ALIVE
 
 
@@ -593,7 +671,7 @@ def main(argv: list[str]) -> int:
         else:
             args.append(a)
     verb = args[0] if len(args) == 1 else ""
-    if verb not in ("open", "week", "ask", "decide", "recap") or not opts.get("--table") or (verb == "open") != bool(opts.get("--who")):  # fmt: skip
+    if verb not in ("open", "week", "words", "ask", "decide", "recap") or not opts.get("--table") or (verb == "open") != bool(opts.get("--who")):  # fmt: skip
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     table = Path(opts["--table"])
@@ -607,9 +685,13 @@ def main(argv: list[str]) -> int:
         )
     if not (table / "who.txt").is_file():
         return fail(f"{table} isn't a life box laid by open")
-    return {"week": cmd_week, "ask": cmd_ask, "decide": cmd_decide, "recap": cmd_recap}[
-        verb
-    ](table)
+    return {
+        "week": cmd_week,
+        "words": cmd_words,
+        "ask": cmd_ask,
+        "decide": cmd_decide,
+        "recap": cmd_recap,
+    }[verb](table)
 
 
 if __name__ == "__main__":

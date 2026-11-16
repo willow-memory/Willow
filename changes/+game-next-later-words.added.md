@@ -1,0 +1,1 @@
+`later-words`: a box made again, at a new place, with a words list it lacked. A box takes its words only when it is made, so this lays the record down again through the kernel's own `append`, byte for byte, with its seals, declines, proposals and answers, and `verify` holds; the old box and the key are never touched.
