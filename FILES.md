@@ -981,9 +981,13 @@ willow/
 │   │   │   └── README.md
 ```
 
-#### adapters/stdlib/, from symptoms/
+#### adapters/stdlib/, from spent/
 
 ```
+│   │   ├── spent/
+│   │   │   ├── spent.py      How much you spent on one thing in a year, the money-out lines that say it added up, each cited so you can check it
+│   │   │   ├── test_spent.py
+│   │   │   └── README.md     its card
 │   │   ├── symptoms/
 │   │   │   ├── symptoms.py   one symptom's dated diary, turns marked only where the line says one, each cited
 │   │   │   ├── test_symptoms.py

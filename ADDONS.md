@@ -1087,6 +1087,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="session-cost"></a>[**session-cost**](adapters/stdlib/session-cost/) \
   Tokens each agent session spent, by day and by repo, summed from its own session files and priced from a table you keep. \
   *new* `no-install` `offline` `agent` `session` · near: agent-transcript, corpus-lens, csv-rows
+- <a id="spent"></a>[**spent**](adapters/stdlib/spent/) \
+  How much you spent on one thing in a year, the money-out lines that say it added up, each cited so you can check it. \
+  Uses habits. *new* `no-install` `offline` `year` · near: on-this-day, coming-up, box-health
 - <a id="symptoms"></a>[**symptoms**](adapters/stdlib/symptoms/) \
   A symptom diary over time, ready to show a doctor: what, when, how bad, each line cited. \
   *new* `no-install` `offline` · near: syllabus, hours, minutes

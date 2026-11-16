@@ -886,6 +886,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     # nothing listens on port 9: a file to ask about finds no model, and says so
     "sort-ask": ("sort_ask.py", ["--box", "{box}", "--categories", "{pile}/categories.txt",
                  "--model", "m", "--url", "http://127.0.0.1:9/v1"]),
+    "spent": ("spent.py", ["--box", "{box}", *NOW, "tomatoes"]),
     "stack": ("stack.py", ["--box", "{box}", "--stack", "adapters/stdlib/stack/example.md"]),
     "stack-bridges": ("stack_bridges.py", ["--stack", "adapters/stdlib/stack-bridges/example.md"]),
     "stack-row": ("stack_row.py", ["--box", "{box}", "--run", "adapters/stdlib/stack-row/example-run", *NOW]),

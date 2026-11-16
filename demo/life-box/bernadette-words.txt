@@ -13,3 +13,8 @@ rego = registration
 # financial year; the agent's statement says EOFY and her own sheet, "Rental
 # unit", says FY.
 financial = fy, eofy
+#
+# Question 18, "how much did we spend on electricity this year": she says
+# electricity; her budget's line is "Electricity & gas (Origin)" and her bank's
+# BPAY lines say ORIGIN ENERGY, which says neither of her words.
+electricity = energy, origin
