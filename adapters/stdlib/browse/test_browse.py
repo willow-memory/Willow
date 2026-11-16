@@ -73,8 +73,11 @@ class Open:
         return r, text
 
     def start(self):
-        r, _ = self.req("GET", f"/start?key={self.willow.token}", cookie=False)
-        assert r.status == 303 and r.getheader("Location") == "/"
+        r, text = self.req("GET", f"/start?key={self.willow.token}", cookie=False)
+        # a page that moves on itself, not a redirect: a phone's link from
+        # another app is a cross-site start, and the cookie stays off a redirect
+        assert r.status == 200 and r.getheader("Location") is None
+        assert '<meta http-equiv=refresh content="0;url=/">' in text
         self.cookie = r.getheader("Set-Cookie").split(";")[0]
         return r
 

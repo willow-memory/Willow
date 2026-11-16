@@ -223,3 +223,37 @@ def test_the_printed_report_heads_each_named_group_and_caps_the_where_column(
         "## named",
         f"  {'.a':<60}  short",
     ]
+
+
+def test_a_file_over_the_limit_is_never_tried_and_said_as_none_tried(
+    tmp_path, adapters, monkeypatch
+):
+    """A big file's copy is slow and its reader can run out of time, which
+    would read as took none: past TRY_BYTES it isn't tried, and a kind whose
+    files all are says so, with what the readers' cards say."""
+    src = tmp_path / "big"
+    src.mkdir()
+    (src / "a.json").write_text(json.dumps(OUTBOX))
+    (src / "b.json").write_text(json.dumps(OUTBOX) + " " * 200)
+    known = nk.readers(adapters)
+    one = {"shapely": known["shapely"]["script"]}
+    monkeypatch.setattr(nk, "TRY_BYTES", (src / "a.json").stat().st_size)
+    t = nk.trial(".json", sorted(src.iterdir()), one)
+    assert (t["tried"], t["big"]) == (1, 1) and t["fits"] == [
+        {"name": "shapely", "took": 1}
+    ]
+    monkeypatch.setattr(nk, "TRY_BYTES", 10)
+    t = nk.trial(".json", sorted(src.iterdir()), one)
+    assert (t["tried"], t["big"], t["fits"]) == (0, 2, [])
+    pdf = tmp_path / "pdfs"
+    pdf.mkdir()
+    (pdf / "scan.pdf").write_bytes(b"%PDF-1.4\0" + b"x" * 40)
+    got = run("--from", str(pdf), "--adapters", str(adapters))
+    assert "none of 1 tried taken by pdfish" in got.stdout  # under the limit
+    monkeypatch.setattr(nk, "TRY_BYTES", 10)
+    doc = nk.look([pdf], [], set(), known)
+    (g,) = doc["groups"]
+    assert g["rows"][0]["what"] == (
+        "1 file; none tried, each over 0 MB; said to be read by pdfish (needs its install)"
+    )
+    assert nk.size(tmp_path / "gone") > nk.TRY_BYTES

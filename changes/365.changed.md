@@ -1,0 +1,1 @@
+`ui`: the kernel step says what helps first: the kinds a reader took when tried on a few of your files, then what readers' cards say, then a line each for the kinds no reader here reads and the text it skips
