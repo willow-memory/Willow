@@ -663,6 +663,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "amounts": ("amounts.py", ["--box", "{box}"]),
     "annotations": ("annotations.py", ["--box", "{box}", "--to", "{tmp}/annotations.json"]),
     "approved-only": ("approved_only.py", ["scope", "--box", "{box}"]),
+    "ask-parts": ("ask_parts.py", ["--box", "{box}", "what are tomatoes, and how many are ripe"]),
     "asked-again": ("asked_again.py", ["--box", "{box}"]),
     "assistant-scores": ("assistant_scores.py", ["--box", "{box}"]),
     "attendance": ("attendance.py", ["--box", "{box}"]),

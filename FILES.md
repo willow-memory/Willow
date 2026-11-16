@@ -599,6 +599,10 @@ willow/
 │   │   │   ├── all_passages.py every passage that holds your question, ranked, not just the top three
 │   │   │   ├── test_all_passages.py
 │   │   │   └── README.md     its card
+│   │   ├── ask-parts/
+│   │   │   ├── ask_parts.py  A question that asks two things in one breath, split into its parts, each asked by the kernel's own rule, so the second part isn't lost to the first's words
+│   │   │   ├── test_ask_parts.py
+│   │   │   └── README.md     its card
 │   │   ├── batch-glance/
 │   │   │   ├── batch_glance.py what a scan found, a line a question
 │   │   │   ├── example-questions.txt
@@ -645,15 +649,15 @@ willow/
 │   │   │   ├── pile_rungs.py  a question climbs words, phrases, embedder; each rung says why it answered or stopped
 │   │   │   ├── test_pile_rungs.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from pile-sweep/
+
+```
 │   │   ├── pile-sweep/
 │   │   │   ├── pile_sweep.py  your sealed answers asked at several passage sizes, the best one named
 │   │   │   ├── test_pile_sweep.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from quote-check/
-
-```
 │   │   ├── quote-check/
 │   │   │   ├── quote_check.py is this exact quote in my files, and where
 │   │   │   ├── test_quote_check.py

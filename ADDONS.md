@@ -661,6 +661,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 - <a id="all-passages"></a>[**all-passages**](adapters/stdlib/all-passages/) \
   Every matching passage, ranked, not just the top three. \
   *box* `no-install` `offline` `ranked` `matched` · near: claim-check, latent, thesis
+- <a id="ask-parts"></a>[**ask-parts**](adapters/stdlib/ask-parts/) \
+  A question that asks two things in one breath, split into parts, each asked by the kernel's own rule so neither loses the other's words. \
+  *new* `no-install` `offline` `rules` · near: synonyms, asked-again, rules
 - <a id="batch-glance"></a>[**batch-glance**](adapters/stdlib/batch-glance/) \
   What a scan found, a line a question: where its best passage is, how it opens, and which of the question's words it lacks. \
   Uses batch-ask. *new* `no-install` `offline` `batch` `scan` · near: batch-ask, latent, synonyms

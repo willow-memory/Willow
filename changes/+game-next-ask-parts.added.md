@@ -1,0 +1,1 @@
+`ask-parts`: a question that asks two things in one breath, split where each side is itself a question and each part asked by the kernel's own rule, so "what did colleen say about mam's headstone, how much was my half" finds the email that says "your half is 725"; it only asks, and a part is bitten through the kernel to be cited
