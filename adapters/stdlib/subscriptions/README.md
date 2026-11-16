@@ -3,7 +3,7 @@ section: Keeping track
 line: What you pay for every month, found in bank statements and emails, and when each renews.
 source: new
 added: 2026-10-29
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: page
