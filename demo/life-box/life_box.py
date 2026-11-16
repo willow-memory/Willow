@@ -60,6 +60,14 @@ the starter words list a person begins with:
   asked back left out) up to DEAL of them, and each is proposed in the box
   that served it, citing that box's last bite. The claim's `from` is the
   path in the whole life, so NAME.json reads the same.
+  A word of the question that names a pile ("on the kindle" names `Kindle/`;
+  "recipe" names `Recipes/`, the way the kernel holds a word, so a plural
+  or a stem counts) says where to look, not what the text says: the question
+  is asked of that pile alone, without the naming words (`asked of Kindle as
+  "that quote about loss i highlighted on the"`, in the claim and the recap),
+  and the other piles are not asked. A question left with no content word is
+  asked as it is. A pile is named for its own folder's last part, so the top
+  level's loose files are never named.
 - `decide` is NAME, deciding: every suggestion is sealed with NAME's key if
   NAME's answer key (NAME.json, beside this) names its file, and what it
   must say, for that question; every other is declined. It runs only for a
@@ -78,6 +86,7 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -108,11 +117,14 @@ READERS = [STD / "mail" / "mail.py", STD / "calendar" / "cal.py", STD / "chats" 
            ROOT / "adapters" / "deps" / "pdf" / "pdf.py"]  # fmt: skip
 WEEK = HERE / "week.md"
 #: passages dealt out across piles for one question. One box offers the
-#: kernel's TOP (3), but three turns across a dozen piles never reach the
-#: later piles (Bernadette's recipe is not reached at 3, her Q3 and Q15
-#: answers are not at fair-merge's own 6); ten reaches them, and a pile that
-#: holds more than one answer still gets its second turn
-DEAL = 10
+#: kernel's TOP (3), but three turns across a dozen piles never reach the later
+#: piles (Bernadette's Q3 and Q15 answers are not reached at 3 or 6). By DEAL,
+#: with a question that names a pile asked of that pile alone, answered / of 20
+#: (Bernadette; without pypdf; Teodora): 3 is 10, 9, 11; 6 is 14, 14, 11; 7 is
+#: 16, 15, 11, as many as 10 answers; 10 is 16, 15, 11, and seals three more
+#: passages on questions already answered (a cancellation mail, a calendar line,
+#: a jeweller's mail). The smallest that answers as many is 7
+DEAL = 7
 TODAY = re.compile(r"^TODAY = date\((\d{4}), (\d{1,2}), (\d{1,2})\)", re.M)
 QUESTION = re.compile(r"^\d+\. (.+)$", re.M)
 
@@ -198,6 +210,29 @@ def split_piles(pile: Path) -> list[dict]:
         seen.add(slug)
         out.append({"slug": slug, "folder": rel, "loose": loose, "name": (f"{rel}/." if rel else ".") if loose else rel})  # fmt: skip
     return out
+
+
+def pile_words(p: dict) -> list[str]:
+    """The words a pile's own name says: its folder's last part (a loose pile's
+    level, so `Notes/Vault/.` says Vault), as the kernel splits words, less the
+    common ones. The top level's loose files are named for nothing."""
+    return [w for w in kernel.words(p["folder"].rsplit("/", 1)[-1]) if w not in kernel.FUNCTION]  # fmt: skip
+
+
+def naming(q: str, piles: list[dict]) -> dict[str, str]:
+    """The piles a question names, each with the question as that pile is asked:
+    a word of it that the pile's own name holds (the way the kernel holds a
+    word: "recipe" names `Recipes`) is where to look, not a word in the text, so
+    it is left out. A question left with no content word is asked as it is."""
+    found = {}
+    for p in piles:
+        toks = kernel.forms(pile_words(p))
+        hit = {w for w in kernel.words(q) if w not in kernel.FUNCTION and kernel.holds(w, toks)}  # fmt: skip
+        if hit:
+            left = re.sub(r"[^\W_]+", lambda m: "" if unicodedata.normalize("NFC", m.group().lower()) in hit else m.group(), q)  # fmt: skip
+            left = " ".join(left.split())
+            found[p["slug"]] = left if set(kernel.words(left)) - kernel.FUNCTION else q
+    return found
 
 
 def piles_of(table: Path) -> list[dict]:
@@ -369,8 +404,10 @@ def cmd_ask(table: Path) -> int:
         read = read_as(box, q)  # asked as the files spell it, once
         how = f'\n      asked as "{read}"' if read != q else ""
         as_ = f', asked as "{read}"' if read != q else ""
+        sent = naming(read, piles) if piles else {}
+        how += "".join(f'\n      asked of {p["name"]} as "{sent[p["slug"]]}"' for p in piles if p["slug"] in sent)  # fmt: skip
         if piles:
-            served, passed = ask_piles(table, piles, i, q, read, as_, now)
+            served, passed = ask_piles(table, piles, i, q, read, as_, now, sent)
         else:
             bite = py(ROOT / "kernel.py", "bite", "--box", box, "--now", now, read)
             served = json.loads(bite.stdout).get("served", []) if bite.stdout.strip() else []  # fmt: skip
@@ -393,13 +430,18 @@ def cmd_ask(table: Path) -> int:
     return kernel.ESCALATE if handed else kernel.ALIVE
 
 
-def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: str, now: str) -> tuple[list[dict], int]:  # fmt: skip
+def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: str, now: str, sent: dict[str, str]) -> tuple[list[dict], int]:  # fmt: skip
     """One question put to every pile's box, the passages they served dealt out
     in turns (fair-merge's rule), each proposed in the box that served it,
-    citing only that box's last bite. (what was dealt, how many passed)"""
+    citing only that box's last bite. When the question names piles (`sent`,
+    from `naming`) only those are asked, each without the naming words.
+    (what was dealt, how many passed)"""
+
+    if sent:  # a question that names a pile is asked of that pile alone
+        piles = [p for p in piles if p["slug"] in sent]
 
     def bitten(p: dict) -> list[dict]:
-        bite = py(ROOT / "kernel.py", "bite", "--box", table / "records" / p["slug"], "--now", now, read)  # fmt: skip
+        bite = py(ROOT / "kernel.py", "bite", "--box", table / "records" / p["slug"], "--now", now, sent.get(p["slug"], read))  # fmt: skip
         got = json.loads(bite.stdout).get("served", []) if bite.stdout.strip() else []
         pre = f"{p['folder']}/" if p["folder"] else ""
         return [{**s, "where": pre + s["where"]} for s in got if not s["echo"]]
@@ -411,12 +453,22 @@ def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: st
     lists, _ = fair_merge.joined(lists)
     dealt, _ = fair_merge.merge(lists, DEAL)
     passed = 0
+
+    def of(
+        p: dict,
+    ) -> str:  # sent to the pile by name: where to look, said in the claim
+        return (
+            f', asked of {p["name"]} as "{sent[p["slug"]]}"'
+            if p["slug"] in sent
+            else ""
+        )
+
     for p in piles:
         mine = [(k, s) for k, (name, s) in enumerate(dealt, 1) if name == p["slug"]]
         if not mine:
             continue
         props = [json.dumps({"path": f"answers/q{i:02d}-{k}.txt", "data": s["text"], "cites": [s["id"]],
-                             "claim": f"answers question {i}, \"{q}\"{as_}, from {s['where']}"})  # fmt: skip
+                             "claim": f"answers question {i}, \"{q}\"{as_}, from {s['where']}{of(p)}"})  # fmt: skip
                  for k, s in mine]  # fmt: skip
         sugg = table / "suggestions.jsonl"
         sugg.write_text("\n".join(props) + "\n", encoding="utf-8")
@@ -446,7 +498,7 @@ def waiting(box: Path) -> list[tuple[str, dict]]:
 
 
 CLAIM = re.compile(
-    r'^answers question (\d+), "(.*?)"(?:, asked as "(.*?)")?, from (.+?):(\d+)$'
+    r'^answers question (\d+), "(.*?)"(?:, asked as "(.*?)")?, from (.+?):(\d+)(?:, asked of (.+?) as "(.*?)")?$'
 )
 
 
@@ -500,7 +552,9 @@ def cmd_recap(table: Path) -> int:
                 prop = json.loads((box / "proposals" / f"{r['subject'][9:]}.json").read_text(encoding="utf-8"))  # fmt: skip
                 m = CLAIM.match(prop["claim"])
                 if m:
-                    q = by_q.setdefault(int(m.group(1)), {"q": m.group(2), "read": m.group(3) or "", "seal": [], "decline": [], "wait": []})  # fmt: skip
+                    q = by_q.setdefault(int(m.group(1)), {"q": m.group(2), "read": m.group(3) or "", "of": {}, "seal": [], "decline": [], "wait": []})  # fmt: skip
+                    if m.group(6):
+                        q["of"][m.group(6)] = m.group(7)  # sent to this pile by name
                     tag = f"   [{names[box]}]" if piles else ""  # the pile it came from
                     k = int(re.search(r"-(\d+)\.txt$", prop["path"]).group(1))  # its turn in the deal  # fmt: skip
                     q[verdict.get(r["subject"], "wait")].append((k, f"{m.group(4)}:{m.group(5)}{tag}"))  # fmt: skip
@@ -519,6 +573,7 @@ def cmd_recap(table: Path) -> int:
         line = f"{i:>2}. {q}\n" + (
             f'      asked as "{got["read"]}"\n' if got["read"] else ""
         )
+        line += "".join(f'      asked of {k} as "{v}"\n' for k, v in got["of"].items())
         line += "".join(f"      sealed    {w}\n" for w in got["seal"])
         line += "".join(f"      declined  {w}\n" for w in got["decline"])
         line += "".join(f"      waiting   {w}\n" for w in got["wait"])

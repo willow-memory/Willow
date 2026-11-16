@@ -152,14 +152,14 @@ name, and comes first.
 | offered | the backlinks, two chat lines | the recipe, a chat line, a recipe from another folder, ... |
 | sealed | nothing | `Notes/Bernie's Vault/Recipes/Scones.md.txt:5` |
 
-**`ask` with piles.** Every pile's box is bitten for each question (the
-question read in the files' spelling first, as before). What each served is
+**`ask` with piles.** Every pile's box is bitten for each question, unless it names a pile
+(below) (the question read in the files' spelling first, as before). What each served is
 then dealt out in turns by [fair-merge](../../adapters/stdlib/fair-merge/)'s
 own rule, which `life_box.py` calls rather than copies: the first of each
 pile, then the second of each, a passage word for word in two piles shown
-once, the question asked back left out. Up to ten are dealt: the kernel's 3
-or fair-merge's 6 never reach the later piles of fifteen (3 loses the
-recipe; 6 loses Bernadette's skin-check and pennant answers). Each is proposed in the box that
+once, the question asked back left out. Up to seven are dealt: the kernel's 3
+or fair-merge's 6 never reach the later piles of fifteen (see
+[the deal](#the-deal)). Each is proposed in the box that
 served it, citing only that box's last bite, and the claim's `from` is the
 path in the whole life, so the answer keys read the same. `decide` and
 `recap` walk every box; the recap names each answer's pile, and
@@ -167,24 +167,92 @@ path in the whole life, so the answer keys read the same. `decide` and
 
 **What it changes.** Bernadette opened with `--read --dates day-first
 --piles` is laid as fifteen piles (the vault's loose notes, its Daily and
-Recipes, and a pile for each other folder) and 99 passages are offered (98
-without pypdf), against 48 in one box: she seals 24 and declines 75, and
+Recipes, and a pile for each other folder) and 80 passages are offered (79
+without pypdf), against 48 in one box: she seals 21 and declines 59, and
 sixteen questions are answered, as before. The scone recipe is in; "that
-quote about loss I highlighted on the kindle" is out, because "kindle" was
-only the folder's name and her one file of clippings no longer holds it. The
+quote about loss I highlighted on the kindle" is still out (below). The
 other gains are more of what her key names (the Tax note for the deadline,
 the cancellation mail for her skin check, two more for Aoife's birthday) and
 more declined beside them. Teodora, opened with `--dates day-first --piles`,
-is laid as twelve piles; 62 passages are offered, she seals 19 and declines
-43, and ten questions are answered, as before. "Did Hargreaves pay August"
-now finds the remittance advice, which she seals, and still declines the
-ledger line (T2); the phishing email stays declined (T1). "Which AAT exams
-have I passed" is lost for the same reason as the kindle quote: `study/aat/`
-is only the folder's name.
+is laid as twelve piles; 52 passages are offered, she seals 19 and declines
+33, and eleven questions are answered, one more than in one box. "Did
+Hargreaves pay August" now finds the remittance advice, which she seals, and
+still declines the ledger line (T2); the phishing email stays declined (T1).
 
-So a question that names the folder ("on the kindle") loses it. That is the
-price of a folder's name no longer being free, and the answer is not to
-loosen it.
+### A question that names a pile
+
+A person says where to look: "on the kindle", "the scone recipe", "which AAT
+exams". Inside its own pile a folder's name is no longer a word its passages
+hold, so the word cannot be matched in the text, and it should not be: it
+says which pile. A word of the question that a pile's own name holds (the
+pile's folder, its last part, or for a loose pile the level's; the way the
+kernel holds a word, so "recipe" names `Recipes/`, and "aat" names
+`study/aat/`) sends the question to that pile alone, and is left out of what
+that pile is asked. The other piles are not asked. The claim and the recap
+say so: `asked of Kindle as "that quote about loss i highlighted on the"`. A
+question left with no content word is asked as it is, and the top level's
+loose files are named for nothing, so no word names them.
+
+Why only the named pile, not every pile with the naming word dropped from
+the one that has it. Measured on both lives at the same deal of ten:
+
+| the question that names a pile is | Bernadette offered / sealed / declined / answered | without pypdf | Teodora |
+|---|---|---|---|
+| asked as it was (no rule) | 99 / 24 / 75 / 16 | 98 / 24 / 74 / 15 | 62 / 19 / 43 / 10 |
+| asked of every pile, the named one without the word | 99 / 23 / 76 / 15 | 98 / 23 / 75 / 14 | 66 / 21 / 45 / 11 |
+| asked of the named pile alone | 92 / 24 / 68 / 16 | 91 / 24 / 67 / 15 | 54 / 20 / 34 / 11 |
+
+Asking every pile fills the deal with the other piles' echoes of the same
+word and crowds out the named pile's own turns: "scone recipe" asks the
+Recipes pile for "scone", where all of Scones.md ties on its file name and
+the recipe comes third, and with ten turns shared between all the piles
+(Chats' "send me your scone recipe" lines among them) the third never comes.
+Asked of that pile alone it is sealed, as before the rule. Teodora's "which
+AAT exams have I passed" finds `study/aat/progress.md:3` again, and "does my
+work insurance need anything from me" now finds the PI schedule.
+
+Every question of both lives that names a pile, and what happens to it:
+
+| question | names | asked as |
+|---|---|---|
+| Bernadette 12, scone recipe | `Notes/Bernie's Vault/Recipes` | "scone"; the recipe sealed |
+| Bernadette 17, that quote about loss i highlighted on the kindle | `Kindle` | "that quote about loss i highlighted on the"; nothing |
+| Teodora 1, when's the car due its mot | `car` | "when's the due its mot"; sealed as before |
+| Teodora 7, when is maisie off school for half term | `maisie` | "when is off school for half term"; sealed as before |
+| Teodora 14, which aat exams have I passed | `study/aat/.` | "which exams have I passed"; sealed |
+| Teodora 18, does my work insurance need anything from me | `work` | "does my insurance need anything from me"; the PI schedule sealed |
+
+No other question names a pile. The common names will be named by ordinary
+questions ("what's my home wifi password" is asked of Home alone), which is
+what saying "home" means here; a person whose wifi password is not in Home
+has asked a pile that cannot answer, and is told nothing is held.
+
+The kindle quote is still lost, and the rule is not what is wrong. The
+clipping, "Loss is nothing else but change", holds one of the three content
+words left ("quote", "loss", "highlighted"), and the kernel serves a passage
+only when it holds half. In one box it was sealed because "kindle", in the
+file's path, was a fourth word it held for free, which is what piles took
+away. The answer is not to loosen the half, nor to give a named pile its
+folder's name back (that gives the scone recipe back to its tie).
+
+### The deal
+
+How many passages are dealt for one question, with the rule in
+(`--dates day-first --piles`). Offered / sealed / declined / questions
+answered, of 20:
+
+| deal | Bernadette | without pypdf | Teodora |
+|---|---|---|---|
+| 3 | 47 / 13 / 34 / 10 | 46 / 12 / 34 / 9 | 37 / 14 / 23 / 11 |
+| 6 | 73 / 19 / 54 / 14 | 72 / 19 / 53 / 14 | 49 / 18 / 31 / 11 |
+| 7 | 80 / 21 / 59 / 16 | 79 / 21 / 58 / 15 | 52 / 19 / 33 / 11 |
+| 10 | 92 / 24 / 68 / 16 | 91 / 24 / 67 / 15 | 54 / 20 / 34 / 11 |
+
+Seven is the smallest deal that answers as many questions as ten. What ten
+keeps over it is three more sealed passages on questions already answered (the
+cancellation mail for her skin check, a calendar line for Aoife's birthday and
+the jeweller's mail about the ring claws); at six, Bernadette loses two
+questions. Teodora's eleven are there from three.
 
 [test_life_box.py](test_life_box.py) runs all of it in about a hundred
 seconds.
