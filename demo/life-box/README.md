@@ -46,11 +46,13 @@ the kernel's own bite and propose, citing what was served.
 
 Her 308 files, laid at her today (2026-10-22), asked her twenty questions:
 
-- 41 passages are offered for 16 of them. She seals 16 and declines 25.
-  Ten questions have an answer she made true. The four the kernel finds
+- 46 passages are offered for 17 of them. She seals 16 and declines 30.
+  Ten questions have an answer she made true. The three the kernel finds
   nothing for ("has kirsty paid me yet", "anything I'm about to forget
-  before november", the Thai place, Ana's wedding) stay unanswered: it
-  serves a passage only when it holds half the question's words.
+  before november", the Thai place) stay unanswered: it serves a passage
+  only when it holds half the question's words. Ana's wedding is two
+  questions in one breath, asked as each (below): five passages are offered
+  and she declines them all.
 - The traps hold. "Did Hargreaves pay August?" is offered the ledger, which
   shows the invoice unpaid; it was paid, and she declines it (PLANTED.md's
   T2). "Is that HMRC refund thing legit?" is offered only the phishing email
@@ -93,8 +95,8 @@ mirror is then mirrored again through day-first.
   the 30th and the tax due the 31st. Her one thing marked to do is the bank's
   "update any recurring payments", which she didn't, which is why the cover
   is ending.
-- 50 passages are offered for 19 of her twenty questions. She seals 20 and
-  declines 30: sixteen questions answered (fifteen without pypdf, below).
+- 54 passages are offered for 19 of her twenty questions. She seals 20 and
+  declines 34: sixteen questions answered (fifteen without pypdf, below).
 - She spells some questions her own way, and `ask` reads each the way her
   files spell it before it asks, as her stack does: the typos add-on, then
   accents, each over the box. "What did the jeweler say" is asked as "what
@@ -169,16 +171,16 @@ path in the whole life, so the answer keys read the same. `decide` and
 
 **What it changes.** Bernadette opened with `--read --dates day-first
 --piles` is laid as fifteen piles (the vault's loose notes, its Daily and
-Recipes, and a pile for each other folder) and 81 passages are offered (80
-without pypdf), against 50 in one box: she seals 22 and declines 59, and
+Recipes, and a pile for each other folder) and 86 passages are offered (85
+without pypdf), against 54 in one box: she seals 23 and declines 63, and
 seventeen questions are answered, one more than in one box. The scone
 recipe is in, and so is "that quote about loss I highlighted on the kindle"
-(below). The
+(below), and the stone-done email for question 14's second part (below). The
 other gains are more of what her key names (the Tax note for the deadline,
 the cancellation mail for her skin check, two more for Aoife's birthday) and
 more declined beside them. Teodora, opened with `--dates day-first --piles`,
-is laid as twelve piles; 52 passages are offered, she seals 19 and declines
-33, and eleven questions are answered, one more than in one box. "Did
+is laid as twelve piles; 57 passages are offered, she seals 19 and declines
+38, and eleven questions are answered, one more than in one box. "Did
 Hargreaves pay August" now finds the remittance advice, which she seals, and
 still declines the ledger line (T2); the phishing email stays declined (T1).
 
@@ -257,11 +259,54 @@ answered, of 20:
 | 7 | 81 / 22 / 59 / 17 | 80 / 22 / 58 / 16 | 52 / 19 / 33 / 11 |
 | 10 | 93 / 25 / 68 / 17 | 92 / 25 / 67 / 16 | 54 / 20 / 34 / 11 |
 
-Seven is the smallest deal that answers as many questions as ten. What ten
+(Measured before a question could be asked in parts; the seven row is now
+86 / 23 / 63 / 17, 85 / 23 / 62 / 16 and 57 / 19 / 38 / 11.) Seven is the
+smallest deal that answers as many questions as ten. What ten
 keeps over it is three more sealed passages on questions already answered (the
 cancellation mail for her skin check, a calendar line for Aoife's birthday and
 the jeweller's mail about the ring claws); at six, Bernadette loses two
 questions. Teodora's eleven are there from three.
+
+## A question that asks two things
+
+"What did colleen say about mam's headstone, how much was my half" asks two
+things, and the kernel serves a passage only when it holds half the question's
+content words. The 2022 email about the stone holds "headstone" and more, and
+is served; the 2024 email that says "Your half is EUR 725" holds one of the
+five, and never was. So `ask` splits a question the way the
+[ask-parts](../../adapters/stdlib/ask-parts/) add-on does (at a comma, "and"
+or "also", and only where each side is itself a question) and asks each part
+the whole way a question goes: spelling read, a pile it names, every pile
+bitten, dealt in turns. Asked alone, "how much was my half" serves
+`Mail/Inbox/2024-04-22 Stone done photos.eml.txt:6` in her Mail pile, and her
+key names it ("Your half"): sealed.
+
+A proposal reaches only the last bite of its box, so each part is bitten and
+proposed in turn, a part's passages right after its own bite, never every
+part bitten first. The claim still says `answers question 14, "what did
+colleen say about mam's headstone, how much was my half"` with the whole
+question, so her key, keyed by number, reads it; it ends with `, part 2 "how
+much was my half"`, and recap shows each part under the question. A question
+of one part is asked as it was and its claim has no part.
+
+The parts share the question's deal (seven passages in all, four and three
+for two parts) rather than each being dealt seven. Both measured, the whole
+scenario (open, week, ask, decide, words, ask, decide, recap), offered /
+sealed / declined / questions answered of 20:
+
+| | Bernadette piles | without pypdf | Bernadette one box | without pypdf | Teodora piles |
+|---|---|---|---|---|---|
+| asked whole | 86 / 24 / 62 / 19 | 84 / 24 / 60 / 18 | 54 / 22 / 32 / 18 | 52 / 21 / 31 / 17 | 52 / 19 / 33 / 11 |
+| each part dealt seven | 96 / 25 / 71 / 19 | 94 / 25 / 69 / 18 | 58 / 22 / 36 / 18 | 56 / 21 / 35 / 17 | 57 / 19 / 38 / 11 |
+| the parts share seven | 91 / 25 / 66 / 19 | 89 / 25 / 64 / 18 | 58 / 22 / 36 / 18 | 56 / 21 / 35 / 17 | 57 / 19 / 38 / 11 |
+
+The same is sealed either way, and no trap is. Sharing offers five fewer on
+Bernadette's piles, so it is the rule. On one box the stone-done email is not
+served: the kernel serves three passages from the whole life and others rank
+above it. The two questions it splits are
+Bernadette's 14 and Teodora's 17 ("what was I going to do for ana's wedding
+and how far along am I"): part 2 of 14 is sealed, and Teodora's five are
+offered and declined, since her key names none of them.
 
 [test_life_box.py](test_life_box.py) runs all of it in about a hundred
 seconds.
@@ -311,8 +356,8 @@ of 20), the first ask and then the second:
 
 | | first | after her words | without pypdf: first | after |
 |---|---|---|---|---|
-| piles | 81 / 22 / 59 / 17 | 86 / 24 / 62 / 19 | 80 / 22 / 58 / 16 | 84 / 24 / 60 / 18 |
-| one box | 50 / 20 / 30 / 16 | 54 / 22 / 32 / 18 | 49 / 19 / 30 / 15 | 52 / 21 / 31 / 17 |
+| piles | 86 / 23 / 63 / 17 | 91 / 25 / 66 / 19 | 85 / 23 / 62 / 16 | 89 / 25 / 64 / 18 |
+| one box | 54 / 20 / 34 / 16 | 58 / 22 / 36 / 18 | 53 / 19 / 34 / 15 | 56 / 21 / 35 / 17 |
 
 Question 2 is offered the 2026 notice's `Mail/Inbox/2026-10-06 Registration
 renewal notice SUBARU FORESTER 1XY4KD.eml.txt:10`, which holds "$912.40", and

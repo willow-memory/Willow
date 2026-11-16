@@ -165,13 +165,14 @@ def test_a_date_order_must_be_one_of_the_two(tmp_path):
 def test_nothing_is_an_answer_until_she_seals_it(teo):
     assert (
         teo["ask"].returncode == 42
-        and "41 answers wait on teodora's seal" in teo["ask"].stdout
-    )
+        and "46 answers wait on teodora's seal" in teo["ask"].stdout
+    )  # was 41: Q17 asks two things, and its two parts offer five passages between them
     assert teo["before"] == []
 
 
 def test_she_seals_what_her_answer_key_names_and_declines_the_rest(teo):
-    assert "sealed 16 answers and declined 25" in teo["decide"].stdout
+    # 16 sealed as before; 30 declined, not 25: Q17's five (see its test below)
+    assert "sealed 16 answers and declined 30" in teo["decide"].stdout
     got = answers(teo["recap"].stdout)
     assert "10 of 20 questions have an answer teodora sealed" in teo["recap"].stdout
     assert got[1]["sealed"] == [
@@ -183,10 +184,17 @@ def test_she_seals_what_her_answer_key_names_and_declines_the_rest(teo):
     assert (
         "email/2025-10-06_pi-renewal-2025.eml:15" in got[18]["declined"]
     )  # last year's, the decoy
-    for q in (2, 6, 15, 17):  # nothing in her life holds the question's words
+    for q in (2, 6, 15):  # nothing in her life holds the question's words
         assert got[q] == {"sealed": [], "declined": []}
         assert f"{q:>2}. " in teo["recap"].stdout
-    assert teo["recap"].stdout.count("nothing in the life holds it") == 4
+    assert teo["recap"].stdout.count("nothing in the life holds it") == 3
+    # Q17 asks two things ("what was I going to do for ana's wedding and how far along am I"):
+    # asked whole nothing held it, asked as each part five passages are offered, and her key
+    # names none of them, so all five are declined, and none is sealed
+    assert got[17]["sealed"] == [] and len(got[17]["declined"]) == 5
+    q17 = teo["recap"].stdout.split("17. ")[1].split("18. ")[0]
+    assert '      part 1 "what was I going to do for ana\'s wedding"\n' in q17
+    assert '      part 2 "how far along am I"\n' in q17
 
 
 def test_the_traps_are_declined(teo):
@@ -204,7 +212,7 @@ def test_her_record_holds_every_seal(teo):
     assert v.returncode == 0 and "16 sealed" in v.stdout
     rows = kernel.read(t / "record" / "record.jsonl")[0]
     assert [r["kind"] for r in rows].count("seal") == 16
-    assert [r["kind"] for r in rows].count("decline") == 25
+    assert [r["kind"] for r in rows].count("decline") == 30
 
 
 def test_only_a_made_up_person_with_an_answer_key_is_decided_for(teo, tmp_path):
@@ -293,9 +301,12 @@ def test_bernadette_seals_what_her_key_names_and_her_traps_hold(bern):
     # their passages. The letter is a scan, read only with pypdf: without it, one
     # answer fewer, and one question fewer answered. The kindle clippings now say "highlight"
     # (books.py keeps the kind), so Q17's "highlighted" is held by the clipping: two more
-    # offered, both declined (30 declined, not 28), sealed and answered as before.
+    # offered, both declined (30 declined, not 28), sealed and answered as before. Q14 asks two
+    # things and is asked as each: its second part ("how much was my half") offers four more
+    # (34 declined), none sealed on one box, where three passages are all the kernel serves and
+    # the stone-done email ranks below them (it is sealed from her Mail pile, below).
     sealed, answered = (20, 16) if bern["pdf"] else (19, 15)
-    assert f"sealed {sealed} answers and declined 30" in bern["decide"].stdout
+    assert f"sealed {sealed} answers and declined 34" in bern["decide"].stdout
     assert f"{answered} of 20 questions have an answer bernadette sealed" in bern["recap"].stdout  # fmt: skip
     got = answers(bern["recap"].stdout)
     # Q17: the clipping that says "highlight" is sealed, and the two other clippings are offered, declined
@@ -361,9 +372,9 @@ def test_a_question_spelt_as_the_files_spell_it_is_asked_once(bern):
     assert ask.count("asked as") == 2  # Q11 and Q20 only, of her twenty
     assert "12. scone recipe  (a thing you wrote down)\n      asked as" not in ask
     rows = kernel.read(bern["table"] / "record" / "record.jsonl")[0]
-    assert [r["kind"] for r in rows].count(
-        "bite"
-    ) == 20  # one bite a question: the read form in place of the typed
+    assert (
+        [r["kind"] for r in rows].count("bite") == 21
+    )  # one bite a question, the read form in place of the typed; Q14 asks two things: two
     claims = [json.loads(p.read_text())["claim"] for p in (bern["table"] / "record" / "proposals").glob("*.json")]  # fmt: skip
     assert any(
         c.startswith('answers question 12, "scone recipe", from ') for c in claims
@@ -475,7 +486,8 @@ def test_bernadette_piles_are_asked_every_box_and_sealed_in_the_box_that_served_
         # every pile hears every question, but the two that name another pile ("scone recipe"
         # names Recipes, "...on the kindle" names Kindle) go to that pile alone
         named = {12: "notes-bernie-s-vault-recipes", 17: "kindle"}
-        assert kinds.count("bite") == 20 - sum(1 for slug in named.values() if slug != p["slug"]), p["slug"]  # fmt: skip
+        # and Q14 asks two things, each bitten: one bite more
+        assert kinds.count("bite") == 21 - sum(1 for slug in named.values() if slug != p["slug"]), p["slug"]  # fmt: skip
         # a proposal says where it is from in the whole life: the pile's folder, then the file
         for prop in (t / "records" / p["slug"] / "proposals").glob("*.json"):
             where = life_box.CLAIM.match(json.loads(prop.read_text())["claim"]).group(4)
@@ -517,10 +529,13 @@ def test_bernadette_by_piles_counts(bern_piles):
     # wrote, so the clipping holds "highlight" and with "loss" is 2 of the 3 words left
     # once "kindle" has named the pile (it was 1 of 3, and unanswered, before). A question
     # that names a pile is asked of that pile alone, so Q12 and Q17 offer 3 and 1: 81 offered.
+    # Q14 asks two things and is asked as each, the question's 7 shared between its parts (4 and
+    # 3): five more offered, and the stone-done email ("Your half is EUR 725") is sealed from her
+    # Mail pile for part 2, one more sealed: 86 offered, 23 sealed, 63 declined.
     # Without pypdf, the scan is unread: one offered, one declined and one question fewer.
-    offered, declined, answered = (81, 59, 17) if bern_piles["pdf"] else (80, 58, 16)
+    offered, declined, answered = (86, 63, 17) if bern_piles["pdf"] else (85, 62, 16)
     assert f"{offered} answers wait on bernadette's seal" in bern_piles["ask"].stdout
-    assert f"sealed 22 answers and declined {declined}" in bern_piles["decide"].stdout
+    assert f"sealed 23 answers and declined {declined}" in bern_piles["decide"].stdout
     assert (
         f"{answered} of 20 questions have an answer bernadette sealed"
         in bern_piles["recap"].stdout
@@ -538,11 +553,57 @@ def test_bernadette_by_piles_counts(bern_piles):
     assert got[20]["sealed"] == (["Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:1"] if bern_piles["pdf"] else [])  # fmt: skip
 
 
+def test_a_question_that_asks_two_things_is_asked_as_each_and_part_two_is_answered(
+    bern_piles,
+):
+    """Q14, "what did colleen say about mam's headstone, how much was my half":
+    asked whole it held the 2022 email about the stone and never the one that says
+    "Your half is EUR 725", which holds one of its five words. Asked as each part,
+    "how much was my half" finds that email in her Mail pile."""
+    t = bern_piles["table"]
+    got = answers(bern_piles["recap"].stdout)
+    stone, done = "Mail/Inbox/2022-03-17 Paddys Day and Mams stone.eml.txt:10", "Mail/Inbox/2024-04-22 Stone done photos.eml.txt:6"  # fmt: skip
+    assert got[14]["sealed"] == [
+        stone,
+        done,
+    ]  # the whole question's answer, and part 2's
+    q14 = bern_piles["recap"].stdout.split("14. ")[1].split("15. ")[0]
+    assert q14.startswith("what did colleen say about mam's headstone, how much was my half\n")  # fmt: skip
+    assert '      part 1 "what did colleen say about mam\'s headstone"\n' in q14
+    assert '      part 2 "how much was my half"\n' in q14
+    # each claim says the full question, so her key (keyed by number) reads it, and its part
+    mail = t / "records" / "mail" / "proposals"
+    claims = {m.group(4) + ":" + m.group(5): m for m in (life_box.CLAIM.match(json.loads(f.read_text())["claim"]) for f in mail.glob("*.json")) if m.group(1) == "14"}  # fmt: skip
+    assert claims[stone].group(2) == claims[done].group(2) == "what did colleen say about mam's headstone, how much was my half"  # fmt: skip
+    assert (claims[done].group(8), claims[done].group(9)) == (
+        "2",
+        "how much was my half",
+    )
+    assert claims[stone].group(8) == "1" and claims[stone].group(9) == "what did colleen say about mam's headstone"  # fmt: skip
+    # part 2's passages are proposed under paths of their own, so part 1's are not replaced
+    paths = {m.group(4) + ":" + m.group(5): json.loads(f.read_text())["path"] for f in mail.glob("*.json") if (m := life_box.CLAIM.match(json.loads(f.read_text())["claim"])) and m.group(1) == "14"}  # fmt: skip
+    assert paths[done].startswith("answers/q14-p2-") and paths[stone].startswith("answers/q14-p1-")  # fmt: skip
+    # a question that asks one thing has no part, in any box: its claim and its recap are as they were
+    every = [m for box in all_boxes(t) for f in (box / "proposals").glob("*.json") if (m := life_box.CLAIM.match(json.loads(f.read_text())["claim"])) and m.group(1) != "14"]  # fmt: skip
+    assert every and all(m.group(8) is None and m.group(9) is None for m in every)
+    assert (
+        "      part "
+        not in bern_piles["recap"].stdout.split("13. ")[1].split("14. ")[0]
+    )
+    rows = kernel.read(t / "records" / "mail" / "record.jsonl")[0]
+    # two parts in a pile, so two bites there, the second after the first part's proposals
+    kinds = [r["kind"] for r in rows]
+    assert (
+        kinds.count("bite") == 21 - 2
+    )  # every question but the two that name another pile
+    assert verifies(t / "records" / "mail").returncode == 0
+
+
 def test_bernadette_by_piles_seals_nothing_her_key_does_not_name_in_any_box(bern_piles):
     t = bern_piles["table"]
     key = json.loads((HERE / "bernadette.json").read_text())
     sealed = seals(t)
-    assert len(sealed) == 22
+    assert len(sealed) == 23  # 22, and Q14's stone-done email
     for box, prop in sealed:
         m = life_box.CLAIM.match(prop["claim"])
         q, where = m.group(1), m.group(4)
@@ -587,9 +648,10 @@ def test_teodora_by_piles_keeps_her_week_and_her_traps(teo_piles):
     )  # the week still runs, over the whole-life box
     assert "SUMMARY:Half term" in teo_piles["week"].stdout
     # one box offered 41, sealed 16 and declined 25 for 10 of 20; across piles more is offered
-    # (up to 7 a question), the key seals 3 more and one more question is answered (Q14)
-    assert "52 answers wait on teodora's seal" in teo_piles["ask"].stdout
-    assert "sealed 19 answers and declined 33" in teo_piles["decide"].stdout
+    # (up to 7 a question), the key seals 3 more and one more question is answered (Q14).
+    # Q17 asks two things and is asked as each: five more offered, all declined (57, 38)
+    assert "57 answers wait on teodora's seal" in teo_piles["ask"].stdout
+    assert "sealed 19 answers and declined 38" in teo_piles["decide"].stdout
     assert (
         "11 of 20 questions have an answer teodora sealed" in teo_piles["recap"].stdout
     )
@@ -702,6 +764,21 @@ def test_a_claim_says_a_question_was_asked_of_a_pile_and_old_claims_still_parse(
     assert (
         life_box.CLAIM.match('answers question 1, "q", from f.txt:1').group(6) is None
     )
+
+
+def test_a_claim_says_which_part_of_a_question_it_answers_and_old_claims_still_parse():
+    whole = "what did colleen say about mam's headstone, how much was my half"
+    q = f'answers question 14, "{whole}"'
+    part = ', part 2 "how much was my half"'
+    old, plain = q + ", from Mail/a b.eml:6", q + ", from Mail/a b.eml:6" + part
+    both = q + ', asked as "how much was my half", from Mail/a b.eml:6, asked of Mail as "half"' + part  # fmt: skip
+    m, n, b = (life_box.CLAIM.match(c) for c in (old, plain, both))
+    assert m and n and b
+    # groups 1-7 mean what they did; the part is 8 and 9, and only a part has them
+    assert (m.group(1), m.group(4), m.group(5), m.group(8), m.group(9)) == ("14", "Mail/a b.eml", "6", None, None)  # fmt: skip
+    assert (n.group(1), n.group(2), n.group(4), n.group(5)) == ("14", whole, "Mail/a b.eml", "6")  # fmt: skip
+    assert (n.group(6), n.group(7), n.group(8), n.group(9)) == (None, None, "2", "how much was my half")  # fmt: skip
+    assert (b.group(3), b.group(6), b.group(7), b.group(8), b.group(9)) == ("how much was my half", "Mail", "half", "2", "how much was my half")  # fmt: skip
 
 
 # ── day two: her own words ──────────────────────────────────────────────────
@@ -833,7 +910,7 @@ def test_day_two_counts_with_her_piles_and_nothing_untrue_is_sealed(words_piles)
     assert f"{19 if pdf else 18} of 20 questions have an answer bernadette sealed" in words_piles["recap"].stdout  # fmt: skip
     key = json.loads((HERE / "bernadette.json").read_text())
     every = seals(words_piles["table"])
-    assert len(every) == 24
+    assert len(every) == 25  # 24, and Q14's stone-done email
     for box, prop in every:
         m = life_box.CLAIM.match(prop["claim"])
         q, where = m.group(1), m.group(4)
