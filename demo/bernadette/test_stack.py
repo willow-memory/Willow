@@ -103,7 +103,8 @@ def test_the_look_ahead_finds_what_her_files_hold(ran):
         assert what in coming.split(f"## {day}")[1].split("## ")[0], day
     assert said["car"] == "2 kinds of job, 16 entries"
     assert said["home-upkeep"] == "3 kinds of job, 14 entries"
-    assert said["subscriptions"].startswith("11 subscriptions")
+    # her pension, the unit's rent and the tax refund come in: listed, never counted as paid
+    assert said["subscriptions"].endswith("; 3 that come in, not counted")
     hide = next(s for s in ran["doc"]["steps"] if s["piece"] == "privacy")
     assert hide["said"] == "hid 4 email, 3 password"
 

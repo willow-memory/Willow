@@ -31,8 +31,12 @@ guess at when to look, not a promise from anyone.
 
 Dearest first by what it costs in a year. Nothing is cancelled, and nothing
 is claimed to be a subscription that your files do not show paid on a rhythm.
-A line does not say which way money went, so a deposit that comes round (a
-wage, a refund) is found as well as a payment. Amounts are shown without their currency sign, as they stand in the line; two
+**Which way.** An amount written with a plus before it (+3292.34, as a
+statement's credit is) came in: a pension, a wage, a rent that comes round
+is listed with its plus, last, and never added to what you pay. A minus, or
+no sign at all, is counted as paid, since an unsigned amount doesn't say
+which way it went (some banks write money in unsigned, and an email's
+"15.99" is a price). Amounts are shown without their currency sign; two
 currencies are not added. It only reads. Exit codes, the kernel's: 0
 subscriptions found; 42 none; 2 refused.
 """
@@ -85,9 +89,18 @@ def what(line: str) -> str:
 
 
 def paid(line: str) -> str:
-    """The first amount a line writes to the cent, as 15.99; "" when none."""
+    """The first amount a line writes to the cent, as 15.99, or +15.99 when
+    a plus is written before it, money that came in; "" when none."""
     m = AMOUNT.search(line)
-    return f"{int(m.group(2).replace(',', ''))}.{m.group(3)}" if m else ""
+    if not m:
+        return ""
+    came_in = "+" if line[: m.start()].endswith("+") else ""
+    return f"{came_in}{int(m.group(2).replace(',', ''))}.{m.group(3)}"
+
+
+def comes_in(sub: dict) -> bool:
+    """Whether a thing's latest amount came in: written with a plus."""
+    return sub["amount"].startswith("+")
 
 
 def to_date(day: str) -> date:
@@ -131,7 +144,7 @@ def found(pile: list[dict]) -> list[dict]:
             "count": len(days), "was": before,
             "year": float(now) * (12 if kind == "monthly" else 1),
         })  # fmt: skip
-    return sorted(out, key=lambda s: (-s["year"], s["what"]))
+    return sorted(out, key=lambda s: (comes_in(s), -s["year"], s["what"]))
 
 
 def show(subs: list[dict]) -> list[str]:
@@ -143,12 +156,14 @@ def show(subs: list[dict]) -> list[str]:
             f"{s['what']:<{w}}  {s['amount']:>8}  {s['kind']:<7}  last {s['last']}  next about {s['next']}"
             f"  ({s['count']} payments{extra})"
         )
-    month = sum(float(s["amount"]) for s in subs if s["kind"] == "monthly")
-    year = sum(s["year"] for s in subs)
-    n = len(subs)
-    out.append(
-        f"{n} subscription{'s' if n != 1 else ''}: about {month:.2f} a month, {year:.2f} a year"
-    )
+    pays = [s for s in subs if not comes_in(s)]
+    month = sum(float(s["amount"]) for s in pays if s["kind"] == "monthly")
+    year = sum(s["year"] for s in pays)
+    n, ins = len(pays), len(subs) - len(pays)
+    line = f"{n} subscription{'s' if n != 1 else ''}: about {month:.2f} a month, {year:.2f} a year"  # fmt: skip
+    if ins:
+        line += f"; {ins} that come{'s' if ins == 1 else ''} in, not counted"
+    out.append(line)
     return out
 
 

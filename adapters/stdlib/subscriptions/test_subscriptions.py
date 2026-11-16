@@ -160,6 +160,33 @@ def test_the_listing_dearest_a_year_first_with_totals(tmp_path):
     assert run("--box", str(b)).stdout == got.stdout
 
 
+def test_an_amount_written_with_a_plus_came_in_and_is_never_counted_as_paid(tmp_path):
+    text = (
+        '15/08/2026,"+3292.34","SUPER PENSION","+126917.35"\n'
+        '15/09/2026,"+3292.34","SUPER PENSION","+130209.69"\n'
+        '15/10/2026,"+3292.34","SUPER PENSION","+133502.03"\n'
+        '20/08/2026,"-95.00","TELSTRA","+126822.35"\n'
+        '20/09/2026,"-95.00","TELSTRA","+130114.69"\n'
+        '20/10/2026,"-95.00","TELSTRA","+133407.03"\n'
+        "2026-01-05,REFUND,+$12.00\n2026-02-04,REFUND,+$12.00\n2026-03-06,REFUND,+$12.00\n"
+    )  # fmt: skip
+    assert sb.paid('15/10/2026,"+3292.34","SUPER"') == "+3292.34"
+    assert (
+        sb.paid("2026-01-05,REFUND,+$12.00") == "+12.00"
+    )  # a plus before its currency
+    assert sb.paid("2026-01-05,GYM,-29.00") == "29.00"
+    assert sb.paid("GYM 29.00, +3.00 tip") == "29.00"  # the first amount's own sign
+    b = box(tmp_path, {"bank.csv": text})
+    got = run("--box", str(b)).stdout.splitlines()
+    assert got[0].startswith("telstra") and "95.00" in got[0]
+    assert {g.split()[0] for g in got[1:3]} == {"super", "refund"}  # what came in, last
+    assert "+3292.34  monthly" in got[1]
+    assert got[-1] == "1 subscription: about 95.00 a month, 1140.00 a year; 2 that come in, not counted"  # fmt: skip
+    (tmp_path / "one").mkdir()
+    one = box(tmp_path / "one", {"bank.csv": text.split("2026-01-05")[0]})
+    assert run("--box", str(one)).stdout.splitlines()[-1].endswith("; 1 that comes in, not counted")  # fmt: skip
+
+
 def test_one_subscription_is_singular_and_nothing_is_42(tmp_path):
     b = box(
         tmp_path,

@@ -41,13 +41,17 @@ not a plan. The amount is the latest paid; an earlier different amount is said
 ("was 12.99"). "Next about" is the last day plus a month or a year: a guess at
 when to look, not a promise from anyone.
 
-Dearest first by what it costs in a year. A line does not say which way money
-went, so a deposit that comes round (a wage, a refund) is found as well as a
-payment. Amounts are shown without their currency sign, as they stand in the
-line, and two currencies are not added. On willow's demo folders it finds
-Teodora's direct debits, Hollis's mortgage, insurance and phone, and
-Bernadette's Netflix, rego and super; it also finds the odd email's recurring
-"paid" line, which is a rhythm all the same.
+Dearest first by what it costs in a year. An amount written with a plus
+before it (+3292.34, as a statement's credit is) came in: a pension, a wage,
+a rent that comes round is listed last, with its plus, and never added to
+what you pay; the total says how many came in. A minus, or no sign, is
+counted as paid, since an unsigned amount doesn't say which way it went
+(some banks write money in unsigned, and an email's "15.99" is a price).
+Amounts are shown without their currency sign, and two currencies are not
+added. On willow's demo folders it finds Teodora's direct debits, Hollis's
+mortgage, insurance and phone, and Bernadette's Netflix, rego and phone, with
+her super pension, the unit's rent and a tax refund as money in; it also
+finds the odd email's recurring "paid" line, which is a rhythm all the same.
 
 Nothing is cancelled, and nothing is called a subscription that your files do
 not show paid on a rhythm. It only reads. Exit codes, the kernel's: 0

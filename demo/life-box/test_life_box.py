@@ -271,6 +271,14 @@ def test_bernadettes_week_finds_her_rego_her_cover_and_her_friend(bern):
         ("2026-11-14", "FINAL NOTICE policy suspension"),  # N3, her cover's last day
     ):
         assert what in coming.split(f"## {day}")[1].split("## ")[0], day
+    subs = (run_ / "08-subscriptions.txt").read_text()
+    assert (
+        "lakeside health premium       412.85  monthly  last 2026-07-28" in subs
+    )  # N3: none since July
+    assert (
+        "ausprime super pension      +3292.34" in subs
+    )  # her pension came in, never paid
+    assert subs.splitlines()[-1] == "8 subscriptions: about 4596.28 a month, 56727.31 a year; 3 that come in, not counted"  # fmt: skip
     # the card replaced in August is what she meant to do and didn't
     assert "update any recurring payments" in (run_ / "09-todo.txt").read_text()
 

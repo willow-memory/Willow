@@ -1,0 +1,1 @@
+`subscriptions`: an amount written with a plus before it, as a statement's credit is, came in: a pension, a wage or a rent that comes round is listed last with its plus and never added to what you pay, and the total says how many came in. Bernadette's month goes from 9632.24 to 4596.28.

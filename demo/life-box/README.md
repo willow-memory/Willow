@@ -103,9 +103,12 @@ mirror is then mirrored again through day-first.
   file's wrong passage (its backlinks), and "dermatoligist referal letter",
   spelt as she spells it, holds too few of the letter's words. Her stack in
   [demo/bernadette](../bernadette/) reads that one through typos first.
-- Her week's subscriptions says "about 9632.24 a month", since a line does
-  not say which way money went (its card says so): her pension and the
-  unit's rent come round as surely as Netflix.
+- Her week's subscriptions lists eight things she pays, about 4596.28 a
+  month, and three that come in, written with a plus as her bank writes a
+  credit: her super pension, the unit's rent and a tax refund, never added
+  to what she pays. Lakeside's premium shows its last payment in July, a
+  month that has gone by. The 4000.00 a month to her own saver is still
+  counted as paid: nothing in the line says it stays hers.
 - The scans are read by the pdf add-on, which needs pypdf. Without it, her
   referral letter isn't read, and the cancelled 5 Nov booking is offered in
   its place, and declined. The test holds both.
