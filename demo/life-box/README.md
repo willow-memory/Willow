@@ -12,7 +12,7 @@ everyone begins with, runs a week's prep at their own today, asks their
 own questions (their `QUESTIONS.md`), and lets them decide each answer
 with a key made for them.
 
-    python demo/life-box/life_box.py open   --who teodora --table DIR
+    python demo/life-box/life_box.py open   --who teodora --table DIR --dates day-first
     python demo/life-box/life_box.py week   --table DIR
     python demo/life-box/life_box.py ask    --table DIR
     python demo/life-box/life_box.py decide --table DIR
@@ -21,7 +21,7 @@ with a key made for them.
 | piece | what it is |
 |---|---|
 | [life_box.py](life_box.py) | the five steps: lay the life, run the week, ask the questions, decide them, say what was made true |
-| [week.md](week.md) | the game box's prep sheet made for a life: what's coming in three weeks, what's waiting on me, who owes me and whom I owe, what goes out every month, where things stand, the money in my files, what's new, does the box hold |
+| [week.md](week.md) | the game box's prep sheet made for a life: what's coming in three weeks, what runs out, what the car and the house need, what's waiting on me, who owes me and whom I owe, what goes out every month, where things stand, the money in my files, what's new, does the box hold |
 | [teodora.json](teodora.json) | Teodora's answer key: for each of her twenty questions, the files (and the words in them) she would seal as its answer, written from her [PLANTED.md](../teodora/PLANTED.md) |
 
 ## The seal, for someone made up
@@ -41,7 +41,7 @@ the kernel's own bite and propose, citing what was served.
 
 Her 308 files, laid at her today (2026-10-22), asked her twenty questions:
 
-- 41 passages are offered for 16 of them. She seals 15 and declines 26.
+- 41 passages are offered for 16 of them. She seals 16 and declines 25.
   Ten questions have an answer she made true. The four the kernel finds
   nothing for ("has kirsty paid me yet", "anything I'm about to forget
   before november", the Thai place, Ana's wedding) stay unanswered: it
@@ -60,13 +60,18 @@ Her 308 files, laid at her today (2026-10-22), asked her twenty questions:
   along am I" with Ana's wedding is where it stands, and the week's todo
   step has the nineteen recipes not yet typed up. The week also finds Dev's
   £600, her eight standing payments, and last year's turnover.
-- Her week finds what is coming in three weeks: the insurer collecting on
-  27/10, half term, three invoices due 30/10, month end. It misses her two
-  most urgent dates, her cover ending 03/11/2026 and the MOT running out
-  09/11/2026: day first, but each could be read month first, and coming-up
-  never guesses a date that reads two ways. Her life is written day first;
-  nothing yet lets a box say so. The test holds the miss, so the day it can
-  be told otherwise the test says so.
+- Her life is written day first, and only she would know: 03/11/2026 reads
+  both ways, and coming-up never guesses. `--dates day-first` says it for
+  her: the life is mirrored through the [day-first](../../adapters/stdlib/day-first/)
+  add-on, every date given its ISO form beside it, and the box laid over
+  the mirror. Then her week finds her two most urgent dates, her cover
+  ending 03/11/2026 and the MOT running out 09/11/2026, in coming-up and in
+  renewals, beside the insurer collecting on 27/10, half term and three
+  invoices due 30/10. Opened without it, the same week finds neither; the
+  test holds both.
+- car reads the MOT certificate as the test's: its advisories (both front
+  tyres, a corroded brake pipe) keep the test's day, not the expiry's, now
+  that the expiry is readable above them.
 
 [test_life_box.py](test_life_box.py) runs all of it in about ten seconds.
 

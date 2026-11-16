@@ -32,8 +32,9 @@ mot (MOT, inspection, roadworthy, rego, registration, safety check), tyres,
 brakes, battery, repair (repair, repaired, fixed, replaced) and, last,
 service (service, serviced, oil change, oil + filter). A line is the first
 kind it names, so "oil + filter, battery" is the battery's. A
-line's day is the latest date it says before any "due" (the kernel's
-`newest`), else the nearest date written above it in its file, else the date
+line's day is the latest date it says before any "due", expiry or "valid
+until" (the kernel's `newest`): those say when a thing runs out, not when a
+job was done. Else the nearest date written above it in its file, else the date
 its file is named for; a line no day reaches is not counted.
 
 **What it cost** is the amount with a currency sign on the line (£ $ €); each

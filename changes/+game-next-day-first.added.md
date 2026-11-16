@@ -1,0 +1,1 @@
+`day-first`: for a folder you know writes dates day first, each one's ISO form written beside it in a mirror of every file the kernel reads, so 03/11/2026 is placed as the 3rd of November by coming-up, renewals, car and the rest; month-first's twin, sharing its walk

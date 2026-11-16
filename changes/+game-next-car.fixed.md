@@ -1,0 +1,1 @@
+`car`: an expiry or "valid until" date is when a thing runs out, not the day a job was done: an MOT's advisories keep the test's day, where an expiry readable above them had made them a job on a day still to come

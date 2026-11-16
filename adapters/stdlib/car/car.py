@@ -19,7 +19,7 @@ mot (MOT, inspection, roadworthy, rego, registration, safety check), tyres,
 brakes, battery, repair (repair, repaired, fixed, replaced) and, last,
 service (service, serviced, oil change, oil + filter). A line is the first
 kind it names, so "oil + filter, battery" is the battery's. A
-line's day is the latest date it says before any "due", else the nearest date
+line's day is the latest date it says before any "due" or expiry, else the nearest date
 written above it in its file, else the date its file is named for; a line no
 day reaches is not counted.
 
@@ -63,7 +63,7 @@ CAR_CONTEXT = re.compile(
     r"\b(?:cars?|vehicles?|vans?|ute|trucks?|motors?|garage|auto|engine|odometer|mot|rego|tyres?|tires?|brakes?)\b",
     re.I,
 )
-DUE = re.compile(r"\bdue\b.*", re.I)
+DUE = re.compile(r"\b(?:due|expir(?:y|es|ed|ing)|valid until)\b.*", re.I)
 MONEY = re.compile(r"([£$€])\s*(\d[\d,]*(?:\.\d{1,2})?)")
 EVERY = re.compile(
     r"\bevery\s+(?:(\d+|a|one|two|three|four|six|twelve)\s*[- ]?)?(week|month|year)s?\b",
@@ -78,10 +78,11 @@ NAMED = (
 )
 
 
-# differs on purpose: a due date is when something is due, not the day the line happened
+# differs on purpose: a due date, or an expiry, is when something is due or runs out,
+# not the day the line happened
 def entries(pile: list[dict]) -> list[tuple[str, str, int, str]]:
     """(day, path, line number, text) for each line a day reaches: the latest
-    date it says before any "due", else the nearest above it in its file, else
+    date it says before any "due" or expiry, else the nearest above it in its file, else
     its file's name."""
     out = []
     for path, rows in habits.file_lines(pile).items():

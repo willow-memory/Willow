@@ -128,7 +128,21 @@ def sources(root: Path) -> list[Path]:
     return sorted(found, key=lambda p: p.as_posix())
 
 
+def is_page_or_text(rel: Path, path: Path) -> bool:
+    """month-first's files: text and pages, by their names."""
+    return rel.suffix.lower() in TEXT + PAGE
+
+
 def mirror(folder: Path, to: Path) -> int:
+    return mirror_with(folder, to, mark, is_page_or_text, "month-first", "day first", every_txt=True)  # fmt: skip
+
+
+def mirror_with(folder: Path, to: Path, marker, keep, order: str, other: str, every_txt: bool) -> int:  # fmt: skip
+    """Each file under `folder` that `keep` takes, written into `to` with its
+    `order` dates marked by `marker`; a file whose own dates say `other` is
+    named. Every file written gains .txt when `every_txt`, else only a page,
+    whose tags are dropped. day-first shares this walk with its own marker
+    and keep."""
     if not folder.is_dir():
         print(f"refused: {folder} is not a folder", file=sys.stderr)
         return kernel.REFUSED
@@ -144,7 +158,7 @@ def mirror(folder: Path, to: Path) -> int:
     written = skipped = dates = dmy = 0
     for rel in sources(src):
         suffix = rel.suffix.lower()
-        if suffix not in TEXT + PAGE:
+        if not keep(rel, src / rel):
             continue
         try:
             text = (src / rel).read_bytes().decode("utf-8-sig")
@@ -158,19 +172,20 @@ def mirror(folder: Path, to: Path) -> int:
             continue
         if suffix in PAGE:
             text = kernel.html_text(text)
-        text, n, says = mark(text)
+        text, n, says = marker(text)
         dates += n
         if says:
             dmy += 1
-            print(f"day first: {rel.as_posix()}, its numbered dates left as they are", file=sys.stderr)  # fmt: skip
+            print(f"{other}: {rel.as_posix()}, its numbered dates left as they are", file=sys.stderr)  # fmt: skip
         out = to / rel
-        out = out.with_name(out.name + ".txt")
+        if every_txt or suffix in PAGE:
+            out = out.with_name(out.name + ".txt")
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(text.encode("utf-8"))
         written += 1
-    print(f"{dates} month-first dates given their ISO form")
+    print(f"{dates} {order} dates given their ISO form")
     if dmy:
-        print(f"{dmy} files whose own dates say day first: their numbered dates left")
+        print(f"{dmy} files whose own dates say {other}: their numbered dates left")
     print(f"wrote {written} files to {to}; skipped {skipped}")
     return kernel.ALIVE if written else kernel.ESCALATE
 

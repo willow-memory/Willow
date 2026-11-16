@@ -697,6 +697,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "copy-in": ("copy_in.py", ["--from", "{pile}", "--to", "{tmp}/copied-in"]),
     "cursor": ("cursor.py", ["--box", "{box}"]),
     "daily-word": ("daily_word.py", ["--box", "{box}", "today", *NOW]),
+    "day-first": ("day_first.py", ["mirror", "--from", "{pile}", "--to", "{tmp}/mirror"]),
     "debts": ("debts.py", ["--box", "{box}"]),
     "decisions": ("decisions.py", ["ask", "--box", "{box}", "tomatoes"]),
     "deep-links": ("deep_links.py", ["--box", "{box}"]),

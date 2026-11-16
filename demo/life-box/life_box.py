@@ -1,6 +1,6 @@
 """life_box.py: the game box, with a person's life for its binder. Python 3.9+.
 
-    python demo/life-box/life_box.py open   --who NAME --table DIR
+    python demo/life-box/life_box.py open   --who NAME --table DIR [--dates day-first|month-first]
     python demo/life-box/life_box.py week   --table DIR
     python demo/life-box/life_box.py ask    --table DIR
     python demo/life-box/life_box.py decide --table DIR
@@ -17,6 +17,11 @@ the starter words list a person begins with:
   with a key made for NAME at DIR/NAME.key. NAME is made up, and so is the
   key: this demo seals for them. A real person's key is never made, read
   or used here.
+- `--dates day-first` (or month-first) says the order the life's dates
+  are written in, which only its writer knows: the life is mirrored through
+  that add-on, each date given its ISO form beside it, and the box laid over
+  the mirror, so 03/11/2026 is the 3rd of November to every reader of dates.
+  Without it, a date that reads both ways is left unread.
 - `week` runs week.md, a week's prep over the life, at NAME's own today
   (the TODAY their make_life.py writes them at), kept in DIR/week/NNN,
   beside NNN.md, the stack as it ran.
@@ -55,6 +60,10 @@ DEMO = ROOT / "demo"
 STARTER = ROOT / "adapters" / "stdlib" / "starter-words" / "starter.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
 ROUTE = ROOT / "adapters" / "stdlib" / "route" / "route.py"
+ORDERS = {  # a folder's date order, which only its writer knows, and the add-on that marks it
+    "day-first": ROOT / "adapters" / "stdlib" / "day-first" / "day_first.py",
+    "month-first": ROOT / "adapters" / "stdlib" / "month-first" / "month_first.py",
+}
 WEEK = HERE / "week.md"
 TODAY = re.compile(r"^TODAY = date\((\d{4}), (\d{1,2}), (\d{1,2})\)", re.M)
 QUESTION = re.compile(r"^\d+\. (.+)$", re.M)
@@ -90,13 +99,15 @@ def box_of(table: Path) -> Path:
     return table / "record"
 
 
-def cmd_open(who: str, table: Path) -> int:
+def cmd_open(who: str, table: Path, dates: str = "") -> int:
     if not re.fullmatch(r"[a-z][a-z-]*", who) or not (DEMO / who / "make_life.py").is_file():  # fmt: skip
         return fail(
             f"{who!r} isn't one of willow's made-up lives (demo/NAME/make_life.py)"
         )
     if not (DEMO / who / "QUESTIONS.md").is_file():
         return fail(f"demo/{who} has no QUESTIONS.md of their own")
+    if dates and dates not in ORDERS:
+        return fail(f"--dates is {' or '.join(ORDERS)}: the order the life's dates are written in")  # fmt: skip
     if table.exists():
         return fail(f"{table} is there already: a life box is laid in a new folder")
     table.mkdir(parents=True)
@@ -104,19 +115,31 @@ def cmd_open(who: str, table: Path) -> int:
     made = py(table / who / "make_life.py", cwd=table / who)
     if made.returncode != 0:
         return fail(f"{who}'s make_life.py: {made.stderr.strip()}")
+    pile = table / who / "life"
+    if (
+        dates
+    ):  # each date given its ISO form beside it, so every reader of dates can place it
+        pile = table / f"{who}-{dates}"
+        marked = py(
+            ORDERS[dates], "mirror", "--from", table / who / "life", "--to", pile
+        )
+        if marked.returncode != 0:
+            return fail(f"{dates}: {marked.stderr.strip()}")
     now = today_of(who)
     words = py(STARTER, "copy", "--to", table / "words.txt")
     if words.returncode != 0:
         return fail(f"the starter words list: {words.stderr.strip()}")
-    init = py(ROOT / "kernel.py", "init", "--box", box_of(table), "--pile", table / who / "life",
+    init = py(ROOT / "kernel.py", "init", "--box", box_of(table), "--pile", pile,
               "--key", table / f"{who}.key", "--words", table / "words.txt", "--now", now)  # fmt: skip
     if init.returncode != 0:
         return fail(f"the record: {init.stderr.strip()}")
     (table / "who.txt").write_text(who + "\n", encoding="utf-8")
-    files = sum(1 for p in (table / who / "life").rglob("*") if p.is_file())
+    files = sum(1 for p in pile.rglob("*") if p.is_file())
     print(
         f"{who}'s life is laid at {table}: {files} files, read through the starter words list,"
     )
+    if dates:
+        print(f"its dates read {dates}, each given its ISO form beside it by the {dates} add-on, at {pile}.")  # fmt: skip
     print(f"the record started at {now[:10]}, their today. {table / f'{who}.key'} is a key made for {who}, who is made up.")  # fmt: skip
     return kernel.ALIVE
 
@@ -287,7 +310,7 @@ def cmd_recap(table: Path) -> int:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--who", "--table"):
+        if a in ("--who", "--table", "--dates"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -297,7 +320,7 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     table = Path(opts["--table"])
     if verb == "open":
-        return cmd_open(opts["--who"], table)
+        return cmd_open(opts["--who"], table, opts.get("--dates", ""))
     if not (table / "who.txt").is_file():
         return fail(f"{table} isn't a life box laid by open")
     return {"week": cmd_week, "ask": cmd_ask, "decide": cmd_decide, "recap": cmd_recap}[

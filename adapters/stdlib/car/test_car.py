@@ -139,6 +139,24 @@ def test_due_is_what_is_written_and_a_due_date_is_not_the_day_of_the_job():
     assert car.due_date(weeks) == date(2026, 2, 12)
 
 
+def test_an_expiry_is_when_a_thing_runs_out_not_the_day_of_a_job():
+    """An MOT certificate: the test's day, its expiry, then advisories with no
+    date of their own. They are the test's, not the expiry's: a date after an
+    expiry (or "valid until") is when it runs out, as one after "due" is."""
+    pile = [{"path": "car/MOT.txt", "line": 1, "text": (
+        "MOT test date: 2025-11-10\n"
+        "Expiry: 2026-11-09\n"
+        "  * Nearside front tyre worn close to legal limit\n"
+        "  * Rear brake pipe corroded\n"
+    )}]  # fmt: skip
+    got = car.register(pile, car.CAR, context=car.CAR_CONTEXT)
+    assert got[("", "tyres")]["days"] == ["20251110"]
+    assert got[("", "brakes")]["days"] == ["20251110"]
+    assert "20261109" not in {d for rec in got.values() for d in rec["days"]}
+    for said in ("expires 2026-11-09", "expiring 2026-11-09", "valid until 2026-11-09"):
+        assert car.kernel.newest(car.DUE.sub("", f"tyres {said}")) == "", said
+
+
 def test_a_later_line_replaces_the_interval_and_an_earlier_one_does_not():
     pile = [{"path": "log.md", "line": 1, "text": (
         "2026-06-01 service every 6 months\n"

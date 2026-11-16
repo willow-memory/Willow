@@ -566,6 +566,10 @@ willow/
 │   │   │   ├── scan.py       index a folder once, then ask it many questions, fast
 │   │   │   ├── test_scan.py
 │   │   │   └── README.md     its card
+│   │   ├── day-first/
+│   │   │   ├── day_first.py  For a folder you know writes dates day first: each one's ISO form written beside it, so it can be placed
+│   │   │   ├── test_day_first.py
+│   │   │   └── README.md     its card
 │   │   ├── index-cache/
 │   │   │   ├── index_cache.py  a folder's scan index kept between runs, rebuilt only when a file's hash changed
 │   │   │   ├── test_index_cache.py
