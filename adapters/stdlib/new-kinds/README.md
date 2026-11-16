@@ -40,7 +40,7 @@ nothing is remembered anywhere else.
 
 For each other kind, the readers whose cards say they read it are tried.
 Each runs its own `mirror --from --to` on copies of up to four of the
-kind's files, spread over them in name order, beside a file of the kind
+kind's files of 8 MB or less, spread over them in name order, beside a file of the kind
 with nothing in it. The copies are in scratch made with `tempfile`, removed
 after. A reader that took some of yours and not the nonsense knows their
 shape, and is said with how many it took. One that took the nonsense too
@@ -72,7 +72,9 @@ it tries runs on copies, and what they write is thrown away. Only kinds and
 counts are said, never a file's name or a line of it. The readers are the
 ones beside it in this willow (or in `--adapters DIR`, another willow's),
 and only those whose card says `network: none`. Four files are tried a kind, so a shape held by few files of a big
-kind can be missed.
+kind can be missed. A file over 8 MB isn't tried (its copy is slow, and a
+reader would run out of its 30 seconds and seem to take none): a kind
+whose files all are says "none tried", with the readers that say they read it.
 
 **Refused:** no `--from`; a `--from` that isn't a folder; an option with no
 value, or one it doesn't know; a `--leave` kind not written `.ext`; a stack

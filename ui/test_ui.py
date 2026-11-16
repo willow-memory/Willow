@@ -158,6 +158,47 @@ def test_a_reader_is_offered_for_text_it_knows_the_shape_of(
     assert list(scratch.iterdir()) == []  # the copies tried are gone
 
 
+def test_a_reader_is_offered_for_a_kind_the_kernel_cant_read_only_if_it_took_some(
+    site, tmp_path, monkeypatch
+):
+    """A .zip is anything: a card saying it reads .zip (discord, slack,
+    notion, pocket) isn't that it reads yours. They're tried on a few, as
+    for text: a Slack export is taken by slack and no other; a zip of
+    anything else is taken by none, and still said with what its cards say."""
+    import zipfile
+
+    _, call = site
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(scratch))
+
+    def zipped(where: Path, files: dict) -> None:
+        with zipfile.ZipFile(where, "w") as z:
+            for name, text in files.items():
+                z.writestr(name, text)
+
+    slack, other = tmp_path / "slack", tmp_path / "other"
+    slack.mkdir()
+    other.mkdir()
+    zipped(slack / "export-SECRETNAME.zip", {
+        "users.json": '[{"id":"U1","name":"ana","real_name":"Ana","profile":{"display_name":"ana"}}]',
+        "channels.json": '[{"id":"C1","name":"garden"}]',
+        "garden/2024-03-02.json": '[{"type":"message","user":"U1","text":"BEANSTALK","ts":"1709367300.0"}]'})  # fmt: skip
+    zipped(other / "photos-OTHERNAME.zip", {"a.txt": "WALRUS"})
+    b = call("GET", f"/tok/api/baseline?path={slack}")[1]
+    said = json.dumps(b)
+    (z,) = b["cant"]
+    assert z["kind"] == ".zip" and z["tried"] == 1 and "slack" in z["readers"]
+    assert z["fits"] == [{"name": "slack", "took": 1}]
+    b = call("GET", f"/tok/api/baseline?path={other}")[1]
+    (z,) = b["cant"]
+    assert z["tried"] == 1 and z["fits"] == [] and "discord" in z["readers"]
+    said += json.dumps(b)
+    for leak in ("SECRETNAME", "OTHERNAME", "BEANSTALK", "WALRUS", "garden"):
+        assert leak not in said, leak
+    assert list(scratch.iterdir()) == []  # the copies tried are gone
+
+
 def test_what_an_add_on_uses_comes_with_it_and_the_cards_say_it(site):
     cv, call = site
     pieces = call("GET", "/tok/api/pieces")[1]

@@ -511,7 +511,7 @@ class Canvas:
         if not f["ok"]:
             return f
         k, root = self.kernel, Path(f["path"])
-        read, hidden, kinds, readable = 0, 0, {}, {}
+        read, hidden, kinds, readable, unread = 0, 0, {}, {}, {}
         for p in root.rglob("*"):
             rel = p.relative_to(root)
             if not p.is_file():
@@ -537,6 +537,7 @@ class Canvas:
                 why = "text in another encoding than UTF-8"
             except OSError:
                 why = "couldn't be opened"
+            unread.setdefault(ext, []).append(p)
             kind = kinds.setdefault(ext, {"kind": ext, "files": 0, "why": {}})
             kind["files"] += 1
             kind["why"][why] = kind["why"].get(why, 0) + 1
@@ -545,6 +546,11 @@ class Canvas:
         for c in cant:
             c["readers"] = self.readers_for(c["kind"])
             c["text"] = c["kind"] in TEXT_KINDS
+            # a card saying it reads the kind isn't that it reads yours (a .zip
+            # is a Discord package or anything else): the built ones are tried
+            # on a few, as for text below; `tried` 0 is none could be tried here
+            c.update(self.tried(c["kind"], unread[c["kind"]]) if c["readers"]
+                     else {"tried": 0, "fits": [], "any": [], "big": 0})  # fmt: skip
         better = []
         for ext, files in sorted(readable.items(), key=lambda kv: (-len(kv[1]), kv[0])):
             took = self.tried(ext, files)
@@ -555,13 +561,13 @@ class Canvas:
                 "hidden": hidden, "cant": cant, "better": better}  # fmt: skip
 
     def tried(self, ext: str, files: list[Path]) -> dict:
-        """For a kind the kernel reads as it is (.json, .csv, .jsonl): the
-        readers that take some of these files, by the new-kinds add-on's
+        """For a kind of file, whether the kernel reads it as it is (.json,
+        .csv) or not (.zip, .pdf): the readers that take some of these files, by the new-kinds add-on's
         trial. Each built reader whose card says it reads the kind runs its
         own `mirror` on copies of a few of them, beside a file of the kind
         with nothing in it: `fits` took some of yours and not that, `any`
         took that too. Counts only, never a file's name or a line of it."""
-        none = {"tried": 0, "fits": [], "any": []}
+        none = {"tried": 0, "fits": [], "any": [], "big": 0}
         nk = self.new_kinds
         if nk is None or not ext.startswith("."):
             return none
@@ -574,7 +580,8 @@ class Canvas:
                 if m:
                     scripts[n] = m
         t = nk.trial(ext, files, scripts)
-        return {"tried": t["tried"], "fits": t["fits"][:4], "any": t["any"][:4]}
+        return {"tried": t["tried"], "fits": t["fits"][:4], "any": t["any"][:4],
+                "big": t.get("big", 0)}  # fmt: skip
 
     def readers_for(self, ext: str) -> list[str]:
         """Reader add-ons that read a kind of file, as their cards' `reads`

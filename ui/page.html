@@ -291,19 +291,26 @@ function baselines(){const box=el('div',{class:'base'});
   if(b.loading){sec.append(el('div',{class:'none',text:'Reading it the way the kernel does, and trying the readers on a few of its files…'}));continue}
   if(!b.ok){sec.append(el('div',{class:'none',text:b.why}));continue}
   sec.append(el('div',{class:'bline'},el('b',{text:n2(b.read,'file')}),' it can read, making ',el('b',{text:n2(b.passages,'passage')}),' it can answer from.'));
-  const cant=b.cant.reduce((t,c)=>t+c.files,0);
-  if(!cant)sec.append(el('div',{class:'bline ok',text:'Every file it found, it can read.'}));
-  else{sec.append(el('div',{class:'bline',text:n2(cant,'file')+' it can’t read:'}));const ul=el('ul',{class:'bcant'});
-   for(const c of b.cant){const why=Object.entries(c.why).map(([w,n])=>w).join(', ');
-    const adds=c.readers.map(r=>all().includes(r)?el('span',{class:'tag have',text:r+' ✓'}):cantAdd(r)?el('span',{class:'tag',text:r+' ('+cantAdd(r)+')'}):el('button',{class:'link',text:'+ '+r,title:P[r]?.line||'',onclick:()=>addPiece(r)}));
-    ul.append(el('li',{},el('b',{text:c.kind}),' '+c.files+' · '+why+(adds.length?' · could be read by ':c.text?'':' · no reader for it yet'),...adds.flatMap((a,i)=>i?[' ',a]:[a])))}
-   sec.append(ul)}
-  // read as plain text already, but a reader took some of them as its own shape (tried on a few, beside a file of nonsense)
-  const fit=(b.better||[]).filter(c=>c.fits.length),loose=(b.better||[]).filter(c=>c.any.length);
-  if(fit.length){sec.append(el('div',{class:'bline',text:'Read as plain text, but a reader knows their shape:'}));const ul=el('ul',{class:'bcant'});
-   for(const c of fit){const adds=c.fits.map(r=>{const said=' ('+r.took+' of '+c.tried+')';return all().includes(r.name)?el('span',{class:'tag have',text:r.name+' ✓'+said}):cantAdd(r.name)?el('span',{class:'tag',text:r.name+' ('+cantAdd(r.name)+')'}):el('button',{class:'link',text:'+ '+r.name+said,title:P[r.name]?.line||'',onclick:()=>addPiece(r.name)})});
-    ul.append(el('li',{},el('b',{text:c.kind}),' '+c.files+' · tried on '+c.tried+' · taken by ',...adds.flatMap((a,i)=>i?[' ',a]:[a])))}
-   sec.append(ul)}
+  // what helps first: kinds a reader took when tried on a few (it can't read them, or reads them only as plain text);
+  // then kinds a card says it reads but none took; then, a line each, the kinds no reader here reads and the text it skips
+  const cant=b.cant,nCant=cant.reduce((t,c)=>t+c.files,0),fit=(b.better||[]).filter(c=>c.fits.length),loose=(b.better||[]).filter(c=>c.any.length);
+  const taken=cant.filter(c=>(c.fits||[]).length),claimed=cant.filter(c=>!(c.fits||[]).length&&c.readers.length),
+   none=cant.filter(c=>!c.readers.length&&!c.text),skipped=cant.filter(c=>c.text);
+  sec.append(el('div',{class:'bline'+(nCant?'':' ok'),text:nCant?n2(nCant,'file')+' it can’t read, of '+n2(cant.length,'kind')+'.':'Every file it found, it can read.'}));
+  const took=(c,r)=>{const said=' ('+r.took+' of '+c.tried+')';return all().includes(r.name)?el('span',{class:'tag have',text:r.name+' ✓'+said}):cantAdd(r.name)?el('span',{class:'tag',text:r.name+' ('+cantAdd(r.name)+')'}):el('button',{class:'link',text:'+ '+r.name+said,title:P[r.name]?.line||'',onclick:()=>addPiece(r.name)})};
+  const join=a=>a.flatMap((x,i)=>i?[' ',x]:[x]);
+  const list=(head,rows)=>{if(!rows.length)return;sec.append(el('div',{class:'bline',text:head}));const ul=el('ul',{class:'bcant'});rows.forEach(r=>ul.append(r));sec.append(ul)};
+  list('It can’t read these, but a reader took them:',taken.map(c=>el('li',{},el('b',{text:c.kind}),' '+c.files+' · tried on '+c.tried+(c.big?' ('+c.big+' over 8 MB, not tried)':'')+' · taken by ',...join(c.fits.map(r=>took(c,r))))));
+  list('Read as plain text, but a reader knows their shape:',fit.map(c=>el('li',{},el('b',{text:c.kind}),' '+c.files+' · tried on '+c.tried+' · taken by ',...join(c.fits.map(r=>took(c,r))))));
+  // a card's word only: tried here and none taken (said so, or that it needs its install), or one that couldn't be tried
+  const claim=(c,r)=>all().includes(r)?el('span',{class:'tag have',text:r+' ✓'}):cantAdd(r)?el('span',{class:'tag',text:r+' ('+cantAdd(r)+')'}):
+   c.tried&&P[r]?.needs?el('button',{class:'link',text:'+ '+r+' (needs its install)',title:P[r]?.line||'',onclick:()=>addPiece(r)}):
+   c.tried&&P[r]?.network==='none'?el('span',{class:'tag',title:'tried on '+c.tried+' of yours: it took none of them',text:r+' took none'}):
+   el('button',{class:'link',text:'+ '+r,title:P[r]?.line||'',onclick:()=>addPiece(r)});
+  list('A reader’s card says it reads these, but none took them'+(claimed.some(c=>!c.tried)?', or they couldn’t be tried here':'')+':',
+   claimed.map(c=>el('li',{},el('b',{text:c.kind}),' '+c.files+' · '+(c.tried?'tried on '+c.tried+(c.big?' ('+c.big+' over 8 MB, not tried)':'')+' · ':c.big?'none tried, each over 8 MB · ':'')+'could be read by ',...join(c.readers.map(r=>claim(c,r))))));
+  if(none.length)sec.append(el('div',{class:'bline mute',text:'No reader here reads '+n2(none.reduce((t,c)=>t+c.files,0),'file')+' of '+n2(none.length,'kind')+': '+none.map(c=>c.kind+' '+c.files).join(', ')+'.'}));
+  if(skipped.length)sec.append(el('div',{class:'bline mute',text:'Text it skips, which no reader fixes: '+skipped.map(c=>c.kind+' '+c.files+' ('+Object.keys(c.why).map(w=>w.replace('text in another encoding than UTF-8','another encoding').replace(/over the kernel's (\d+) MB a file/,'over $1 MB')).join(', ')+')').join(', ')+'.'}));
   if(loose.length){const by={};for(const c of loose)for(const r of c.any)(by[r.name]??=[]).push(c.kind);
    sec.append(el('div',{class:'bline mute',text:'Readers that take any file of a kind, whatever is in it: '+Object.entries(by).map(([n,k])=>n+' ('+k.join(', ')+')').join(', ')+'.'}))}
   if(b.hidden)sec.append(el('div',{class:'bline mute',text:n2(b.hidden,'file')+' in hidden folders, which it never reads.'}))}

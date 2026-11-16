@@ -1,0 +1,1 @@
+`ui`, `new-kinds`: a reader is offered for a kind the kernel can't read (.zip, .db) only if it took some of yours when tried, not on its card's word; a file over 8 MB isn't tried, so a reader that runs out of time is no longer said to have taken none
