@@ -2401,10 +2401,12 @@ willow/
 │   │   ├── bernadette-words.txt
 │   │   ├── bernadette.json
 │   │   ├── life_box.py       the game box, with a person's life for its binder
+│   │   ├── odile.json
 │   │   ├── teodora.json
 │   │   ├── week.md           the week, over a life
 │   │   ├── test_life_box.py
 │   │   ├── test_life_box_studies.py
+│   │   ├── test_life_box_odile.py
 │   │   └── README.md         the life box: the game box, with a person's life for its binder
 │   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
@@ -2440,7 +2442,8 @@ willow/
 │   │   ├── CHARACTER.md      who she is and how her life is written down
 │   │   ├── PLANTED.md        the needs hidden in her files, and the traps
 │   │   ├── STRIP.md          her questions, and what kernel.py found and missed
-│   │   └── names.txt         everyone named in her files, written by make_life.py
+│   │   ├── names.txt         everyone named in her files, written by make_life.py
+│   │   └── QUESTIONS.md      Questions (in Odile's own words)
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round

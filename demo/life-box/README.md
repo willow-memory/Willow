@@ -508,6 +508,102 @@ Rosa in three. The one line missing is for money-hour: a questions list for one
 of its four people, written in a new freeze, before the box could lay that
 person's folder.
 
+## Odile
+
+Odile Varga ([demo/odile](../odile/)) is a piano tuner and beekeeper of sixty-one
+who keeps her father in her house: 254 files of tuning log, hive notes, a care
+log, voice memos, texts, mail, her money and one calendar. Her
+[odile.json](odile.json) is her answer key, written from her
+[PLANTED.md](../odile/PLANTED.md). Her eleven questions are
+[QUESTIONS.md](../odile/QUESTIONS.md): lifted unchanged from the first pass of
+her [STRIP.md](../odile/STRIP.md), where they were asked of her folder with no
+key, in the order they appear there, each once (eleven, not twenty).
+
+    python demo/life-box/life_box.py open --who odile --table DIR --read --piles
+
+### The options, by evidence
+
+- `--read`: her calendar is an `.ics`, which only the calendar reader turns into
+  dated lines (`2026-10-28  Tune - Benedikt Ybarra`, not a `VEVENT`); the other
+  253 files are text and csv, copied as they are. It changes no count.
+- No `--dates`. She lives in the US, so month-first, but her files write dates
+  as `2026-10-16`, `Oct 2027` and `March 20, 2026`; the only numbered dates are
+  her father's date of birth and a hospital stay, which no question reads. And
+  [month-first](../../adapters/stdlib/month-first/) mirrors only `.txt`, `.md`
+  and pages, so it drops her care log, her card reader's export and Teo's
+  sheet: opened with it she is answered on none of her eleven questions in one
+  box (0 sealed), one in piles.
+- `--piles`: her folders are one per matter (`tuning/`, `hives/`, `dad/`,
+  `mail/`, `memos/`, `money/`, `texts/`, and her calendar loose at the top).
+
+|  | one box | piles |
+|---|---|---|
+| offered / sealed / declined | 30 / 7 / 23 | 41 / 9 / 32 |
+| questions answered | 4 (3, 4, 7, 8) | 4 (3, 4, 7, 10) |
+
+Piles are chosen for one question, "I'm tired": in one box it serves her tuning
+log (a Steinway M, a client named Weight), and her night memo "Tired." and what
+she told Kati ("fine, tired") are never offered; her memos and
+texts are piles of their own, and both are, and she seals them. The cost is
+"is anything wrong with the hives": "hives" names the pile, and what is left,
+"is anything wrong with the", is not in her hive notes, so that question, which
+one box answers with hive 4's no eggs, no brood, is left unanswered.
+
+### What happens
+
+At her today, 2026-10-22: 41 passages are offered for seven
+of her eleven questions (nothing is held for the other four), and she seals 9
+and declines 32. Four questions are answered:
+
+- "Dad's weight": the cardiologist's line, *call the office if weight goes up
+  more than 2 kg in a week* (N2). The care log's first rows are offered and
+  declined: they are 2025's, and the rise to 75.1 is at its end.
+- "what do I need to do": the county's notice, *you may file a response within
+  180 days*, which ran out on 2026-09-16 (N3), and her memo of selling Teo's
+  van, *need to call Mesa Mutual and take it off the policy* (N6). The 2024
+  letter, already answered (T2), is never offered.
+- "how are the bees": the two passages that hold hive 4's September and October
+  inspections, *eggs none, brood none* (N5), which she reads as a queenless hive;
+  nothing says so.
+- "I'm tired": her memo "Tired." and three stretches of her texts to Kati, each
+  "me: fine, tired" (N7).
+
+### The traps hold
+
+ Harriet Weight (T1) is offered for "I'm tired" and declined.
+The Dry Creek order paid in cash (T3), which only her memo says, is offered for
+"invoice not paid" and declined: it is not one of the unpaid. Hers are two
+other orders, and no passage says so.
+
+### Her father
+"how's Dad doing" and "is Dad okay" are nothing at all as piles ("Dad" names
+`dad/`, and the files say *Laszlo*), and in one box the first is offered her
+calendar's *Dad - pharmacy refills* and the second her own memo, "Okay.", which
+is hers and not his. All of it is declined.
+
+### Her words
+
+ There is no `odile-words.txt` and `words` is refused for her.
+Her one-line list in STRIP.md, `due = next`, is already in the starter list
+(its `due` line says *deadline, expires, expiry, renewal, next*), and `dad =
+laszlo`, tried with it for the two questions about her father, served the same
+passages. Nothing she said was a word her files said another way; what is
+missing is a reading, not a word.
+
+### What is left, and what would close it
+
+ Seven questions are unanswered.
+Each is a gap an existing add-on or a line in her stack already points at; none
+is built here.
+
+| question | why | closes it |
+|---|---|---|
+| 1 "something that tells me who's due" | the right file, the wrong rows: her latest `next: Oct 2027` visits. Who is due is a date passed with no visit since | the [readings](../../adapters/stdlib/readings/) add-on, which on this box (STRIP.md's second pass) says the seven, *gone by, nothing written since*, four truly due |
+| 2, 11 "how's Dad doing", "is Dad okay" | a trend is not a word; and as piles "Dad" names `dad/` | readings (STRIP.md's second pass): *75.1 on 2026-10-21, up 2.5 in one week*, beside the cardiologist's 2 kg |
+| 5, 6 "did the schools pay me", "invoice not paid" | an unpaid order is a deposit that isn't there; her invoices say `PO 2026-095`, not `INV-` | [invoices](../../adapters/stdlib/invoices/) takes the id pattern, but her payments never name the PO, so no step matches them: a line she can add to a stack, not a word |
+| 8 "is anything wrong with the hives" | in piles the question loses "hives" and asks for "wrong" | one box answers it; her notes never say "queenless" |
+| 9 "how am I doing" | nothing holds it, and her answer is "fine" | none: [gaps](../../adapters/stdlib/gaps/) says where a log stops; her memos shrink and no add-on says so |
+
 ## Where it comes from
 
 The [game box](../game-box/), with the binder swapped for a life:
