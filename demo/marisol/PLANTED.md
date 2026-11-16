@@ -65,3 +65,47 @@ real address, account or card number appears.
 - **A real lesson's text.** The "open community lesson" of the plan is an
   invented stand-in (`life/lessons/03-...`), because no licence has been read
   yet for the real one. Swap it only after reading the licence.
+
+## Freeze 3: more of her life (`life-more/`, from `make_life_3.py`)
+
+Written before the generator, as the sections above were, and corrected once
+before the freeze (below). `life/` is untouched: runs 1 and 2 read the same
+bytes they did. The new paragraph of her draft is `life-more/grants/draft-3.md`,
+never boxed.
+
+| # | Claim in the new paragraph | What her files say | Read by | A person decides |
+|---|---|---|---|---|
+| C7 | "Outages closed the school for 9 class days in 2022-23" | The district calendar (`calendar/escuela-2022-23.ics`, *invented*) has 7 days "Cierre por apagón" (three for Fiona, four more), among other events | calendar | 7, not 9 |
+| C8 | "My brother's $6,000 arrived in February 2018" | Holds: her texts with Tomás (`phone/sms-backup.xml`, an Android backup) say "Ya llegaron los $6,000" on 2018-02-12, three days after his email | sms | Nothing; it stands |
+| C9 | "We need 30 laptops at $600 each, $18,000 in all" | The lab's budget (`budget/presupuesto-laboratorio.xlsx`, *invented*) asks for 12 Chromebooks at $289.00, $3,468.00, and totals $4,040.00; $18,000 is nowhere | office, amounts | Which figure goes in |
+| C10 | "The lab's battery bank runs the lab through a full school day" | The battery sensors (`sensors/history.json`, Home Assistant history, *invented*): on the three outage days of 2026-09-01 to 14 the bank ran the lab 4.5, 4.0 and 5.0 hours, against a 6.5-hour school day | home-sensors | It doesn't, yet: say so |
+
+**Corrected before the freeze (C10).** The sensors were first planted as one
+entity, the bank's charge in %, sampled through the day. The home-sensors
+reader keeps one daily mean per entity, so an outage day's afternoon low
+(22%) averages to 63.7 and the claim can't be settled from the mirror. A
+second entity, "Lab backup runtime" in hours, now says it directly, and the
+entities are named in English so an English claim can find the sheet. This
+was found by reading the reader's README and a mirror of the files, before
+any question was asked.
+
+## Freeze 3: more claims, the same folder
+
+| # | Claim | What `life/` says | Expected |
+|---|---|---|---|
+| C11 | "The principal asked me to keep track of what I spend on diesel" | Holds: Héctor's 2018 email, "Le pido que lleve la cuenta de lo que gasta en diésel" | claim-check in English misses; words-es in Spanish finds it |
+| C12 | "My father worked 28 years in the plant's laboratory" | Holds: the tape, "llevaba veintiocho en el laboratorio" | the number is written out, so English misses; Spanish finds it |
+| C13 | "the plant closed in 2004" | Holds: "Cerró en el verano de 2004"; the tape's 1996 line (T4) is the trap | words-es finds it |
+| C14 | "Puente Digital asked for a source for every claim" | Holds: Inés's email, "que cada afirmación lleve su fuente" | English misses; Spanish finds it |
+| C15 | "the robotics club won a state championship" | Nothing says so | silent |
+
+## Freeze 3: the two misses followed
+
+Runs 1 and 2 failed two questions: the repeal question ("ultimate repeal in
+2005" is in the pile, ranked below the top three) and the brother question
+(the mail reader's header passage was served, not the body with "$6,000").
+Freeze 3 asks the same words of two tools that point at where to look, and
+changes nothing in the kernel: `all-passages` (the kernel's own rank, every
+passage it would serve; the phrase is predicted 10th or better) and
+`pile-rank` (BM25F with phrases, over the web pages' mirror for the repeal
+and the mail mirror for the brother; predicted in its first three).

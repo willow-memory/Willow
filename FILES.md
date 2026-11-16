@@ -2394,30 +2394,35 @@ willow/
 │   │   │   ├── test_handoff.py
 │   │   │   └── README.md     Check a translation, and seal it from your own box
 │   │   ├── make_life.py      Marisol Ortiz Beltran's folder, as the files her work leaves: python3 make_life.py [--check]
+│   │   ├── make_life_3.py    More of Marisol's life, for freeze 3: python3 make_life_3.py [--check]
 │   │   ├── names.txt
 │   │   ├── PLANTED.md        What the author planted: the answer key (notes, written before the generator)
+│   │   ├── questions-3.json
 │   │   ├── questions.json
 │   │   ├── results/
 │   │   │   ├── dry-run.json
 │   │   │   ├── dry-run-2.json
 │   │   │   ├── run-1.json
-│   │   │   └── run-2.json
+│   │   │   ├── run-2.json
+│   │   │   └── dry-run-3.json
 │   │   ├── run.py            Marisol's folder asked its questions, every pass rule judged, and
+│   │   ├── run3.py           freeze 3's three strands, each on a box of its own, each judged
 │   │   ├── sources.json
 │   │   ├── sources.py        the real sources of this demo, fetched again and checked by hash
 │   │   ├── test_marisol.py
+│   │   ├── test_marisol3.py
 │   │   └── README.md         Marisol's island
+```
+
+#### demo/, from markets-2026-11-05/
+
+```
 │   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
 │   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
 │   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
 │   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
-```
-
-#### demo/, from money-hour/
-
-```
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
 │   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
@@ -2442,6 +2447,11 @@ willow/
 │   │   ├── PLANTED.md        the needs hidden in her files, and the traps
 │   │   ├── STRIP.md          her questions, and what kernel.py found and missed
 │   │   └── names.txt         everyone named in her files, written by make_life.py
+```
+
+#### demo/, from ofrenda/
+
+```
 │   ├── ofrenda/              a séance with a local Gemma: a made-up abuela's files and two real books, every word cited or silent
 │   │   ├── README.md         the story, the claim, what is frozen, the dry run, how to run it, the results
 │   │   ├── CHARACTER.md      Femia, Marisol and the ofrenda kept up year round
@@ -2467,11 +2477,6 @@ willow/
 │   │   │   ├── 6-caught.txt  the commands and their output, word for word
 │   │   │   ├── 7-verify.svg  both chains hold, nothing sealed
 │   │   │   └── 7-verify.txt  the commands and their output, word for word
-```
-
-#### demo/ofrenda/, from results/
-
-```
 │   │   ├── results/
 │   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
 │   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught
@@ -2483,6 +2488,11 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
+```
+
+#### demo/, from percus-yevick/
+
+```
 │   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
 │   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
 │   │   ├── blind.py          the blind questions, written by a local model that has seen no

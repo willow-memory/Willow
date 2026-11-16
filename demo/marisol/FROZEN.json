@@ -1,5 +1,5 @@
 {
- "about": "demo/marisol's freeze 2: each file's SHA-256 when it was frozen, held by test_marisol.py, and the tools' as run. A change is a new freeze, in its own commit, with its reason.",
+ "about": "demo/marisol's freeze 3: each file's SHA-256 when it was frozen, held by test_marisol.py, and the tools' as run. A change is a new freeze, in its own commit, with its reason.",
  "frozen": "2026-11-16",
  "files": {
   "questions.json": "637aa90fcde19ffd8496e7577147bdf7c43258a7c09fbbf2447533db30f1e475",
@@ -7,7 +7,10 @@
   "make_life.py": "8031ab778284a06d9b8354219696f396906e2c05e8588960570edc92c9a9a7a2",
   "sources.json": "a3d1ab863b23ac56460481b3006f598efb817168589613cf25eaaf6b97c7e907",
   "sources.py": "8e5af56ab5673a400bda94cf490448af4b411ec0f9dd86e9f9403c81d642716e",
-  "PLANTED.md": "4d09a67f71ff29a05336793cd3f94e2c35efccaef67035989466998da5e5e30a"
+  "PLANTED.md": "983af9b338801312d03d32617037c354ed4cc0fa85644b2f7fdfff92e73e39f1",
+  "make_life_3.py": "4a6a583423103b97ba39e8e7b70329387b1fe0c38b261c8d7ffb8673839df68f",
+  "questions-3.json": "a9ae4f3405ddb6087f3c5b7fa665376d53b8ffc92fb8f7b678806955145ae2c0",
+  "run3.py": "6df15165fa84a1cebfedb5c2f85f0481e3d58d63d5a41622de5abe02f8440293"
  },
  "tools_at_freeze": {
   "kernel.py": "b5cd7e931429a859035b02be8e70bd8c4c9356f90ccb23e9529f8186ce6da746",
@@ -20,7 +23,13 @@
   "claim-check.py": "c85a88a8faa64d2e9068ea0d1156232468862d2e39ece359c90bfdf5fc36e85f",
   "amounts.py": "666a6f2ab4cdc6c8815d4148e7849973060a180fa99b5a0743012b04d6b65b54",
   "quotes.py": "12713976fb0f96aa87b0b41005994db9438cf64ebd4c1422dc5f4acc292880ab",
-  "contradictions.py": "7354c0464b9ee03ad2326fa0462a3d7b5c1517147815b469ad71e83fc90ff0b4"
+  "contradictions.py": "7354c0464b9ee03ad2326fa0462a3d7b5c1517147815b469ad71e83fc90ff0b4",
+  "calendar.py": "63ff4bf1e57548e4917bc3f2f3e3eb7ec9063ad72b0f6dfa2a288ef27f4d62eb",
+  "sms.py": "a24736898e35eb7cd70100dd899a93cf3edf8a13ce39317bbdfd1744c21215d8",
+  "office.py": "26b138d38480a02a7f507c13807f6aa0edcb4868a35b0df1372c8db8d6dca38c",
+  "home-sensors.py": "77f9633849cc6927926a1c2893a360f3b8eec25136cdb4c7eaa31683049d4d3d",
+  "all-passages.py": "5fa280eeff27dfe2b877aa34ee428bd4672cbd59f7ed15ce1f87bc9f589a9abf",
+  "pile-rank.py": "3fe92c970b839fc5396a6f196433cf7793871354c748215d017abf02b82e34a4"
  },
  "freezes": [
   {
@@ -32,6 +41,19 @@
    "n": 2,
    "date": "2026-11-16",
    "why": "VI.9, read where they are kept (#368): run.py no longer copies seven places into one pile. The box reads each reader's mirror as a source of its own (mail, subtitles, csv-rows, web-pages, json-paths), her log/ and lessons/ in her folder, and the credit note through a one-line list, with init --from; the verdict box reads the same sources. Passage paths are now named by source (mail/..., log/...), and a source's name is no word of a passage, so what is served can move: run 1 stood on the copying build, and run 2 is asked on this one. The sources were fetched again on 2026-11-16: the CRS report (claim C5's) and the NSF award match their freeze-1 hashes; the NBER, NBC and Wikipedia pages had changed and are frozen at what was fetched. The questions, the hit rule and every pass rule are as at freeze 1. The maintainer will extend the demo further."
+  },
+  {
+   "n": 3,
+   "date": "2026-11-16",
+   "why": "The maintainer's extension, in three strands, each asked on a box of its own and judged into a verdict box of its own (gates marisol3-life, marisol3-claims, marisol3-misses), after one dry run with nonsense per strand (results/dry-run-3.json: every box built, nothing served, every chain verified; the two kinds that take no question, count and amounts, were skipped in it, so no answer was seen) and before any frozen question was asked. 'life': more of her life, life-more/ from make_life_3.py (a school calendar, her texts with Tomás, the lab's budget sheet, the battery sensors), read by the calendar, sms, office and home-sensors readers beside freeze 2's sources, against claims C7-C10 of a new draft paragraph never boxed. 'claims': C11-C15 on the freeze-2 box unchanged. 'misses': the repeal and the brother questions, the two runs 1 and 2 failed, asked of all-passages and pile-rank, with kernel.py held to freeze 2's file. life/, questions.json, run.py and every freeze-2 rule are as they were. Corrected before the freeze, from reading the home-sensors reader and a mirror, not from asking: the sensors gained a backup-runtime entity, since a daily mean of charge cannot say how long the bank ran (PLANTED.md). The sources were fetched again for this run; the CRS report and the NSF award match sources.json, and the NBER, NBC and Wikipedia pages had changed again, so 'sources_fetched' holds what this run reads.",
+   "sources_fetched": {
+    ".snapshots.jsonl": "e21a5e767c16dff961a55d6708c8dade56b2d3d009710117caa8bc3787666687",
+    "crs-rs20695.html": "15e9069d613c5d6f72076bc38a5710a9c09df872f97595e1e022ca78630d14e7",
+    "nbc-luma-2021.html": "14bd6bd5e77c8bea9888bd79326c33a3ffd50a54993f133c4785b972252bfd97",
+    "nber-w23681.html": "dc7c28f994d960f166297552eb7640fdf1d7605a95660c023130f2533853d5f0",
+    "nsf-award-2305699.json": "5149cbf84b0ccc9426b8cb46db0d045190959cbe4d7d8e77cfef28eee3da9d32",
+    "wikipedia-prepa.html": "598d586d3e35a525e6e65450687c0a897e533875acb90d7fbd818a3e6b9d52c7"
+   }
   }
  ]
 }
