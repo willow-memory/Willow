@@ -123,3 +123,52 @@ def test_nothing_is_42_and_refusals(tmp_path):
         assert run(SCRIPT, *argv).returncode == 2, argv
     assert "home_upkeep.py" in run(SCRIPT).stderr
     assert "not a kernel box" in run(SCRIPT, "--box", str(tmp_path)).stderr
+
+
+WARRANTY = (
+    "Installed: 06/12/2024 [2024-12-06] (old boiler condemned 03/12/2024 [2024-12-03])\n"
+    "Boiler: combi, 25kW\n"
+    "Next service due: by 06/12/2025 [2025-12-06] (done 21/11/2025 [2025-11-21])"
+    " then by 06/12/2026 [2026-12-06].\n"
+    "Total cost £3,680.00.\n"
+)
+
+
+def test_a_due_on_a_line_that_names_no_kind_goes_to_the_kind_its_file_names():
+    """A warranty's "Next service due" never says boiler, its file does. The
+    due is taken, the later one and not the "(done ...)" day; and that line is
+    no entry, so nothing is counted twice."""
+    pile = [
+        {"path": "home/boiler_warranty.txt", "line": 1, "text": WARRANTY},
+        {"path": "chat.txt", "line": 1, "text": "2025-11-21 boiler serviced at home £120\n"},
+    ]  # fmt: skip
+    got = hu.car.register(pile, hu.HOME, None, hu.CONTEXT, path_due=True)
+    rec = got[("", "boiler")]
+    assert rec["due"] == "20261206"
+    assert rec["cost"] == {"£": 120.0} and "20251121" in rec["days"]
+    assert len(rec["days"]) == 3, "the two boiler lines and the chat; not the due line"
+    old = hu.car.register(pile, hu.HOME, None, hu.CONTEXT)
+    assert old[("", "boiler")]["due"] == "", "without it the due is lost"
+
+
+def test_a_done_day_is_never_the_due_and_a_due_names_no_other_kind():
+    assert hu.car.explicit_due("service due 01/11/2025 (done 05/11/2025)") == ""
+    assert (
+        hu.car.explicit_due("due 2025-11-01 [2025-11-01] (done 2025-11-05)")
+        == "20251101"
+    )
+    pile = [
+        {"path": "home/notes.txt", "line": 1, "text": "boiler serviced 2025-11-21\nNext service due 2026-12-06\n"},
+        {"path": "home/boiler_notes.txt", "line": 1, "text": "boiler serviced 2025-11-21\nNext service by 2026-12-06\n"},
+    ]  # fmt: skip
+    got = hu.car.register(pile, hu.HOME, None, hu.CONTEXT, path_due=True)
+    assert got[("", "boiler")]["due"] == "", "no due word, or no kind in the path"
+
+
+def test_the_listing_reads_the_warranty_due(tmp_path):
+    b = box(tmp_path, {
+        "home/boiler_warranty.txt": WARRANTY,
+        "chat.txt": "2025-11-21 boiler serviced at home £120\n"})  # fmt: skip
+    got = run(SCRIPT, "--box", str(b), "--now", "2026-10-22T09:00:00Z")
+    assert got.returncode == 0, got.stderr
+    assert "due 2026-12-06 (in 45 days)" in got.stdout

@@ -25,7 +25,11 @@ Cost, the day a line is about, and what's due are read as the
 [car](../car/) add-on reads them: the amount with a £, $ or € sign, totalled
 for each sign; the latest date before any "due"; and a due date only from a
 date after "due" or an interval the line writes ("every 12 months", "yearly",
-"six-monthly"). A kind with neither says "no due date written"; none is
+"six-monthly"). A "(done 21/11/2025)" beside a due is the day it was
+done, never the day it is due. A line that says "due" but names no kind
+("Next service due: by 06/12/2026" in boiler_warranty.txt) gives its due to
+the kind its file's name names, and nothing else: it is no entry, and its
+amounts are not counted. A kind with neither says "no due date written"; none is
 guessed. Soonest due first, measured from --now (an ISO timestamp, the
 kernel's kind; today if not given).
 
@@ -66,6 +70,7 @@ def main(argv: list[str]) -> int:
         HOME,
         context=CONTEXT,
         none="No line of your folder says a job done to the house.",
+        path_due=True,
     )
 
 

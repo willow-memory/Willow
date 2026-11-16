@@ -38,7 +38,11 @@ Cost, the day a line is about, and what's due are read as the
 for each sign and never converted; (an amount is
 read from the line whatever it is the price of: check a total against its receipts) the latest date before any "due"; and a due
 date only from a date after "due" or an interval the line writes ("every 12
-months", "yearly", "six-monthly"). A kind with neither says "no due date
+months", "yearly", "six-monthly"). A "(done 21/11/2025)" beside a due is
+the day it was done, never the day it is due. A line that says "due" but names
+no kind ("Next service due: by 06/12/2026" in boiler_warranty.txt) gives its
+due to the kind its file's name names, and nothing else: it is no entry, and
+its amounts are not counted. A kind with neither says "no due date
 written"; none is guessed. Soonest due first, measured from `--now` (an ISO
 timestamp, the kernel's kind; today if not given).
 

@@ -44,7 +44,8 @@ whatever it is the price of, so check a total against its receipts.
 **What's due** is only what you wrote: a date after "due" ("next service due
 2027-01-15"), else the last day plus an interval a line says ("every 12
 months", "every 2 years", "every 6 weeks", "annual", "yearly", "six-monthly").
-An interval written once holds for the later jobs of that kind until a later
+A "(done 21/11/2025)" beside a due is the day it was done, never the day it
+is due. An interval written once holds for the later jobs of that kind until a later
 line writes another. A kind with neither says "no due date written"; none is
 guessed from how often you did it. Soonest due first, measured from `--now`
 (an ISO timestamp, the kernel's kind; today if not given), then the rest.

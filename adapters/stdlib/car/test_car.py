@@ -209,3 +209,13 @@ def test_nothing_is_42_and_refusals(tmp_path):
         assert run(SCRIPT, *argv).returncode == 2, argv
     assert "car.py" in run(SCRIPT).stderr
     assert "not a kernel box" in run(SCRIPT, "--box", str(tmp_path)).stderr
+
+
+def test_a_done_day_beside_a_due_is_not_the_due():
+    assert (
+        car.explicit_due("Next service due 2025-11-01 (done 2025-11-05)") == "20251101"
+    )
+    assert (
+        car.explicit_due("due by 2025-12-06 (done 2025-11-21) then by 2026-12-06")
+        == "20261206"
+    )

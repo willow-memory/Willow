@@ -125,19 +125,41 @@ def interval_of(line: str) -> tuple[int, str] | None:
     return (n, unit) if n > 0 else None
 
 
+DONE = re.compile(r"\(\s*done\b[^)]*\)", re.I)
+
+
 def explicit_due(line: str) -> str:
+    """The latest date after "due". A "(done 21/11/2025)" beside it is the day
+    the job was done, never the day it is due, even when it is the later one."""
     m = DUE.search(line)
-    return kernel.newest(m.group(0)) if m else ""
+    return kernel.newest(DONE.sub("", m.group(0))) if m else ""
 
 
-def register(pile: list[dict], kinds: dict[str, str], who=None, context=None) -> dict:
+def register(
+    pile: list[dict],
+    kinds: dict[str, str],
+    who=None,
+    context=None,
+    path_due: bool = False,
+) -> dict:
     """{(who, kind): {days, cost, interval, due, last line}} from the pile. With a
     context, a line counts only when it or its file's path matches it: a
     "service" in a tuning log is not the car's."""
     rxs = {k: re.compile(r"\b(?:" + v + r")\b", re.I) for k, v in kinds.items()}
     out: dict = {}
+    named: list[tuple[str, str]] = []  # (kind, due) from lines that name no kind
     for day, path, n, line in entries(pile):
         kind = next((k for k, rx in rxs.items() if rx.search(line)), None)
+        if kind is None and path_due and explicit_due(line):
+            # "Next service due: ..." in boiler_warranty.txt: the line names no
+            # kind, its file's name does. Taken for its due date and nothing
+            # else (not a day, a cost or an entry), so no amount is counted
+            # twice and no job is made of it.
+            pk = next(
+                (k for k, rx in rxs.items() if rx.search(path.replace("_", " "))), None
+            )
+            if pk and (not context or context.search(path + " " + line)):
+                named.append((pk, explicit_due(line)))
         if kind is None or (context and not context.search(path + " " + line)):
             continue
         rec = out.setdefault(
@@ -152,6 +174,10 @@ def register(pile: list[dict], kinds: dict[str, str], who=None, context=None) ->
             rec["interval"] = iv or rec["interval"]
             rec["due"] = due or rec["due"]
             rec["at"] = f"{path}:{n}"
+    for kind, due in named:
+        for (_, k), rec in out.items():
+            if k == kind and due > rec["due"]:
+                rec["due"] = due
     return out
 
 
@@ -210,6 +236,7 @@ def cli(
     context=None,
     label: str = "kinds of job",
     none: str = "No line of your folder says a job done to the car.",
+    path_due: bool = False,
 ) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
@@ -234,7 +261,11 @@ def cli(
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     found = register(
-        kernel.chunks(Path(kernel.config(box)["pile"])), kinds, who, context
+        kernel.chunks(Path(kernel.config(box)["pile"])),
+        kinds,
+        who,
+        context,
+        path_due,
     )
     if not found:
         print(none)
