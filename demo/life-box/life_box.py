@@ -22,7 +22,11 @@ the starter words list a person begins with:
   beside NNN.md, the stack as it ran.
 - `ask` asks each of NAME's own questions (demo/NAME/QUESTIONS.md) and
   hands in every passage served as a suggested answer, citing it. Nothing
-  is an answer yet: each waits on the seal.
+  is an answer yet: each waits on the seal. First the route add-on reads
+  what kind each question is, and names the steps whose job that kind is
+  ("has kirsty paid me yet" is money owed: debts and invoices) with the
+  file the latest week kept each one's output in, kept in DIR/route.json.
+  A sum over many passages is a step's to give, not one passage's.
 - `decide` is NAME, deciding: every suggestion is sealed with NAME's key if
   NAME's answer key (NAME.json, beside this) names its file, and what it
   must say, for that question; every other is declined. It runs only for a
@@ -50,6 +54,7 @@ import kernel  # noqa: E402
 DEMO = ROOT / "demo"
 STARTER = ROOT / "adapters" / "stdlib" / "starter-words" / "starter.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
+ROUTE = ROOT / "adapters" / "stdlib" / "route" / "route.py"
 WEEK = HERE / "week.md"
 TODAY = re.compile(r"^TODAY = date\((\d{4}), (\d{1,2}), (\d{1,2})\)", re.M)
 QUESTION = re.compile(r"^\d+\. (.+)$", re.M)
@@ -133,11 +138,39 @@ def cmd_week(table: Path) -> int:
     return got.returncode
 
 
+def routes(table: Path, asked: list[str]) -> dict[int, dict]:
+    """Each question's kind, and the steps whose job it is, with the file the
+    latest week kept that step's output in: route's own reading, kept."""
+    weeks = sorted((table / "week").glob("[0-9][0-9][0-9]")) if (table / "week").is_dir() else []  # fmt: skip
+    qfile = table / "questions.txt"
+    qfile.write_text("".join(q + "\n" for q in asked), encoding="utf-8")
+    got = py(ROUTE, "--questions", qfile, *(["--run", weeks[-1]] if weeks else []), "--json")  # fmt: skip
+    qfile.unlink()
+    out: dict[int, dict] = {}
+    for g in json.loads(got.stdout).get("groups", []) if got.stdout.strip() else []:
+        kind = g["name"].rsplit(":", 1)[0]
+        steps = []
+        for r in g["rows"]:
+            if r["where"].startswith("-> "):
+                kept = r["what"].rsplit("   ", 1)[-1] if str(table) in r["what"] else ""
+                steps.append({"step": r["where"][3:], "kept": str(Path(kept).relative_to(table)) if kept else ""})  # fmt: skip
+            elif r["where"].isdigit():
+                out[int(r["where"])] = {"kind": kind, "steps": [x for x in steps if x["step"] != "ask"]}  # fmt: skip
+    (table / "route.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    return out
+
+
+def sent_to(route: dict) -> str:
+    return "".join(f"      see       {x['step']}: {x['kept'] or 'not in this week'}\n" for x in route.get("steps", []))  # fmt: skip
+
+
 def cmd_ask(table: Path) -> int:
     who, box = who_of(table), box_of(table)
     now = today_of(who)
     handed = 0
+    routed = routes(table, questions(who))
     for i, q in enumerate(questions(who), 1):
+        kind = f"  ({routed[i]['kind']})" if i in routed else ""
         bite = py(ROOT / "kernel.py", "bite", "--box", box, "--now", now, q)
         served = (
             json.loads(bite.stdout).get("served", []) if bite.stdout.strip() else []
@@ -146,7 +179,7 @@ def cmd_ask(table: Path) -> int:
                              "claim": f"answers question {i}, \"{q}\", from {s['where']}"})  # fmt: skip
                  for k, s in enumerate(served, 1)]  # fmt: skip
         if not props:
-            print(f"{i:>2}. {q}\n      nothing in the life holds it")
+            print(f"{i:>2}. {q}{kind}\n      nothing in the life holds it\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
             continue
         sugg = table / "suggestions.jsonl"
         sugg.write_text("\n".join(props) + "\n", encoding="utf-8")
@@ -156,10 +189,7 @@ def cmd_ask(table: Path) -> int:
         sugg.unlink()
         passed = got.stdout.count("pass ")
         handed += passed
-        print(
-            f"{i:>2}. {q}\n      {passed} suggested: "
-            + "; ".join(s["where"] for s in served)
-        )
+        print(f"{i:>2}. {q}{kind}\n      {passed} suggested: " + "; ".join(s["where"] for s in served) + "\n" + sent_to(routed.get(i, {})), end="")  # fmt: skip
     print(f"\n{handed} answers wait on {who}'s seal; nothing is an answer until then.")
     return kernel.ESCALATE if handed else kernel.ALIVE
 
@@ -236,17 +266,19 @@ def cmd_recap(table: Path) -> int:
                     f"{m.group(3)}:{m.group(4)}"
                 )
     asked = questions(who)
+    routed = json.loads((table / "route.json").read_text(encoding="utf-8")) if (table / "route.json").is_file() else {}  # fmt: skip
     print(f"# What {who} made true\n")
     for i, q in enumerate(asked, 1):
         got = by_q.get(i)
+        see = sent_to(routed.get(str(i), {}))
         if got is None:
-            print(f"{i:>2}. {q}\n      nothing in the life holds it")
+            print(f"{i:>2}. {q}\n      nothing in the life holds it\n{see}", end="")
             continue
         line = f"{i:>2}. {q}\n"
         line += "".join(f"      sealed    {w}\n" for w in got["seal"])
         line += "".join(f"      declined  {w}\n" for w in got["decline"])
         line += "".join(f"      waiting   {w}\n" for w in got["wait"])
-        print(line, end="")
+        print(line + see, end="")
     answered = sum(1 for g in by_q.values() if g["seal"])
     print(f"\n{answered} of {len(asked)} questions have an answer {who} sealed.")
     return kernel.ALIVE

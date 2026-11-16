@@ -71,16 +71,62 @@ def test_her_week_finds_what_is_coming_at_her_today(teo):
         "Month end",
     ):
         assert line in out, line
-    assert (teo["table"] / "week" / "001.md").read_text().count(
-        "2026-10-22T09:00:00Z"
-    ) == 2
+    week = (teo["table"] / "week" / "001.md").read_text()
+    assert week.count("2026-10-22T09:00:00Z") == 3  # its three steps that take a today
+    assert "`{today}` is the person's today" in week  # and its prose, as written
+
+
+def test_her_week_finds_who_owes_her_what_goes_out_and_what_she_meant_to_do(teo):
+    run = teo["table"] / "week" / "001"
+    invoices = (run / "03-invoices.txt").read_text()
+    for inv, amount in (
+        ("INV-0427", "£680.00"),
+        ("INV-0431", "£720.00"),
+        ("INV-0435", "£740.00"),
+    ):
+        line = next(ln for ln in invoices.splitlines() if inv in ln)
+        assert (
+            line.startswith("overdue") and "Bramble & Bean" in line and amount in line
+        ), line
+    # T2: Hargreaves' August matches a payment only by sum, so it is never counted as paid
+    assert (
+        "same sum, no invoice named: check these by hand, never counted as paid"
+        in invoices
+    )
+    assert "HPS LTD BACS" in invoices
+    assert "Dev Raman: I can do 600 tonight" in (run / "04-debts.txt").read_text()
+    subs = (run / "05-subscriptions.txt").read_text()
+    assert "holmwood lettings" in subs and "8 subscriptions" in subs
+    todo = (run / "06-todo.txt").read_text()
+    assert todo.count("recipes/bunica/index.md") == 19  # the recipes not yet typed up
+    assert (
+        "Turnover (invoiced):            £24962.00"
+        in (run / "07-amounts.txt").read_text()
+    )
+
+
+def test_each_question_is_sent_to_the_steps_whose_job_it_is(teo):
+    route = json.loads((teo["table"] / "route.json").read_text())
+    assert route["2"]["kind"] == "money owed"
+    assert {"step": "invoices", "kept": "week/001/03-invoices.txt"} in route["2"][
+        "steps"
+    ]
+    assert route["17"]["kind"] == "where it stands"
+    assert {"step": "todo", "kept": "week/001/06-todo.txt"} in route["17"]["steps"]
+    assert (
+        "3" not in route or route["3"]["steps"] == []
+    )  # the wifi password is a thing she wrote down
+    recap = teo["recap"].stdout
+    q2 = recap.split(" 2. has kirsty paid me yet")[1].split(" 3. ")[0]
+    assert "see       invoices: week/001/03-invoices.txt" in q2
 
 
 def test_her_week_misses_the_dates_that_could_be_read_two_ways(teo):
     """Her cover ends 03/11/2026 and the MOT 09/11/2026: day first, but each
     could be read month first, and coming-up never guesses. Held here, so the
     day it can be told otherwise this test says so."""
-    out = teo["week"].stdout
+    out = (teo["table"] / "week" / "001" / "01-coming-up.txt").read_text()
+    assert "27/10/2026" in out
     assert "03/11/2026" not in out and "09/11/2026" not in out
 
 

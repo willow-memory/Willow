@@ -21,7 +21,7 @@ with a key made for them.
 | piece | what it is |
 |---|---|
 | [life_box.py](life_box.py) | the five steps: lay the life, run the week, ask the questions, decide them, say what was made true |
-| [week.md](week.md) | the game box's prep sheet made for a life: what's coming in three weeks, what's waiting on me, what's new, does the box hold |
+| [week.md](week.md) | the game box's prep sheet made for a life: what's coming in three weeks, what's waiting on me, who owes me and whom I owe, what goes out every month, where things stand, the money in my files, what's new, does the box hold |
 | [teodora.json](teodora.json) | Teodora's answer key: for each of her twenty questions, the files (and the words in them) she would seal as its answer, written from her [PLANTED.md](../teodora/PLANTED.md) |
 
 ## The seal, for someone made up
@@ -51,6 +51,15 @@ Her 308 files, laid at her today (2026-10-22), asked her twenty questions:
   T2). "Is that HMRC refund thing legit?" is offered only the phishing email
   itself, and she declines all three of its passages (T1). Last year's
   insurance renewal is declined beside this year's card change.
+- A question one passage can't answer is a sum over many, and an add-on
+  already does that sum. The route add-on reads what kind each question is
+  and points it at the week's step whose job it is: "has kirsty paid me
+  yet" is money owed, and the week's invoices step has Bramble & Bean's
+  three invoices overdue, £2,140, and Hargreaves' August payment found by
+  its sum but never counted as paid, since it names no invoice. "How far
+  along am I" with Ana's wedding is where it stands, and the week's todo
+  step has the nineteen recipes not yet typed up. The week also finds Dev's
+  £600, her eight standing payments, and last year's turnover.
 - Her week finds what is coming in three weeks: the insurer collecting on
   27/10, half term, three invoices due 30/10, month end. It misses her two
   most urgent dates, her cover ending 03/11/2026 and the MOT running out
