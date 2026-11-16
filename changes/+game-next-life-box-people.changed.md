@@ -1,0 +1,1 @@
+`demo/life-box`: the week runs `people`, the roster of everyone the files speak of, so a question about a person ("mags phone number") has the page the route add-on already pointed it at, where before it said "not in this week".

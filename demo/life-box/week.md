@@ -62,6 +62,11 @@ Want 9: "What did the money come to?" Every sum of money in my files, with
 its date and the line it is on.
 - amounts -- --box {box}
 
+Want 9b: "Who's in my life, and where do they turn up?" Everyone my files
+speak of, most mentioned first, so a question about a person has a page to
+look at.
+- people -- --box {box}
+
 ## what's new
 
 Want 10: "What changed in my files since I last looked?" Every file new,
