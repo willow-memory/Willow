@@ -82,6 +82,69 @@ def test_a_web_page_is_read_as_its_blocks_with_lines_kept():
                    (3, "Ever, mostly."), (4, "One bold item"), (5, "Last.")]  # fmt: skip
 
 
+def _report(lines: list[str]) -> str:
+    """A printed report saved as a page: its every line ended with a <br/>."""
+    return "<html><body><div>" + "<br/>".join(lines) + "<br/></div></body></html>\n"
+
+
+WIDE_LINES = [
+    "The modifications culminated with the Small Business Job Protection",
+    "Act of 1996, which scheduled the credit for phaseout and ultimate repeal in",
+    "2005.  The tax credit was renamed the Economic Activity Credit and is now",
+    "authorized by section 30A of the tax code, for existing claimants only.",
+    "Current Proposals",
+    "In each of the four budgets the Administration has submitted since then it",
+    "has proposed extending a modified version of the credit to new firms, and",
+    "two bills to extend it are in Congress this year.",
+] + [
+    f"Line {i} of a long appendix that the printed report wraps at its width."
+    for i in range(14)
+]
+
+
+def test_a_page_wrapped_with_br_is_read_as_wrapped_lines_so_no_sentence_is_cut():
+    got = [b for _, b in clauses.blocks_of_html(_report(WIDE_LINES))]
+    assert got[0] == (
+        "The modifications culminated with the Small Business Job Protection Act of"
+        " 1996, which scheduled the credit for phaseout and ultimate repeal in 2005.\n"
+        "The tax credit was renamed the Economic Activity Credit and is now"
+        " authorized by section 30A of the tax code, for existing claimants only."
+    )  # one sentence a line: the kernel cuts a long paragraph between its lines
+    assert got[1] == "Current Proposals"  # a short line, the next in capitals
+    assert got[2].startswith("In each of the four budgets") and got[2].endswith(
+        "are in Congress this year."
+    )
+    assert got[3].startswith("Line 0 of a long appendix")
+
+
+def test_two_breaks_in_a_row_end_a_paragraph_on_a_wrapped_page():
+    lines = WIDE_LINES[:2] + [""] + WIDE_LINES[2:]
+    got = [b for _, b in clauses.blocks_of_html(_report(lines))]
+    assert got[0].endswith("ultimate repeal in")
+    assert got[1].startswith("2005.")
+
+
+def test_a_page_with_few_breaks_ends_a_block_at_each_as_before():
+    page = (
+        "<p>1050 Massachusetts Avenue<br>Cambridge, MA 02138<br/>info@example.org</p>"
+    )
+    assert [b for _, b in clauses.blocks_of_html(page)] == [
+        "1050 Massachusetts Avenue", "Cambridge, MA 02138", "info@example.org"]  # fmt: skip
+    assert len(clauses.LINE_BREAK.findall(page)) < clauses.WRAPPED
+
+
+def test_twenty_breaks_make_a_wrapped_page_and_nineteen_do_not():
+    lines = ["One line of a printed report, wrapped at its width, goes"] * 20
+    wrapped = "<p>" + "<br>".join(lines) + "<br></p>"  # 20 breaks
+    assert len(clauses.blocks_of_html(wrapped)) == 1
+    plain = "<p>" + "<br>".join(lines) + "</p>"  # 19 breaks: each one an edge
+    assert len(clauses.blocks_of_html(plain)) == 20
+
+
+def test_a_line_too_long_for_a_chunk_is_cut_at_its_last_space_even_the_first():
+    assert clauses.fit("a " + "x" * 600) == "a\n" + "x" * 500 + "\n" + "x" * 100
+
+
 def test_compare_pairs_rewordings_and_counts_spacing_as_same():
     old = [(1, "Effective October 1, 2026"), (3, "We don't show ads from Gmail."),
            (5, "Gone  for good."), (7, "Unrelated words here entirely.")]  # fmt: skip

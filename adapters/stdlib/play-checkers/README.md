@@ -3,7 +3,7 @@ section: Play
 line: Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools
@@ -68,7 +68,8 @@ played.
 Exit codes, the kernel's: 0 done, or every game holds; 42 a draw waits on
 the seal; 2 refused.
 
-**Where it comes from:** the-table's checkers in safe-app-store, over
+**Where it comes from:** the-table's checkers, built in the SAFE App Store
+and now in [Die-Namic](https://github.com/rudi193-cmd/die-namic-games), over
 game-lab's rules. The rules here were checked against game-lab's on 22,039
 positions from 300 seeded games, all the same. Left out: game-lab's ending
 at 300 moves, or 60 with no jump, judged on the pieces left. That was a

@@ -3,7 +3,7 @@ section: Play
 line: Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: tools
@@ -60,7 +60,8 @@ nothing else is played.
 
 Exit codes, the kernel's: 0 done, or every game holds; 2 refused.
 
-**Where it comes from:** the-table's hearts in the SAFE App Store, over
+**Where it comes from:** the-table's hearts, built in the SAFE App Store and
+now in [Die-Namic](https://github.com/rudi193-cmd/die-namic-games), over
 game-lab's rules. Its legal plays were checked against game-lab's
 `legal_plays` in 104,000 states from 2,000 hands, and its scoring on the
 same hands, 19 of them moons: all the same. The hands are open for now;

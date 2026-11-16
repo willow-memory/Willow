@@ -57,12 +57,15 @@ PAGE = re.compile(r"== page \d+")
 SHORT = 0.75  # a line under this share of the file's wide lines ends its block
 WIDE = 0.9  # which line is "wide": the 90th in a hundred, by length
 SEP = "\0"  # where a block tag stood; splitlines() would cut at \x1c-\x1e
+BR = "\x02"  # where a <br> stood, on a wrapped page: a line's end, not a block's
+WRAPPED = 20  # a page that ends this many lines with <br> is wrapped text
 KEEP = 0.5  # the share of words a removed and an added sentence share, to pair
 BLOCK = re.compile(
     r"</?(?:p|div|li|ul|ol|h[1-6]|br|tr|td|th|table|section|article|header|"
     r"footer|blockquote|title|main|nav|figure|figcaption|dd|dt|dl|aside|pre|hr)\b[^>]*>",
     re.I,
 )
+LINE_BREAK = re.compile(r"<br\b[^>]*>", re.I)
 #: words that end in a full stop and don't end a sentence, lower case
 ABBREV = {"e.g", "i.e", "etc", "inc", "ltd", "corp", "co", "mr", "mrs", "ms",
           "dr", "st", "vs", "no", "jr", "sr", "u.s", "u.k", "approx", "fig"}  # fmt: skip
@@ -73,7 +76,15 @@ END = re.compile(r"[.!?][\"'”’)\]]*\s+(?=[A-Z0-9\"'“‘(])")
 def blocks_of_html(text: str) -> list[tuple[int, str]]:
     """A page's blocks, each with the line it starts on: each block tag marked,
     then the kernel's own reading of a page (`html_text`), which drops scripts,
-    styles and comments, a mark inside them too, and keeps every line."""
+    styles and comments, a mark inside them too, and keeps every line. A
+    `<br>` ends a block, as an address's or a name's lines want, except on a
+    page that ends WRAPPED lines or more with one: that is a printed report
+    saved as a page, its every line ended with a `<br>`, and its lines are
+    read as wrapped lines (`broken`), so a sentence is not cut where the
+    printed line ended."""
+    wrapped = len(LINE_BREAK.findall(text)) >= WRAPPED
+    if wrapped:
+        text = LINE_BREAK.sub(BR, text)
     text = BLOCK.sub(lambda m: SEP + "\n" * m.group(0).count("\n"), text)
     text = kernel.html_text(text)
     out, para, start = [], [], 0
@@ -90,7 +101,50 @@ def blocks_of_html(text: str) -> list[tuple[int, str]]:
         if not line.strip() and para:  # a blank line ends a block too
             out.append((start, "\n".join(para)))
             para = []
+    return broken(out) if wrapped else out
+
+
+def broken(blocks: list[tuple[int, str]]) -> list[tuple[int, str]]:
+    """Blocks whose lines a `<br>` ended, cut where a paragraph ends: at two
+    breaks in a row, or at a short line (under SHORT of the page's wide broken
+    lines) unless the next goes on in lower case, as `blocks_of_text` reads
+    wrapped lines; and before a short line that follows a sentence's end, a
+    heading's or a one-line paragraph's. Each part keeps its block's first line, and holds one
+    sentence a line (`fit`), so the kernel, which cuts a long paragraph
+    between its lines, never cuts inside a sentence."""
+    lines = [len(seg.strip()) for _, b in blocks if BR in b for seg in b.split(BR)]
+    sizes = sorted(n for n in lines if n)
+    wide = sizes[int(WIDE * (len(sizes) - 1))] if sizes else 0
+    out: list[tuple[int, str]] = []
+    for start, block in blocks:
+        if BR not in block:
+            out.append((start, block))
+            continue
+        segs = [" ".join(seg.split()) for seg in block.split(BR)]
+        para: list[str] = []
+        for j, seg in enumerate(segs):
+            if not seg:  # two breaks in a row, or one at an edge
+                if para and j + 1 < len(segs):
+                    out.append((start, flowed(para)))
+                    para = []
+                continue
+            short = len(seg) < SHORT * wide
+            if short and para and STOP.search(para[-1]):  # a heading's own
+                out.append((start, flowed(para)))
+                para = []
+            para.append(seg)
+            nxt = next((x for x in segs[j + 1 :] if x), "")
+            if short and (not nxt[:1].islower() or STOP.search(seg)):
+                out.append((start, flowed(para)))
+                para = []
+        if para:
+            out.append((start, flowed(para)))
     return out
+
+
+def flowed(lines: list[str]) -> str:
+    """A paragraph's printed lines as its sentences, one a line."""
+    return "\n".join(fit(s) for s in sentences("\n".join(lines)))
 
 
 def blocks_of_text(text: str, wrapped: bool) -> list[tuple[int, str]]:
