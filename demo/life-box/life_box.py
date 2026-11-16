@@ -23,7 +23,10 @@ the starter words list a person begins with:
   each reader mirrors what it reads into DIR/NAME-read, the files no reader
   took are copied beside them as they are, and the box is laid over that.
   Without it, the box is laid over the life as written, which suits a life
-  of plain files; a scan or a spreadsheet is never read raw.
+  of plain files; a scan or a spreadsheet is never read raw. A life that
+  holds a shell history (bash_history, zsh_history, histfile, fish_history)
+  has it read too, by shell-history, each command a line dated in UTC; a
+  life without one is read exactly as before.
 - `--dates day-first` (or month-first) says the order the life's dates
   are written in, which only its writer knows: the life is mirrored through
   that add-on, each date given its ISO form beside it, and the box laid over
@@ -41,9 +44,16 @@ the starter words list a person begins with:
   box is. DIR/record is laid beside them over the whole life: the week
   and the spelling add-ons each read one box, and read it whole.
 - `week` runs week.md, a week's prep over the life, at NAME's own today
-  (the TODAY their make_life.py writes them at), kept in DIR/week/NNN,
+  (the TODAY their make_life.py writes them at; where it writes none, the
+  `today` of their questions.json, then the NOW their run.py asks at, and
+  with none of the three the demo is refused: a day is never guessed),
+  kept in DIR/week/NNN,
   beside NNN.md, the stack as it ran.
-- `ask` asks each of NAME's own questions (demo/NAME/QUESTIONS.md) and
+- `ask` asks each of NAME's own questions (demo/NAME/QUESTIONS.md, or where
+  there is none the `questions` of demo/NAME/questions.json, the `ask` of
+  each that is put to the life itself, a `box` of their own name or none,
+  in order and as written; a demo with no such list is not a life with
+  questions of its own, and `open` refuses it) and
   hands in every passage served as a suggested answer, citing it. A
   question is first read the way their files spell it: the typos add-on,
   then accents, each over the box; when that reads it differently
@@ -159,6 +169,9 @@ STD = ROOT / "adapters" / "stdlib"
 READERS = [STD / "mail" / "mail.py", STD / "calendar" / "cal.py", STD / "chats" / "chats.py",
            STD / "notes" / "notes.py", STD / "office" / "office.py", STD / "books" / "books.py",
            ROOT / "adapters" / "deps" / "pdf" / "pdf.py"]  # fmt: skip
+HISTORY = (
+    STD / "shell-history" / "shell_history.py"
+)  # --read runs it only on a life holding a history
 WEEK = HERE / "week.md"
 #: passages dealt out across piles for one question. One box offers the
 #: kernel's TOP (3), but three turns across a dozen piles never reach the later
@@ -175,6 +188,9 @@ WEEK = HERE / "week.md"
 DEAL = 7
 TODAY = re.compile(r"^TODAY = date\((\d{4}), (\d{1,2}), (\d{1,2})\)", re.M)
 QUESTION = re.compile(r"^\d+\. (.+)$", re.M)
+NOW = re.compile(r'^NOW = "(\d{4}-\d\d-\d\d)T', re.M)
+#: a shell history's name, as shell-history knows one: it is read only where the life holds one
+HISTORIES = ("bash_history", "zsh_history", "histfile", "fish_history")
 
 
 def py(*argv, **kw) -> subprocess.CompletedProcess:
@@ -187,16 +203,42 @@ def fail(why: str) -> int:
 
 
 def today_of(who: str) -> str:
-    """NAME's own today, as their make_life.py writes them."""
-    m = TODAY.search((DEMO / who / "make_life.py").read_text(encoding="utf-8"))
-    if not m:
-        raise ValueError(f"demo/{who}/make_life.py names no TODAY")
-    y, mo, d = (int(g) for g in m.groups())
-    return f"{y:04d}-{mo:02d}-{d:02d}T09:00:00Z"
+    """NAME's own today, where the demo writes it, the first of these: the
+    `TODAY = date(Y, M, D)` line of their make_life.py; a `today` in their
+    questions.json; the `NOW = "YYYY-MM-DDT..."` their run.py asks at. A day
+    is never guessed: with none of the three, it is refused."""
+    folder = DEMO / who
+    m = TODAY.search((folder / "make_life.py").read_text(encoding="utf-8"))
+    if m:
+        y, mo, d = (int(g) for g in m.groups())
+        return f"{y:04d}-{mo:02d}-{d:02d}T09:00:00Z"
+    if (folder / "questions.json").is_file():
+        day = json.loads((folder / "questions.json").read_text(encoding="utf-8")).get("today", "")  # fmt: skip
+        if isinstance(day, str) and re.fullmatch(r"\d{4}-\d\d-\d\d", day):
+            return f"{day}T09:00:00Z"
+    if (folder / "run.py").is_file():
+        m = NOW.search((folder / "run.py").read_text(encoding="utf-8"))
+        if m:
+            return f"{m.group(1)}T09:00:00Z"
+    raise ValueError(f"demo/{who} names no today: no TODAY in make_life.py, no `today` in questions.json, no NOW in run.py")  # fmt: skip
 
 
 def questions(who: str) -> list[str]:
-    return QUESTION.findall((DEMO / who / "QUESTIONS.md").read_text(encoding="utf-8"))
+    """NAME's own questions, in order, as written: their QUESTIONS.md, else the
+    `questions` of their questions.json, the `ask` of each that is put to the
+    life itself (a `box` of their own name, or none), verbatim."""
+    folder = DEMO / who
+    if (folder / "QUESTIONS.md").is_file():
+        return QUESTION.findall((folder / "QUESTIONS.md").read_text(encoding="utf-8"))
+    if not (folder / "questions.json").is_file():
+        raise ValueError(f"demo/{who} has no QUESTIONS.md and no questions.json of their own")  # fmt: skip
+    listed = json.loads((folder / "questions.json").read_text(encoding="utf-8")).get("questions")  # fmt: skip
+    if not isinstance(listed, list) or not all(isinstance(x, dict) and isinstance(x.get("ask"), str) for x in listed):  # fmt: skip
+        raise ValueError(f"demo/{who}/questions.json holds no `questions` list of questions to ask")  # fmt: skip
+    asked = [x["ask"] for x in listed if x.get("box", who) == who]
+    if not asked:
+        raise ValueError(f"demo/{who}/questions.json puts none of its questions to {who}'s own files")  # fmt: skip
+    return asked
 
 
 def words_of(text: str) -> list[str]:
@@ -312,7 +354,8 @@ def read_life(life: Path, to: Path) -> list[str]:
     """Every reader over the life into one mirror, then the files no reader
     took copied beside them; what each reader said, one line each."""
     said = []
-    for script in READERS:
+    history = any(f.name.startswith(HISTORIES) for f in life.rglob("*") if f.is_file())
+    for script in READERS + ([HISTORY] if history else []):
         got = py(script, "mirror", "--from", life, "--to", to)
         if got.returncode == 2 and ("pip install" in got.stderr or "ModuleNotFoundError" in got.stderr):  # fmt: skip
             said.append(f"{script.parent.name}: unreachable, {script.parent.name}'s package isn't installed")  # fmt: skip
@@ -338,8 +381,11 @@ def cmd_open(
         return fail(
             f"{who!r} isn't one of willow's made-up lives (demo/NAME/make_life.py)"
         )
-    if not (DEMO / who / "QUESTIONS.md").is_file():
-        return fail(f"demo/{who} has no QUESTIONS.md of their own")
+    try:
+        questions(who)
+        today_of(who)
+    except ValueError as e:
+        return fail(str(e))
     if dates and dates not in ORDERS:
         return fail(f"--dates is {' or '.join(ORDERS)}: the order the life's dates are written in")  # fmt: skip
     if table.exists():

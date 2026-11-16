@@ -433,6 +433,81 @@ for the boiler. The warranty file's "Total cost £3,680.00. Paid: £1,840.00
 card ..." is a file, not a bank line, and spent never adds it. "how much did I
 actually make last year" is money made, so it is not sent to spent.
 
+## The other demo lives
+
+Four more demos have a `make_life.py`. The life box lays a person's life and
+asks that person's own questions of it, so each was read for whether it is one
+(laying them is [test_life_box_studies.py](test_life_box_studies.py), about
+twenty seconds). `make_life.py` runs on the copy in the table, as it does for
+Teodora, and nothing is written back: the test holds every file under the four
+demos' folders by SHA-256 through the run, since three of them are frozen.
+
+| demo | laid | why |
+|---|---|---|
+| [ofrenda](../ofrenda/) | yes | Marisol's life, and the first three of its seven questions are hers, asked of it. The other four are put to two books from Project Gutenberg, not to her files, and are left out |
+| [money-hour](../money-hour/) | no | four people's folders (23 files), and its `questions.json` holds no question: facts, traps, wagers and pass rules, claims about the markets held to a record outside anyone's files. A box over the four would be nobody's life, and PLANTED.md's traps are what claim-check, misquote and pair-drift are for, not a person's answer key |
+| [stewart-crossover](../stewart-crossover/) | no | Wren's files (8) held beside a real man's life: facts, quotes and traps held to publishers. She asks nothing of her own files; the questions are the study's, about him |
+| [johnson](../johnson/) | no | five people's folders passed one report; Ines's four questions are inside `scene.py`, no file of theirs, and a box over `life/` would pile Walt's, Aurelie's, Tamsin's and Harold's with hers |
+
+`open` refuses the three, before it makes anything, and says which: a
+`questions.json` with no `questions` list, or a demo with neither a QUESTIONS.md
+nor a questions.json.
+
+### What `open` reads now
+
+- **Questions.** QUESTIONS.md as before; failing that, the `questions` of
+  questions.json, each `ask` in order and word for word, those put to the
+  person's own files (a `box` of their own name, or none). Ofrenda's three.
+- **Today.** The `TODAY = date(...)` of make_life.py as before; failing that, a
+  `today` in questions.json (money-hour's, 2026-11-05); failing that, the `NOW`
+  its run.py asks at. Ofrenda's make_life.py has no TODAY and its
+  questions.json no `today`, so it is run.py's `NOW`, 2026-10-31: the same day
+  as the last line of Marisol's diary, "Tomorrow the marigolds. I want to ask
+  her files, not a guess." With none of the three the demo is refused.
+- **The readers.** `--read` now also runs
+  [shell-history](../../adapters/stdlib/shell-history/), but only on a life
+  that holds a bash, zsh or fish history, so Teodora and Bernadette are read
+  as they were.
+
+### Ofrenda
+
+Opened `--read`, at her today: 11 files, Femia's terminal history read into
+dated lines. Options by what they changed, asked of the same three questions:
+
+| laid | offered | questions with an offer |
+|---|---|---|
+| as written | 5 | 2 |
+| `--read` | 5 | 2 |
+| `--read --piles` | 8 | 2 |
+
+`--read`, because it is how her life is read: the deleted file's command is a
+line dated 2019-12-21 16:45:40 UTC, where raw bash history holds it under an
+epoch number. `--piles` offers three passages more and answers nothing more:
+the life is eleven files and three questions, and a pile per folder spreads
+what one box already serves. `--dates` says nothing here: no file writes a
+date that reads both ways.
+
+- 1, "what was the secret in the biscochitos": three offered, the deleted
+  file's command (`bash_history.txt:189`) first, then two diary lines.
+- 2, "why does the old computer beep at midnight on november 2": two, Femia's
+  note about cron (`notas/computadora.txt:9`) and a diary line.
+- 3, "where did she hide the deed to the land": nothing in the life holds it,
+  as demo/ofrenda froze it to be: the kernel serves a passage only when it
+  holds half the question's words.
+
+Five passages wait, none sealed. Ofrenda has no answer key and no PLANTED.md,
+so `decide` refuses ("no answer key beside this"), and Marisol's answers wait
+on her own seal. The record verifies. Nothing was declined, so no question is
+answered.
+
+**Gaps.** None that an add-on would close. The box offers the passage; whether
+the command at line 189 is the secret, and whether Marisol's diary lines say
+the same thing, is hers to read and seal. The week already runs over her files:
+coming-up finds her 2026-10-31 line, and people finds Joaquín in four files and
+Rosa in three. The one line missing is for money-hour: a questions list for one
+of its four people, written in a new freeze, before the box could lay that
+person's folder.
+
 ## Where it comes from
 
 The [game box](../game-box/), with the binder swapped for a life:
