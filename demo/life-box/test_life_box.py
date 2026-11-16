@@ -291,11 +291,15 @@ def test_bernadette_seals_what_her_key_names_and_her_traps_hold(bern):
     # her spelling is read before it is asked (typos, then accents): "jeweler" as
     # "jeweller" and "dermatoligist referal" as "dermatologist referral" now find
     # their passages. The letter is a scan, read only with pypdf: without it, one
-    # answer fewer, and one question fewer answered.
+    # answer fewer, and one question fewer answered. The kindle clippings now say "highlight"
+    # (books.py keeps the kind), so Q17's "highlighted" is held by the clipping: two more
+    # offered, both declined (30 declined, not 28), sealed and answered as before.
     sealed, answered = (20, 16) if bern["pdf"] else (19, 15)
-    assert f"sealed {sealed} answers and declined 28" in bern["decide"].stdout
+    assert f"sealed {sealed} answers and declined 30" in bern["decide"].stdout
     assert f"{answered} of 20 questions have an answer bernadette sealed" in bern["recap"].stdout  # fmt: skip
     got = answers(bern["recap"].stdout)
+    # Q17: the clipping that says "highlight" is sealed, and the two other clippings are offered, declined
+    assert got[17]["sealed"] == ["Kindle/My Clippings.txt.txt:7"] and len(got[17]["declined"]) == 2  # fmt: skip
     # T2: the budget's estimate and last year's rego are no answer to this year's
     assert got[2]["sealed"] == [] and "Documents/Household budget 2026.xlsx.txt:3" in got[2]["declined"]  # fmt: skip
     # T3: the skin check she cancelled is sealed; no booking is
@@ -506,27 +510,26 @@ def test_the_scone_recipe_is_offered_first_in_its_own_pile_and_she_seals_it(bern
 
 
 def test_bernadette_by_piles_counts(bern_piles):
-    # one box: 48 offered, 20 sealed, 28 declined, 16 of 20. Dealt across piles each question
-    # offers up to 7, so more is offered and declined; the same 16 questions are answered,
-    # the scone recipe in, "the quote about loss i highlighted on the kindle" out. A question
-    # that names a pile is asked of that pile alone, so Q12 and Q17 offer 3 and none: 80 offered.
+    # one box: 50 offered, 20 sealed, 30 declined, 16 of 20. Dealt across piles each question
+    # offers up to 7, so more is offered and declined; the scone recipe is in, and so now is
+    # "the quote about loss i highlighted on the kindle": books.py keeps the kind Kindle
+    # wrote, so the clipping holds "highlight" and with "loss" is 2 of the 3 words left
+    # once "kindle" has named the pile (it was 1 of 3, and unanswered, before). A question
+    # that names a pile is asked of that pile alone, so Q12 and Q17 offer 3 and 1: 81 offered.
     # Without pypdf, the scan is unread: one offered, one declined and one question fewer.
-    offered, declined, answered = (80, 59, 16) if bern_piles["pdf"] else (79, 58, 15)
+    offered, declined, answered = (81, 59, 17) if bern_piles["pdf"] else (80, 58, 16)
     assert f"{offered} answers wait on bernadette's seal" in bern_piles["ask"].stdout
-    assert f"sealed 21 answers and declined {declined}" in bern_piles["decide"].stdout
+    assert f"sealed 22 answers and declined {declined}" in bern_piles["decide"].stdout
     assert (
         f"{answered} of 20 questions have an answer bernadette sealed"
         in bern_piles["recap"].stdout
     )
     got = answers(bern_piles["recap"].stdout)
-    assert (
-        got[17]
-        == {
-            "sealed": [],
-            "declined": [],
-        }
-    )  # "kindle" now says where to look, but the clipping holds one of "quote loss highlighted"
-    assert "     nothing in the life holds it" in bern_piles["recap"].stdout.split("17. ")[1].split("18. ")[0]  # fmt: skip
+    # Q17: the clipping the key names, offered in the Kindle pile and sealed
+    assert got[17] == {"sealed": ["Kindle/My Clippings.txt.txt:7"], "declined": []}
+    q17 = bern_piles["recap"].stdout.split("17. ")[1].split("18. ")[0]
+    assert '     asked of Kindle as "that quote about loss i highlighted on the"' in q17
+    assert "[Kindle]" in q17 and "nothing in the life holds it" not in q17
     # last week's dated answers stay where they were
     assert got[1]["sealed"] == ["Calendar/Home.ics.txt:44"]
     assert got[8]["sealed"] == ["Calendar/Home.ics.txt:55", "Contacts/contacts.vcf.txt:6"]  # fmt: skip
@@ -538,7 +541,7 @@ def test_bernadette_by_piles_seals_nothing_her_key_does_not_name_in_any_box(bern
     t = bern_piles["table"]
     key = json.loads((HERE / "bernadette.json").read_text())
     sealed = seals(t)
-    assert len(sealed) == 21
+    assert len(sealed) == 22
     for box, prop in sealed:
         m = life_box.CLAIM.match(prop["claim"])
         q, where = m.group(1), m.group(4)

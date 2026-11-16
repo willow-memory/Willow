@@ -8,10 +8,12 @@ Walks FOLDER for two kinds of file, skipping hidden folders and files:
   or note becomes one paragraph. Books are sorted by title; each book's entries
   keep their order in the file:
 
-      2024-03-03  Book Title (Author), page 12
+      2024-03-03  Book Title (Author), highlight at page 12
       The highlighted words, exactly as Kindle saved them.
 
-  A bookmark has no text, so it is skipped. A highlight whose "Added on" date
+  The header says what it is, as Kindle does: `highlight` or `note`, then
+  `at page N` (or `at location N`, if it has no page), so a question that says
+  "highlighted" finds a highlight. A bookmark has no text, so it is skipped. A highlight whose "Added on" date
   cannot be read is written as `undated` rather than dropped.
 
 - an .epub file. Its text, in spine (reading) order, with scripts and styles
@@ -97,11 +99,12 @@ def clippings_text(raw: bytes) -> str | None:
     out = []
     for book in sorted(by_book):
         for e in by_book[book]:
-            where = ""
+            # the kind as Kindle says it (highlight, note), then where
+            where = f", {e['kind'].lower()}"
             if e["page"]:
-                where = f", page {e['page']}"
+                where += f" at page {e['page']}"
             elif e["location"]:
-                where = f", location {e['location']}"
+                where += f" at location {e['location']}"
             out.append(f"{e['date'] or 'undated'}  {book}{where}\n{e['text']}\n\n")
     return "".join(out)
 

@@ -17,9 +17,10 @@ questions of.
     python adapters/stdlib/books/books.py mirror --from FOLDER --to MIRROR
 
 A highlight or note from a Kindle "My Clippings.txt" becomes one paragraph,
-dated by its "Added on" day, with its page (or location, if it has no page):
+dated by its "Added on" day, saying what it is (`highlight` or `note`, as
+Kindle does) and where, its page (or location, if it has no page):
 
-    2024-03-03  Made-Up Harbour (Ada Example), page 12
+    2024-03-03  Made-Up Harbour (Ada Example), highlight at page 12
     The tide keeps its own calendar.
 
 Books are sorted by title and each keeps its order in the file. A bookmark has

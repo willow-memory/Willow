@@ -44,13 +44,13 @@ CLIPPINGS = (
 )
 
 EXPECTED_MIRROR = (
-    "2024-03-03  Another Shore (Bo Sample), page 4\n"
+    "2024-03-03  Another Shore (Bo Sample), note at page 4\n"
     "Remember the second pier.\n"
     "\n"
-    "2024-03-03  Made-Up Harbour (Ada Example), page 12\n"
+    "2024-03-03  Made-Up Harbour (Ada Example), highlight at page 12\n"
     "The tide keeps its own calendar.\n"
     "\n"
-    "2024-03-05  Made-Up Harbour (Ada Example), page 40\n"
+    "2024-03-05  Made-Up Harbour (Ada Example), highlight at page 40\n"
     "Salt keeps the lamps burning.\n"
     "\n"
 )
@@ -146,7 +146,7 @@ def test_highlight_has_iso_date_and_page_and_note_is_kept(tmp_path):
     got = mirror(folder, to)
     assert got.returncode == 0, got.stderr
     text = (to / "kindle" / "My Clippings.txt.txt").read_text(encoding="utf-8")
-    assert "2024-03-03  Made-Up Harbour (Ada Example), page 12\n" in text
+    assert "2024-03-03  Made-Up Harbour (Ada Example), highlight at page 12\n" in text
     assert "The tide keeps its own calendar.\n" in text
     assert "Remember the second pier.\n" in text  # a note is kept
 
@@ -178,7 +178,7 @@ def test_both_added_on_formats_read_to_the_same_iso_day(tmp_path):
     text = (to / "kindle" / "My Clippings.txt.txt").read_text(encoding="utf-8")
     # "3 March 2024" (day first) and "March 3, 2024 ... PM" (month first) both give 03-03.
     assert text.count("2024-03-03  ") == 2
-    assert "2024-03-05  Made-Up Harbour (Ada Example), page 40\n" in text
+    assert "2024-03-05  Made-Up Harbour (Ada Example), highlight at page 40\n" in text
 
 
 def test_bookmark_is_skipped_and_books_grouped_by_title(tmp_path):
@@ -341,3 +341,42 @@ def test_an_epub_naming_no_book_inside_is_skipped_and_counted(tmp_path):
     got = mirror(folder, to)
     assert got.returncode == 0, got.stderr
     assert got.stdout.strip() == f"wrote 2 files to {to}; skipped 1"
+
+
+def test_header_says_highlight_or_note_and_where(tmp_path):
+    """The kind Kindle wrote on the meta line ("Your Highlight", "Your Note") is kept
+    in the header, so a question that says "highlighted" finds a highlight. It was
+    dropped before: only the page or location survived."""
+    raw = (
+        "Meditations (Marcus Aurelius)\n"
+        "- Your Highlight on Location 288-290 | Added on Friday, 19 June 2026 20:54:43\n"
+        "\n"
+        "Loss is nothing else but change.\n"
+        "==========\n"
+        "Meditations (Marcus Aurelius)\n"
+        "- Your Note on Location 301 | Added on Friday, 19 June 2026 20:55:00\n"
+        "\n"
+        "Read this again.\n"
+        "==========\n"
+        "Meditations (Marcus Aurelius)\n"
+        "- Your Highlight | Added on Friday, 19 June 2026 20:56:00\n"
+        "\n"
+        "No place given.\n"
+        "==========\n"
+    )
+    folder, to = tmp_path / "f", tmp_path / "m"
+    (folder / "kindle").mkdir(parents=True)
+    (folder / "kindle" / "My Clippings.txt").write_text(raw, encoding="utf-8")
+    assert mirror(folder, to).returncode == 0
+    text = (to / "kindle" / "My Clippings.txt.txt").read_text(encoding="utf-8")
+    assert (
+        "2026-06-19  Meditations (Marcus Aurelius), highlight at location 288-290\nLoss is"
+        in text
+    )
+    assert (
+        "2026-06-19  Meditations (Marcus Aurelius), note at location 301\nRead this"
+        in text
+    )
+    assert (
+        "2026-06-19  Meditations (Marcus Aurelius), highlight\nNo place" in text
+    )  # no place: the kind alone

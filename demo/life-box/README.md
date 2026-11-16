@@ -91,8 +91,8 @@ mirror is then mirrored again through day-first.
   the 30th and the tax due the 31st. Her one thing marked to do is the bank's
   "update any recurring payments", which she didn't, which is why the cover
   is ending.
-- 48 passages are offered for 19 of her twenty questions. She seals 20 and
-  declines 28: sixteen questions answered (fifteen without pypdf, below).
+- 50 passages are offered for 19 of her twenty questions. She seals 20 and
+  declines 30: sixteen questions answered (fifteen without pypdf, below).
 - She spells some questions her own way, and `ask` reads each the way her
   files spell it before it asks, as her stack does: the typos add-on, then
   accents, each over the box. "What did the jeweler say" is asked as "what
@@ -167,10 +167,11 @@ path in the whole life, so the answer keys read the same. `decide` and
 
 **What it changes.** Bernadette opened with `--read --dates day-first
 --piles` is laid as fifteen piles (the vault's loose notes, its Daily and
-Recipes, and a pile for each other folder) and 80 passages are offered (79
-without pypdf), against 48 in one box: she seals 21 and declines 59, and
-sixteen questions are answered, as before. The scone recipe is in; "that
-quote about loss I highlighted on the kindle" is still out (below). The
+Recipes, and a pile for each other folder) and 81 passages are offered (80
+without pypdf), against 50 in one box: she seals 22 and declines 59, and
+seventeen questions are answered, one more than in one box. The scone
+recipe is in, and so is "that quote about loss I highlighted on the kindle"
+(below). The
 other gains are more of what her key names (the Tax note for the deadline,
 the cancellation mail for her skin check, two more for Aoife's birthday) and
 more declined beside them. Teodora, opened with `--dates day-first --piles`,
@@ -202,6 +203,10 @@ the one that has it. Measured on both lives at the same deal of ten:
 | asked of every pile, the named one without the word | 99 / 23 / 76 / 15 | 98 / 23 / 75 / 14 | 66 / 21 / 45 / 11 |
 | asked of the named pile alone | 92 / 24 / 68 / 16 | 91 / 24 / 67 / 15 | 54 / 20 / 34 / 11 |
 
+These three rows were measured before the Kindle reader kept `highlight`, which
+moves only Bernadette: the last is now 93 / 25 / 68 / 17, and 92 / 25 / 67 / 16
+without pypdf; the first two were not measured again.
+
 Asking every pile fills the deal with the other piles' echoes of the same
 word and crowds out the named pile's own turns: "scone recipe" asks the
 Recipes pile for "scone", where all of Scones.md ties on its file name and
@@ -216,7 +221,7 @@ Every question of both lives that names a pile, and what happens to it:
 | question | names | asked as |
 |---|---|---|
 | Bernadette 12, scone recipe | `Notes/Bernie's Vault/Recipes` | "scone"; the recipe sealed |
-| Bernadette 17, that quote about loss i highlighted on the kindle | `Kindle` | "that quote about loss i highlighted on the"; nothing |
+| Bernadette 17, that quote about loss i highlighted on the kindle | `Kindle` | "that quote about loss i highlighted on the"; the clipping sealed |
 | Teodora 1, when's the car due its mot | `car` | "when's the due its mot"; sealed as before |
 | Teodora 7, when is maisie off school for half term | `maisie` | "when is off school for half term"; sealed as before |
 | Teodora 14, which aat exams have I passed | `study/aat/.` | "which exams have I passed"; sealed |
@@ -227,13 +232,15 @@ questions ("what's my home wifi password" is asked of Home alone), which is
 what saying "home" means here; a person whose wifi password is not in Home
 has asked a pile that cannot answer, and is told nothing is held.
 
-The kindle quote is still lost, and the rule is not what is wrong. The
-clipping, "Loss is nothing else but change", holds one of the three content
-words left ("quote", "loss", "highlighted"), and the kernel serves a passage
-only when it holds half. In one box it was sealed because "kindle", in the
-file's path, was a fourth word it held for free, which is what piles took
-away. The answer is not to loosen the half, nor to give a named pile its
-folder's name back (that gives the scone recipe back to its tie).
+The kindle quote is found because the reader says what the file says. The
+clipping, "Loss is nothing else but change", was written by books.py without
+the word Kindle saved beside it, `Your Highlight`, so it held one of the three
+content words left ("quote", "loss", "highlighted"), short of the half the
+kernel serves at. Its header now says `highlight at location 288-290`, as the
+file does, and the clipping holds "loss" and "highlighted", two of three: the
+rule is not loosened and the named pile is not given its folder's name back
+(that gives the scone recipe back to its tie). The reader had dropped what the
+file said; the mirror now keeps it.
 
 ### The deal
 
@@ -243,10 +250,10 @@ answered, of 20:
 
 | deal | Bernadette | without pypdf | Teodora |
 |---|---|---|---|
-| 3 | 47 / 13 / 34 / 10 | 46 / 12 / 34 / 9 | 37 / 14 / 23 / 11 |
-| 6 | 73 / 19 / 54 / 14 | 72 / 19 / 53 / 14 | 49 / 18 / 31 / 11 |
-| 7 | 80 / 21 / 59 / 16 | 79 / 21 / 58 / 15 | 52 / 19 / 33 / 11 |
-| 10 | 92 / 24 / 68 / 16 | 91 / 24 / 67 / 15 | 54 / 20 / 34 / 11 |
+| 3 | 48 / 14 / 34 / 11 | 47 / 13 / 34 / 10 | 37 / 14 / 23 / 11 |
+| 6 | 74 / 20 / 54 / 15 | 73 / 20 / 53 / 15 | 49 / 18 / 31 / 11 |
+| 7 | 81 / 22 / 59 / 17 | 80 / 22 / 58 / 16 | 52 / 19 / 33 / 11 |
+| 10 | 93 / 25 / 68 / 17 | 92 / 25 / 67 / 16 | 54 / 20 / 34 / 11 |
 
 Seven is the smallest deal that answers as many questions as ten. What ten
 keeps over it is three more sealed passages on questions already answered (the
