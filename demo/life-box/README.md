@@ -433,6 +433,80 @@ for the boiler. The warranty file's "Total cost £3,680.00. Paid: £1,840.00
 card ..." is a file, not a bank line, and spent never adds it. "how much did I
 actually make last year" is money made, so it is not sent to spent.
 
+## Readings beside each question
+
+[readings](../../adapters/stdlib/readings/) was found by Odile's second pass
+(her [STRIP.md](../odile/STRIP.md)): two hints beside a kernel bite, *a date in a
+log has gone by with nothing written since* and *a number in a dated table moved
+a lot lately*. It needs a question, since it reads the passages one bite served,
+so it is not a step of the week (a week step takes none: week.md has no place
+for it). It sits in `ask`, where every question is bitten: each bite, in one box
+or in every pile's, is `readings.py bite` in place of `kernel.py bite`, at the
+person's today, on the question as their files spell it. It runs the kernel's
+own bite and prints its JSON with the hints added to `look`, so `ask` takes the
+passages from that and the hints from the `look` entries that carry a `where`
+and no `next` (the kernel's own carry one or the other). Under each question it
+prints them as `see readings: WHY  WHERE`, and keeps them in `DIR/readings/NN.txt`,
+beside the week, for recap:
+
+     1. something that tells me who's due  (what is coming)
+          7 suggested: dad/cardiology-2026-07-30.txt:13 [dad]; ...
+          see readings: gone by, nothing written since: Everett Montaño - Samick console (1999),
+              2203 Pinon St (Jan 2023); Ada Kerrigan - ...; Benedikt Ybarra - Wurlitzer console
+              (1971), 904 Pinon St (Oct 2026)  tuning/: 7 of 66 headings, as of 2026-10-22
+     3. Dad's weight  (a thing you wrote down)
+          asked of dad as "'s weight"
+          3 suggested: dad/cardiology-2026-07-30.txt:8 [dad]; ...; dad/care-log.csv:1 [dad]
+          see readings: weight_kg: 75.1 on 2026-10-21, up 1.9 from 73.2 on 2026-10-14; the most
+              in one week of the last 4: up 2.5, 2026-10-09 to 2026-10-16  dad/care-log.csv: ...
+          see readings: pulse: 64 on 2026-10-21, down 5 from 69 on 2026-10-14; the most in one
+              week of the last 4: up 14, 2026-09-23 to 2026-09-30  dad/care-log.csv: ...
+
+(Each hint is one line in the output; wrapped here, and `...` for what is cut.)
+
+### The two on Odile's box
+
+The seven are STRIP.md's second-pass answer, the tuning log's clients whose
+`next:` date has passed with no visit written under them since. Her STRIP.md
+checks them: three (the 2023 ones) moved away, which her log never says, and
+Benedikt Ybarra is already booked for 2026-10-28 in her calendar, which leaves
+the four STRIP.md calls truly due; the hint reads her tuning folder, not her calendar, and says no more
+than the date. The weight is Laszlo's, up 2.5 kg in the week of 2026-10-09, past the
+cardiologist's 2 kg line, which her answer already seals for the same question.
+The pulse line is the same care log's other column: readings says every column
+that moved, and "weight" does not choose one. Where one question is asked of
+several piles, each pile's hints are said, `where` led by the pile's folder.
+
+### A hint is never an answer
+
+It is not proposed (a proposal can only cite what
+one bite served) and not sealed, and the record never hears of it. The passages
+served, the bite row written (the test runs the kernel and readings over the same
+box and compares the files) and every count are the kernel's: measured on every
+life this box lays, one box and piles, with pypdf and without, and on day two,
+every `ask`, `decide` and `recap` is the same line for line without the `see
+readings:` lines, and the counts are what they were (Odile 41 offered, 9 sealed,
+32 declined as piles and 30 / 7 / 23 as one box, and the other lives' counts, each
+asserted in its test file).
+
+### Only Odile hears anything
+
+Teodora, Bernadette, Hollis, Corwin and ofrenda
+are served no dated log or dated table for any question, so no hint is said for
+them on either day, and none of readings' noise on Hollis and Teodora (the
+"what isn't there" it had before, taken out) comes back. Odile's one stray is
+the pulse above, a true reading beside a question about the weight. Her "how's
+Dad doing" and "is Dad okay" get none: as piles they are served nothing, in one
+box her calendar's lines.
+
+### Where readings cannot run
+
+A box of sources is read where its files are kept
+and readings reads it the same way, through the kernel's own `pile_of_box`. Where
+readings gives no JSON (it refused, or failed), the kernel bites the question
+exactly as before and nothing is hinted; recap says so, in one line beside the
+question: `see readings: not run on BOX: WHY; the kernel bit it alone`.
+
 ## The other demo lives
 
 Four more demos have a `make_life.py`. The life box lays a person's life and
@@ -598,8 +672,8 @@ is built here.
 
 | question | why | closes it |
 |---|---|---|
-| 1 "something that tells me who's due" | the right file, the wrong rows: her latest `next: Oct 2027` visits. Who is due is a date passed with no visit since | the [readings](../../adapters/stdlib/readings/) add-on, which on this box (STRIP.md's second pass) says the seven, *gone by, nothing written since*, four truly due |
-| 2, 11 "how's Dad doing", "is Dad okay" | a trend is not a word; and as piles "Dad" names `dad/` | readings (STRIP.md's second pass): *75.1 on 2026-10-21, up 2.5 in one week*, beside the cardiologist's 2 kg |
+| 1 "something that tells me who's due" | the right file, the wrong rows: her latest `next: Oct 2027` visits. Who is due is a date passed with no visit since | the [readings](../../adapters/stdlib/readings/) add-on, now beside this question in `ask` ([Readings beside each question](#readings-beside-each-question)): the seven, *gone by, nothing written since*, four truly due; the passages offered are still declined |
+| 2, 11 "how's Dad doing", "is Dad okay" | a trend is not a word; and as piles "Dad" names `dad/` | readings says the trend beside "Dad's weight" (3), *75.1 on 2026-10-21, up 2.5 in one week*, beside the cardiologist's 2 kg; these two are served no care log, so they get none |
 | 5, 6 "did the schools pay me", "invoice not paid" | an unpaid order is a deposit that isn't there; her invoices say `PO 2026-095`, not `INV-` | [invoices](../../adapters/stdlib/invoices/) takes the id pattern, but her payments never name the PO, so no step matches them: a line she can add to a stack, not a word |
 | 8 "is anything wrong with the hives" | in piles the question loses "hives" and asks for "wrong" | one box answers it; her notes never say "queenless" |
 | 9 "how am I doing" | nothing holds it, and her answer is "fine" | none: [gaps](../../adapters/stdlib/gaps/) says where a log stops; her memos shrink and no add-on says so |

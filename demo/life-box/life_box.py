@@ -71,6 +71,20 @@ the starter words list a person begins with:
   total, the count, the period and each payment's file and line) is kept in
   DIR/spent/NN.txt, beside the week. It is never proposed and never sealed: a
   total is not a passage, and a proposal can only cite what one bite served.
+  Every bite, in one box or in each pile's, is made through readings
+  (`readings.py bite`), which runs the kernel's own bite (the passages served,
+  the row written and the exit code are the kernel's, so a proposal still
+  cites the last bite) and reads two hints from what was served: a date in a
+  log that has gone by with nothing written since, and a number in a dated
+  table that moved a lot lately. They are printed under the question as `see
+  readings: WHY  WHERE` and kept in DIR/readings/NN.txt, beside the week: a
+  place to look, never proposed and never sealed, since a hint is not a
+  passage a bite served. Odile's "something that tells me who's due" gets the
+  seven in her tuning log, and "Dad's weight" the 2.5 kg week. They are in
+  `ask` and not in the week because a week step takes no question of its own,
+  and a hint reads the passages one question was served. Where readings
+  gives no answer (it refused, or failed), the kernel bites it as before,
+  nothing is hinted, and one `see readings: not run on BOX: WHY` line says so.
   With piles, every pile's box is bitten, the passages each served are
   dealt out in turns by fair-merge's own rule (first of each pile, then
   second of each, a passage word for word in two piles once, the question
@@ -125,6 +139,7 @@ the starter words list a person begins with:
   pile of each, walking every box). Beside each question, `see` names the
   steps whose job it is: for spent, its total, count, period and each payment
   as it kept them.
+  Under them, `see readings:` lines, as `ask` kept them.
 
 Exit codes, the kernel's: 0 done; 42 waiting on the seal; 2 refused.
 """
@@ -169,6 +184,7 @@ STD = ROOT / "adapters" / "stdlib"
 READERS = [STD / "mail" / "mail.py", STD / "calendar" / "cal.py", STD / "chats" / "chats.py",
            STD / "notes" / "notes.py", STD / "office" / "office.py", STD / "books" / "books.py",
            ROOT / "adapters" / "deps" / "pdf" / "pdf.py"]  # fmt: skip
+READINGS = STD / "readings" / "readings.py"
 HISTORY = (
     STD / "shell-history" / "shell_history.py"
 )  # --read runs it only on a life holding a history
@@ -579,6 +595,57 @@ def run_spent(table: Path, box: Path, now: str, asked: list[str], routed: dict[i
     (table / "route.json").write_text(json.dumps(routed, indent=1), encoding="utf-8")
 
 
+def bite_of(box: Path, now: str, text: str, pre: str = "") -> tuple[list[dict], list[str]]:  # fmt: skip
+    """One bite of a box, through readings: what the kernel served (its bite, its
+    row, its exit code, as `kernel.py bite` gives them) and the `see readings:`
+    lines for the hints readings added beside it, each `why  where`, `where`
+    prefixed with `pre` (a pile's folder). Readings prints the kernel's own JSON
+    with its hints appended to `look`; the kernel's own hints carry a `next` or
+    no `where`, readings' never do, and they are told apart that way, parsed and
+    never guessed from stderr. Where readings gives no JSON (it refused, or could
+    not run on this box), the kernel bites it as before, nothing is hinted, and
+    the one line says so."""
+    got = py(READINGS, "bite", "--box", box, "--now", now, text)
+    try:
+        doc = json.loads(got.stdout) if got.stdout.strip() else None
+    except ValueError:
+        doc = None
+    if not isinstance(doc, dict):
+        plain = py(ROOT / "kernel.py", "bite", "--box", box, "--now", now, text)
+        served = json.loads(plain.stdout).get("served", []) if plain.stdout.strip() else []  # fmt: skip
+        said = (got.stderr.strip().splitlines() or ["it gave no answer"])[-1]
+        return served, [f"see readings: not run on {box.name}: {said}; the kernel bit it alone"]  # fmt: skip
+    see = []
+    for h in doc.get("look", []):
+        if "where" in h and "next" not in h:
+            where = (pre + h["where"].removeprefix("./")) if pre else h["where"]
+            see.append(f"see readings: {h['why']}  {where}")
+    return doc.get("served", []), see
+
+
+def keep_readings(table: Path, i: int, see: list[str]) -> list[str]:
+    """What readings said for question `i`, once each, kept in DIR/readings/NN.txt
+    beside the week (spent's way), for recap. A hint is never proposed or sealed:
+    it is a place to look, not a passage a bite served."""
+    kept = table / "readings" / f"{i:02d}.txt"
+    kept.unlink(missing_ok=True)
+    see = list(dict.fromkeys(see))
+    if see:
+        kept.parent.mkdir(exist_ok=True)
+        kept.write_text("".join(x + "\n" for x in see), encoding="utf-8")
+    return see
+
+
+def readings_see(table: Path, i: int) -> str:
+    """The lines readings kept for question `i`, as recap shows them."""
+    kept = table / "readings" / f"{i:02d}.txt"
+    if not kept.is_file():
+        return ""
+    return "".join(
+        f"      {x}\n" for x in kept.read_text(encoding="utf-8").splitlines()
+    )
+
+
 def cmd_ask(table: Path) -> int:
     who, box = who_of(table), box_of(table)
     now = today_of(who)
@@ -596,7 +663,7 @@ def cmd_ask(table: Path) -> int:
             continue
         kind = f"  ({routed[i]['kind']})" if i in routed else ""
         asks = ask_parts.parts(q)  # a question that asks two things is asked as each
-        lines = ""
+        lines, seen = "", []
         for n, part in enumerate(asks, 1):
             read = read_as(box, part)  # asked as the files spell it, once
             how = f'\n      asked as "{read}"' if read != part else ""
@@ -605,10 +672,9 @@ def cmd_ask(table: Path) -> int:
             how += "".join(f'\n      asked of {p["name"]} as "{sent[p["slug"]]}"' for p in piles if p["slug"] in sent)  # fmt: skip
             tag = f', part {n} "{part}"' if len(asks) > 1 else ""
             if piles:
-                served, passed = ask_piles(table, piles, i, q, read, as_, now, sent, tag, n if tag else 0, len(asks))  # fmt: skip
+                served, passed, said = ask_piles(table, piles, i, q, read, as_, now, sent, tag, n if tag else 0, len(asks))  # fmt: skip
             else:
-                bite = py(ROOT / "kernel.py", "bite", "--box", box, "--now", now, read)
-                served = json.loads(bite.stdout).get("served", []) if bite.stdout.strip() else []  # fmt: skip
+                served, said = bite_of(box, now, read)
                 props = [json.dumps({"path": f"answers/q{i:02d}{f'-p{n}' if tag else ''}-{k}.txt", "data": s["text"], "cites": [s["id"]],
                                      "claim": f"answers question {i}, \"{q}\"{as_}, from {s['where']}{tag}"})  # fmt: skip
                          for k, s in enumerate(served, 1)]  # fmt: skip
@@ -619,6 +685,7 @@ def cmd_ask(table: Path) -> int:
                     got = py(ROOT / "kernel.py", "propose", "--box", box, "--now", now, "--file", sugg)  # fmt: skip
                     sugg.unlink()
                     passed = got.stdout.count("pass ")
+            seen += said
             lines += f'\n      part {n} "{part}"' if tag else ""
             lines += how
             if served:
@@ -628,6 +695,8 @@ def cmd_ask(table: Path) -> int:
                 handed += passed
             else:
                 lines += "\n      nothing in the life holds it"
+        for x in keep_readings(table, i, seen):
+            lines += f"\n      {x}"
         print(f"{i:>2}. {q}{kind}{lines}\n" + sent_to(routed.get(i, {}), table), end="")
     left = f" {len(done)} questions already have a sealed answer and were not asked again." if done else ""  # fmt: skip
     print(
@@ -636,7 +705,7 @@ def cmd_ask(table: Path) -> int:
     return kernel.ESCALATE if handed else kernel.ALIVE
 
 
-def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: str, now: str, sent: dict[str, str], tag: str = "", part: int = 0, of_parts: int = 1) -> tuple[list[dict], int]:  # fmt: skip
+def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: str, now: str, sent: dict[str, str], tag: str = "", part: int = 0, of_parts: int = 1) -> tuple[list[dict], int, list[str]]:  # fmt: skip
     """One question put to every pile's box, the passages they served dealt out
     in turns (fair-merge's rule), each proposed in the box that served it,
     citing only that box's last bite. When the question names piles (`sent`,
@@ -645,21 +714,24 @@ def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: st
     its number (0 when it was one), so a part's passages keep paths of their own;
     `of_parts` is how many there are. The parts share the question's DEAL, the
     first parts taking the remainder: 7 passages over two parts is 4 and 3.
-    (what was dealt, how many passed)"""
+    Each box is bitten through readings (`bite_of`), whose hints are the third
+    thing returned, in the piles' order.
+    (what was dealt, how many passed, the `see readings:` lines)"""
 
     if sent:  # a question that names a pile is asked of that pile alone
         piles = [p for p in piles if p["slug"] in sent]
 
-    def bitten(p: dict) -> list[dict]:
-        bite = py(ROOT / "kernel.py", "bite", "--box", table / "records" / p["slug"], "--now", now, sent.get(p["slug"], read))  # fmt: skip
-        got = json.loads(bite.stdout).get("served", []) if bite.stdout.strip() else []
+    def bitten(p: dict) -> tuple[list[dict], list[str]]:
         pre = f"{p['folder']}/" if p["folder"] else ""
-        return [{**s, "where": pre + s["where"]} for s in got if not s["echo"]]
+        got, see = bite_of(table / "records" / p["slug"], now, sent.get(p["slug"], read), pre)  # fmt: skip
+        return [{**s, "where": pre + s["where"]} for s in got if not s["echo"]], see
 
     with ThreadPoolExecutor(
         4
     ) as pool:  # each box is its own folder: the bites don't meet
-        lists = [(p["slug"], got) for p, got in zip(piles, pool.map(bitten, piles))]
+        bites = list(pool.map(bitten, piles))
+    lists = [(p["slug"], got) for p, (got, _) in zip(piles, bites)]
+    see = [x for _, hints in bites for x in hints]
     lists, _ = fair_merge.joined(lists)
     dealt, _ = fair_merge.merge(lists, max(1, DEAL // of_parts + (part <= DEAL % of_parts)) if part else DEAL)  # fmt: skip
     passed = 0
@@ -686,9 +758,11 @@ def ask_piles(table: Path, piles: list[dict], i: int, q: str, read: str, as_: st
         sugg.unlink()
         passed += got.stdout.count("pass ")
     names = {p["slug"]: p["name"] for p in piles}
-    return [
-        {**s, "where": f"{s['where']} [{names[name]}]"} for name, s in dealt
-    ], passed
+    return (
+        [{**s, "where": f"{s['where']} [{names[name]}]"} for name, s in dealt],
+        passed,
+        see,
+    )
 
 
 def waiting(box: Path) -> list[tuple[str, dict]]:
@@ -780,7 +854,7 @@ def cmd_recap(table: Path) -> int:
     print(f"# What {who} made true\n")
     for i, q in enumerate(asked, 1):
         got = by_q.get(i)
-        see = sent_to(routed.get(str(i), {}), table)
+        see = sent_to(routed.get(str(i), {}), table) + readings_see(table, i)
         if got is None:
             print(f"{i:>2}. {q}\n      nothing in the life holds it\n{see}", end="")
             continue

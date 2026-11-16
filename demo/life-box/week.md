@@ -10,6 +10,10 @@ person's own today, keeping each run in a folder of its own.
 `{today}` is the person's today. life_box.py writes it in before the stack
 runs, since a made-up life has a today of its own.
 
+Readings (a log's date gone by, a number in a table that moved) are not a
+step here: they read what one question was served, and a step takes none.
+`life_box.py ask` bites each question through them.
+
 ## what's coming
 
 Want 1: "What's about to happen to me?" Every date in my files in the next

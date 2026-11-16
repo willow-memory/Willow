@@ -179,3 +179,10 @@ def test_a_study_that_is_not_one_persons_questions_is_not_laid(who, says, tmp_pa
 def test_the_frozen_demos_are_unchanged_by_all_of_it(ofrenda):
     # laying a life copies its folder into the table and runs make_life.py there
     assert hashes() == ofrenda["before"]
+
+
+def test_readings_have_nothing_to_say_beside_her_questions(ofrenda):
+    """No dated log or table is served for any of her questions: no hint, none
+    kept, and what ask offers is what the kernel serves."""
+    assert "see readings" not in ofrenda["ask"].stdout + ofrenda["recap"].stdout
+    assert not (ofrenda["table"] / "readings").exists()

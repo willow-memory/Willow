@@ -77,6 +77,13 @@ def answers(recap: str) -> dict[int, dict[str, list[str]]]:
     return out
 
 
+def see_readings(recap: str, q: int) -> list[str]:
+    """The `see readings:` lines under question q of an ask or a recap."""
+    mine = re.split(rf"^\s*{q}\. ", recap, flags=re.M)[1]
+    mine = re.split(r"^\s*\d+\. ", mine, flags=re.M)[0]
+    return [x.strip() for x in mine.splitlines() if x.strip().startswith("see readings:")]  # fmt: skip
+
+
 def strips_first_pass() -> list[str]:
     """The questions in the first pass's table of STRIP.md (its "Asked" column),
     each once, in the order they appear."""
@@ -251,8 +258,133 @@ def test_the_box_does_not_need_pypdf(odile, no_pypdf):
     for part in ("ask", "decide"):
         assert no_pypdf[part].stdout == odile[part].stdout.replace(str(odile["table"]), str(no_pypdf["table"]))  # fmt: skip
     assert answers(no_pypdf["recap"].stdout) == answers(odile["recap"].stdout)
+    # and the same readings beside the same two questions: they read text and a csv
+    assert [see_readings(no_pypdf["recap"].stdout, q) for q in (1, 3)] == [see_readings(odile["recap"].stdout, q) for q in (1, 3)] == [[DUE + "tuning/: 7 of 66 headings, as of 2026-10-22"], [WEIGHT, PULSE]]  # fmt: skip
 
 
 def test_she_has_no_words_of_her_own_so_words_is_refused(odile):
     got = run("words", "--table", odile["table"])
     assert got.returncode == 2 and "has no words of their own" in got.stderr
+
+
+#: what readings says beside "something that tells me who's due": her tuning
+#: log's seven (STRIP.md's second pass), four of them truly due
+DUE = (
+    "see readings: gone by, nothing written since: "
+    "Everett Montaño - Samick console (1999), 2203 Pinon St (Jan 2023); "
+    "Ada Kerrigan - Story & Clark console (1984), 983 Cholla St (Jul 2023); "
+    "Winifred Marchetti - Steinway K-52 (1981), 1657 Railroad St (Nov 2023); "
+    "Renata Lindahl - Chickering upright (1908), 1763 Railroad St (Jun 2026); "
+    "Loretta Tremaine - Mason & Hamlin A (1919), 2140 Cholla St (Aug 2026); "
+    "Imogen Sandoval - Everett studio (1974), 725 Cholla St (Sep 2026); "
+    "Benedikt Ybarra - Wurlitzer console (1971), 904 Pinon St (Oct 2026)  "
+)
+#: and beside "Dad's weight": Laszlo's weight, 2.5 kg in one week, past the 2 kg line
+WEIGHT = (
+    "see readings: weight_kg: 75.1 on 2026-10-21, up 1.9 from 73.2 on 2026-10-14; "
+    "the most in one week of the last 4: up 2.5, 2026-10-09 to 2026-10-16  "
+    "dad/care-log.csv: 430 dated rows, 2025-08-18 to 2026-10-21"
+)
+PULSE = (
+    "see readings: pulse: 64 on 2026-10-21, down 5 from 69 on 2026-10-14; "
+    "the most in one week of the last 4: up 14, 2026-09-23 to 2026-09-30  "
+    "dad/care-log.csv: 430 dated rows, 2025-08-18 to 2026-10-21"
+)
+
+
+def test_readings_beside_her_questions_say_who_is_due_and_her_fathers_weight(odile, one_box):  # fmt: skip
+    """STRIP.md's second pass, in the box: "who's due" gets the seven gone by with
+    nothing written since, and "Dad's weight" the 2.5 kg week, in ask and in recap,
+    as piles and as one box. Only those two questions are hinted, and the care
+    log's other column, the pulse, comes with the weight."""
+    for got in (odile, one_box):
+        for part in ("ask", "recap"):
+            text = got[part].stdout
+            assert see_readings(text, 1) == [DUE + "tuning/: 7 of 66 headings, as of 2026-10-22"]  # fmt: skip
+            assert see_readings(text, 3) == [WEIGHT, PULSE]
+            assert [q for q in range(1, 12) if see_readings(text, q)] == [1, 3]
+    kept = sorted(p.name for p in (odile["table"] / "readings").iterdir())
+    assert kept == ["01.txt", "03.txt"]  # beside the week, as spent's are kept
+    assert (odile["table"] / "readings" / "03.txt").read_text().splitlines() == [WEIGHT, PULSE]  # fmt: skip
+
+
+def test_a_reading_is_never_proposed_or_sealed(odile, one_box):
+    """A hint is a place to look, not a passage a bite served: nothing in a
+    proposal, a seal or the record says one, and every proposal still cites a
+    passage."""
+    for got in (odile, one_box):
+        for box in life_box.boxes_of(got["table"]):
+            record = (box / "record.jsonl").read_text(encoding="utf-8")
+            for said in ("gone by, nothing written", "dated rows", "weight_kg: 75.1", "readings"):  # fmt: skip
+                assert said not in record, (box.name, said)
+            for f in (box / "proposals").glob("*.json"):
+                prop = json.loads(f.read_text(encoding="utf-8"))
+                assert life_box.CLAIM.match(prop["claim"]) and len(prop["cites"]) == 1
+                for said in ("gone by, nothing written", "dated rows", "see readings"):
+                    assert said not in f.read_text(encoding="utf-8"), (f.name, said)
+
+
+def test_the_readings_bite_serves_what_the_kernels_does_and_writes_its_row(one_box, tmp_path):  # fmt: skip
+    """On boxes of her whole life, one made fresh over each (the asked ones hold
+    their answers), the bite through readings is the kernel's own: the passages
+    served, the row written and the exit code, byte for byte, so a proposal still
+    cites the last bite and the kernel still checks it."""
+    key = tmp_path / "k" / "odile.key"  # a key made for her, who is made up
+    now = life_box.today_of("odile")
+    read = one_box["table"] / "odile-read"
+    for n, text in enumerate(("something that tells me who's due", "Dad's weight", "I'm tired", "how are the bees")):  # fmt: skip
+        for how in ("kernel", "readings"):
+            box = tmp_path / f"{how}{n}"
+            made = subprocess.run([sys.executable, str(ROOT / "kernel.py"), "init", "--box", str(box), "--pile", str(read),
+                                   "--key", str(key), "--words", str(one_box["table"] / "words.txt"), "--now", now],
+                                  capture_output=True, text=True, check=False)  # fmt: skip
+            assert made.returncode == 0, made.stderr
+        plain = subprocess.run([sys.executable, str(ROOT / "kernel.py"), "bite", "--box", str(tmp_path / f"kernel{n}"), "--now", now, text],
+                               capture_output=True, text=True, check=False)  # fmt: skip
+        more = subprocess.run([sys.executable, str(life_box.READINGS), "bite", "--box", str(tmp_path / f"readings{n}"), "--now", now, text],
+                              capture_output=True, text=True, check=False)  # fmt: skip
+        served, see = life_box.bite_of(tmp_path / f"readings{n}", now, text)
+        # the box that bite_of bit is bitten twice now: compare the first two to the kernel's
+        a, b = json.loads(plain.stdout), json.loads(more.stdout)
+        assert plain.returncode == more.returncode
+        assert a["served"] == b["served"] and a["bite_key"] == b["bite_key"] and a["state"] == b["state"]  # fmt: skip
+        rows = [(tmp_path / f"{h}{n}" / "record.jsonl").read_bytes().splitlines() for h in ("kernel", "readings")]  # fmt: skip
+        assert (
+            rows[0][:2] == rows[1][:2]
+        )  # the boot row and the bite row, as the kernel writes them
+        assert served == a["served"]  # what bite_of hands on is what the kernel served
+        assert bool(see) == (
+            n < 2
+        )  # hints on the first two of these four, and only there
+    for key_file in (tmp_path / "k").glob("*.key"):
+        subprocess.run(["shred", "-u", str(key_file)], check=False)
+
+
+def test_where_readings_cannot_run_the_kernel_bites_it_and_nothing_is_hinted(tmp_path, monkeypatch):  # fmt: skip
+    """A box of sources is read where its files are kept, and readings reads it
+    the same way. A box that can't be bitten at all, or a readings that fails,
+    is bitten by the kernel as before, hinted nothing, and the one line says so."""
+    log = tmp_path / "kept" / "tuning"
+    log.mkdir(parents=True)
+    (log / "2026.txt").write_text("2026-01-02  Ann - upright\n  next: May 2026\n")
+    key, now, box = tmp_path / "k" / "who.key", "2026-10-22T09:00:00Z", tmp_path / "box"
+    made = subprocess.run([sys.executable, str(ROOT / "kernel.py"), "init", "--box", str(box), "--from", f"tuning={log}",
+                           "--key", str(key), "--now", now], capture_output=True, text=True, check=False)  # fmt: skip
+    assert made.returncode == 0, made.stderr
+    served, see = life_box.bite_of(box, now, "next tuning")
+    assert [s["where"] for s in served] == ["tuning/2026.txt:1"]
+    assert len(see) == 1 and see[0].startswith("see readings: gone by, nothing written since: Ann - upright (May 2026)")  # fmt: skip
+    assert see[0].endswith("tuning/: 1 of 1 headings, as of 2026-10-22")
+    gone = tmp_path / "no-such-box"
+    assert life_box.bite_of(gone, now, "next tuning")[0] == []
+    assert life_box.bite_of(gone, now, "next tuning")[1] == ["see readings: not run on no-such-box: refused: not a kernel box; init first; the kernel bit it alone"]  # fmt: skip
+    broken = tmp_path / "broken.py"
+    broken.write_text("import sys\nprint('boom', file=sys.stderr)\nsys.exit(1)\n")
+    monkeypatch.setattr(life_box, "READINGS", broken)
+    served, see = life_box.bite_of(box, now, "next tuning")
+    assert [s["where"] for s in served] == [
+        "tuning/2026.txt:1"
+    ]  # the kernel's, as before
+    assert see == ["see readings: not run on box: boom; the kernel bit it alone"]
+    for key_file in (tmp_path / "k").glob("*.key"):
+        subprocess.run(["shred", "-u", str(key_file)], check=False)

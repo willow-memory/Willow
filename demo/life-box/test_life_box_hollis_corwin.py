@@ -602,3 +602,16 @@ def test_corwins_words_file_holds_only_his_lines_each_with_a_comment_naming_his_
     assert not {"find", "open"} & set(
         kernel.parse_words(STARTER.read_text())[0]
     )  # not tuned in
+
+
+@pytest.mark.parametrize("who", ["hollis", "corwin"])
+def test_readings_have_nothing_to_say_beside_either_of_them(who, hollis, corwin):
+    """Readings' two hints read a dated log and a dated table. Neither life's
+    questions are served one (STRIP.md took out "what isn't there" for the noise
+    it made on Hollis's piano model numbers), so on both days, in every ask and
+    recap, no hint is said, none is kept, and counts and seals are what they
+    were without readings."""
+    got = {"hollis": hollis, "corwin": corwin}[who]
+    for part in ("ask", "recap1", "ask2", "recap"):
+        assert "see readings" not in got[part].stdout
+    assert not (got["table"] / "readings").exists()

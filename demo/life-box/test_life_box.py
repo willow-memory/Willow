@@ -1072,3 +1072,31 @@ def test_recap_shows_a_kept_sum_as_its_total_period_and_each_line_cited(tmp_path
     )
     # nothing kept for it: the step is named, nothing is made up
     assert life_box.sent_to({"steps": [{"step": "spent", "kept": ""}]}, tmp_path) == "      see       spent: not in this week\n"  # fmt: skip
+
+
+def test_readings_have_nothing_to_say_beside_teodora_or_bernadette(teo, bern, teo_piles, bern_piles, words_one, words_piles):  # fmt: skip
+    """Both hints are read from what a bite served: the two dated things readings
+    reads (a log's date gone by, a table's numbers over time) are not in what
+    these two lives' questions are served, with pypdf or without, so every ask
+    and every recap is what it was without readings, and none is kept. (Odile's
+    are the only hints of the lives laid so far: test_life_box_odile.py.) A hint
+    on a question it had nothing to do with would show here."""
+    for got in (teo, bern, teo_piles, bern_piles):
+        assert "see readings" not in got["ask"].stdout + got["recap"].stdout
+        assert not (got["table"] / "readings").exists()
+    for got in (words_one, words_piles):  # day two, the same tables asked again
+        assert "see readings" not in got["asked"].stdout + got["recap"].stdout
+        assert not (got["table"] / "readings").exists()
+
+
+def test_what_readings_said_is_kept_beside_the_week_and_shown_in_recap(tmp_path):
+    """One line each, once, in DIR/readings/NN.txt; the line that says readings
+    could not run is kept the same way, so recap says so too. Asked again, a
+    question's old lines go."""
+    see = ["see readings: a  b", "see readings: c  d", "see readings: a  b"]
+    assert life_box.keep_readings(tmp_path, 3, see) == ["see readings: a  b", "see readings: c  d"]  # fmt: skip
+    assert (tmp_path / "readings" / "03.txt").read_text() == "see readings: a  b\nsee readings: c  d\n"  # fmt: skip
+    assert life_box.readings_see(tmp_path, 3) == "      see readings: a  b\n      see readings: c  d\n"  # fmt: skip
+    assert life_box.readings_see(tmp_path, 4) == ""
+    assert life_box.keep_readings(tmp_path, 3, []) == []
+    assert not (tmp_path / "readings" / "03.txt").exists()
