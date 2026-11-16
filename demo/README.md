@@ -46,9 +46,12 @@ A box holds a life, or a binder, as a record you can ask, where nothing
 stands as an answer until the one who holds the key seals it.
 
 - [life-box](life-box/): the game box with a person's life for its binder.
-  It lays teodora or bernadette, runs a week's prep at their own today, asks
-  their twenty questions, and decides each answer with a key made for them,
-  since they are made up. Their answer keys are in the folder.
+  It lays any of the five lives above, and Marisol's from ofrenda, runs a
+  week's prep at their own today, asks their own questions, and decides each
+  answer with a key made for them, since they are made up. Their answer keys
+  are in the folder; Marisol has none, so hers wait. It refuses a study whose
+  folders are several people's, with no questions of their own (money-hour,
+  stewart-crossover, johnson).
 - [game-box](game-box/): a game master's binder that can be asked: monsters,
   people and four nights of session notes, the GM's own words, a prep sheet,
   two stories and a few games, all made up for the demo. The life box is its
