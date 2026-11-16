@@ -1,0 +1,1 @@
+`CONTRIBUTING.md` and `AGENTS.md`: when a stack falls short, build last. Ask first whether an add-on does it, whether it's in the stack, and whether the route already points at it; most gaps are a missing line in a stack.

@@ -197,6 +197,19 @@ willow-bot posts the same list in its status comment, read from the run's
 the maintainer decides. CI does refuse an idea with the same line as one
 already listed.
 
+### When a stack falls short, build last
+
+Willow has hundreds of add-ons, and most gaps are a step missing from a
+stack, not a gap in willow. Ask, in this order:
+
+1. Is there an add-on that does this? (`similar.py near`, and ADDONS.md)
+2. Is it in the stack?
+3. Does the route already point at it?
+
+A question the route sends to a step the stack doesn't run (`see people: not
+in this week`) wants one line in the stack, not new code. Build only when all
+three say no.
+
 ## Pick one up
 
 Anyone can build any idea on the list; you don't need to ask first. To let
