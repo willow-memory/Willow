@@ -600,7 +600,7 @@ willow/
 │   │   │   ├── test_all_passages.py
 │   │   │   └── README.md     its card
 │   │   ├── ask-parts/
-│   │   │   ├── ask_parts.py  A question that asks two things in one breath, split into its parts, each asked by the kernel's own rule, so the second part isn't lost to the first's words
+│   │   │   ├── ask_parts.py  A question that asks two things, split into its parts, each asked by the kernel's own rule
 │   │   │   ├── test_ask_parts.py
 │   │   │   └── README.md     its card
 │   │   ├── batch-glance/
