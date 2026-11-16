@@ -11,7 +11,7 @@ a judgement: is it bad, is it ok, should i, legit, too damp, too much, worth it 
 money owed: owe, owing, paid me, pay me, paid yet, behind on, outstanding, overdue, lent, borrowed, did * pay -> debts, invoices
 what is coming: about to forget, let slide, dropped, coming up, due, deadline, expire, run out, runs out, renew -> coming-up, renewals, digest
 where it stands: left to do, still not, did i ever, have i passed, how far along, promise, promised, go back and redo, what's left -> todo, digest
-money spent: spend, spent -> spent, amounts, subscriptions
-money spent or made: how much, total, cost, a month, make last year, made last year, bill, billed, rent, paying for, what did * pay -> amounts, invoices, subscriptions
+money spent: spend, spent, paying for -> spent, amounts, subscriptions
+money spent or made: how much, total, cost, a month, make last year, made last year, bill, billed, rent, what did * pay -> amounts, invoices, subscriptions
 a date: when is, when's, when are, when does, when did, birthday, appointment, how long ago, what day, start date -> coming-up, ask
 a person: who, phone number, address, name -> people, ask

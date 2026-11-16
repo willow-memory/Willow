@@ -1029,11 +1029,22 @@ def test_with_her_piles_spent_still_adds_up_the_whole_life(words_piles):
     assert (words_piles["table"] / "spent" / "18.txt").read_text().splitlines()[-1] == "total: 1,654.36 in 3 payments"  # fmt: skip
 
 
-def test_teodora_has_no_question_that_asks_how_much_she_spent(teo):
+def test_teodora_has_one_question_routed_to_spent_and_it_finds_nothing_and_says_so(teo):  # fmt: skip
+    """Her 10th, "what did we end up paying for the new boiler", is `money spent`
+    by "paying for" and sent to spent first. It asks for a sum over a year's
+    lines, and she asks for one purchase: spent needs every word of the question
+    ("end", "up" and "new" among them) in one money-out line and no line says
+    them, so it names the words it could not find, and the amounts and the
+    subscriptions listed after it, and her seals, are as they were. Dev's BOILER
+    lines are a loan paid back, and the word alone would add them up as 250.00:
+    the full question never gets there."""
     route = json.loads((teo["table"] / "route.json").read_text())
-    assert not any(x["step"] == "spent" for r in route.values() for x in r["steps"])
-    assert not (teo["table"] / "spent").exists()
-    assert "see       spent" not in teo["recap"].stdout and "see       spent" not in teo["ask"].stdout  # fmt: skip
+    assert [q for q, r in route.items() if any(x["step"] == "spent" for x in r["steps"])] == ["10"]  # fmt: skip
+    assert route["10"]["kind"] == "money spent"
+    assert [x["step"] for x in route["10"]["steps"]] == ["spent", "amounts", "subscriptions"]  # fmt: skip
+    assert [p.name for p in (teo["table"] / "spent").iterdir()] == ["10.txt"]
+    assert "No money-out line in this period holds all of: end, up, new, boiler" in (teo["table"] / "spent" / "10.txt").read_text()  # fmt: skip
+    assert "      see       spent: No money-out line in this period holds all of: end, up, new, boiler; every date, up to 2026-10-22; spent/10.txt\n" in teo["recap"].stdout  # fmt: skip
 
 
 def test_recap_shows_a_kept_sum_as_its_total_period_and_each_line_cited(tmp_path):

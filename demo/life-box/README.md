@@ -385,7 +385,7 @@ spent` (by "spend") and names three steps: [spent](../../adapters/stdlib/spent/)
 which adds up the money-out lines that say what the question names, then
 amounts and subscriptions. The week has no `spent` step, since a step of the
 week takes no question of its own, so `ask` runs it itself, for each question
-route sends it to (this is the only one of Bernadette's, and none of
+route sends it to (this is the only one of Bernadette's, and one of
 Teodora's), over the box of the whole life (with piles, the box laid beside
 them), on the question as her files spell it, at her today. It keeps what it
 prints in DIR/spent/NN.txt, beside the week, and `recap` shows it the way it
@@ -419,9 +419,19 @@ the first time and the same after, with and without the line.) What spent
 gives is the step's answer, kept in a file and shown as `see`, for her to read;
 her seal is for a passage she has read and agrees says it.
 
-Teodora's twenty have no such question: "what did we end up paying for the new
-boiler" is `money spent or made` (by "paying for"), and "how much did I actually
-make last year" is money made, so none is sent to spent.
+Teodora's twenty have one: "what did we end up paying for the new boiler" is
+`money spent` (by "paying for"), so it is run through spent too, and spent finds
+nothing. It asks for a sum over lines that say a thing, and she asks for one
+purchase: spent needs every word of the question in one money-out line, "end",
+"up" and "new" among them, and no line says them, so recap shows `see
+spent: No money-out line in this period holds all of: end, up, new, boiler;
+every date, up to 2026-10-22; spent/10.txt`, then amounts (which lists her
+journal's "Boiler condemned. £3,680.") and subscriptions as before. The pointer
+is the honest one: the bank's only BOILER lines are Dev's loan, £600 in and
+£250 paid back, so "boiler" alone would add up 250.00 and call it what she paid
+for the boiler. The warranty file's "Total cost £3,680.00. Paid: £1,840.00
+card ..." is a file, not a bank line, and spent never adds it. "how much did I
+actually make last year" is money made, so it is not sent to spent.
 
 ## Where it comes from
 

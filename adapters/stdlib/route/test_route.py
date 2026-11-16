@@ -784,6 +784,10 @@ def shipped() -> list:
         ("how much did we spend on electricity this year", "money spent", "spend"),
         ("how much was spent on the roof", "money spent", "spent"),
         ("what is our spending on food", "money spent", "spend"),
+        ("what did we end up paying for the new boiler", "money spent", "paying for"),
+        # being paid is income, and paid for is as often money in as money out
+        ("how much was I paid for the job", "money spent or made", "how much"),
+        ("which client paid for the job", "a thing you wrote down", ""),
         ("how much is the car rego this year", "money spent or made", "how much"),
         ("when's grace's birthday", "a date", "when's"),
         ("when is the dentist", "a date", "when is"),
