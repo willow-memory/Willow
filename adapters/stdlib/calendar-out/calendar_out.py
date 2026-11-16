@@ -129,9 +129,7 @@ def main(argv: list[str]) -> int:
     except ValueError:
         print(f"refused: --now {ts!r} isn't a date, YYYY-MM-DD", file=sys.stderr)
         return kernel.REFUSED
-    found = coming_up.coming(
-        kernel.chunks(Path(kernel.config(box)["pile"])), today, int(days)
-    )
+    found = coming_up.coming(kernel.pile_of_box(kernel.config(box)), today, int(days))
     hits = [h for h in found if not is_calendar(h[1])]
     if not hits:
         print(

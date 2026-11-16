@@ -193,7 +193,7 @@ def do_policy(opts: dict) -> int:
     _, why = box_rows(box)
     if why:
         return refuse(why)
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     print(json.dumps(policy(pile, Path("<scratch, made new for each run>")), indent=1))
     return kernel.ALIVE
 
@@ -270,7 +270,7 @@ def do_run(opts: dict, ts: str) -> int:
     why = share.new_file(to, "", 0o600, box)  # new, outside the box and folder
     if why:
         return refuse(why)
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     used = tools(prop["data"])
     status, result = sandboxed(prop["data"], pile, timeout)
     out = str(result.get("stdout") or "")

@@ -219,7 +219,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    got = read(kernel.chunks(Path(kernel.config(box)["pile"])))
+    got = read(kernel.pile_of_box(kernel.config(box)))
     if not (got["decisions"] or got["open"] or got["closed"]):
         said = "no line of your folder records a decision or an action"
         say(report(NAME, "empty", said, []), as_json)

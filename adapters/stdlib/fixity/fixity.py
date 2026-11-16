@@ -116,7 +116,7 @@ def main(argv: list[str]) -> int:
         )
         return kernel.REFUSED
     ts = opts.get("--now") or kernel.now()
-    now = fingerprints(Path(kernel.config(box)["pile"]))
+    now = fingerprints(kernel.folder(kernel.config(box)))
     before, when = last_files(rows)
     kernel.append(box, ts, KIND, who=KIND, files=now)
     if before is None:

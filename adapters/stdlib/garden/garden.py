@@ -167,7 +167,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    got = seasons(kernel.chunks(Path(kernel.config(box)["pile"])))
+    got = seasons(kernel.pile_of_box(kernel.config(box)))
     if not got:
         print("No line of your folder says something planted or harvested in a garden.")
         return kernel.ESCALATE

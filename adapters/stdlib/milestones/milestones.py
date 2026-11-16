@@ -144,7 +144,7 @@ def main(argv: list[str]) -> int:
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     found = milestones(
-        kernel.chunks(Path(kernel.config(box)["pile"])), born, opts.get("--name", "")
+        kernel.pile_of_box(kernel.config(box)), born, opts.get("--name", "")
     )
     if not found:
         print(

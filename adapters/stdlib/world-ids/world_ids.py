@@ -112,7 +112,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     if args:
         lines = show_one(pile, args[0])
         if lines is None:

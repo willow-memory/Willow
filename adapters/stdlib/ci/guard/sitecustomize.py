@@ -206,9 +206,24 @@ def box_fields(box: str | None) -> dict:
 
 def originals() -> list[str]:
     out = [p for p in (argv("--from"),) if p]
-    pile = box_fields(argv("--box")).get("pile")
+    cfg = box_fields(argv("--box"))
+    pile = cfg.get("pile")
     if pile:
         out.append(os.path.realpath(pile))
+    for at in (cfg.get("sources") or {}).values():  # read where they are kept
+        if not at.startswith("@"):
+            out.append(os.path.realpath(at))
+            continue
+        out.append(os.path.realpath(at[1:]))  # the list, and each file it names
+        try:
+            with open(at[1:], encoding="utf-8") as f:
+                for line in f.read().splitlines():
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        here = os.path.join(os.path.dirname(at[1:]), line)
+                        out.append(os.path.realpath(here))
+        except (OSError, ValueError):
+            pass
     return out
 
 

@@ -97,7 +97,7 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
             return None
         listed = {"words_sha256": sha}
     old = cache.cached(at)
-    if old is None or old != cache.manifest(Path(cfg["pile"])):
+    if old is None or old != cache.manifest(kernel.folder(cfg)):
         return None
     rows, breaks = kernel.read(box / "record.jsonl")
     k = kernel.bite_key(text)
@@ -172,7 +172,7 @@ def setup(box: Path, index: Path | None = None) -> str:
         + f"    {command_line(add)}\n"
     )
     if index is not None:
-        pile = kernel.config(box)["pile"]
+        pile = str(kernel.folder(kernel.config(box)))
         keep = [py, str(HERE.parents[1] / "index-cache" / "index_cache.py"),
                 "--from", str(pile), "--to", str(index.resolve())]  # fmt: skip
         said += (

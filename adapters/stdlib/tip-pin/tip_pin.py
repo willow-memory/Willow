@@ -90,7 +90,7 @@ def do_pin(box: Path, to: Path) -> int:
     if why:
         return refuse(why)
     for name, root in (
-        ("your folder", Path(kernel.config(box)["pile"])),
+        ("your folder", kernel.folder(kernel.config(box))),
         ("the box", box),
     ):
         if to.resolve().is_relative_to(root.resolve()):

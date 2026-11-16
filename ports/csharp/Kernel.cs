@@ -811,6 +811,44 @@ public static class Kernel
 
     static string Suffix(string name) { int i = name.LastIndexOf('.'); return i > 0 && i < name.Length - 1 ? name.Substring(i) : ""; }
 
+    /** One file's paragraphs, as Chunks cuts them; none when the kernel doesn't read it. */
+    static List<Chunk> Chunked(string p, string relPath, string name)
+    {
+        var o = new List<Chunk>();
+        string text;
+        try
+        {
+            if (!File.Exists(p) || new FileInfo(p).Length > MAX_FILE) return o;
+            var raw = File.ReadAllBytes(p);
+            if (System.Array.IndexOf(raw, (byte)0, 0, Math.Min(raw.Length, SNIFF)) >= 0) return o;
+            text = Utf8.GetString(raw);
+        }
+        catch (Exception e) when (e is IOException || e is DecoderFallbackException || e is UnauthorizedAccessException) { return o; }
+        var suf = Suffix(name).ToLowerInvariant();
+        if (suf == ".html" || suf == ".htm") text = HtmlText(text);
+        var lines = Splitlines(text);
+        lines.Add("");
+        var para = new List<string>();
+        int start = 1, size = 0;
+        for (int i = 1; i <= lines.Count; i++)
+        {
+            var line = lines[i - 1];
+            if (para.Count > 0 && (Blank(line) || size + Len(line) > MAX_CHUNK))
+            {
+                o.Add(new Chunk(relPath, start, string.Join("\n", para)));
+                para.Clear();
+                size = 0;
+            }
+            if (!Blank(line))
+            {
+                if (para.Count == 0) start = i;
+                para.Add(Take(line, MAX_CHUNK));
+                size += Len(para[^1]) + 1;
+            }
+        }
+        return o;
+    }
+
     static List<Chunk> Chunks(string pile)
     {
         var all = new List<List<string>>();
@@ -821,40 +859,100 @@ public static class Kernel
         {
             var p = System.IO.Path.Combine(new[] { pile }.Concat(rel).ToArray());
             if (!File.Exists(p) || rel.Any(x => x.StartsWith('.'))) continue;
-            string text;
-            try
-            {
-                if (new FileInfo(p).Length > MAX_FILE) continue;
-                var raw = File.ReadAllBytes(p);
-                if (System.Array.IndexOf(raw, (byte)0, 0, Math.Min(raw.Length, SNIFF)) >= 0) continue;
-                text = Utf8.GetString(raw);
-            }
-            catch (Exception e) when (e is IOException || e is DecoderFallbackException || e is UnauthorizedAccessException) { continue; }
-            var suf = Suffix(rel[^1]).ToLowerInvariant();
-            if (suf == ".html" || suf == ".htm") text = HtmlText(text);
-            var relPath = string.Join("/", rel);
-            var lines = Splitlines(text);
-            lines.Add("");
-            var para = new List<string>();
-            int start = 1, size = 0;
-            for (int i = 1; i <= lines.Count; i++)
-            {
-                var line = lines[i - 1];
-                if (para.Count > 0 && (Blank(line) || size + Len(line) > MAX_CHUNK))
-                {
-                    o.Add(new Chunk(relPath, start, string.Join("\n", para)));
-                    para.Clear();
-                    size = 0;
-                }
-                if (!Blank(line))
-                {
-                    if (para.Count == 0) start = i;
-                    para.Add(Take(line, MAX_CHUNK));
-                    size += Len(para[^1]) + 1;
-                }
-            }
+            o.AddRange(Chunked(p, string.Join("/", rel), rel[^1]));
         }
         return o;
+    }
+
+    // ── sources: the person's files, read where they are kept (CONST-VI-9) ──
+    /** The files a list names, in its order, each once. */
+    static List<string> Listed(string lst)
+    {
+        var o = new List<string>();
+        string text;
+        try { text = Utf8.GetString(File.ReadAllBytes(lst)); }
+        catch (Exception e) when (e is IOException || e is DecoderFallbackException || e is UnauthorizedAccessException) { return o; }
+        var dir = System.IO.Path.GetDirectoryName(Resolved(lst))!;
+        foreach (var raw in Splitlines(text))
+        {
+            var line = Strip(raw);
+            if (line == "" || line.StartsWith('#')) continue;
+            var f = Resolved(System.IO.Path.IsPathRooted(line) ? line : System.IO.Path.Combine(dir, line));
+            if (!o.Contains(f)) o.Add(f);
+        }
+        return o;
+    }
+
+    /** os.path.commonpath of absolute paths, part by part. */
+    static string CommonPath(List<string> ps)
+    {
+        var first = ps[0].Split('/');
+        int n = first.Length;
+        foreach (var p in ps.Skip(1))
+        {
+            var parts = p.Split('/');
+            int k = 0;
+            while (k < n && k < parts.Length && parts[k] == first[k]) k++;
+            n = k;
+        }
+        var root = string.Join("/", first.Take(n));
+        return root == "" ? "/" : root;
+    }
+
+    static List<Chunk> ListChunks(string lst)
+    {
+        var files = Listed(lst);
+        var o = new List<Chunk>();
+        if (files.Count == 0) return o;
+        var root = CommonPath(files.Select(f => System.IO.Path.GetDirectoryName(f)!).ToList());
+        var rels = files.Select(f => (parts: System.IO.Path.GetRelativePath(root, f).Split('/').ToList(), file: f)).ToList();
+        rels.Sort((x, y) => ByParts(x.parts, y.parts));
+        foreach (var (parts, file) in rels)
+            if (!parts.Any(x => x.StartsWith('.'))) o.AddRange(Chunked(file, string.Join("/", parts), parts[^1]));
+        return o;
+    }
+
+    /** Everything the box reads: its pile folder, then each source in name order, as NAME/path. */
+    static (List<Chunk>? pile, string? why) PileOfBox(JObj cfg)
+    {
+        var o = cfg.Has("pile") ? Chunks((string)cfg["pile"]!) : new List<Chunk>();
+        var tops = new HashSet<string>(o.Select(c => c.Path.Split('/')[0]), StringComparer.Ordinal);
+        if (cfg.Get("sources") is JObj srcs)
+        {
+            var names = new List<string>(srcs.Keys);
+            names.Sort(CodePointOrder.It);
+            foreach (var name in names)
+            {
+                if (tops.Contains(name)) return (null, $"the source {name} has the name of a file or folder at the top of the pile");
+                var at = (string)srcs[name]!;
+                var part = at.StartsWith('@') ? ListChunks(at.Substring(1)) : Chunks(at);
+                foreach (var c in part) o.Add(new Chunk(name + "/" + c.Path, c.Line, c.Text));
+            }
+        }
+        return (o, null);
+    }
+
+    /** NAME=FOLDER or NAME=@LIST as (name, where), or why not. */
+    static (string? name, string? place, string? why) SourceOf(string given)
+    {
+        int eq = given.IndexOf('=');
+        if (eq <= 0 || given.Substring(eq + 1) == "" || given.Substring(eq + 1) == "@")
+            return (null, null, $"{given}: a source is NAME=FOLDER or NAME=@LIST");
+        var name = given.Substring(0, eq);
+        var at = given.Substring(eq + 1);
+        if (name.Contains('/') || name.Contains('\\') || name.StartsWith('.'))
+            return (null, null, $"{name}: a source's name is plain, no / and not starting with .");
+        if (at.StartsWith('@'))
+        {
+            var l = at.Substring(1);
+            if (!File.Exists(l)) return (null, null, $"{l}: a list of files is a file, and isn't there");
+            var gone = Listed(l).Where(f => !File.Exists(f)).ToList();
+            if (gone.Count > 0)
+                return (null, null, $"{l} names {gone.Count} file{(gone.Count == 1 ? "" : "s")} that aren't there, the first {gone[0]}");
+            return (name, "@" + Resolved(l), null);
+        }
+        if (!Directory.Exists(at)) return (null, null, $"{at} is not a folder");
+        return (name, Resolved(at), null);
     }
 
     /** An exact rational, for the rank's scores. */
@@ -1353,10 +1451,21 @@ public static class Kernel
         catch (IOException) { return (null, "the key could not be read: OSError"); }
     }
 
-    static int Init(string box, string pile, string key, string ts, string? wl)
+    static int Init(string box, string? pile, string key, string ts, string? wl, List<string> froms)
     {
         if (File.Exists(System.IO.Path.Combine(box, "record.jsonl"))) { Console.Error.WriteLine("refused: this box already has a record"); return REFUSED; }
-        if (!Directory.Exists(pile)) { Console.Error.WriteLine($"refused: {pile} is not a folder"); return REFUSED; }
+        if (pile != null && !Directory.Exists(pile)) { Console.Error.WriteLine($"refused: {pile} is not a folder"); return REFUSED; }
+        var found = new SortedDictionary<string, string>(CodePointOrder.It);
+        foreach (var given in froms)
+        {
+            var (name, place, why0) = SourceOf(given);
+            if (why0 != null) { Console.Error.WriteLine($"refused: {why0}"); return REFUSED; }
+            if (found.ContainsKey(name!)) { Console.Error.WriteLine($"refused: {name}: a source's name is given once"); return REFUSED; }
+            var top = pile == null ? null : System.IO.Path.Combine(pile, name!);
+            if (top != null && (File.Exists(top) || Directory.Exists(top))) { Console.Error.WriteLine($"refused: {name}: the pile already holds that name at its top"); return REFUSED; }
+            found[name!] = place!;
+        }
+        if (pile == null && found.Count == 0) { Console.Error.WriteLine("refused: a box reads a pile folder, sources, or both"); return REFUSED; }
         if (Inside(key, box)) { Console.Error.WriteLine("refused: the key can't live inside the box"); return REFUSED; }
         if (wl != null && ReadWords(wl, box).why is string why) { Console.Error.WriteLine($"refused: {why}"); return REFUSED; }
         if (!File.Exists(key))
@@ -1368,10 +1477,23 @@ public static class Kernel
             f.Write(Encoding.ASCII.GetBytes(Hex(secret) + "\n"));
         }
         Directory.CreateDirectory(box);
-        var cfg = Obj("pile", Resolved(pile), "key", Resolved(key));
+        var cfg = Obj("key", Resolved(key));
+        var placed = Obj("loop", "open");
+        if (pile != null)
+        {
+            cfg["pile"] = Resolved(pile);
+            placed["pile_sha256"] = H256((string)cfg["pile"]!);
+        }
+        if (found.Count > 0)
+        {
+            var srcs = new JObj();
+            foreach (var kv in found) srcs[kv.Key] = kv.Value;
+            cfg["sources"] = srcs;
+            placed["sources_sha256"] = H256(Canon(srcs));
+        }
         if (wl != null) cfg["words"] = Resolved(wl);
         File.WriteAllText(System.IO.Path.Combine(box, "kernel.json"), DumpsDefault(cfg, true) + "\n", Utf8);
-        var row = Append(box, ts, "boot", "kernel", Obj("loop", "open", "pile_sha256", H256((string)cfg["pile"]!)));
+        var row = Append(box, ts, "boot", "kernel", placed);
         Console.WriteLine($"ready: record started, row {PyStr(row["n"])} {((string)row["hash"]!).Substring(0, 16)}");
         return ALIVE;
     }
@@ -1505,7 +1627,9 @@ public static class Kernel
             alias = got!;
             listed = sha;
         }
-        var pile = Chunks((string)cfg["pile"]!);
+        var (pile0, why1) = PileOfBox(cfg);
+        if (why1 != null) { Console.Error.WriteLine($"refused: {why1}"); return REFUSED; }
+        var pile = pile0!;
         var served = Rank(pile, text, alias);
         var refs = new List<object?>();
         var answers = new List<Chunk>();
@@ -1725,6 +1849,7 @@ public static class Kernel
     // ── the command line ───────────────────────────────────────────────────
     const string USAGE = "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.\n" +
         "    python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]\n" +
+        "    python kernel.py init    --box DIR [--pile FOLDER] --from NAME=FOLDER|NAME=@LIST ... --key FILE\n" +
         "    python kernel.py bite    --box DIR \"your question\"\n" +
         "    python kernel.py propose --box DIR --file SUGGESTIONS.jsonl\n" +
         "    python kernel.py seal    --box DIR proposal:<sha256>\n" +
@@ -1748,16 +1873,21 @@ public static class Kernel
         var verb = argv.Length > 0 ? argv[0] : "";
         var opts = new Dictionary<string, string>(StringComparer.Ordinal);
         var args = new List<string>();
+        var froms = new List<string>();
         for (int i = 1; i < argv.Length; i++)
         {
             if (new[] { "--box", "--pile", "--key", "--file", "--now", "--words" }.Contains(argv[i])) opts[argv[i]] = i + 1 < argv.Length ? argv[++i] : "";
+            else if (argv[i] == "--from") froms.Add(i + 1 < argv.Length ? argv[++i] : "");
             else args.Add(argv[i]);
         }
         string Opt(string k) => opts.TryGetValue(k, out var v) ? v : "";
         if (Opt("--box") == "") { Console.Error.WriteLine(USAGE); return REFUSED; }
         var box = Opt("--box");
         var ts = Opt("--now") != "" ? Opt("--now") : DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture);
-        if (verb == "init" && Opt("--pile") != "" && Opt("--key") != "" && args.Count == 0) return Init(box, Opt("--pile"), Opt("--key"), ts, Opt("--words") != "" ? Opt("--words") : null);
+        if (verb == "init" && (Opt("--pile") != "" || froms.Count > 0) && !froms.Contains("")
+            && (!opts.ContainsKey("--pile") || Opt("--pile") != "") && Opt("--key") != "" && args.Count == 0)
+            return Init(box, Opt("--pile") != "" ? Opt("--pile") : null, Opt("--key"), ts, Opt("--words") != "" ? Opt("--words") : null, froms);
+        if (froms.Count > 0) { Console.Error.WriteLine(USAGE); return REFUSED; }
         if (!File.Exists(System.IO.Path.Combine(box, "kernel.json"))) { Console.Error.WriteLine("refused: not a kernel box; init first"); return REFUSED; }
         if (verb == "bite" && args.Count == 1) return Bite(box, args[0], ts);
         if (verb == "propose" && Opt("--file") != "" && args.Count == 0) return Propose(box, Splitlines(Utf8.GetString(File.ReadAllBytes(Opt("--file")))), ts);

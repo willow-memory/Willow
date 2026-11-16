@@ -170,7 +170,7 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
             return None
         listed = {"words_sha256": sha}
     old = cache.cached(at)
-    if old is None or old != cache.manifest(Path(cfg["pile"])):
+    if old is None or old != cache.manifest(kernel.folder(cfg)):
         return None
     rows, breaks = kernel.read(box / "record.jsonl")
     k = kernel.bite_key(text)
@@ -727,7 +727,7 @@ class Willow:
         return box_name(self.box.resolve())
 
     def pile(self) -> Path:
-        return Path(kernel.config(self.box)["pile"])
+        return kernel.folder(kernel.config(self.box))
 
     def cited(self, ids: set[str]) -> dict[str, dict]:
         """The passages of the open box's pile with these ids, read a folder

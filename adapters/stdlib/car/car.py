@@ -232,9 +232,7 @@ def cli(
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found = register(
-        kernel.chunks(Path(kernel.config(box)["pile"])), kinds, who, context
-    )
+    found = register(kernel.pile_of_box(kernel.config(box)), kinds, who, context)
     if not found:
         print(none)
         return kernel.ESCALATE

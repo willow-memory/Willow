@@ -138,7 +138,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    rows = found(kernel.chunks(Path(kernel.config(box)["pile"])))
+    rows = found(kernel.pile_of_box(kernel.config(box)))
     if not rows:
         print("No sums of money in your folder.")
         return kernel.ESCALATE

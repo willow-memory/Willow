@@ -137,7 +137,7 @@ def main(argv: list[str]) -> int:
               "sealed; nothing recorded")  # fmt: skip
         return kernel.ESCALATE
     store = Path(opts["--store"]) if "--store" in opts else None
-    pile, where = pile_rank.passages(Path(cfg["pile"]), store)
+    pile, where = pile_rank.passages(kernel.folder(cfg), store)
     dated = (lambda p: [c["date"] for c in p]) if where == "store" else None
     got = score(pile, asked, alias, dated)
     for line in got["lines"]:

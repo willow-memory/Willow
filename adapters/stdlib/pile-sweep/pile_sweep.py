@@ -150,7 +150,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    folder = Path(cfg["pile"])
+    folder = kernel.folder(cfg)
     marked = pile_gold.gold(box, rows)
     where = {c["id"]: span(c) for c in kernel.chunks(folder)}
     asked = []

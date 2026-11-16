@@ -118,7 +118,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    scored, short = rows(kernel.chunks(Path(kernel.config(box)["pile"])))
+    scored, short = rows(kernel.pile_of_box(kernel.config(box)))
     if not scored:
         print("Nothing long enough to score.")
         return kernel.ESCALATE

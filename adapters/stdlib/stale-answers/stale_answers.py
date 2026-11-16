@@ -83,7 +83,7 @@ def check(box: Path) -> tuple[int, list[dict]]:
         for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"])
     ]  # fmt: skip
     cited = {c for _, _, prop, _, why in standing if why is None for c in prop["cites"]}
-    here = present(Path(kernel.config(box)["pile"]), cited)
+    here = present(kernel.folder(kernel.config(box)), cited)
     out = []
     for subj, row, prop, _, why in standing:
         if (

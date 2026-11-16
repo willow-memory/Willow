@@ -1481,6 +1481,53 @@ fn suffix(name: &str) -> &str {
     }
 }
 
+/// One file's paragraphs, as chunks cuts them; none when the kernel doesn't read it.
+fn chunked(p: &Path, rel_path: &str, name: &str) -> Vec<Chunk> {
+    let mut out = Vec::new();
+    let st = match fs::metadata(p) {
+        Ok(st) => st,
+        Err(_) => return out,
+    };
+    if !st.is_file() || st.len() > t().max_file {
+        return out;
+    }
+    let raw = match fs::read(p) {
+        Ok(r) => r,
+        Err(_) => return out,
+    };
+    if raw.iter().take(t().sniff).any(|&b| b == 0) {
+        return out;
+    }
+    let mut text = match String::from_utf8(raw) {
+        Ok(x) => x,
+        Err(_) => return out,
+    };
+    let suf = lower(suffix(name));
+    if suf == ".html" || suf == ".htm" {
+        text = html_text(&text);
+    }
+    let mut lines = splitlines(&text);
+    lines.push(String::new());
+    let mut para: Vec<String> = Vec::new();
+    let (mut start, mut size) = (1, 0);
+    for (i0, line) in lines.iter().enumerate() {
+        let i = i0 + 1;
+        if !para.is_empty() && (blank(line) || size + length(line) > t().max_chunk) {
+            out.push(Chunk::new(rel_path, start, para.join("\n")));
+            para.clear();
+            size = 0;
+        }
+        if !blank(line) {
+            if para.is_empty() {
+                start = i;
+            }
+            para.push(take(line, t().max_chunk));
+            size += length(&para[para.len() - 1]) + 1;
+        }
+    }
+    out
+}
+
 fn chunks(pile: &str) -> Vec<Chunk> {
     let mut all = Vec::new();
     walk(Path::new(pile), &[], &mut all);
@@ -1491,51 +1538,149 @@ fn chunks(pile: &str) -> Vec<Chunk> {
         for part in rel {
             p.push(part);
         }
-        let st = match fs::metadata(&p) {
-            Ok(st) => st,
-            Err(_) => continue,
-        };
-        if !st.is_file() || rel.iter().any(|part| part.starts_with('.')) || st.len() > t().max_file
+        if !fs::metadata(&p).map_or(false, |st| st.is_file())
+            || rel.iter().any(|part| part.starts_with('.'))
         {
             continue;
         }
-        let raw = match fs::read(&p) {
-            Ok(r) => r,
-            Err(_) => continue,
-        };
-        if raw.iter().take(t().sniff).any(|&b| b == 0) {
-            continue;
-        }
-        let mut text = match String::from_utf8(raw) {
-            Ok(x) => x,
-            Err(_) => continue,
-        };
-        let suf = lower(suffix(&rel[rel.len() - 1]));
-        if suf == ".html" || suf == ".htm" {
-            text = html_text(&text);
-        }
-        let rel_path = rel.join("/");
-        let mut lines = splitlines(&text);
-        lines.push(String::new());
-        let mut para: Vec<String> = Vec::new();
-        let (mut start, mut size) = (1, 0);
-        for (i0, line) in lines.iter().enumerate() {
-            let i = i0 + 1;
-            if !para.is_empty() && (blank(line) || size + length(line) > t().max_chunk) {
-                out.push(Chunk::new(&rel_path, start, para.join("\n")));
-                para.clear();
-                size = 0;
-            }
-            if !blank(line) {
-                if para.is_empty() {
-                    start = i;
-                }
-                para.push(take(line, t().max_chunk));
-                size += length(&para[para.len() - 1]) + 1;
+        out.extend(chunked(&p, &rel.join("/"), &rel[rel.len() - 1]));
+    }
+    out
+}
+
+// ── sources: the person's files, read where they are kept (CONST-VI-9) ────
+
+/// The files a list names, in its order, each once.
+fn listed(lst: &str) -> Vec<PathBuf> {
+    let mut out: Vec<PathBuf> = Vec::new();
+    let text = match fs::read(lst).ok().and_then(|r| String::from_utf8(r).ok()) {
+        Some(x) => x,
+        None => return out,
+    };
+    let dir = resolved(lst).parent().map(Path::to_path_buf).unwrap_or_default();
+    for raw in splitlines(&text) {
+        let line = strip(&raw);
+        if !line.is_empty() && !line.starts_with('#') {
+            let f = if Path::new(&line).is_absolute() {
+                resolved(&line)
+            } else {
+                resolved(&dir.join(&line).to_string_lossy())
+            };
+            if !out.contains(&f) {
+                out.push(f);
             }
         }
     }
     out
+}
+
+fn is_file(p: &Path) -> bool {
+    fs::metadata(p).map_or(false, |st| st.is_file())
+}
+
+fn list_chunks(lst: &str) -> Vec<Chunk> {
+    let files = listed(lst);
+    let mut out = Vec::new();
+    if files.is_empty() {
+        return out;
+    }
+    let mut root = files[0].parent().map(Path::to_path_buf).unwrap_or_default();
+    for f in &files {
+        while !f.parent().map_or(false, |d| d.starts_with(&root)) {
+            match root.parent() {
+                Some(up) => root = up.to_path_buf(),
+                None => break,
+            }
+        }
+    }
+    let mut rels: Vec<(Vec<String>, PathBuf)> = files
+        .iter()
+        .map(|f| {
+            let parts = f
+                .strip_prefix(&root)
+                .map(|r| r.iter().map(|x| x.to_string_lossy().into_owned()).collect())
+                .unwrap_or_default();
+            (parts, f.clone())
+        })
+        .collect();
+    rels.sort();
+    for (rel, f) in &rels {
+        if !rel.is_empty() && !rel.iter().any(|part| part.starts_with('.')) {
+            out.extend(chunked(f, &rel.join("/"), &rel[rel.len() - 1]));
+        }
+    }
+    out
+}
+
+/// Everything the box reads: its pile folder, then each source in name order, as NAME/path.
+fn pile_of_box(cfg: &Obj) -> Result<Vec<Chunk>, String> {
+    let mut out = match cfg.get("pile") {
+        Some(v) => chunks(&py_str(v)),
+        None => Vec::new(),
+    };
+    let tops: std::collections::HashSet<String> = out
+        .iter()
+        .map(|c| c.path.split('/').next().unwrap_or("").to_string())
+        .collect();
+    if let Some(srcs) = cfg.obj("sources") {
+        let mut names: Vec<String> = srcs.keys.clone();
+        names.sort();
+        for name in names {
+            if tops.contains(&name) {
+                return Err(format!(
+                    "the source {} has the name of a file or folder at the top of the pile",
+                    name
+                ));
+            }
+            let at = srcs.str(&name).unwrap_or("").to_string();
+            let part = if let Some(l) = at.strip_prefix('@') {
+                list_chunks(l)
+            } else {
+                chunks(&at)
+            };
+            for c in part {
+                out.push(Chunk::new(&format!("{}/{}", name, c.path), c.line, c.text));
+            }
+        }
+    }
+    Ok(out)
+}
+
+/// NAME=FOLDER or NAME=@LIST as (name, where), or why not.
+fn source_of(given: &str) -> Result<(String, String), String> {
+    let (name, at) = match given.find('=') {
+        Some(i) => (&given[..i], &given[i + 1..]),
+        None => return Err(format!("{}: a source is NAME=FOLDER or NAME=@LIST", given)),
+    };
+    if name.is_empty() || at.is_empty() || at == "@" {
+        return Err(format!("{}: a source is NAME=FOLDER or NAME=@LIST", given));
+    }
+    if name.contains('/') || name.contains('\\') || name.starts_with('.') {
+        return Err(format!(
+            "{}: a source's name is plain, no / and not starting with .",
+            name
+        ));
+    }
+    if let Some(l) = at.strip_prefix('@') {
+        if !is_file(Path::new(l)) {
+            return Err(format!("{}: a list of files is a file, and isn't there", l));
+        }
+        let gone: Vec<PathBuf> = listed(l).into_iter().filter(|f| !is_file(f)).collect();
+        if !gone.is_empty() {
+            return Err(format!(
+                "{} names {} file{} that aren't there, the first {}",
+                l,
+                gone.len(),
+                if gone.len() == 1 { "" } else { "s" },
+                gone[0].to_string_lossy()
+            ));
+        }
+        return Ok((name.to_string(), format!("@{}", resolved(l).to_string_lossy())));
+    }
+    if !fs::metadata(at).map_or(false, |st| st.is_dir()) {
+        return Err(format!("{} is not a folder", at));
+    }
+    Ok((name.to_string(), resolved(at).to_string_lossy().into_owned()))
 }
 
 // ── dates ───────────────────────────────────────────────────────────────────
@@ -2376,13 +2521,47 @@ fn create_key(key: &str, hex_key: &str) -> Res<()> {
         .map_err(io_err)
 }
 
-fn init_box(box_: &str, pile: &str, key: &str, ts: &str, wl: Option<&str>) -> Res<i32> {
+fn init_box(
+    box_: &str,
+    pile: Option<&str>,
+    key: &str,
+    ts: &str,
+    wl: Option<&str>,
+    froms: &[String],
+) -> Res<i32> {
     let bp = Path::new(box_);
     if bp.join("record.jsonl").exists() {
         return Ok(refuse("refused: this box already has a record"));
     }
-    if !fs::metadata(pile).map_or(false, |st| st.is_dir()) {
-        return Ok(refuse(&format!("refused: {} is not a folder", pile)));
+    if let Some(p) = pile {
+        if !fs::metadata(p).map_or(false, |st| st.is_dir()) {
+            return Ok(refuse(&format!("refused: {} is not a folder", p)));
+        }
+    }
+    let mut found: Vec<(String, String)> = Vec::new();
+    for given in froms {
+        let (name, at) = match source_of(given) {
+            Ok(x) => x,
+            Err(why) => return Ok(refuse(&format!("refused: {}", why))),
+        };
+        if found.iter().any(|(n, _)| *n == name) {
+            return Ok(refuse(&format!(
+                "refused: {}: a source's name is given once",
+                name
+            )));
+        }
+        if let Some(p) = pile {
+            if fs::metadata(Path::new(p).join(&name)).is_ok() {
+                return Ok(refuse(&format!(
+                    "refused: {}: the pile already holds that name at its top",
+                    name
+                )));
+            }
+        }
+        found.push((name, at));
+    }
+    if pile.is_none() && found.is_empty() {
+        return Ok(refuse("refused: a box reads a pile folder, sources, or both"));
     }
     if inside(key, box_) {
         return Ok(refuse("refused: the key can't live inside the box"));
@@ -2401,16 +2580,26 @@ fn init_box(box_: &str, pile: &str, key: &str, ts: &str, wl: Option<&str>) -> Re
         create_key(key, &hex(&random_bytes(32)?))?;
     }
     fs::create_dir_all(bp).map_err(io_err)?;
-    let mut cfg = obj(&[
-        (
-            "pile",
-            Value::Str(resolved(pile).to_string_lossy().into_owned()),
-        ),
-        (
-            "key",
-            Value::Str(resolved(key).to_string_lossy().into_owned()),
-        ),
-    ]);
+    let mut cfg = obj(&[(
+        "key",
+        Value::Str(resolved(key).to_string_lossy().into_owned()),
+    )]);
+    let mut placed = obj(&[("loop", s("open"))]);
+    if let Some(p) = pile {
+        let at = resolved(p).to_string_lossy().into_owned();
+        placed.set("pile_sha256", Value::Str(h256(&at)));
+        cfg.set("pile", Value::Str(at));
+    }
+    if !found.is_empty() {
+        found.sort();
+        let mut srcs = Obj::new();
+        for (n, at) in &found {
+            srcs.set(n, Value::Str(at.clone()));
+        }
+        let srcs = Value::Obj(srcs);
+        placed.set("sources_sha256", Value::Str(h256(&canon(&srcs)?)));
+        cfg.set("sources", srcs);
+    }
     if let Some(w) = wl {
         cfg.set(
             "words",
@@ -2422,14 +2611,7 @@ fn init_box(box_: &str, pile: &str, key: &str, ts: &str, wl: Option<&str>) -> Re
         format!("{}\n", dumps_default(&Value::Obj(cfg.clone()), true)),
     )
     .map_err(io_err)?;
-    let pile_sha = h256(cfg.str("pile").unwrap_or(""));
-    let row = append_row(
-        bp,
-        ts,
-        "boot",
-        "kernel",
-        &obj(&[("loop", s("open")), ("pile_sha256", Value::Str(pile_sha))]),
-    )?;
+    let row = append_row(bp, ts, "boot", "kernel", &placed)?;
     let hash = row.str("hash").unwrap_or("");
     println!(
         "ready: record started, row {} {}",
@@ -2624,7 +2806,10 @@ fn bite(box_: &str, text: &str, ts: &str) -> Res<i32> {
             Err(why) => return Ok(refuse(&format!("refused: {}", why))),
         }
     }
-    let pile = chunks(&cfg.get("pile").map(py_str).unwrap_or_default());
+    let pile = match pile_of_box(&cfg) {
+        Ok(p) => p,
+        Err(why) => return Ok(refuse(&format!("refused: {}", why))),
+    };
     let served = rank(&pile, text, &al);
     let mut refs = Vec::new();
     let mut answers: Vec<&Chunk> = Vec::new();
@@ -3314,6 +3499,7 @@ fn now() -> String {
 
 const USAGE: &str = "kernel.py: answers questions from your own files. Python 3.9+, stdlib only.
     python kernel.py init    --box DIR --pile FOLDER --key FILE [--words FILE]
+    python kernel.py init    --box DIR [--pile FOLDER] --from NAME=FOLDER|NAME=@LIST ... --key FILE
     python kernel.py bite    --box DIR \"your question\"
     python kernel.py propose --box DIR --file SUGGESTIONS.jsonl
     python kernel.py seal    --box DIR proposal:<sha256>
@@ -3374,6 +3560,7 @@ fn run(argv: &[String]) -> Res<i32> {
     let verb = argv.first().cloned().unwrap_or_default();
     let mut opts: HashMap<&str, String> = HashMap::new();
     let mut args: Vec<&str> = Vec::new();
+    let mut froms: Vec<String> = Vec::new();
     let mut i = 1;
     while i < argv.len() {
         let a = argv[i].as_str();
@@ -3386,6 +3573,14 @@ fn run(argv: &[String]) -> Res<i32> {
                     String::new()
                 };
                 opts.insert(a, val);
+            }
+            "--from" => {
+                froms.push(if i + 1 < argv.len() {
+                    i += 1;
+                    argv[i].clone()
+                } else {
+                    String::new()
+                });
             }
             _ => args.push(a),
         }
@@ -3400,16 +3595,26 @@ fn run(argv: &[String]) -> Res<i32> {
     if ts.is_empty() {
         ts = now();
     }
-    if verb == "init" && !opt_("--pile").is_empty() && !opt_("--key").is_empty() && args.is_empty()
+    if verb == "init"
+        && (!opt_("--pile").is_empty() || !froms.is_empty())
+        && !froms.iter().any(|f| f.is_empty())
+        && (!opts.contains_key("--pile") || !opt_("--pile").is_empty())
+        && !opt_("--key").is_empty()
+        && args.is_empty()
     {
         let wl = opt_("--words");
+        let pile = opt_("--pile");
         return init_box(
             &box_,
-            &opt_("--pile"),
+            if pile.is_empty() { None } else { Some(&pile) },
             &opt_("--key"),
             &ts,
             if wl.is_empty() { None } else { Some(&wl) },
+            &froms,
         );
+    }
+    if !froms.is_empty() {
+        return Ok(refuse(USAGE));
     }
     if !Path::new(&box_).join("kernel.json").exists() {
         return Ok(refuse("refused: not a kernel box; init first"));

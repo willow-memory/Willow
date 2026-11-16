@@ -93,7 +93,7 @@ def main(argv: list[str]) -> int:
         print("refused: the record doesn't verify", file=sys.stderr)
         return kernel.REFUSED
     seed = seed or day_seed(ts)
-    c = draw(kernel.chunks(Path(kernel.config(box)["pile"])), seed)
+    c = draw(kernel.pile_of_box(kernel.config(box)), seed)
     if c is None:
         print(f"No passage in your folder has {MIN_WORDS} words or more.")
         return kernel.ESCALATE

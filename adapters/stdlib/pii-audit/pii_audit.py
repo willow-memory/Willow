@@ -191,7 +191,7 @@ def main(argv: list[str]) -> int:
         if not (box / "kernel.json").exists():
             print("refused: not a kernel box; init first", file=sys.stderr)
             return kernel.REFUSED
-        folder = Path(kernel.config(box)["pile"])
+        folder = kernel.folder(kernel.config(box))
     else:
         folder = Path(opts["--from"])
         if not folder.is_dir():

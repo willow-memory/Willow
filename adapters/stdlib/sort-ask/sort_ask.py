@@ -217,7 +217,7 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return kernel.REFUSED
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     _, more, none = sort.placed(sort.sort(pile, cats), list(cats))
     standing = asked(box)
     todo = [p for p, _ in more + none if where_for(p) not in standing]

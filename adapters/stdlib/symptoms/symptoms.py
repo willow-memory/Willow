@@ -207,7 +207,7 @@ def main(argv: list[str]) -> int:
         said = f'"{args[0]}" is only common words, held by everything; say more'
         say(report(NAME, "unreachable", said, []), as_json)
         return kernel.ESCALATE
-    rows = diary(kernel.chunks(Path(cfg["pile"])), want, alias)
+    rows = diary(kernel.pile_of_box(cfg), want, alias)
     if not rows:
         say(
             report(NAME, "empty", f'no line of your folder names "{args[0]}"', []),

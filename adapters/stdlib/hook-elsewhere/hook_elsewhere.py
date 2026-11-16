@@ -201,7 +201,7 @@ def setup(host: str, box: Path, index: Path | None = None) -> str:
         )
     if index is not None:
         hk = claude()
-        pile = kernel.config(box)["pile"]
+        pile = str(kernel.folder(kernel.config(box)))
         py = sys.executable or "python3"
         keep = [
             py,

@@ -113,7 +113,7 @@ def refuse(why: str) -> int:
 
 # ── the verbs ───────────────────────────────────────────────────────────────
 def propose(box: Path, rows: list[dict], rel: str, ts: str) -> int:
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     f = (pile / rel).resolve()
     if not f.is_relative_to(pile) or not f.is_file():
         return refuse(f"{rel} is not a file in your folder")
@@ -198,7 +198,7 @@ def show(box: Path, rows: list[dict]) -> int:
     if not mine:
         print("no rules proposed yet: propose a file of them first")
         return kernel.ESCALATE
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     waits = False
     for p in mine:
         state = "sealed" if p["sealed"] else "waiting"
