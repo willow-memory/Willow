@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Kinds of file in your folders that no step of your stack reads yet, each with the readers that took some of them when tried on a few.
 source: new
 added: 2026-11-14
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools
