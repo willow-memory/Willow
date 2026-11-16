@@ -261,6 +261,57 @@ grouping by writers is what replaces them.
 
 Before the fixes: bridges 5 of 404, controls 4 of 1,950, p 0.010.
 
+## The third report: phase 7 on all eight public piles (2026-11-16)
+
+The same seventh freeze's notebooks, made again for the six piles the
+second report hadn't run (nestor, jeles, homestead-law, forge,
+climate-almanac, known-gaps), two a pile on Kaggle, 12 notebooks in three
+waves. One change to the notebook: known-gaps has no repository, so it is
+made by `piles/known_gaps.py make` as stage 0 made it. Every notebook held
+its pile's shape, the grid and the pairs to the freeze, and every worker
+ended 0. Measured with willow's and the grove's runs, 16 in all, by
+changes.py as the ninth freeze has it, nothing changed after the rows were
+read: [truth/report-3.md](truth/report-3.md), as it wrote it.
+
+**Fired, against an empty pile:** 81 steps on homestead-law, 83 on jeles,
+84 on climate-almanac, 89 on known-gaps, 113 on the grove, 120 on forge,
+130 on nestor, 161 on willow. What fires is the pile's.
+
+**Bridges held:** the taker changed in 12 of 1,608 bridge stacks, and the
+second step in 0 of 7,796 no-bridge pairs (one-sided Fisher p 6×10⁻¹⁰).
+dice [play-dice] then game-master held on all eight piles;
+openai-compatible then sent-log on four: willow, nestor, forge and
+known-gaps.
+
+**Readers, grouped by the writers that move them:** the same four groups
+as the second report, on all eight piles (7,864 kind stacks, 882 moved
+their reader). The bite group is the one that leans on the pile:
+session-seal's bite moved sent-log and serve [approved-only] on all eight,
+predict's [forecast-ask] on the same four piles where openai-compatible
+then sent-log held, and llm-cli's on willow alone. A reading, not a
+measure: a bite moves these readers when it serves a passage that isn't an
+echo, and the four piles are where predict's question finds one.
+
+**What it says:** the pools are the add-ons' code, not the piles. Eight
+piles of law, climate, games, notes and code give one map of who moves
+whom; only how much fires, and whether a bite finds an answer, is the
+pile's. 17 steps were unsteady on some pile and were held to nothing as
+takers.
+
+**For the kernel,** the three reads the readers share:
+
+- **What waits on the person** (the proposal group): five add-ons wrote it
+  again and disagreed with the kernel's count. Now V.11, merged.
+- **The whole record:** `kernel.read`, already the kernel's.
+- **What a bite served** (the bite group): not a rule written again. The
+  kernel marks each served passage `echo` or not when it writes the bite,
+  and sent-log, approved-only and some fifteen other add-ons filter on
+  that mark. They read one rule and can't disagree with it. The kernel
+  doesn't record whether a bite answered (the state it prints), so five
+  add-ons work it out again as "any passage not an echo" (digest,
+  export-answers, forecast-ask, record-history, sent-log): the same test
+  each time, a tidy at most, not law.
+
 ## What the report may say: [truth/](truth/)
 
 `python demo/pools/truth/truth.py measure ...` reads the trace's rows and
