@@ -127,7 +127,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found = due(kernel.chunks(Path(kernel.config(box)["pile"])))
+    found = due(kernel.pile_of_box(kernel.config(box)))
     if not found:
         print(
             "No line of your folder gives a reading, an assignment or an exam for a course a day."

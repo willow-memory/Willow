@@ -3,7 +3,7 @@ section: Finding things
 line: Is this exact quote in my files, and where? For writers, journalists and students.
 source: box
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools

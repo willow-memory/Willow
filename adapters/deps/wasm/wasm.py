@@ -186,7 +186,7 @@ def do_run(opts: dict, ts: str) -> int:
     why = share.new_file(to, "", 0o600, box)  # new, outside the box and folder
     if why:
         return refuse(why)
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     if os.path.realpath(box).startswith(str(pile) + os.sep):
         return refuse("the box is inside the folder; a job would see it")
     result = execute(module, pile, script, fuel)

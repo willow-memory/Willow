@@ -87,7 +87,7 @@ def served_for(box: Path, question: str) -> list[dict]:
         alias, _, why = kernel.read_words(Path(cfg["words"]), box)
         if why is not None:
             raise WordsList(why)
-    pile = kernel.chunks(Path(cfg["pile"]))
+    pile = kernel.pile_of_box(cfg)
     return [
         {"id": c["id"], "where": f"{c['path']}:{c['line']}", "text": c["text"]}
         for c in kernel.rank(pile, question, alias)

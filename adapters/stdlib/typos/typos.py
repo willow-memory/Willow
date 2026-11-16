@@ -124,7 +124,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    read, missing = readings(args[0], kernel.chunks(Path(cfg["pile"])), alias)
+    read, missing = readings(args[0], kernel.pile_of_box(cfg), alias)
     for w, (x, n) in read.items():
         print(f"read {w} as {x}: {n} passage{'s' * (n != 1)} hold{'s' * (n == 1)} it")
     for w in missing:

@@ -282,7 +282,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found, skipped = passages(kernel.chunks(Path(kernel.config(box)["pile"])))
+    found, skipped = passages(kernel.pile_of_box(kernel.config(box)))
     if not found:
         print("Nothing in your folder states a date or an amount this can read.")
         return kernel.ESCALATE

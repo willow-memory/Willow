@@ -310,7 +310,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    lines, code = report(kernel.chunks(Path(cfg["pile"])), args[0], to_date(day), year, alias)  # fmt: skip
+    lines, code = report(kernel.pile_of_box(cfg), args[0], to_date(day), year, alias)  # fmt: skip
     print("\n".join(lines), file=sys.stderr if code == kernel.REFUSED else sys.stdout)
     return code
 

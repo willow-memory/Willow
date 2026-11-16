@@ -65,7 +65,7 @@ def licence_id(value: str) -> str:
 def payload(box: Path) -> list[tuple[str, Path]]:
     """(the name in the crate, the file) for everything the crate holds."""
     out: list[tuple[str, Path]] = []
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     for p in sorted(pile.rglob("*")):
         rel = p.relative_to(pile)
         if p.is_file() and not any(part.startswith(".") for part in rel.parts):
@@ -147,7 +147,7 @@ def why_not(box: Path, to: Path) -> str | None:
     to = to.resolve()
     for inside, what in (
         (box.resolve(), "the box"),
-        (Path(cfg["pile"]).resolve(), "your files"),
+        (kernel.folder(cfg).resolve(), "your files"),
     ):
         if to == inside or inside in to.parents:
             return f"{to} is inside {what}; a snapshot inside what it copies isn't one"

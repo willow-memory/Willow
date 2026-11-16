@@ -129,7 +129,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     rows = verdicts(pile, period)
     if not rows:
         print("No lesson plan with timed parts and a stated time.")

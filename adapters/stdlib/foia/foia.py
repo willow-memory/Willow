@@ -218,7 +218,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    found, stray = requests(kernel.chunks(Path(kernel.config(box)["pile"])), law)
+    found, stray = requests(kernel.pile_of_box(kernel.config(box)), law)
     if not found:
         print("No line of your folder says an information request was sent.")
         return kernel.ESCALATE

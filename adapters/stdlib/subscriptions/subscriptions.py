@@ -181,7 +181,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    subs = found(kernel.chunks(Path(kernel.config(box)["pile"])))
+    subs = found(kernel.pile_of_box(kernel.config(box)))
     if not subs:
         print("No payment in your folder comes round on a monthly or yearly rhythm.")
         return kernel.ESCALATE

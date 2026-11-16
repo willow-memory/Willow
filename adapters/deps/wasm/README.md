@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you as WebAssembly, run by Wasmtime over your folder read-only: the same bytes, so the same answer, on every machine.
 source: new
 added: 2026-11-04
-version: 0.1.0
+version: 0.1.1
 needs: wasmtime; Apache-2.0 WITH LLVM-exception
 floor: wasmtime 48.0.0; the rule names 0.21.0 from 2020, and before 48.0.0 a folder is opened read-only only through permission objects this code doesn't use, and output can't be caught without a file
 writes: record, to

@@ -181,7 +181,7 @@ def main(argv: list[str]) -> int:
         print("refused: the record doesn't verify:", *breaks, sep="\n  ",
               file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
-    pile = kernel.chunks(Path(kernel.config(box)["pile"]))
+    pile = kernel.pile_of_box(kernel.config(box))
     ts = opts.get("--now") or kernel.now()
     standing = open_quiz(rows)
     if asking:

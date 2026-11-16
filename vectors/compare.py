@@ -383,7 +383,46 @@ def session(impl, root: Path) -> dict:
     step("propose", *b, "--file", str(rows_file))  # declined, pass, waiting
     step("out", *b)  # one waiting
     step("verify", *b)
+    sources(root, step)
     return {"shown": shown, "box": box, "key": key}
+
+
+def sources(root: Path, step) -> None:
+    """A box of its pile and two sources, read where they are (CONST-VI-9):
+    a folder, and a list of files (a comment, a blank, a relative path, an
+    absolute one, one named twice, one beside them not listed). Each passage
+    is named under its source; an edit after init is what the next bite
+    reads; a bad source refuses the box."""
+    pile, law, notes = root / "pile", root / "law", root / "notes"
+    _pile(law, {"charter.md": "The shed is painted every fourth spring.\n"})
+    _pile(notes, {"roof.md": "The roof estimate was 4200.\n",
+                  "deck.md": "The deck was oiled in May.\n",
+                  "skip.md": "The roof estimate was 9999.\n"})  # fmt: skip
+    lst = root / "chosen.txt"
+    lst.write_text(
+        f"# the two asked for\n\nnotes/roof.md\n{notes / 'deck.md'}\nnotes/roof.md\n"
+    )
+    key = root / "keys" / "me.key"
+    two = ["--box", str(root / "two"), "--now", TS]
+    for bad in (["--from", "law"], ["--from", "a/b=" + str(law)],
+                ["--from", f"law={law}", "--from", f"law={law}"],
+                ["--from", f"law={root / 'none'}"], ["--from", f"law=@{root / 'none.txt'}"],
+                ["--from", f"garden.md={law}"]):  # fmt: skip
+        step("init", *two, "--pile", str(pile), *bad, "--key", str(key))
+    step("init", *two, "--pile", str(pile), "--from", f"law={law}",
+         "--from", f"chosen=@{lst}", "--key", str(key))  # fmt: skip
+    step("bite", *two, "when is the shed painted")
+    step("bite", *two, "what does the law charter say")  # a source's name is no word
+    step("bite", *two, "what was the roof estimate")
+    step("bite", *two, "when was the deck oiled")
+    step("bite", *two, "how much sun do tomatoes want")
+    (notes / "roof.md").write_text("The roof estimate is now 4300.\n")
+    step("bite", *two, "what was the roof estimate")
+    step("verify", *two)
+    alone = ["--box", str(root / "alone"), "--now", TS]
+    step("init", *alone, "--from", f"law={law}", "--key", str(key))
+    step("bite", *alone, "when is the shed painted")
+    step("bite", *alone, "--from", f"x={law}", "when is the shed painted")
 
 
 def rehash(path: Path, rows: list[dict]) -> None:
@@ -534,6 +573,10 @@ def sessions(ports: list, work: Path) -> int:
             },
             "tamper": tamper_with_proposals(impl, got["box"]),
             "attacks": forge_and_edit(impl, got["box"]),
+            "sources": [
+                (rows_without_self(root / b), files_of(root / b))
+                for b in ("two", "alone")
+            ],
         }
     py = sides["kernel.py"]
     bad = 0
@@ -580,7 +623,13 @@ def sessions(ports: list, work: Path) -> int:
             side["attacks"],
             port.name,
         )
-        steps = len(py["shown"]) + 4
+        check(
+            "the boxes of sources: rows and kernel.json",
+            py["sources"],
+            side["sources"],
+            port.name,
+        )
+        steps = len(py["shown"]) + 5
         print(f"  {port.name:<7} {steps - (bad - before)}/{steps} session checks ok")
     names = [i.name for i in every]
     print("  every box, verified by every implementation (0 = the chain holds):")

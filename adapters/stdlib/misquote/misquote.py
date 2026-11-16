@@ -125,7 +125,7 @@ def main(argv: list[str]) -> int:
     if not tokens(quote):
         print("refused: a quote with no words", file=sys.stderr)
         return kernel.REFUSED
-    got = closest(kernel.chunks(Path(kernel.config(box)["pile"])), quote)
+    got = closest(kernel.pile_of_box(kernel.config(box)), quote)
     if got is None:
         said = "nothing in your folder holds even half of it, in that order"
         say(report(NAME, "empty", said, []), as_json)

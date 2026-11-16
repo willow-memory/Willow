@@ -3,7 +3,7 @@ section: Assistants
 line: What a model on this machine says connects two passages of yours, in a few sentences, each number and name it gives checked against them.
 source: new
 added: 2026-11-11
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: loopback
 role: suggests

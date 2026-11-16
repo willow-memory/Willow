@@ -29,6 +29,9 @@
   "misquote": {
     "101d4093cf32": "The where column's cap: every row of misquote's report has the same place, the closest passage, so the column is that place's width whatever the cap, and no row is padded."
   },
+  "new-kinds": {
+    "0cbcf08d2031": "The size given a file that can't be looked at: it only has to be past TRY_BYTES so the file is never tried, and TRY_BYTES + 1 or + 2 are both past it, so the trial is the same."
+  },
   "play-bureau": {
     "06401a082af5": "The seed a Session falls back to when none is given: the default is never used, since every game is built with the seed its record holds, so any number there plays the same."
   },

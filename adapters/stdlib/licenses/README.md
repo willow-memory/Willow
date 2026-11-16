@@ -3,7 +3,7 @@ section: Trust and proof
 line: The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

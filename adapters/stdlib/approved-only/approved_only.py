@@ -96,7 +96,7 @@ def do_serve(box: Path, to: Path) -> int:
     if breaks:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     for name, root in (("your folder", pile), ("the box", box)):
         if to.resolve().is_relative_to(root.resolve()):
             print(f"refused: {to} is inside {name}; this never writes there",

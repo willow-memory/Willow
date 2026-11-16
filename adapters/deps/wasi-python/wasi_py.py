@@ -183,7 +183,7 @@ def do_run(opts: dict, ts: str) -> int:
     why = share.new_file(to, "", 0o600, box)  # new, outside the box and folder
     if why:
         return refuse(why)
-    pile = Path(kernel.config(box)["pile"]).resolve()
+    pile = kernel.folder(kernel.config(box)).resolve()
     used = tools()
     cache, cached = (
         (None, "none") if "--cache" not in opts else cache_for(Path(opts["--cache"]))

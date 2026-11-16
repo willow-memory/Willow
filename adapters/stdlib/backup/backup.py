@@ -59,7 +59,7 @@ def why_not(box: Path, to: Path) -> str | None:
     key_dir = Path(cfg["key"]).resolve().parent
     for inside, what in (
         (box.resolve(), "the box"),
-        (Path(cfg["pile"]).resolve(), "your files"),
+        (kernel.folder(cfg).resolve(), "your files"),
     ):
         if to == inside or inside in to.parents:
             return f"{to} is inside {what}; a backup inside what it backs up isn't one"

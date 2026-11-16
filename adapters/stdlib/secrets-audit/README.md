@@ -3,7 +3,7 @@ section: Privacy and safety
 line: Finds passwords, keys and card numbers sitting in plain files, by file and line, never showing the value.
 source: bot
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

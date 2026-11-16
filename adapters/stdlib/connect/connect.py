@@ -255,7 +255,7 @@ def main(argv: list[str], ask=None) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    pile = Path(kernel.config(box)["pile"])
+    pile = kernel.folder(kernel.config(box))
     if one:
         pairs = [(opts["--first"], opts["--second"])]
     else:

@@ -253,7 +253,7 @@ def main(argv: list[str]) -> int:
                 file=sys.stderr,
             )
             return kernel.REFUSED
-    text = card(Path(kernel.config(box)["pile"]), notes, now)
+    text = card(kernel.folder(kernel.config(box)), notes, now)
     try:
         fd = os.open(to, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     except OSError as e:

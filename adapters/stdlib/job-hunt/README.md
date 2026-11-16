@@ -3,7 +3,7 @@ section: Keeping track
 line: Applications sent, replies and interviews, by date: who you're still waiting on.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page

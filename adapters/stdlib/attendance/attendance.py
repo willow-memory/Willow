@@ -164,7 +164,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
-    reg = register(kernel.chunks(Path(kernel.config(box)["pile"])))
+    reg = register(kernel.pile_of_box(kernel.config(box)))
     if not reg:
         print("No line of your folder marks anyone present or absent.")
         return kernel.ESCALATE

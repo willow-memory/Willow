@@ -261,11 +261,7 @@ def cli(
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     found = register(
-        kernel.chunks(Path(kernel.config(box)["pile"])),
-        kinds,
-        who,
-        context,
-        path_due,
+        kernel.pile_of_box(kernel.config(box)), kinds, who, context, path_due
     )
     if not found:
         print(none)

@@ -57,9 +57,12 @@ USAGE = (
     " [--leave .EXT[,.EXT]]... [--adapters DIR] [--json]"
 )
 ADAPTERS = Path(__file__).resolve().parents[2]
-#: files of a kind a reader is tried on, and how long it is given for them
+#: files of a kind a reader is tried on, how long it is given for them, and
+#: the biggest file tried: past it a copy is slow and a reader runs out of time,
+#: which would be said as took none when it was never let finish
 SAMPLE = 4
 TRY_SECONDS = 30
+TRY_BYTES = 8_000_000
 NO_KIND = "(no extension)"
 
 
@@ -152,6 +155,14 @@ def nonsense(ext: str) -> bytes:
     return b'{"willow": 1}\n' if ext in (".json", ".jsonl", ".ndjson") else b"willow\n"
 
 
+def size(p: Path) -> int:
+    """A file's size, or past any limit when it can't be looked at."""
+    try:
+        return p.stat().st_size
+    except OSError:
+        return TRY_BYTES + 1
+
+
 def took_by(script: Path, src: Path, dst: Path) -> set:
     """Which of the tried folders a reader wrote text for: src holds each
     file in a folder of its own, so what it wrote says which it took. A
@@ -173,11 +184,13 @@ def trial(ext: str, files: list[Path], scripts: dict) -> dict:
     to SAMPLE of `files` beside a file of the kind with nothing in it, in
     scratch removed after. `fits`: the ones that took some of yours and not
     the nonsense; `any`: the ones that took the nonsense too. Each is
-    {name, took}, most taken first, then by name; `tried` is how many."""
-    out: dict = {"tried": 0, "fits": [], "any": []}
-    if not scripts or not files:
+    {name, took}, most taken first, then by name; `tried` is how many, and
+    `big` how many weren't, being over TRY_BYTES."""
+    small = [f for f in files if size(f) <= TRY_BYTES]
+    out: dict = {"tried": 0, "fits": [], "any": [], "big": len(files) - len(small)}
+    if not scripts or not small:
         return out
-    some = sample(files)
+    some = sample(small)
     out["tried"] = len(some)
     with tempfile.TemporaryDirectory(prefix="willow-new-kinds-") as tmp:
         src = Path(tmp) / "from"
@@ -270,7 +283,7 @@ def look(folders: list[Path], stacked: list[str], leave: set, known: dict) -> di
             continue
         cards = {n: r for n, r in known.items() if ext in r["reads"]}
         scripts = {n: r["script"] for n, r in cards.items() if r["script"]}
-        t = trial(ext, files, scripts) if ext != NO_KIND else {"tried": 0, "fits": [], "any": []}  # fmt: skip
+        t = trial(ext, files, scripts) if ext != NO_KIND else {"tried": 0, "fits": [], "any": [], "big": 0}  # fmt: skip
         took = [f"{r['name']} took {r['took']} of {t['tried']}" for r in t["fits"]]
         loose = [r["name"] for r in t["any"]]
         tail = f"; any {ext} is taken by {', '.join(loose)}" if loose else ""
@@ -287,9 +300,11 @@ def look(folders: list[Path], stacked: list[str], leave: set, known: dict) -> di
                 c + (" (needs its install)" if cards[c]["needs"] else "")
                 for c in sorted(cards)
             ]
-            cant.append(
-                (ext, f"{n}; none of {t['tried']} tried taken by {', '.join(by)}")
-            )
+            if t["tried"]:
+                said = f"none of {t['tried']} tried taken by {', '.join(by)}"
+            else:  # every one too big to try: what the cards say, not a no
+                said = f"none tried, each over {TRY_BYTES // 1_000_000} MB; said to be read by {', '.join(by)}"
+            cant.append((ext, f"{n}; {said}"))
         else:
             none_yet.append((ext, f"{n}; no reader here says it reads them"))
         waiting.append(ext)

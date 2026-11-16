@@ -106,7 +106,7 @@ def main(argv: list[str]) -> int:
         if why is not None:
             print(f"refused: {why}", file=sys.stderr)
             return kernel.REFUSED
-    pile_dir, question = Path(cfg["pile"]), args[0]
+    pile_dir, question = kernel.folder(cfg), args[0]
     pile, read_s = timed(lambda: kernel.chunks(pile_dir), int(repeat))
     _, rank_s = timed(lambda: kernel.rank(pile, question, alias or {}), int(repeat))
     prof = cProfile.Profile()

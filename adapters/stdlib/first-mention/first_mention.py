@@ -169,7 +169,7 @@ def main(argv: list[str]) -> int:
         said = f'"{args[0]}" is only common words, held by everything; say more'
         say(report(NAME, "unreachable", said, []), as_json)
         return kernel.ESCALATE
-    found = mentions(kernel.chunks(Path(cfg["pile"])), want, alias)
+    found = mentions(kernel.pile_of_box(cfg), want, alias)
     if not found:
         say(report(NAME, "empty", f'your files never mention "{args[0]}"', []), as_json)
         return kernel.ALIVE

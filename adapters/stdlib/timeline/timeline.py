@@ -147,7 +147,7 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         return refuse("not a kernel box; init first")
     cfg = kernel.config(box)
-    pile = Path(cfg["pile"])
+    pile = kernel.folder(cfg)
     for name, root in (("your folder", pile), ("the box", box)):
         if to.resolve().is_relative_to(root.resolve()):
             return refuse(f"FILE is inside {name}; this never writes there")

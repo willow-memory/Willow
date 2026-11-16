@@ -3,7 +3,7 @@ section: Privacy and safety
 line: Personal data sitting in your files (ID numbers, health details, card numbers), listed by file and line.
 source: new
 added: 2026-10-27
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
