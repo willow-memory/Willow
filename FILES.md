@@ -2401,6 +2401,10 @@ willow/
 │   ├── life-box/
 │   │   ├── bernadette-words.txt
 │   │   ├── bernadette.json
+│   │   ├── corwin-words.txt
+│   │   ├── corwin.json
+│   │   ├── hollis-words.txt
+│   │   ├── hollis.json
 │   │   ├── life_box.py       the game box, with a person's life for its binder
 │   │   ├── odile.json
 │   │   ├── teodora.json
@@ -2408,6 +2412,7 @@ willow/
 │   │   ├── test_life_box.py
 │   │   ├── test_life_box_studies.py
 │   │   ├── test_life_box_odile.py
+│   │   ├── test_life_box_hollis_corwin.py
 │   │   └── README.md         the life box: the game box, with a person's life for its binder
 │   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
@@ -2415,6 +2420,11 @@ willow/
 │   │   ├── mirror.py         the pile as text the kernel searches, each reader's part, over-long files cut into parts
 │   │   ├── sources.json      each source fetched, with its address, size and SHA-256, and what failed
 │   │   └── test_markets.py   holds what fetch.py froze, and the parts that need no network, to the README
+```
+
+#### demo/, from money-hour/
+
+```
 │   ├── money-hour/           four people from the other demos at one table, every market figure they repeat held to the real record
 │   │   ├── README.md         the claim, what the record says, how it runs, run 1's results and its one failure
 │   │   ├── CHARACTER.md      Teo, Bernie, Hollis and Marisol, where each comes from, and what each keeps
@@ -2433,11 +2443,6 @@ willow/
 │   │       ├── run-2.json    every outcome of run 2, freeze 2's desks, letter, themes and stacks added
 │   │       └── run-3.json    every outcome of run 3, after pair-drift's fix: every rule held
 │   ├── novelty.py           the reusable novelty check: have these pieces been put together before?
-```
-
-#### demo/, from odile/
-
-```
 │   ├── odile/                piano tuner and beekeeper, caring for her father
 │   │   ├── make_life.py      writes her files into life/, the same bytes every run
 │   │   ├── CHARACTER.md      who she is and how her life is written down
@@ -2470,6 +2475,11 @@ willow/
 │   │   │   ├── 6-caught.txt  the commands and their output, word for word
 │   │   │   ├── 7-verify.svg  both chains hold, nothing sealed
 │   │   │   └── 7-verify.txt  the commands and their output, word for word
+```
+
+#### demo/ofrenda/, from results/
+
+```
 │   │   ├── results/
 │   │   │   ├── run-1-gemma-3-4b-it.json   run 1 with the primary model: every reply, passage served and cite
 │   │   │   ├── run-1-gemma-3-1b-it.json   the same with the 1B, every guess caught
@@ -2481,11 +2491,6 @@ willow/
 │   │       ├── femia.md      the abuela's voice, put before the rule, never in place of it
 │   │       ├── babbage.md    Babbage's
 │   │       └── ada.md        Ada Lovelace's
-```
-
-#### demo/, from percus-yevick/
-
-```
 │   ├── percus-yevick/        a study, in draft: can a physics derivation be found rather than generated
 │   │   ├── arms.py           the study's reported arms, beside the pass rules. None is scored
 │   │   ├── blind.py          the blind questions, written by a local model that has seen no

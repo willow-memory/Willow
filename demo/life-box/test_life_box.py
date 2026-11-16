@@ -218,6 +218,9 @@ def test_her_record_holds_every_seal(teo):
 def test_only_a_made_up_person_with_an_answer_key_is_decided_for(teo, tmp_path):
     table = tmp_path / "hollis"
     assert run("open", "--who", "hollis", "--table", table).returncode == 0
+    # every made-up life that has questions now has an answer key (hollis.json
+    # too), so the person with none is a name no key sits beside
+    (table / "who.txt").write_text("nobody\n")
     got = run("decide", "--table", table)
     assert got.returncode == 2 and "has no answer key" in got.stderr
 
