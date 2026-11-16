@@ -57,6 +57,19 @@ another CRS passage above the one that says "ultimate repeal in 2005", which is
 in the pile. Both are misses of the kernel's rank, not of the folder. Neither
 rule was changed after seeing this.
 
+**Run 2, on freeze 2** (`results/run-2.json`, SHA-256 `28f17ad678ccf431881f458e63ac054fd973223720824e346d03136dbb2fe99a`;
+its dry run with nonsense, `results/dry-run-2.json`, served nothing and
+sealed nothing). Freeze 2 builds the box as VI.9 says, read where its files
+are kept: each reader's mirror is a source of its own, her `log/` and
+`lessons/` are read in her folder and the credit note through a list, where
+run 1's box was a pile of copies of all seven. Three of the five pages had
+changed online by then (the NBER, NBC and Wikipedia ones; the CRS report
+and the NSF award had not) and are frozen as fetched. The result is run 1's:
+the same five rules held, `served` failed on the same two questions, and
+every question was served the same passages, word for word and in the same
+order. Only their places changed, named now by the source they were read
+in (`mail/...`, `log/...`), not by a folder of copies.
+
 **What the five claims show.** The tools find where to read; they do not judge.
 C1 (the draft says Type 2): claim-check serves the NSF record, and only a
 person reading it sees it says Type 1. C3 (June 2021): the NBC page's sentence
