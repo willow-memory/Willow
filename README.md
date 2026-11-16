@@ -345,7 +345,7 @@ willow/
 ├── adapters/                 add-ons built on top of kernel.py
 ├── ports/                    kernel.py rewritten in other languages
 ├── vectors/                  what keeps the six implementations identical
-├── demo/                     four made-up people, and one real bug, to try it on
+├── demo/                     made-up lives to try it on, and studies of its work: demo/README.md
 ├── docs/                     the full first five minutes, using it on your own files, how it works in full, and agents' how-tos
 ├── .github/                  CI, the issue forms, the pull request template: the GitHub add-on's
 ├── .gitignore                generated files and build output
