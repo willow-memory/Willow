@@ -1,0 +1,1 @@
+`demo/life-box`: the game box with a person's life for its binder: one of willow's made-up people laid at their own today, read through the starter words list, their week prepped, their own questions asked, and each answer sealed or declined with a key made for them against their answer key; Teodora's traps are declined, and her week shows the dates coming-up can't read two ways

@@ -1,0 +1,33 @@
+{
+  "_what": "Teodora's answer key for her QUESTIONS.md, written from demo/teodora/PLANTED.md: for each question, the passages she would seal as its answer. A passage counts when it is from a file named here and, where `says` is given, holds those words. Anything else served for that question she declines. A question with no entry has nothing she would seal for it.",
+  "who": "teodora",
+  "answers": {
+    "1": [{"file": "car/MOT_2025-11-10.txt"}],
+    "2": [{"file": "work/invoices/invoice_ledger.csv", "says": "Bramble"},
+          {"file": "work/invoices/INV-0427_bramble.txt"}, {"file": "work/invoices/INV-0431_bramble.txt"},
+          {"file": "work/invoices/INV-0435_bramble.txt"}, {"file": "email/2026-10-06_outstanding-invoices.eml"},
+          {"file": "email/2026-09-12_re-inv-0427-and-inv-0431.eml"}],
+    "3": [{"file": "home/wifi.txt"}],
+    "4": [{"file": "work/tax/"}],
+    "5": [{"file": "recipes/bunica/cozonac.md"}],
+    "6": [{"file": "email/2026-10-06_pi-renewal-2026.eml"}, {"file": "work/insurance/PI_schedule_2025-26.txt"},
+          {"file": "car/MOT_2025-11-10.txt"}],
+    "7": [{"file": "maisie/term_dates_2026-27.txt", "says": "Half term"}],
+    "8": [{"file": "notes/physio_exercises.md"}],
+    "9": [{"file": "chats/WhatsApp Chat with Dev.txt", "says": "back"}, {"file": "bank/northbank_current_2024-12.csv", "says": "RAMAN"},
+          {"file": "bank/northbank_current_2025-02.csv", "says": "RAMAN"}, {"file": "bank/northbank_current_2025-05.csv", "says": "RAMAN"}],
+    "10": [{"file": "receipts/warmline_2024-12-06.txt"}, {"file": "home/boiler_warranty.txt"}],
+    "11": [{"file": "bank/northbank_current_2026-09.csv", "says": "HPS"}, {"file": "email/2026-09-02_remittance-advice.eml"}],
+    "12": [{"file": "work/tax/"}],
+    "13": [{"file": "notes/gift_ideas.md", "says": "Grace"}, {"file": "calendar/teo.ics", "says": "Grace"}],
+    "14": [{"file": "study/aat/progress.md"}],
+    "15": [],
+    "16": [{"file": "chats/WhatsApp Chat with Jo.txt", "says": "Christmas"}, {"file": "maisie/schedule_with_jo.md"}],
+    "17": [{"file": "recipes/bunica/index.md"}, {"file": "email/2026-06-02_re-small-run-of-hardback-books-quote.eml"}],
+    "18": [{"file": "email/2026-09-20_your-replacement-debit-card-is-on-its-way.eml"}, {"file": "email/2026-10-06_pi-renewal-2026.eml"},
+           {"file": "work/insurance/PI_schedule_2025-26.txt"}],
+    "19": [{"file": "home/council_tax_2026-27.txt"}],
+    "20": [{"file": "work/invoices/invoice_ledger.csv", "says": "Bramble"}, {"file": "work/clients/bramble/"},
+           {"file": "email/2026-10-06_outstanding-invoices.eml"}]
+  }
+}
