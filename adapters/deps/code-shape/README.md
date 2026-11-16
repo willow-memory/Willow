@@ -3,7 +3,7 @@ section: Finding things
 line: Search code by its shape, not its words: every call of a kind, whatever it's named.
 source: new
 added: 2026-10-30
-version: 0.1.0
+version: 0.1.1
 needs: the ast-grep program, from ast-grep-cli on PyPI or your own ast-grep; MIT
 floor: ast-grep-cli 0.14.1
 writes: nothing

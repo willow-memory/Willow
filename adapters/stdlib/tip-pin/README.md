@@ -3,7 +3,7 @@ section: Trust and proof
 line: Where your record ends, written somewhere willow can't reach, so rows cut off the end or rewritten are caught where verify can't.
 source: new
 added: 2026-10-26
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes

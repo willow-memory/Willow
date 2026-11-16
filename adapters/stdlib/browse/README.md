@@ -3,7 +3,7 @@ section: Ways to use it
 line: Your folder in your web browser: ask, read each answer at its file and line, and approve suggestions with a click, from this machine only.
 source: new
 added: 2026-10-24
-version: 0.6.3
+version: 0.6.4
 writes: record
 network: loopback
 role: ways

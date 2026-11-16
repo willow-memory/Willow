@@ -3,7 +3,7 @@ section: For maintainers
 line: Where a question's time goes, function by function, from cProfile, per release.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: tools

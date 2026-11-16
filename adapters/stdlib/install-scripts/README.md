@@ -3,7 +3,7 @@ section: Privacy and safety
 line: The install scripts the packages in node_modules would run (preinstall, install, postinstall), each cited by file and line.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
