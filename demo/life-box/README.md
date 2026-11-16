@@ -21,7 +21,7 @@ with a key made for them.
 
 | piece | what it is |
 |---|---|
-| [life_box.py](life_box.py) | the five steps: lay the life, run the week, ask the questions, decide them, say what was made true |
+| [life_box.py](life_box.py) | the five steps: lay the life, run the week, ask the questions (each read the way the files spell it), decide them, say what was made true |
 | [week.md](week.md) | the game box's prep sheet made for a life: what's coming in three weeks, what runs out, what the car and the house need, what's waiting on me, who owes me and whom I owe, what goes out every month, where things stand, the money in my files, what's new, does the box hold |
 | [teodora.json](teodora.json) | Teodora's answer key: for each of her twenty questions, the files (and the words in them) she would seal as its answer, written from her [PLANTED.md](../teodora/PLANTED.md) |
 | [bernadette.json](bernadette.json) | Bernadette's, the same for her twenty, written from [hers](../bernadette/PLANTED.md) and her files as willow's readers mirror them |
@@ -90,8 +90,16 @@ mirror is then mirrored again through day-first.
   the 30th and the tax due the 31st. Her one thing marked to do is the bank's
   "update any recurring payments", which she didn't, which is why the cover
   is ending.
-- 45 passages are offered for 19 of her twenty questions. She seals 17 and
-  declines 28: fourteen questions answered.
+- 48 passages are offered for 19 of her twenty questions. She seals 20 and
+  declines 28: sixteen questions answered (fifteen without pypdf, below).
+- She spells some questions her own way, and `ask` reads each the way her
+  files spell it before it asks, as her stack does: the typos add-on, then
+  accents, each over the box. "What did the jeweler say" is asked as "what
+  did the jeweller say", and the jeweller's quote is sealed. "Dermatoligist
+  referal letter" is asked as "dermatologist referral letter" and is served
+  her referral letter, which she seals, with two notes that only mention it,
+  which she declines. A question already spelt as her files spell it is
+  asked once, as written. The claim and the recap say `asked as "..."`.
 - Her traps hold. "How much is the car rego this year" is offered only the
   budget's estimate, which she declines (PLANTED.md's T2); the true notice
   is in her week's renewals. "When is my skin appointment" seals the check
@@ -100,9 +108,7 @@ mirror is then mirrored again through day-first.
   not Aoife Brennan's from bowls (T5). "Did I promise Siobhán anything" seals
   the ring and the mole; "Tomorrow, promise" was to Gerry.
 - What it can't do yet, and says so: "scone recipe" is served the right
-  file's wrong passage (its backlinks), and "dermatoligist referal letter",
-  spelt as she spells it, holds too few of the letter's words. Her stack in
-  [demo/bernadette](../bernadette/) reads that one through typos first.
+  file's wrong passage (its backlinks).
 - Her week's subscriptions lists eight things she pays, about 4596.28 a
   month, and three that come in, written with a plus as her bank writes a
   credit: her super pension, the unit's rent and a tax refund, never added
@@ -111,7 +117,8 @@ mirror is then mirrored again through day-first.
   counted as paid: nothing in the line says it stays hers.
 - The scans are read by the pdf add-on, which needs pypdf. Without it, her
   referral letter isn't read, and the cancelled 5 Nov booking is offered in
-  its place, and declined. The test holds both.
+  its place, and declined; "dermatoligist referal letter" then has no answer
+  to seal. The test holds both.
 
 [test_life_box.py](test_life_box.py) runs all of it in about thirty-five seconds.
 
