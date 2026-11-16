@@ -138,6 +138,42 @@ held again on three new claims. And following the two old misses showed one
 was a reader splitting a page, not a rank: the next bite there is the
 web-pages reader, not the kernel.
 
+## Run 4, on freeze 4
+
+Run 3 found the repeal miss was the web-pages reader's: it made every `<br>`
+a passage break, and the saved CRS report ends each printed line with one.
+The fix reads a page that ends twenty lines or more with `<br>` as wrapped
+lines, one sentence a line (in the clauses add-on, which web-pages reads
+pages with; willow branch `ccr-8ddfb123-dbqhkm`, not yet on main). Freeze 4
+changed nothing in this folder but FROZEN.json: the questions, rules and
+expectations are as they were, and every tool but `clauses.py` is the file
+freeze 3 ran. Its dry runs with nonsense (`results/dry-run-4.json`) served
+nothing; FROZEN.json says what the author saw while checking the fix. Run 4
+(`results/run-4.json`, SHA-256 `38ed797bf0aff42f7b7ffe2f013d82aa639e765784e6a7bb03d672d6963ad137`)
+asked every question of freezes 2 and 3 once:
+
+| Run | Rules held | Rules failed | Changed since the run before |
+|---|---|---|---|
+| run.py (freeze 2's) | gap, amounts, quotes, unsealed, verify | served: the repeal and the brother questions, as in runs 1 and 2 | the repeal question's served passages (below) |
+| life | every rule | none | nothing |
+| claims | gap, unsealed, verify | served: the diesel question, as in run 3 | nothing |
+| misses | rank, unsealed, verify | reach (the brother only), phrases (the repeal only) | `all-passages` now reaches the repeal sentence, 10th |
+
+**What the fix moved, and what it didn't.** The sentence "…scheduled the
+credit for phaseout and ultimate repeal in 2005." is now one passage in every
+box (`web-pages/crs-rs20695.html.txt:48`), where no passage held it before.
+The kernel ranks it 10th, and pile-rank 9th, for the repeal question: below
+the three NBER passages both now serve first, and so the repeal question and
+pile-rank's first three still miss. What runs 1 to 3 served from the CRS
+page was one printed line ("Credit and was provided under section 936…"),
+now part of its paragraph. So the repeal miss is two misses, and one is
+fixed: the reader cut the sentence (fixed), and the kernel's rank puts it
+10th (kept: the rank is never loosened for recall). Every other question was
+served the same passages, word for word; the grid and the 76-day questions'
+NBC passages are at new line numbers because the NBC page was fetched again for freeze 3, not
+because of the fix. The brother and the diesel questions are as run 3 left
+them: too few of the question's words in the passage that holds the answer.
+
 ## What the freeze is and is not
 
 It is not a blind pre-registration. Before it, the six claims were tried once by
