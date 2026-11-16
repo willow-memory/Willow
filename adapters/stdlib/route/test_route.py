@@ -780,7 +780,11 @@ def shipped() -> list:
         ("should I renew the gym", "a judgement", "should i"),
         ("is it bad that I owe ruth money", "a judgement", "is it bad"),
         ("how much did I make in 2025", "money spent or made", "how much"),
-        ("what did I spend on the roof", "money spent or made", "spend"),
+        ("what did I spend on the roof", "money spent", "spend"),
+        ("how much did we spend on electricity this year", "money spent", "spend"),
+        ("how much was spent on the roof", "money spent", "spent"),
+        ("what is our spending on food", "money spent", "spend"),
+        ("how much is the car rego this year", "money spent or made", "how much"),
         ("when's grace's birthday", "a date", "when's"),
         ("when is the dentist", "a date", "when is"),
         ("what's left to do before the talk", "where it stands", "left to do"),
@@ -804,6 +808,7 @@ def test_the_shipped_kinds_send_a_real_question_to_its_kind(question, is_a, by):
             "money owed": ["debts", "invoices"],
             "what is coming": ["coming-up", "renewals", "digest"],
             "where it stands": ["todo", "digest"],
+            "money spent": ["spent", "amounts", "subscriptions"],
             "money spent or made": ["amounts", "invoices", "subscriptions"],
             "a date": ["coming-up", "ask"],
             "a person": ["people", "ask"],
@@ -822,7 +827,7 @@ def test_the_shipped_kinds_are_the_narrower_first_and_none_twice():
     names = [k for k, _, _ in shipped()]
     assert names == [
         "a judgement", "money owed", "what is coming", "where it stands",
-        "money spent or made", "a date", "a person",
+        "money spent", "money spent or made", "a date", "a person",
     ]  # fmt: skip
     assert route.PLAIN not in names
 
@@ -841,7 +846,7 @@ def test_every_step_the_shipped_kinds_name_is_the_ask_or_an_add_on_here():
     """A renamed add-on is caught here. Copied out beside the kernel alone,
     none of them is there, and each is said not to be."""
     steps = sorted({s for _, _, steps in shipped() for s in steps} - {"ask"})
-    assert len(steps) == 9
+    assert len(steps) == 10
     adapters = HERE.parents[1]
     here = [s for s in steps
             if any((adapters / b / s / "README.md").is_file() for b in ("stdlib", "deps"))]  # fmt: skip

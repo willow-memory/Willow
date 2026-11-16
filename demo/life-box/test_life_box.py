@@ -843,11 +843,13 @@ def test_her_own_words_are_the_starter_list_and_then_hers_kept_to_her(words_pile
 def test_her_file_holds_only_her_lines_each_with_a_comment_saying_whose_file_says_it():
     lines = (HERE / "bernadette-words.txt").read_text().splitlines()
     kept = [ln for ln in lines if ln.strip() and not ln.startswith("#")]
-    assert kept == ["rego = registration", "financial = fy, eofy"]
+    assert kept == ["rego = registration", "financial = fy, eofy", "electricity = energy, origin"]  # fmt: skip
     text = "\n".join(lines)
     assert "Car rego due" in text and "Registration" in text and "EOFY" in text and "FY" in text  # fmt: skip
+    # Q18: her budget's line, "Electricity & gas (Origin)", and her bank's ORIGIN ENERGY
+    assert "Electricity & gas (Origin)" in text and "ORIGIN ENERGY" in text
     assert kernel.parse_words(text)[1] is None
-    assert not {"rego", "financial"} & set(kernel.parse_words(STARTER_TXT.read_text())[0])  # not tuned in  # fmt: skip
+    assert not {"rego", "financial", "electricity"} & set(kernel.parse_words(STARTER_TXT.read_text())[0])  # not tuned in  # fmt: skip
 
 
 def test_every_box_still_verifies_and_holds_every_earlier_row_as_it_was(words_piles):
@@ -958,3 +960,101 @@ def test_a_box_that_reads_no_words_list_is_sent_to_later_words(tmp_path):
     got = run("words", "--table", table)
     assert got.returncode == 2 and "later-words" in got.stderr
     assert not (table / "words.txt").exists()
+
+
+# ── a sum is a step's to give: how much did we spend on electricity ─────────
+SEE_SPENT = "      see       spent: 1,654.36 in 3 payments; calendar 2026, 2026-01-01 to 2026-10-24 (so far); spent/18.txt\n"  # fmt: skip
+THREE = (
+    "                2026-01-25     446.06  Bank/CommBank_SmartAccess_FY2025-26.csv:124\n"
+    "                2026-04-25     479.80  Bank/CommBank_SmartAccess_FY2025-26.csv:50\n"
+    "                2026-07-25     728.50  Bank/CommBank_SmartAccess_FY2026-27.csv:77\n"
+)
+
+
+def q18(recap: str) -> str:
+    return recap.split("18. how much did we spend on electricity this year\n")[1].split("19. ")[0]  # fmt: skip
+
+
+def test_route_sends_how_much_did_we_spend_to_spent_and_to_no_other_question(bern):
+    route = json.loads((bern["table"] / "route.json").read_text())
+    assert route["18"]["kind"] == "money spent"
+    assert [x["step"] for x in route["18"]["steps"]] == ["spent", "amounts", "subscriptions"]  # fmt: skip
+    assert (
+        route["18"]["steps"][0]["kept"] == "spent/18.txt"
+    )  # kept by ask, not by the week
+    assert route["18"]["steps"][1]["kept"] == "week/001/10-amounts.txt"
+    # only the one question is a sum of spending
+    assert [q for q, r in route.items() if any(x["step"] == "spent" for x in r["steps"])] == ["18"]  # fmt: skip
+    assert [p.name for p in (bern["table"] / "spent").iterdir()] == ["18.txt"]
+
+
+def test_on_day_one_her_bank_says_origin_energy_and_spent_finds_nothing_and_says_so(
+    bern,
+):
+    out = q18(bern["recap"].stdout)
+    assert "      see       spent: No money-out line in this period holds all of: electricity; calendar 2026, 2026-01-01 to 2026-10-24 (so far); spent/18.txt\n" in out  # fmt: skip
+    assert "2026-01-25" not in out  # and no total is made up
+
+
+def test_on_day_two_her_own_word_adds_up_the_three_bpay_lines_of_this_year(words_one):
+    out = q18(words_one["recap"].stdout)
+    assert SEE_SPENT + THREE in out
+    kept = (words_one["table"] / "spent" / "18.txt").read_text()
+    assert kept.splitlines()[:2] == ["spent: electricity (electricity = energy, origin)", "period: calendar 2026, 2026-01-01 to 2026-10-24 (so far)"]  # fmt: skip
+    assert kept.splitlines()[-1] == "total: 1,654.36 in 3 payments"
+    # the file and line of each is a line of her bank statement that says so
+    for day, amount, where in re.findall(r"^ +(\S+) +(\S+)  (\S+:\d+)$", THREE, re.M):
+        path, n = where.rsplit(":", 1)
+        line = (words_one["table"] / "bernadette-day-first" / path).read_text().splitlines()[int(n) - 1]  # fmt: skip
+        assert "ORIGIN ENERGY" in line and f"-{amount}" in line and f"[{day}]" in line
+    # the offered passage (her budget) is declined as before; the sum is never a seal
+    assert answers(words_one["recap"].stdout)[18] == {"sealed": [], "declined": ["Documents/Household budget 2026.xlsx.txt:3"]}  # fmt: skip
+
+
+def test_a_sum_is_never_sealed_or_proposed_and_the_record_never_hears_of_it(words_one, words_piles):  # fmt: skip
+    for w in (words_one, words_piles):
+        for _, prop in seals(w["table"]):
+            assert "spent" not in prop["claim"] and "1,654.36" not in prop["data"]
+        for box in all_boxes(w["table"]):
+            text = (box / "record.jsonl").read_text()
+            assert "spent" not in text and "1654.36" not in text
+            for p in (box / "proposals").glob("*.json"):
+                assert "spent" not in p.read_text() and "1,654.36" not in p.read_text()
+        assert [p.name for p in (w["table"] / "spent").iterdir()] == ["18.txt"]
+
+
+def test_with_her_piles_spent_still_adds_up_the_whole_life(words_piles):
+    out = q18(words_piles["recap"].stdout)
+    assert SEE_SPENT + THREE in out  # the whole-life box, the path in the whole life
+    assert (words_piles["table"] / "spent" / "18.txt").read_text().splitlines()[-1] == "total: 1,654.36 in 3 payments"  # fmt: skip
+
+
+def test_teodora_has_no_question_that_asks_how_much_she_spent(teo):
+    route = json.loads((teo["table"] / "route.json").read_text())
+    assert not any(x["step"] == "spent" for r in route.values() for x in r["steps"])
+    assert not (teo["table"] / "spent").exists()
+    assert "see       spent" not in teo["recap"].stdout and "see       spent" not in teo["ask"].stdout  # fmt: skip
+
+
+def test_recap_shows_a_kept_sum_as_its_total_period_and_each_line_cited(tmp_path):
+    (tmp_path / "spent").mkdir()
+    (tmp_path / "spent" / "03.txt").write_text(
+        "spent: gym\nperiod: every date, up to 2026-10-24\n"
+        "2026-01-02  12.00  a b/c d.txt:4  2026-01-02  -12.00  GYM\n"
+        "2026-02-02  $1,200.50  e.csv:12  x\n"
+        "total: 12.00 in 1 payment (no currency sign)\ntotal: $1,200.50 in 1 payment\n"
+        "currencies are never added together\n"
+        "  not added, it is dated after 2026-10-24, not spent yet: e.csv:13  later\n"
+    )
+    got = life_box.sent_to({"steps": [{"step": "spent", "kept": "spent/03.txt"}, {"step": "todo", "kept": ""}]}, tmp_path)  # fmt: skip
+    assert (
+        got
+        == (
+            "      see       spent: 12.00 in 1 payment (no currency sign); $1,200.50 in 1 payment; every date, up to 2026-10-24; 1 left out, said in spent/03.txt\n"  # fmt: skip
+            "                2026-01-02      12.00  a b/c d.txt:4\n"
+            "                2026-02-02  $1,200.50  e.csv:12\n"
+            "      see       todo: not in this week\n"
+        )
+    )
+    # nothing kept for it: the step is named, nothing is made up
+    assert life_box.sent_to({"steps": [{"step": "spent", "kept": ""}]}, tmp_path) == "      see       spent: not in this week\n"  # fmt: skip

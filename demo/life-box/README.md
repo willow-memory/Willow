@@ -327,7 +327,9 @@ one thing and her files another:
 
 The starter list is not tuned to a folder (its card says why), so these two
 lines are hers, in `bernadette-words.txt`: `rego = registration` and
-`financial = fy, eofy`. Then, with the table she already has:
+`financial = fy, eofy`, and a third for a question that is not a passage's to
+answer at all, `electricity = energy, origin` (below). Then, with the table she
+already has:
 
     python demo/life-box/life_box.py words  --table DIR
     python demo/life-box/life_box.py ask    --table DIR
@@ -366,6 +368,60 @@ trap, "2025-10-07 Registration...") and the budget's estimate, and both are
 declined. Question 6 is offered `Documents/Rental unit 2025-26.xlsx.txt:3`,
 which holds "21840", and her key names it: sealed. The statement's own scan
 and the sheet's expenses are declined.
+
+## A sum is a step's to give: question 18
+
+"How much did we spend on electricity this year" has no one passage that
+answers it. The answer is a sum over her bank lines, one `BPAY ORIGIN ENERGY
+6631094` a quarter, written with a minus before the amount since the money went
+out, in `Bank/CommBank_SmartAccess_FY*.csv`: $446.06 on 25 January, $479.80 on 25
+April and $728.50 on 25 July, $1,654.36 for 2026 so far. The kernel serves a
+passage only when it holds half the question's words, and no bank line holds
+"spend" or "year"; the one passage it does serve, her household budget sheet (an
+estimate: "Electricity & gas (Origin)", $215 a month), is declined.
+
+The [route](../../adapters/stdlib/route/) add-on reads the question as `money
+spent` (by "spend") and names three steps: [spent](../../adapters/stdlib/spent/),
+which adds up the money-out lines that say what the question names, then
+amounts and subscriptions. The week has no `spent` step, since a step of the
+week takes no question of its own, so `ask` runs it itself, for each question
+route sends it to (this is the only one of Bernadette's, and none of
+Teodora's), over the box of the whole life (with piles, the box laid beside
+them), on the question as her files spell it, at her today. It keeps what it
+prints in DIR/spent/NN.txt, beside the week, and `recap` shows it the way it
+shows every other step, as `see`:
+
+    18. how much did we spend on electricity this year
+          declined  Documents/Household budget 2026.xlsx.txt:3
+          see       spent: 1,654.36 in 3 payments; calendar 2026, 2026-01-01 to 2026-10-24 (so far); spent/18.txt
+                    2026-01-25     446.06  Bank/CommBank_SmartAccess_FY2025-26.csv:124
+                    2026-04-25     479.80  Bank/CommBank_SmartAccess_FY2025-26.csv:50
+                    2026-07-25     728.50  Bank/CommBank_SmartAccess_FY2026-27.csv:77
+          see       amounts: week/001/10-amounts.txt
+          see       subscriptions: week/001/08-subscriptions.txt
+
+It needs her word. On day one, with the starter list, her bank says ORIGIN
+ENERGY and not "electricity", and spent says so (`see       spent: No money-out
+line in this period holds all of: electricity; ...`): it adds up nothing it
+wasn't told is the thing. On day two `electricity = energy, origin` (her own
+file's words: her budget's line is "Electricity & gas (Origin)" and her bank's
+is ORIGIN ENERGY) finds the three. Asked "last financial year" it would find
+the four of 2025-26, $2,206.28, and "this financial year" the one of 2026-27,
+$728.50. Each line carries its file and line number, so she can check every one
+against her statement.
+
+**A sum is never sealed.** A total is not a passage, and a proposal can only
+cite the passages one bite served, so nothing here is proposed: the record
+never hears of it, `decide` never sees it, and the counts above are the same
+with it and without it, with pypdf and without. (The new words line offers
+nothing more either: measured on one box, 54 offered, 20 sealed and 34 declined
+the first time and the same after, with and without the line.) What spent
+gives is the step's answer, kept in a file and shown as `see`, for her to read;
+her seal is for a passage she has read and agrees says it.
+
+Teodora's twenty have no such question: "what did we end up paying for the new
+boiler" is `money spent or made` (by "paying for"), and "how much did I actually
+make last year" is money made, so none is sent to spent.
 
 ## Where it comes from
 

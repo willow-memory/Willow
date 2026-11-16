@@ -1,0 +1,1 @@
+`route`: a question that says "spend" or "spent" is `money spent`, sent to `spent`, then amounts and subscriptions, before the broader `money spent or made`; "how much did we spend on electricity this year" had been sent to amounts, invoices and subscriptions, none of which add up a payee's payments.

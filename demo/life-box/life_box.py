@@ -55,6 +55,12 @@ the starter words list a person begins with:
   ("has kirsty paid me yet" is money owed: debts and invoices) with the
   file the latest week kept each one's output in, kept in DIR/route.json.
   A sum over many passages is a step's to give, not one passage's.
+  A question route sends to `spent` ("how much did we spend on electricity
+  this year", the kind `money spent`) is run through spent, on the whole
+  life's box at NAME's today, as the files spell it; what it prints (the
+  total, the count, the period and each payment's file and line) is kept in
+  DIR/spent/NN.txt, beside the week. It is never proposed and never sealed: a
+  total is not a passage, and a proposal can only cite what one bite served.
   With piles, every pile's box is bitten, the passages each served are
   dealt out in turns by fair-merge's own rule (first of each pile, then
   second of each, a passage word for word in two piles once, the question
@@ -106,7 +112,9 @@ the starter words list a person begins with:
   made-up person with an answer key.
 - `recap` prints what NAME sealed as their answers, and what they said no
   to, each question with the passage it rests on (with piles, naming the
-  pile of each, walking every box).
+  pile of each, walking every box). Beside each question, `see` names the
+  steps whose job it is: for spent, its total, count, period and each payment
+  as it kept them.
 
 Exit codes, the kernel's: 0 done; 42 waiting on the seal; 2 refused.
 """
@@ -137,6 +145,7 @@ DEMO = ROOT / "demo"
 STARTER = ROOT / "adapters" / "stdlib" / "starter-words" / "starter.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
 ROUTE = ROOT / "adapters" / "stdlib" / "route" / "route.py"
+SPENT = ROOT / "adapters" / "stdlib" / "spent" / "spent.py"
 #: the add-ons that say how a question reads in the files' own spelling, in the order they run
 SPELLING = [ROOT / "adapters" / "stdlib" / "typos" / "typos.py",
             ROOT / "adapters" / "stdlib" / "accents" / "accents.py"]  # fmt: skip
@@ -478,8 +487,50 @@ def routes(table: Path, asked: list[str]) -> dict[int, dict]:
     return out
 
 
-def sent_to(route: dict) -> str:
-    return "".join(f"      see       {x['step']}: {x['kept'] or 'not in this week'}\n" for x in route.get("steps", []))  # fmt: skip
+PAID = re.compile(r"^(\d{4}-\d\d-\d\d)  (\S+)  (.+?:\d+)  ")
+
+
+def spent_see(table: Path, kept: str) -> str:
+    """What spent kept for a question, as recap shows it: its total and how
+    many payments, the period it used, and each payment's day, amount and
+    file:line, so each can be checked in the life."""
+    lines = (table / kept).read_text(encoding="utf-8").splitlines()
+    total = [x[7:] for x in lines if x.startswith("total: ")]
+    period = next((x[8:] for x in lines if x.startswith("period: ")), "")
+    left = sum(x.startswith("  not added") for x in lines)
+    head = "; ".join(total) or (lines[-1].rstrip(".") if lines else "nothing")
+    more = f"; {left} left out, said in {kept}" if left else f"; {kept}"
+    out = f"      see       spent: {head}; {period}{more}\n"
+    for x in lines:
+        if m := PAID.match(x):
+            out += f"                {m.group(1)}  {m.group(2):>9}  {m.group(3)}\n"
+    return out
+
+
+def sent_to(route: dict, table: Path | None = None) -> str:
+    out = ""
+    for x in route.get("steps", []):
+        if x["step"] == "spent" and x["kept"] and table is not None:
+            out += spent_see(table, x["kept"])  # a sum over many lines, kept by ask
+        else:
+            out += f"      see       {x['step']}: {x['kept'] or 'not in this week'}\n"
+    return out
+
+
+def run_spent(table: Path, box: Path, now: str, asked: list[str], routed: dict[int, dict]) -> None:  # fmt: skip
+    """Each question route sends to spent, run through it as the files spell
+    it: a sum is a step's to give, not a passage's, so it is kept in
+    DIR/spent/NN.txt beside the week, never proposed, and what the question
+    says is in route.json beside the steps. It only reads the life."""
+    for i, q in enumerate(asked, 1):
+        for x in routed.get(i, {}).get("steps", []):
+            if x["step"] == "spent":
+                got = py(SPENT, "--box", box, "--now", now, read_as(box, q))
+                kept = table / "spent" / f"{i:02d}.txt"
+                kept.parent.mkdir(exist_ok=True)
+                kept.write_text(got.stdout or got.stderr, encoding="utf-8")
+                x["kept"] = str(kept.relative_to(table))
+    (table / "route.json").write_text(json.dumps(routed, indent=1), encoding="utf-8")
 
 
 def cmd_ask(table: Path) -> int:
@@ -488,6 +539,7 @@ def cmd_ask(table: Path) -> int:
     piles = piles_of(table)
     handed = 0
     routed = routes(table, questions(who))
+    run_spent(table, box, now, questions(who), routed)
     done = sealed_answers(table)
     for i, q in enumerate(questions(who), 1):
         if i in done:  # asked again: an answered question is left alone
@@ -530,7 +582,7 @@ def cmd_ask(table: Path) -> int:
                 handed += passed
             else:
                 lines += "\n      nothing in the life holds it"
-        print(f"{i:>2}. {q}{kind}{lines}\n" + sent_to(routed.get(i, {})), end="")
+        print(f"{i:>2}. {q}{kind}{lines}\n" + sent_to(routed.get(i, {}), table), end="")
     left = f" {len(done)} questions already have a sealed answer and were not asked again." if done else ""  # fmt: skip
     print(
         f"\n{handed} answers wait on {who}'s seal; nothing is an answer until then.{left}"
@@ -682,7 +734,7 @@ def cmd_recap(table: Path) -> int:
     print(f"# What {who} made true\n")
     for i, q in enumerate(asked, 1):
         got = by_q.get(i)
-        see = sent_to(routed.get(str(i), {}))
+        see = sent_to(routed.get(str(i), {}), table)
         if got is None:
             print(f"{i:>2}. {q}\n      nothing in the life holds it\n{see}", end="")
             continue
