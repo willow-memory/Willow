@@ -133,6 +133,18 @@ def test_a_page_with_few_breaks_ends_a_block_at_each_as_before():
     assert len(clauses.LINE_BREAK.findall(page)) < clauses.WRAPPED
 
 
+def test_twenty_breaks_make_a_wrapped_page_and_nineteen_do_not():
+    lines = ["One line of a printed report, wrapped at its width, goes"] * 20
+    wrapped = "<p>" + "<br>".join(lines) + "<br></p>"  # 20 breaks
+    assert len(clauses.blocks_of_html(wrapped)) == 1
+    plain = "<p>" + "<br>".join(lines) + "</p>"  # 19 breaks: each one an edge
+    assert len(clauses.blocks_of_html(plain)) == 20
+
+
+def test_a_line_too_long_for_a_chunk_is_cut_at_its_last_space_even_the_first():
+    assert clauses.fit("a " + "x" * 600) == "a\n" + "x" * 500 + "\n" + "x" * 100
+
+
 def test_compare_pairs_rewordings_and_counts_spacing_as_same():
     old = [(1, "Effective October 1, 2026"), (3, "We don't show ads from Gmail."),
            (5, "Gone  for good."), (7, "Unrelated words here entirely.")]  # fmt: skip
