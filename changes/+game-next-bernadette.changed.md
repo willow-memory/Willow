@@ -1,0 +1,1 @@
+Bernadette's stack reads her dates day first, as her Ballarat files are written, so the rego lapsing 03/11/2026 and her cover's last day are found; its look adds renewals, car, home-upkeep and subscriptions, and its docstring names the add-ons it runs by their current names.

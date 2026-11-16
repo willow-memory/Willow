@@ -59,10 +59,12 @@ def test_the_questions_come_to_what_strip_scores(ran):
     by = {a["n"]: a for a in asked}
     assert by[5]["served"][0] == "Calendar/Home.ics.txt:150"  # N6, TAX DUE
     assert by[2]["served"][0] == "Documents/Household budget 2026.xlsx.txt:3"  # T2
+    # N2; at :12, not :13, since day-first lengthens the letter's date line
+    # and its passage now starts a line earlier, with the lesion first
     assert (
-        "Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:13"
+        "Documents/Scans/Referral - Dr Tolley 11-02-2026.pdf.txt:12"
         in (by[3]["served"])
-    )  # N2
+    )
     assert [n for n, a in by.items() if a["raw_state"] != a["state"]] == [6, 9, 18]
     assert "Mail/Sent/2022-12-12 Happy 17th to our Aoife.eml.txt:10" in by[19]["served"]
     # read as her files spell them, by typos, and asked again as read
@@ -82,6 +84,26 @@ def test_the_look_ahead_finds_what_her_files_hold(ran):
     assert said["secrets-audit"].startswith(
         "secrets-audit: populated, 5 places hold a secret"
     )
+    # her dates are day first: once day-first has given them their ISO form,
+    # the rego lapsing 03/11/2026 (N1) is the one renewal to come, last
+    # year's (T2) gone by, and her cover's last day, 14 November 2026 (N3),
+    # Mags's birthday (N4) and the tax (N6) are all in the month ahead
+    [mirror] = [s for s in step(ran["doc"], "day-first")]
+    assert mirror["state"] == "said", mirror
+    assert said["renewals"] == "4 renewals: 3 gone by, 1 to come"
+    look = ran["to"] / "willow" / "box"
+    got = py(str(HERE.parents[1] / "adapters" / "stdlib" / "renewals" / "renewals.py"),
+             "--box", str(look), "--now", NOW).stdout  # fmt: skip
+    assert "  2026-11-03  Mail/Inbox/2026-10-06 Registration renewal" in got
+    assert "gone by  2025-11-03" in got
+    coming = py(str(HERE.parents[1] / "adapters" / "stdlib" / "coming-up" / "coming_up.py"),
+                "--box", str(look), "--days", "30", "--now", NOW).stdout  # fmt: skip
+    for day, what in (("2026-11-14", "FINAL NOTICE policy suspension"),
+                      ("2026-10-30", "Mags's birthday"), ("2026-10-31", "TAX DUE")):  # fmt: skip
+        assert what in coming.split(f"## {day}")[1].split("## ")[0], day
+    assert said["car"] == "2 kinds of job, 16 entries"
+    assert said["home-upkeep"] == "3 kinds of job, 14 entries"
+    assert said["subscriptions"].startswith("11 subscriptions")
     hide = next(s for s in ran["doc"]["steps"] if s["piece"] == "privacy")
     assert hide["said"] == "hid 4 email, 3 password"
 

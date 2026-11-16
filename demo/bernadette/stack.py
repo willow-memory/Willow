@@ -7,27 +7,33 @@
 add-on run by its own command line, as a person would type it:
 
     read      every reader mirrors what it reads into one folder, and the
-              plain files the readers leave are copied beside them
-    start     start sets up the box on that folder: the kernel's init, a key
-              under --to, the starter words list
-    look      secrets-audit, todo, coming-up, on-this-day and xref, before
-              a question is asked
+              plain files the readers leave are copied beside them; then
+              day-first gives each date its ISO form beside it, since her
+              files are written day first (Ballarat) and 03/11/2026 reads
+              both ways to everything else
+    start     first-run sets up the box on that folder: the kernel's init, a
+              key under --to, the starter words list; the kernel's init on
+              her raw files too, and batch-ask's index
+    look      before a question is asked: secrets-audit, todo, coming-up
+              (thirty days), renewals, car, home-upkeep, subscriptions,
+              on-this-day, ref-check and what-changed
     ask       every question in QUESTIONS.md through readings' bite on the
               box, and the kernel's bite on the raw files, as the earlier
               demos ran. typos and accents say how each would be read as
               her files spell it, and a question they read differently is
               asked again as read, as she would once shown it; a question
-              nothing holds is asked of scan's bm25, which only points at
-              where to look
+              nothing holds is asked of batch-ask's bm25, which only points
+              at where to look
     hide      privacy scrubs everything served, and says what it hid
     assist    an assistant asks and suggests through mcp-lite, by the
               protocol, and can't approve
-    view      again, digest and history
+    view      asked-again, digest and record-history
 
 It stops there, waiting on the person: the seal is theirs, with their key
 (`kernel.py seal`), never this script's. `after` is the rest, once they've
-sealed or chosen not to: stale, export, backup, diverge (the box against its
-backup), changed, session-seal, and the kernel's verify.
+sealed or chosen not to: stale-answers, export-answers, what-changed,
+session-seal and its check, backup, diverge (the box against its backup),
+and the kernel's verify.
 
 Everything goes under --to, which must be outside the repo; the person's
 files are only read. Each step's command, exit and state go in
@@ -253,7 +259,10 @@ def run(to: Path, now: str, life: Path) -> int:
     to.mkdir(parents=True)
     go = Run(to, now, life)
     mirror = to / "pile"
-    read(go, mirror)
+    read(go, to / "read")
+    # her files are written day first (Ballarat): each date given its ISO form, so
+    # 03/11/2026 is the 3rd of November to every reader of dates
+    go("read", STD / "day-first" / "day_first.py", "mirror", "--from", str(to / "read"), "--to", str(mirror))  # fmt: skip
     go("start", STD / "first-run" / "first_run.py", "--pile", str(mirror), "--to",
        str(to / "willow"))  # fmt: skip
     box = to / "willow" / "box"
@@ -265,6 +274,10 @@ def run(to: Path, now: str, life: Path) -> int:
         (STD / "secrets-audit" / "secrets_audit.py",),
         (STD / "todo" / "todo.py",),
         (STD / "coming-up" / "coming_up.py", "--days", "30", "--now", now),
+        (STD / "renewals" / "renewals.py", "--now", now),
+        (STD / "car" / "car.py", "--now", now),
+        (STD / "home-upkeep" / "home_upkeep.py", "--now", now),
+        (STD / "subscriptions" / "subscriptions.py",),
         (STD / "on-this-day" / "on_this_day.py", "--now", now),
         (STD / "ref-check" / "ref_check.py",),
         (STD / "what-changed" / "what_changed.py", "--now", now),
