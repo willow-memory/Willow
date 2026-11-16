@@ -737,19 +737,23 @@ willow/
 │   │   │   ├── words_it.py   a question in Italian, its common words out, then the kernel's bite
 │   │   │   ├── test_words_it.py
 │   │   │   └── README.md
+│   │   ├── words-later/
+│   │   │   ├── words_later.py A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made
+│   │   │   ├── test_words_later.py
+│   │   │   └── README.md     its card
 │   │   ├── words-nl/
 │   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
 │   │   │   ├── test_words_nl.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from words-pl/
+
+```
 │   │   ├── words-pl/
 │   │   │   ├── words_pl.py   Polish questions without Polish's common words, then the kernel's own bite
 │   │   │   ├── test_words_pl.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from words-pt/
-
-```
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py

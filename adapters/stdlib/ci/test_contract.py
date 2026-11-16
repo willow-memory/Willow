@@ -922,6 +922,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "who-said": ("who_said.py", ["--box", "{box}"]),
     "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
+    "words-later": ("words_later.py", ["--box", "{box}", "--words", "{tmp}/my-words.txt", "--to", "{tmp}/again"]),
     "world-ids": ("world_ids.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     # every language pack, from its folder: a new one is run here without a line of its own
@@ -985,6 +986,13 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
                    capture_output=True)  # fmt: skip
     fill = {"box": str(box), "pile": str(pile), "tmp": str(tmp_path)}
     good = [a.format(**fill) for a in argv]
+    if (
+        name == "words-later"
+    ):  # a list readable only by its owner: the kernel refuses any other
+        (tmp_path / "my-words.txt").write_text(
+            "rego = registration\n", encoding="utf-8"
+        )
+        (tmp_path / "my-words.txt").chmod(0o600)
     assert run(script, *good).returncode in (0, 42), "the command that works"
     if name == "starter-words":
         (tmp_path / "words.txt").unlink()
