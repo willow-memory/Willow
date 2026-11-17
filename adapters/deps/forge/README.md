@@ -67,7 +67,10 @@ of thing, each row the card and what it says:
   not answering, so it is a fork and never a step. Its decision is this
   sentence's own, so a seal for these words settles no other sentence;
   `--choose close=none`, sealed, keeps the miss on your record and runs
-  nothing, and the next time the report says so.
+  nothing, and the next time the report says so. Its proposal keeps what
+  you were shown: the cards in their order, the one recommended, where your
+  pick fell, and the SHA-256 of similar.py and the words list that ranked
+  them.
 
       forge: populated, 1 fork waits on you
       ## fork “close”: no card named, these are close to what you said
@@ -100,6 +103,28 @@ waits its turn until the first no longer stands.
       adapters/stdlib/mail/       mail: contract held; tests unreachable (no --python with pytest given); ran: clean
       adapters/stdlib/coming-up/  coming-up: contract held; tests unreachable (no --python with pytest given); ran: clean
 
+    python adapters/deps/forge/suggest.py scores --box DIR [--json]
+
+    forge: populated, 2 close forks settled by your seal; the first taken 1 of 2
+    ## by rank
+      rank 1  first, the recommendation: 1 of 2
+      rank 2  second: 0 of 2
+      rank 3  third: 0 of 2
+      none    none of them: 1 of 2
+    ## by matcher
+      similar 1f3a…, words 2e43…  the first taken 1 of 2
+    ## each
+      forge/decisions/willow-close-….json  “…”: tip-pin, rank 1 of tip-pin, hook-pin, weights-pin (row 9)
+
+`scores` reads the close forks you settled back off your record: only the
+ones you sealed that still stand, through the kernel's `sealed` and
+`standing`. It is how often the search's first card was the one you took,
+counted by place and kept apart per matcher, so a change to similar.py or
+the words list starts a count of its own. That count is the matchmaker's
+measured hit rate, and the only thing a close fork's confidence may ever be
+made from; until there is one, a fork says no confidence at all. It writes
+nothing.
+
 To share a stack you sealed, with your reasons, see
 [stack-share](../../stdlib/stack-share/).
 
@@ -126,7 +151,7 @@ count how often you take it. When a real sentence misses, add a
 line to `ui/search-words.txt`; when one maps wrong, argue the line.
 
 Exit codes, the report's: 0 steps found and nothing waits on you, a stack
-sealed for these words, or nothing named (`empty`); 42 a fork waits on you
+sealed for these words, nothing named (`empty`), or `scores`; 42 a fork waits on you
 or your seal is waited on (`populated`), or forge-play missing or older than
 0.10 (`unreachable`, said in the report); 2 refused (a bad command line, a
 folder that isn't a box or whose record doesn't verify, a fork left

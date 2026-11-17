@@ -316,6 +316,60 @@ def test_none_sealed_keeps_the_miss_and_runs_nothing(box):
     )
 
 
+def test_a_close_proposal_keeps_what_was_shown(box):
+    shown = json.loads(run("suggest", COUNT, "--box", str(box), "--plan").stdout)
+    offered = [o["name"] for o in shown["forks"]["close"] if o["name"] != "none"]
+    waiting = proposed(box, f"close={offered[1]}", sentence=COUNT)
+    (path,) = [p for p in waiting if p != "forge/stack.md"]
+    data = json.loads(
+        json.loads((box / "proposals" / f"{waiting[path][9:]}.json").read_text())[
+            "data"
+        ]
+    )
+    assert data["offered"] == offered and data["recommended"] == offered[0]
+    assert data["rank"] == 2 and set(data["matcher"]) == {"similar", "words"}
+    assert all(len(v) == 64 for v in data["matcher"].values())
+
+
+def scored(box: Path) -> tuple[subprocess.CompletedProcess, dict]:
+    text = run("scores", "--box", str(box))
+    data = run("scores", "--box", str(box), "--json")
+    return text, holds_the_contract(text, data)
+
+
+def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
+    text, doc = scored(box)
+    assert text.returncode == 0 and doc["state"] == "empty"
+    shown = json.loads(run("suggest", COUNT, "--box", str(box), "--plan").stdout)
+    second = [o["name"] for o in shown["forks"]["close"]][1]
+    took = proposed(box, f"close={second}", sentence=COUNT)
+    seal_all(box, {p: s for p, s in took.items() if p != "forge/stack.md"})
+    other = "count how often each suggestion was declined"
+    miss = run("propose", other, "--box", str(box), "--choose", "close=none", "--json")
+    subj = json.loads(miss.stdout)["groups"][0]["rows"][0]["what"].split()[0]
+    unsealed = "count how often each suggestion was sealed"
+    assert (
+        run("propose", unsealed, "--box", str(box), "--choose", "close=none").returncode
+        == 42
+    )
+    assert k("seal", "--box", str(box), subj).returncode == 0
+    before = len(rows(box))
+    text, doc = scored(box)
+    assert text.returncode == 0 and len(rows(box)) == before, "scores writes nothing"
+    assert doc["said"] == "2 close forks settled by your seal; the first taken 0 of 2"
+    by_rank = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert by_rank["rank 1"].endswith(": 0 of 2") and by_rank["rank 2"].endswith(
+        ": 1 of 2"
+    )
+    assert by_rank["none"] == "none of them: 1 of 2"
+    (m,) = doc["groups"][1]["rows"]
+    assert m["what"] == "the first taken 0 of 2"
+    each = [r["what"] for r in doc["groups"][2]["rows"]]
+    assert (
+        each[0].startswith(f"“{COUNT}”: {second}, rank 2 of ") and "none of " in each[1]
+    )
+
+
 def test_without_similars_search_a_sentence_that_names_no_card_is_empty(
     box, monkeypatch, capsys
 ):
