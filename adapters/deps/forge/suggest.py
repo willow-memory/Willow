@@ -5,6 +5,7 @@ Python 3.11+ (forge-play's floor), forge-play 0.10 or newer.
     python adapters/deps/forge/suggest.py propose --box DIR "what you want done"
                                                   --choose WORD=NAME ... [--why WORD=REASON ...] [--json]
     python adapters/deps/forge/suggest.py build   --box DIR "what you want done" --to STACK [--json]
+    python adapters/deps/forge/suggest.py scores  --box DIR [--json]
 
 A sentence in, the add-ons it names or means out. The Forge's card box reads
 every card beside this script (built, and the ideas in adapters/planned.json)
@@ -28,6 +29,22 @@ contract), a group per kind of thing:
     stale   a seal whose card no longer does that word here; said, and the
             fork asked again
     ideas   an add-on the sentence names that isn't built yet
+    close   for a sentence no card name or alias line reaches, the built
+            cards similar's search points at (`Want`, the canvas's search),
+            at most three, the first recommended, and `none`: a fork, never
+            a step, each row saying it is close and not named. Its decision
+            is this sentence's own (`willow-close-<hash of the words>`), so
+            a seal for one sentence settles no other; `none`, sealed, keeps
+            the miss on your record and runs nothing. Its proposal keeps
+            what was shown: the cards in their order, the one recommended,
+            the rank of your pick, and the hashes of what ranked them
+
+`scores` reads those back: over the close decisions you sealed that still
+stand, how often you took the first (the recommendation), the second, the
+third, or none, all together and per matcher (the bytes of similar.py and
+the words list), and each one. It is the matchmaker's measured hit rate,
+the only number a close fork's confidence may ever come from. It writes
+nothing; exit 0, empty before any is sealed.
 
 A stack you sealed for these very words is served first, as the kernel
 serves any sealed answer, and nothing else is asked.
@@ -58,8 +75,10 @@ suggestion and a run. STACK's parent must exist; it never makes one.
 the Forge reads it: the cards counted, the steps, the forks, what is sealed,
 the ideas, and `plan`, a document forge.plan_shape validates,
 forge.decision_extract turns into decisions and forge.build_loop resolves.
-No model, no ranking: a card is here because it was named or an alias line
-names it, and the report says which.
+No model, and no ranking of its own: a step is a card that was named or an
+alias line names; what similar's search ranks is only ever the `close`
+fork's options and its recommendation, with no confidence, and the report
+says which is which.
 
 What is sealed is read through the kernel's own `sealed` and `standing`: a
 seal counts only while its proof holds under the key and the proposal still
@@ -95,6 +114,7 @@ import shlex
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
@@ -105,6 +125,183 @@ NAME = "forge"
 APP = "willow-stack"
 STACK_PATH = "forge/stack.md"
 NEEDS = "forge-play 0.10 or newer is not installed: pip install -r adapters/deps/forge/requirements.txt"
+SIMILAR = ROOT / "adapters/stdlib/similar/similar.py"
+#: the fork for a sentence no name or alias line reaches, and its way out
+CLOSE, NONE = "close", "none"
+#: how many cards similar's search may put in that fork
+NEAR = 3
+DOUBTED = "named, but not close: the search puts it nowhere near your words"
+NONE_TRADEOFF = (
+    "none of these does it: sealed, the miss is on your record and nothing runs"
+)
+
+
+def wanting():
+    """similar's `Want` (its search for a card in a person's words), or None
+    when this willow's similar hasn't one: then a sentence that names no
+    card is said to name none, as before."""
+    if not SIMILAR.is_file():
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location("willow_forge_similar", SIMILAR)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    except Exception:  # noqa: BLE001  an older or broken similar: no search, said by its absence
+        return None
+    return getattr(mod, "Want", None)
+
+
+#: how far down similar's search a card the scan reached alone may sit and
+#: still be a step: past it, the search doesn't place the card near your words
+AGREE = NEAR * 4
+_SEARCH: dict = {}
+
+
+def searched(sentence: str) -> list[dict] | None:
+    """similar's search for a sentence, its first AGREE as [{name, why}], or
+    None when this willow's similar hasn't one. Built once a run."""
+    if _SEARCH.get("from") is not wanting:  # built again if the search was swapped
+        want = wanting()
+        _SEARCH.update({"from": wanting, "want": want() if want is not None else None})
+    if _SEARCH["want"] is None:
+        return None
+    return _SEARCH["want"].find(sentence, top=AGREE)["found"]
+
+
+def near(sentence: str, by_name: dict, leave_out: set = frozenset()) -> list[dict]:
+    """The built cards similar's search points at for a sentence, best
+    first, at most NEAR: [{name, why}]. Pointing, never answering: they are
+    a fork's options and its recommendation, and never a step."""
+    found = searched(sentence) or []
+    out = [f for f in found if f["name"] in by_name and by_name[f["name"]].built
+           and f["name"] not in leave_out]  # fmt: skip
+    # the search's "you named it" (its whole name's words are in yours, in
+    # another form than the scan reads) is said as that: the scan named none
+    return [
+        {**f, "why": "the words of its name are in yours"}
+        if f["why"] == "you named it"
+        else f
+        for f in out[:NEAR]
+    ]
+
+
+WORDS = ROOT / "ui/search-words.txt"
+
+
+def matcher() -> dict:
+    """What ranked a close fork's cards, by the bytes of the files it read:
+    similar.py and the words list (absent, said as absent). A score is kept
+    per matcher, so a change to either starts a count of its own."""
+
+    def sha(p: Path) -> str:
+        return hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else "absent"
+
+    return {"similar": sha(SIMILAR), "words": sha(WORDS)}
+
+
+def outcomes(box: Path, rec) -> list[dict]:
+    """Every fork you settled and sealed that still stands, through the
+    kernel: {kind, word, decision_type, sentence, offered, chose, rank,
+    matcher, row}. `kind` is "close" for the search's fork and "word" for one
+    a word reached through its name or alias line. A proposal from before
+    `offered` was kept is left out: it says nothing of what was shown."""
+    rows, _ = kernel.read(box / "record.jsonl")
+    out = []
+    for subj, row in kernel.sealed(box, rows).items():
+        prop, _, why = kernel.standing(box, rows, subj, row)
+        if why is not None or not prop["path"].startswith(
+            rec.DECISION_PATH.split("{")[0]
+        ):
+            continue
+        try:
+            data = json.loads(prop["data"])
+        except ValueError:
+            continue
+        dt = data.get("decision_type") if isinstance(data, dict) else None
+        if (
+            not isinstance(dt, str)
+            or not isinstance(data.get("offered"), list)
+            or not data["offered"]
+        ):
+            continue
+        kind = "close" if dt.startswith(rec.decision_type(CLOSE) + "-") else "word"
+        out.append({"kind": kind, "word": data.get("word", ""), "decision_type": dt,
+                    "sentence": data.get("sentence", ""), "offered": data["offered"],
+                    "chose": data.get("chose"), "rank": data.get("rank"),
+                    "matcher": data.get("matcher") or {}, "row": row["n"]})  # fmt: skip
+    return sorted(out, key=lambda o: o["row"])
+
+
+def scores(box: Path, rec) -> tuple[dict, int]:
+    """Where each sealed pick fell. For the close fork, how often you took
+    each place: the first (the recommendation), the second, the third, or
+    none, all together and per matcher. For a word's fork, how often its
+    alias line's cards held (you took one) or didn't (none): a word that keeps
+    getting none is a line of ui/search-words.txt to argue. Writes nothing."""
+    every = outcomes(box, rec)
+    if not every:
+        return report(
+            NAME, "empty", "no fork settled by your seal yet", []
+        ), kernel.ALIVE
+    got = [o for o in every if o["kind"] == "close"]
+    words = [o for o in every if o["kind"] == "word"]
+    n = len(got)
+
+    def tally(outs: list[dict]) -> list[tuple[str, str]]:
+        places = [("first, the recommendation", 1), ("second", 2), ("third", 3)]
+        rows = [(f"rank {r}", f"{label}: {sum(o['rank'] == r for o in outs)} of {len(outs)}")
+                for label, r in places]  # fmt: skip
+        rows.append(
+            (
+                "none",
+                f"none of them: {sum(o['rank'] is None for o in outs)} of {len(outs)}",
+            )
+        )
+        return rows
+
+    by_matcher: dict[tuple, list[dict]] = {}
+    for o in got:
+        key = (o["matcher"].get("similar", "?"), o["matcher"].get("words", "?"))
+        by_matcher.setdefault(key, []).append(o)
+    matchers = [(f"similar {s[:12]}, words {w[:12]}",
+                 f"the first taken {sum(o['rank'] == 1 for o in outs)} of {len(outs)}")
+                for (s, w), outs in by_matcher.items()]  # fmt: skip
+    by_word: dict[str, list[dict]] = {}
+    for o in words:
+        by_word.setdefault(o["word"], []).append(o)
+    held = [(f"“{w}”", f"a card taken {sum(o['rank'] is not None for o in outs)} of "
+             f"{len(outs)}, none {sum(o['rank'] is None for o in outs)}")
+            for w, outs in sorted(by_word.items())]  # fmt: skip
+
+    def said_of(o: dict) -> str:
+        asked = f"“{o['sentence']}”" if o["kind"] == "close" else f"“{o['word']}”"
+        picked = (f"rank {o['rank']} of {', '.join(o['offered'])}" if o["rank"] else
+                  f"none of {', '.join(o['offered'])}")  # fmt: skip
+        return f"{asked}: {o['chose']}, {picked} (row {o['row']})"
+
+    asks = [(rec.DECISION_PATH.format(o["decision_type"]), said_of(o)) for o in every]
+    first = sum(o["rank"] == 1 for o in got)
+    took = sum(o["rank"] is not None for o in words)
+    bits = []
+    if got:
+        bits.append(f"{n} close, the first taken {first} of {n}")
+    if words:
+        bits.append(f"{len(words)} by a word, a card taken {took} of {len(words)}")
+    m = len(every)
+    said = f"{m} fork{'s' if m != 1 else ''} settled by your seal: " + "; ".join(bits)
+    groups = [("close: by rank", tally(got) if got else []),
+              ("close: by matcher", matchers if got else []),
+              ("by a word: did its line's cards hold", held), ("each", asks)]  # fmt: skip
+    return report(NAME, "populated", said, groups), kernel.ALIVE
+
+
+def fork_type(rec, word: str, sentence: str) -> str:
+    """A fork's decision type: the word said, or, for the `close` fork, the
+    sentence itself, so a seal for one sentence never settles another."""
+    if word != CLOSE:
+        return rec.decision_type(word)
+    key = kernel.bite_key(sentence) or sentence
+    return rec.decision_type(f"{CLOSE}-{kernel.h256(key)[:12]}")
 
 
 # ── the report: the shape every report add-on prints (ci/README.md) ─────────
@@ -254,22 +451,47 @@ def step_line(name: str) -> str:
     return f"- {name} -- {STEPS.get(name, '--box {box}')}\n"
 
 
-def plan(box, hits, shape, rec, sealed: dict) -> dict:
+def plan(box, hits, shape, rec, sealed: dict, sentence: str = "") -> dict:
     """{cards, steps, forks, sealed, ideas, plan}: what the sentence reaches,
     what the record settled, and the Forge's plan document (or None when
-    there is nothing to run)."""
-    found = box.lookup(hits)
-    forks = box.forks(hits)
+    there is nothing to run). A sentence that reaches no card by name or
+    alias line gets the `close` fork: what similar's search points at, the
+    first recommended, and `none` beside them."""
+    found = list(box.lookup(hits))
+    # every fork offers `none`: a word's alias line can point wrong, and the
+    # person saying so is an outcome, kept like any pick
+    forks = {word: names + [NONE] for word, names in box.forks(hits).items()}
     by_name = {c.name: c for c in box.cards}
+    reached = {c.name for c in found}
+    # a card the scan reached alone is a step only while similar's search
+    # agrees it is near these words; one it puts nowhere near is asked about
+    in_forks = {n for names in forks.values() for n in names}
+    alone = [c for c in found if c.name not in in_forks and by_name[c.name].built]
+    doubted = []  # the search is built only when there is a step to check (a second)
+    if sentence and alone and (ranked := searched(sentence)) is not None:
+        placed = {f["name"] for f in ranked}
+        doubted = [c for c in alone if c.name not in placed]
+        found = [c for c in found if c not in doubted]
+    close = (
+        near(sentence, by_name, reached) if sentence and (doubted or not found) else []
+    )
+    options = [f["name"] for f in close] + [c.name for c in doubted]
+    if options:
+        found += [SimpleNamespace(name=f["name"], why=f["why"]) for f in close]
+        found += [SimpleNamespace(name=c.name, why=DOUBTED) for c in doubted]
+        forks[CLOSE] = options + [NONE]
+    why_close = {f["name"]: f"close, not named: {f['why']}" for f in close}
+    why_close.update({c.name: DOUBTED for c in doubted})
     settled, open_forks = {}, {}
     for word, names in forks.items():
-        got = sealed.get(rec.decision_type(word))
+        dt = fork_type(rec, word, sentence)
+        got = sealed.get(dt)
         if got and got["chose"] in names:
-            settled[word] = {**got, "decision_type": rec.decision_type(word)}
+            settled[word] = {**got, "decision_type": dt}
         else:
             open_forks[word] = names
             if got:
-                settled[word] = {**got, "decision_type": rec.decision_type(word),
+                settled[word] = {**got, "decision_type": dt,
                                  "stale": f"{got['chose']} no longer does “{word}” here"}  # fmt: skip
     in_fork = {n for names in open_forks.values() for n in names}
     chosen = {got["chose"]: word for word, got in settled.items() if "stale" not in got}
@@ -300,29 +522,46 @@ def plan(box, hits, shape, rec, sealed: dict) -> dict:
         )
     fork_docs = {}
     for word, names in open_forks.items():
-        options, resolves = [], {}
+        options, resolves, docs = [], {}, []
         for n in names:
+            if n == NONE:  # every fork's way out, a word's as much as the search's
+                options.append(shape.ForkOption(label=n, tradeoff=NONE_TRADEOFF))
+                resolves[n] = ()
+                docs.append({"name": n, "where": NONE, "tradeoff": NONE_TRADEOFF})
+                continue
             card = by_name[n]
-            options.append(shape.ForkOption(label=n, tradeoff=tradeoff(card)))
+            said = tradeoff(card)
+            if word == CLOSE:  # pointed at, or named and doubted: said on every row
+                said += f"; {why_close[n]}"
+            options.append(shape.ForkOption(label=n, tradeoff=said))
             resolves[n] = (
                 (shape.FileWrite(dest_path=f"steps/{n}.md", content=step_line(n)),)
                 if card.built
                 else ()
             )
+            docs.append({"name": n, "where": card.where, "tradeoff": said})
+        if word == CLOSE:
+            surface = (f"“{sentence}” names no add-on the search agrees with; the fork holds "
+                       f"{', '.join(names[:-1])}: which, if any, does it?")  # fmt: skip
+            recommended = names[
+                0
+            ]  # the search's first; no confidence until the ledger has one
+        else:
+            surface = (
+                f"“{word}” could be {', '.join(names[:-1])}: which add-on, if any?"
+            )
+            recommended = None
         entries.append(
             shape.Fork(
-                decision_type=rec.decision_type(word),
-                surface=f"“{word}” could be {', '.join(names)}: which add-on?",
+                decision_type=fork_type(rec, word, sentence),
+                surface=surface,
                 options=tuple(options),
-                recommended=None,
+                recommended=recommended,
                 confidence=None,
                 resolves=resolves,
             )
         )
-        fork_docs[word] = [
-            {"name": n, "where": by_name[n].where, "tradeoff": o.tradeoff}
-            for n, o in zip(names, options)
-        ]
+        fork_docs[word] = docs
     doc = (
         shape.PlanDoc(app_name=APP, entries=tuple(entries)).to_dict()
         if entries
@@ -362,12 +601,18 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
                           + (f"; {s['why']}" if s["why"].startswith("you sealed") else ""))
                          for s in out["steps"]])]  # fmt: skip
     for word, options in out["forks"].items():
-        groups.append(
-            (
-                f"fork “{word}”",
-                [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options],
-            )
-        )
+        rows = [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options]
+        if word == CLOSE:  # the search's first is the recommendation, and says so
+            rows[0] = (rows[0][0], rows[0][1] + "; recommended, the search's first")
+            groups.append((f"fork “{CLOSE}”: nothing named that the search agrees with; these are close to what you said", rows))  # fmt: skip
+        else:
+            groups.append((f"fork “{word}”", rows))
+    misses = {w: got for w, got in out["sealed"].items()
+              if got["chose"] == NONE and "stale" not in got}  # fmt: skip
+    groups.append(("you sealed none of them", [
+        (rec.DECISION_PATH.format(got["decision_type"]),
+         f"no card offered for “{w}” does it, by your seal (row {got['row']})")
+        for w, got in misses.items()]))  # fmt: skip
     groups.append(("stale seals, asked again", [
         (rec.DECISION_PATH.format(got["decision_type"]), f"{got['stale']} (row {got['row']})")
         for got in out["sealed"].values() if "stale" in got]))  # fmt: skip
@@ -391,6 +636,14 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
         return report(
             NAME, "populated", "only ideas, nothing built to run", groups
         ), kernel.ALIVE
+    if CLOSE in misses and len(misses) == 1:
+        said = (f"you sealed that no card close to these words does it (row {misses[CLOSE]['row']}); "
+                "add a line to ui/search-words.txt, or an idea to adapters/planned.json")  # fmt: skip
+        return report(NAME, "empty", said, []), kernel.ALIVE
+    if misses:
+        said = (f"you sealed that none of the cards offered does it for "
+                f"{', '.join(f'“{w}”' for w in misses)}; nothing to run")  # fmt: skip
+        return report(NAME, "populated", said, groups), kernel.ALIVE
     said = "nothing named: no card or alias line matched; add a line to ui/search-words.txt if one should"
     return report(NAME, "empty", said, []), kernel.ALIVE
 
@@ -559,9 +812,9 @@ def propose(
             return None, kernel.REFUSED
     by_name = {c.name: c for c in cards}
     run = [s["name"] for s in out["steps"]] + [
-        n for n in choose.values() if by_name[n].built
+        n for n in choose.values() if n in by_name and by_name[n].built
     ]
-    if not run:
+    if not run and not choose:
         print(
             "refused: nothing to propose: no step and no settled fork", file=sys.stderr
         )
@@ -569,23 +822,37 @@ def propose(
     ts = kernel.now()
     rows = []
     for word, name in choose.items():
-        card = by_name[name]
-        others = [o["name"] for o in out["forks"][word] if o["name"] != name]
-        dt = rec.decision_type(word)
-        pinned = hashlib.sha256((ROOT / card.where).read_bytes()).hexdigest()
+        others = [
+            o["name"] for o in out["forks"][word] if o["name"] not in (name, NONE)
+        ]
+        dt = fork_type(rec, word, sentence)
         data = {
             "word": word,
             "decision_type": dt,
             "chose": name,
             "over": others,
             "why": why.get(word, ""),
-            "card": {
+            "card": None,  # none of them: the miss, kept, with nothing to run
+        }
+        # what was shown is the outcome once sealed: the cards in their order,
+        # the one recommended (only the search's fork has one), where the pick
+        # fell, and what put them there. The close fork is this sentence's own.
+        offered = [o["name"] for o in out["forks"][word] if o["name"] != NONE]
+        data.update(kind="close" if word == CLOSE else "word", offered=offered,
+                    recommended=offered[0] if word == CLOSE else None,
+                    rank=offered.index(name) + 1 if name in offered else None,
+                    matcher=matcher())  # fmt: skip
+        if word == CLOSE:
+            data["sentence"] = sentence
+        if name != NONE:
+            card = by_name[name]
+            pinned = hashlib.sha256((ROOT / card.where).read_bytes()).hexdigest()
+            data["card"] = {
                 "name": card.name,
                 "line": card.line,
                 "where": card.where,
                 "sha256": pinned,
-            },
-        }
+            }
         prop = {
             "path": rec.DECISION_PATH.format(dt),
             "data": json.dumps(data, sort_keys=True, ensure_ascii=False),
@@ -603,6 +870,9 @@ def propose(
             print("refused:", said.strip(), file=sys.stderr)
             return None, kernel.REFUSED
         rows.append((prop["path"], f"{said.split()[1]}  {name} for “{word}”"))
+    if not run:  # only a miss settled: nothing to stack, and nothing runs
+        said = f"{len(rows)} waiting on your seal, no stack: nothing settled runs"
+        return report(NAME, "populated", said, [(None, rows)]), kernel.ESCALATE
     text = f"# {sentence}\n\n## for “{sentence}”\n" + "".join(step_line(n) for n in run)
     prop = {
         "path": STACK_PATH,
@@ -651,6 +921,8 @@ def main(argv: list[str]) -> int:
             s.add_argument(
                 "--why", action="append", metavar="WORD=REASON", help="your reason"
             )
+    s = sub.add_parser("scores")
+    s.add_argument("--box", required=True, help="your record")
     a = p.parse_args(argv)
     box = Path(a.box)
     why = is_box(box)
@@ -662,6 +934,10 @@ def main(argv: list[str]) -> int:
         say(report(NAME, "unreachable", NEEDS, []), as_json)
         return kernel.ESCALATE
     card_box, card_table, shape, rec = got
+    if a.verb == "scores":
+        doc, code = scores(box, rec)
+        say(doc, as_json)
+        return code
     try:
         cards = card_box.CardBox(ROOT)
     except card_table.CardTableError as e:  # a card beside this script that won't read
@@ -670,7 +946,7 @@ def main(argv: list[str]) -> int:
     sealed, stacks = on_record(box, rec)
     lines, where_from = commands(str(kernel.folder(kernel.config(box))))
     STEPS.update(lines)
-    out = plan(cards, cards.scan(a.sentence), shape, rec, sealed)
+    out = plan(cards, cards.scan(a.sentence), shape, rec, sealed, a.sentence)
     out["cards"]["commands"] = where_from
     if (k := kernel.bite_key(a.sentence)) in stacks:
         out["stack"] = stacks[k]

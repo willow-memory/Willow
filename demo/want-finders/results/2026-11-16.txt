@@ -1,0 +1,54 @@
+W01  write down a prediction before the person is asked, and score it once they pick
+      right: forecasts, forecast-ask
+      suggest  -       (nothing)
+      similar  -       (nothing)
+      canvas   rank 1  forecast-ask, forecasts, make-it-so, abbreviations, tides
+W02  count how often each suggestion was sealed or declined
+      right: assistant-scores
+      suggest  -       (nothing)
+      similar  rank 1  assistant-scores, cite-honesty, second-opinion
+      canvas   rank 2  noised-count, assistant-scores, cite-honesty, forecast-ask, sort-ask
+W03  keep a no with its reason and the condition that would reopen it
+      right: decisions
+      suggest  -       (nothing)
+      similar  rank 1  decisions
+      canvas   rank 1  decisions, google-keep, braille, encrypt, almanac-keep
+W04  check that my tests catch a broken line of code
+      right: mutants
+      suggest  -       (nothing)
+      similar  rank 1  mutants, risky-code
+      canvas   rank 4  risky-code, line-origin, fuzz, mutants, bot-venv
+W05  pin the ledger's tip outside the box so a truncation is caught
+      right: tip-pin
+      suggest  -       (nothing)
+      similar  -       (nothing)
+      canvas   rank 1  tip-pin, hook-pin, contributions, play-hearts, play-crazy-eights
+W06  which tests can a change reach
+      right: test-impact
+      suggest  -       (nothing)
+      similar  rank 1  test-impact, ci-memo
+      canvas   rank 3  slow-tests, fast-tests, test-impact, ci-memo, latent
+W07  a sealed answer stands only while what it cites still hashes the same
+      right: stale-answers
+      suggest  -       digest, handover, repo-digest
+      similar  -       (nothing)
+      canvas   -       handover, model-recall, in-toto, many-boxes, issue-answer
+W08  what each step of a stack takes from an earlier step
+      right: stack-bridges
+      suggest  -       (nothing)
+      similar  rank 1  stack-bridges, stack-check, handover
+      canvas   rank 1  stack-bridges, stack-check, stack-row, stack-share, stack
+W09  score a model against the answers the person sealed
+      right: model-exam
+      suggest  -       against
+      similar  rank 1  model-exam, ci-bets, family-box
+      canvas   rank 1  model-exam, model-recall, witness, forge, weather-bet
+W10  find a rubber stamp in the reasons people give
+      right: (no card here)
+      suggest  -       people
+      similar  -       (nothing)
+      canvas   -       people, nicknames, notation, decisions, share
+
+suggest  R1 0/9  R5 0/9  R0 0/1
+similar  R1 6/9  R5 6/9  R0 1/1
+canvas   R1 5/9  R5 8/9  R0 0/1

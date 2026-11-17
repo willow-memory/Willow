@@ -228,10 +228,9 @@ class Canvas:
         return mod if hasattr(mod, "worked_out") else None
 
     def search(self, words: str, top: int = 12) -> dict:
-        """Cards for what a person says they want, in their own words: BM25 over
-        each whole card, the ranking similar's tags are made with, its name,
-        line and topic tags weighed as its title."""
-        if self.similar is None:
+        """Cards for what a person says they want, in their own words: similar's
+        `Want`, the one search for that, with this file's words list."""
+        if self.similar is None or not hasattr(self.similar, "Want"):
             return {
                 "state": "unreachable",
                 "why": "this willow's similar add-on can't search yet",
@@ -240,61 +239,9 @@ class Canvas:
         words = words.strip()
         if not words:
             return {"state": "empty", "found": []}
-        sim = self.similar
         if self._search is None:
-            every = sim.entries()
-            tags = sim.worked_out(every)
-            docs = []
-            for a in every:
-                # name, line and tags as the passage's heading, which pile-rank weighs
-                # double: what a card says it is outranks what its body mentions
-                head = f"# {a['name'].replace('-', ' ')} {a['line']} {' '.join(tags[a['name']]['tags'][2:])}"
-                text = head + "\n" + sim.card_text(a)
-                docs.append(
-                    {
-                        "path": a["name"],
-                        "line": 1,
-                        "text": text,
-                        "id": sim.kernel.h256(text),
-                    }
-                )
-            self._search = sim.pile_rank.Ranker(docs)
-        k = sim.kernel
-        said = [w.lower() for w in k.words(words)]
-        asked = list(said)
-        asked += [a + b for a, b in zip(said, said[1:])]  # "back up" is also "backup"
-        alias = self.search_words()
-        means = {}  # a card's word, and the word you said it stands for
-        for w in list(asked):
-            for m in alias.get(w, []):
-                means.setdefault(m, w)
-        ranked = self._search.rank(
-            " ".join(dict.fromkeys(asked + list(means))), top * 2
-        )
-
-        def named(name: str, words) -> str | None:
-            plain = sim.HOW | k.FUNCTION  # "read" in "read my email" names nothing
-            return next((p for p in [name, *name.split("-")]
-                         if p in words and len(p) >= 3 and p not in plain), None)  # fmt: skip
-
-        # a card you named comes first ("vim", "mail" in "my email"), then one a
-        # word of yours usually means ("remind": coming-up), then the ranking
-        def tier(r):
-            n = r[0]["path"]
-            return 0 if named(n, asked) else 1 if named(n, means) else 2
-
-        ranked.sort(key=tier)
-        found = []
-        for c, _, ph in ranked[:top]:
-            n = c["path"]
-            if named(n, asked):
-                why = "you named it"
-            elif part := named(n, means):
-                why = f"what “{means[part]}” usually means here"
-            else:
-                why = "uses " + ", ".join(ph) if ph else "close to what you said"
-            found.append({"name": n, "why": why})
-        return {"state": "populated" if found else "empty", "found": found}
+            self._search = self.similar.Want(alias=self.search_words())
+        return self._search.find(words, top)
 
     def search_words(self) -> dict:
         """search-words.txt beside this file: how people ask, and the words

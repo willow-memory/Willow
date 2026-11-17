@@ -1,0 +1,65 @@
+{
+  "about": "Wants in a person's words, each with the card or cards that answer it here, written down before score.py asks any finder. `right: []` says no card here answers it, and a finder hits that want by offering nothing. The wants came from the Forge's open problems (forge-play/Forge), one sentence each; `from` says which. A change is a new freeze, in its own commit.",
+  "wants": [
+    {
+      "id": "W01",
+      "want": "write down a prediction before the person is asked, and score it once they pick",
+      "right": ["forecasts", "forecast-ask"],
+      "from": "the Forge's calibration ledger: a prediction on the record before the ask, settled by the person's pick"
+    },
+    {
+      "id": "W02",
+      "want": "count how often each suggestion was sealed or declined",
+      "right": ["assistant-scores"],
+      "from": "the matchmaker's hit rate, counted before any confidence exists"
+    },
+    {
+      "id": "W03",
+      "want": "keep a no with its reason and the condition that would reopen it",
+      "right": ["decisions"],
+      "from": "the checkpoint's 'it's different' escape, and reject_match having no reopen condition"
+    },
+    {
+      "id": "W04",
+      "want": "check that my tests catch a broken line of code",
+      "right": ["mutants"],
+      "from": "the engine has no mutation run"
+    },
+    {
+      "id": "W05",
+      "want": "pin the ledger's tip outside the box so a truncation is caught",
+      "right": ["tip-pin"],
+      "from": "Nestor's ledger and the custody ledger can be cut off the end unseen"
+    },
+    {
+      "id": "W06",
+      "want": "which tests can a change reach",
+      "right": ["test-impact"],
+      "from": "the engine's suite is long enough to want the tests a change reaches first"
+    },
+    {
+      "id": "W07",
+      "want": "a sealed answer stands only while what it cites still hashes the same",
+      "right": ["stale-answers"],
+      "from": "the Forge's seals never re-check what they were made over"
+    },
+    {
+      "id": "W08",
+      "want": "what each step of a stack takes from an earlier step",
+      "right": ["stack-bridges"],
+      "from": "a plan's order is the order its steps need one another in"
+    },
+    {
+      "id": "W09",
+      "want": "score a model against the answers the person sealed",
+      "right": ["model-exam"],
+      "from": "a model proposing forks is trusted only after the maker's own sealed checkpoints"
+    },
+    {
+      "id": "W10",
+      "want": "find a rubber stamp in the reasons people give",
+      "right": [],
+      "from": "the Forge's engagement gate; no card here does it"
+    }
+  ]
+}
