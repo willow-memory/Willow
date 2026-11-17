@@ -183,6 +183,21 @@ def too_slow(took: float, limit: int = LIMIT) -> bool:
     return took * CI_SLOWER > limit
 
 
+def fresh(copy: Path, target: Path, stamp: int) -> int:
+    """Leave no cached code a break could be mistaken for: every __pycache__
+    under the copy goes, and `target` gets a whole-second mtime later than
+    any it had (`stamp` and on). PYTHONDONTWRITEBYTECODE alone isn't enough:
+    a test that runs `python -I` ignores every PYTHON* variable and writes
+    .pyc files anyway, and a later break the same size, written in the same
+    second, would then import the earlier one's code. Returns the stamp to
+    pass next time."""
+    for cache in sorted(copy.rglob("__pycache__")):
+        shutil.rmtree(cache, ignore_errors=True)
+    stamp = max(stamp + 1, int(time.time()) + 1)
+    os.utime(target, (stamp, stamp))
+    return stamp
+
+
 def run(names: list[str], per: int, limit: int = LIMIT) -> int:
     if subprocess.run([sys.executable, "-c", "import pytest"],
                       capture_output=True).returncode != 0:  # fmt: skip
@@ -193,6 +208,7 @@ def run(names: list[str], per: int, limit: int = LIMIT) -> int:
     with tempfile.TemporaryDirectory() as tmp:
         copy = Path(tmp) / "repo"
         shutil.copytree(ROOT, copy, ignore=skipped)
+        stamp = 0
         for name in names:
             chosen = mutants(name)[:per]
             survived, couldnt, slow = [], [], []
@@ -200,6 +216,7 @@ def run(names: list[str], per: int, limit: int = LIMIT) -> int:
                 target = copy / m["file"]
                 original = target.read_text(encoding="utf-8")
                 target.write_text(broken(original, m["point"]), encoding="utf-8")
+                stamp = fresh(copy, target, stamp)
                 started = time.monotonic()
                 try:
                     targets = [copy / "adapters" / "stdlib" / name]
@@ -211,7 +228,9 @@ def run(names: list[str], per: int, limit: int = LIMIT) -> int:
                         capture_output=True, text=True, timeout=limit,
                         # no bytecode cache: a mutant the same size as the last
                         # one, written in the same second, would otherwise run
-                        # the last one's cached code, and pass as a survivor
+                        # the last one's cached code. A test that runs
+                        # `python -I` ignores this and writes one anyway; fresh()
+                        # clears it before the next break is tested.
                         env={**os.environ, "WILLOW_ONLY": name, "PYTHONDONTWRITEBYTECODE": "1"},
                     )  # fmt: skip
                     # 1 is a test failing on the mutant: killed. 0 is every test
@@ -225,6 +244,7 @@ def run(names: list[str], per: int, limit: int = LIMIT) -> int:
                     couldnt.append(f"{m['id']}: its tests ran past {limit} s")
                 finally:
                     target.write_text(original, encoding="utf-8")
+                    stamp = fresh(copy, target, stamp)
                 took = time.monotonic() - started
                 if too_slow(took, limit) and not any(
                     c.startswith(m["id"]) for c in couldnt
