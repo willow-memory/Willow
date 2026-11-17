@@ -3,14 +3,14 @@ section: Assistants
 line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
-version: 0.1.1
+version: 0.2.0
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
 network: none
 role: repo
 output: report
-uses: stack
+uses: stack, similar
 looks-for: ci
 runs-in: repo
 -->
@@ -55,11 +55,37 @@ of thing, each row the card and what it says:
   while its seal proves under your key and the proposal still hashes to
   what you sealed. It is a step now, and you are not asked twice;
 - **fork “word”**: one word that reaches several add-ons, the cards as the
-  options and their lines and promises as the tradeoffs. That is a decision
-  for the Forge's checkpoint to put to you once and remember;
+  options and their lines and promises as the tradeoffs, and `none` beside
+  them, for when the alias line that offered them points wrong. That is a
+  decision for the Forge's checkpoint to put to you once and remember, keyed
+  by the word, so it holds for any sentence that says it;
 - **stale seals, asked again**: a seal whose card no longer does that word
   here (the alias file changed, say);
-- **ideas**: an add-on you named that isn't built yet.
+- **ideas**: an add-on you named that isn't built yet;
+- **fork “close”**: when your words name no card and no alias line reaches
+  one, what [similar](../../stdlib/similar/)'s search (`Want`, the canvas's
+  search) points at: up to three built cards, the first recommended, each
+  row saying it is close and not named, and `none` beside them. A card your
+  words reach alone, by name or alias line, is a step only while that
+  search agrees it is near them (in its first twelve); one it puts nowhere
+  near ("against" in "score a model against the answers", which reaches the
+  pull request card `against`) joins this fork instead, its row saying it
+  was named but isn't close. A fork's options are never doubted: they are
+  already asked. Pointing is
+  not answering, so it is a fork and never a step. Its decision is this
+  sentence's own, so a seal for these words settles no other sentence;
+  `--choose close=none`, sealed, keeps the miss on your record and runs
+  nothing, and the next time the report says so. Its proposal keeps what
+  you were shown: the cards in their order, the one recommended, where your
+  pick fell, and the SHA-256 of similar.py and the words list that ranked
+  them.
+
+      forge: populated, 1 fork waits on you
+      ## fork “close”: nothing named that the search agrees with; these are close to what you said
+        adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first
+        adapters/stdlib/assistant-scores/README.md  assistant-scores: ...; close, not named: uses often each, suggestion seal
+        adapters/stdlib/forecast-ask/README.md      forecast-ask: ...; close, not named: uses count often
+        none                                        none: none of these does it: sealed, the miss is on your record and nothing runs
 
 A stack you sealed for these very words comes first, as the kernel serves
 any sealed answer, and nothing is asked.
@@ -85,6 +111,35 @@ waits its turn until the first no longer stands.
       adapters/stdlib/mail/       mail: contract held; tests unreachable (no --python with pytest given); ran: clean
       adapters/stdlib/coming-up/  coming-up: contract held; tests unreachable (no --python with pytest given); ran: clean
 
+    python adapters/deps/forge/suggest.py scores --box DIR [--json]
+
+    forge: populated, 2 close forks settled by your seal; the first taken 1 of 2
+    ## by rank
+      rank 1  first, the recommendation: 1 of 2
+      rank 2  second: 0 of 2
+      rank 3  third: 0 of 2
+      none    none of them: 1 of 2
+    ## by matcher
+      similar 1f3a…, words 2e43…  the first taken 1 of 2
+    ## each
+      forge/decisions/willow-close-….json  “…”: tip-pin, rank 1 of tip-pin, hook-pin, weights-pin (row 9)
+
+Every fork's proposal keeps what you were shown, a word's as well as the
+search's: the cards in their order, the one recommended (only the close
+fork has one), where your pick fell, and the matcher's hashes.
+
+`scores` reads the forks you settled back off your record: only the ones
+you sealed that still stand, through the kernel's `sealed` and `standing`.
+For the close fork it is how often the search's first card was the one you
+took, counted by place and kept apart per matcher, so a change to
+similar.py or the words list starts a count of its own. For a word's fork
+it is how often that word's alias line offered a card you took, and how
+often you said none: a word that keeps getting none is a line of
+ui/search-words.txt to argue. That count is the matchmaker's
+measured hit rate, and the only thing a close fork's confidence may ever be
+made from; until there is one, a fork says no confidence at all. It writes
+nothing.
+
 To share a stack you sealed, with your reasons, see
 [stack-share](../../stdlib/stack-share/).
 
@@ -105,12 +160,13 @@ parent must exist; it makes no folder but the one you named.
 the whole as the Forge reads it: the cards counted, the steps, the forks,
 what is sealed, the ideas, and `plan`, a document the Forge's `plan_shape`
 validates, its `decision_extract` turns into decisions and its `build_loop`
-resolves. A fork carries no recommendation and no confidence: nothing is
-guessed, and no made-up 0.5 is scored. When a real sentence misses, add a
+resolves. A fork carries no confidence: no made-up 0.5 is scored. Only the
+`close` fork carries a recommendation, the search's first, so the Forge can
+count how often you take it. When a real sentence misses, add a
 line to `ui/search-words.txt`; when one maps wrong, argue the line.
 
 Exit codes, the report's: 0 steps found and nothing waits on you, a stack
-sealed for these words, or nothing named (`empty`); 42 a fork waits on you
+sealed for these words, nothing named (`empty`), or `scores`; 42 a fork waits on you
 or your seal is waited on (`populated`), or forge-play missing or older than
 0.10 (`unreachable`, said in the report); 2 refused (a bad command line, a
 folder that isn't a box or whose record doesn't verify, a fork left
@@ -122,9 +178,11 @@ words already, a card beside this script that won't read).
 **Uses:** the kernel's `bite` and `propose`, so every question and every
 suggestion is a row; its `sealed` and `standing`, so a seal is believed only
 on the kernel's word; its exit codes; `ui/assemble.py` and the stack add-on,
-to build and run what you sealed.
+to build and run what you sealed; similar's `Want`, to point when nothing is
+named.
 
 **Never:** seals, reads the key (the kernel reads it, to check a proof),
 writes anything but through the kernel or under the folder you name, runs a
-stack you didn't seal, ranks, or asks a model. `suggest` writes nothing at
+stack you didn't seal, ranks on its own (what similar's search ranks is only
+ever the `close` fork's options), or asks a model. `suggest` writes nothing at
 all. The forks are yours to settle, and the seal is yours.

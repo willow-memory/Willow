@@ -1,0 +1,9 @@
+{
+ "about": "What score.py printed for each scored run, kept as it came. Printed by the finders over the frozen wants, not written by a person.",
+ "files": [
+  "results/2026-11-16.txt",
+  "results/2026-11-16-close.txt",
+  "results/2026-11-16-doubt.txt",
+  "results/2026-11-16-relevance.txt"
+ ]
+}

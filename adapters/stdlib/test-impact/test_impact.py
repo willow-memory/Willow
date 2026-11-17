@@ -212,6 +212,9 @@ def test_the_steps_are_ordered_cheapest_first(plan_of):
             "demo:game-box",
             "demo:game-box-end",
             "demo:stack",
+            # demo/want-finders' test runs the forge add-on, whose steps are
+            # each add-on's own command line from the ci contract, this one's too
+            "demo:want-finders",
             "mutants:what-changed",
         ]
     )

@@ -2913,6 +2913,18 @@ willow/
 │   │   ├── QUESTIONS.md
 │   │   ├── STRIP.md
 │   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
+│   ├── want-finders/
+│   │   ├── FROZEN.json
+│   │   ├── KEPT.json
+│   │   ├── results/
+│   │   │   ├── 2026-11-16-close.txt
+│   │   │   ├── 2026-11-16-doubt.txt
+│   │   │   ├── 2026-11-16-relevance.txt
+│   │   │   └── 2026-11-16.txt
+│   │   ├── score.py          demo/want-finders/score.py: the ways into willow's add-on cards, scored on
+│   │   ├── wants.json
+│   │   ├── test_want_finders.py
+│   │   └── README.md         Want finders: which way in finds the card
 │   └── test_novelty.py      a novel description reads as novel, one an existing demo holds as prior art
 ```
 
