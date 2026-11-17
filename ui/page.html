@@ -193,6 +193,7 @@ footer .sum{flex:1;font-size:14px;font-variant-numeric:tabular-nums}footer butto
 .node .tw{width:16px;flex:none;cursor:pointer;color:var(--mute);user-select:none}.node .tw.none{cursor:default}
 .node input{margin-top:4px;flex:none;accent-color:var(--acc)}.node .what{flex:1;min-width:0}.node b{font-weight:600}
 .node small{display:block;color:var(--mute);font-size:12.5px;line-height:1.35}
+.ownwords{border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;background:var(--card)}.ownwords h3{margin-top:0}.ownwords label{display:block;margin-top:8px}.ownwords textarea{display:block;width:100%;box-sizing:border-box;margin-top:4px;font:13px/1.5 ui-monospace,monospace}.ownwords .note{font-size:12px;color:var(--acc);margin-top:4px}.ownwords .note.no{color:var(--warn)}
 .node.off{color:var(--mute)}.node .note{font-size:12px;color:var(--acc)}.node .note.opt{color:var(--blue)}.node .note.no{color:var(--warn)}
 .base{margin-top:6px}.bfold{border-top:1px solid var(--line);padding:9px 0}
 .bpath{font-family:var(--mono);font-size:12px;color:var(--mute);word-break:break-all}
@@ -435,7 +436,7 @@ function chips(s){const box=el('div',{class:'chips'}),list=S.stages[s.key]??=[];
  return box}
 function stageSummary(s){if(s.key==='folders')return S.folders.length?S.folders.length+' folder'+(S.folders.length===1?'':'s'):'none yet';
  if(s.key==='kernel'){const bs=S.folders.map(f=>BASE[f.path]).filter(b=>b&&b.ok);return bs.length?bs.reduce((t,b)=>t+b.read,0).toLocaleString()+' files it can read, '+bs.reduce((t,b)=>t+b.cant.reduce((u,c)=>u+c.files,0),0).toLocaleString()+' it can’t':'always there'}
- if(s.key==='you')return'your seal';const ns=S.stages[s.key]||[];return ns.length?ns.length+' piece'+(ns.length===1?'':'s')+': '+ns.slice(0,4).join(', ')+(ns.length>4?', …':''):'nothing here'}
+ if(s.key==='you')return'your seal';const ns=S.stages[s.key]||[],w=s.key==='words'?myWords().length:0,yours=w?w+' line'+(w===1?'':'s')+' of your own':'';return ns.length?ns.length+' piece'+(ns.length===1?'':'s')+': '+ns.slice(0,4).join(', ')+(ns.length>4?', …':'')+(yours?'; '+yours:''):yours||'nothing here'}
 function go(k){cur=k;keep();const f=document.getElementById('find');if(f.value){f.value='';document.getElementById('findx').hidden=true}flow();shelf();document.getElementById('flow').scrollIntoView({block:'nearest',behavior:'smooth'})}
 function flow(){const view=cur==='start'||cur==='review'?cur:'stage',st=document.getElementById('stage');document.getElementById('startview').hidden=view!=='start';document.getElementById('review').hidden=view!=='review';st.hidden=view!=='stage';st.innerHTML='';
  if(view==='stage'){const s=STAGES.find(x=>x.key===cur),i=STAGES.indexOf(s);st.className='stage'+(s.fixed?' fixed':'');
@@ -443,7 +444,7 @@ function flow(){const view=cur==='start'||cur==='review'?cur:'stage',st=document
   if(s.key==='folders'){if(!S.folders.length)st.append(el('div',{class:'none',text:'No folders yet. Add at least one: it’s what willow answers from.'}));
    S.folders.forEach((fo,k)=>st.append(el('div',{class:'folder'},el('span',{text:fo.path}),el('small',{text:fo.files+' items'}),el('button',{class:'link',text:'remove',onclick:()=>{S.folders.splice(k,1);changed()}}))))}
   else if(s.key==='kernel')st.append(baselines());
-  else if(!s.fixed){if(!(S.stages[s.key]||[]).length)st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}}
+  else if(!s.fixed){if(!(S.stages[s.key]||[]).length&&!(s.key==='words'&&myWords().length))st.append(el('div',{class:'none',text:'Nothing here: this step is skipped.'}));st.append(chips(s))}}
  document.getElementById('railex').replaceChildren(examplesCard());steplist();stacktree()}
 // the step you were on comes back next time; the review doesn't, as opening it writes to the record
 const CURKEY='willow-canvas-cur';function keep(){try{if(cur!=='review')localStorage.setItem(CURKEY,cur)}catch(e){}}
@@ -459,7 +460,8 @@ function steplist(){if(!S)return;const box=document.getElementById('steplist');b
  box.append(list);if(shown!==cur){shown=cur;const sel=box.querySelector('.mini.sel');if(sel&&getComputedStyle(list).flexDirection==='row')sel.scrollIntoView({inline:'nearest',block:'nearest'})}}
 // what you sealed on this page, to tell whether the stack has moved since
 // what the page would propose now, as look() sends it
-function proposalDoc(){return{name:'my willow',folders:S.folders.map(f=>f.path),lanes:STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length)}}
+function myWords(){return(S.words||'').split('\n').map(x=>x.trim()).filter(x=>x&&!x.startsWith('#'))}
+function proposalDoc(){return{name:'my willow',folders:S.folders.map(f=>f.path),words:myWords(),lanes:STAGES.filter(s=>!s.fixed&&s.key!=='folders').map(s=>({title:s.title,steps:(S.stages[s.key]||[]).map(n=>({name:n,args:(S.args||{})[n]||'--box {box}'}))})).filter(l=>l.steps.length)}}
 // sealed, or changed since: the record says, wherever the seal was made (canvas.py's sealed_against)
 let SEALST=null,sealT=null;
 function sealState(){return SEALST}
@@ -500,13 +502,28 @@ async function browse(path){const r=await api('dirs?path='+encodeURIComponent(pa
  if(r.parent)l.append(el('div',{class:'up',text:'↑ up to '+r.parent,onclick:()=>browse(r.parent)}));
  for(const d of r.dirs)l.append(el('div',{text:'📁 '+d,onclick:()=>browse(r.path.replace(/\/$/,'')+'/'+d)}));if(!r.dirs.length)l.append(el('div',{class:'up',text:'no folders inside'}))}
 async function addFolder(path){const r=await api('folder?path='+encodeURIComponent(path));if(!r.ok){say(path+': '+r.why,1);return}if(S.folders.some(f=>f.path===r.path)){say(r.path+' is already one of your folders');return}S.folders.push({path:r.path,files:r.files});say('');changed();baseline(r.path)}
+// at the top of the words step: the starter list, and a place for their own words.
+// A line is `your word = what your files call it, another`; each is checked by the
+// kernel's own reading when the page proposes, so what's sealed is what it takes.
+const WORDLINE=/^[^\s=,]+\s*=\s*[^\s=,]+(\s*,\s*[^\s=,]+)*$/;
+function ownWords(){const st=P['starter-words'],used=all().includes('starter-words'),no=st?cantAdd('starter-words'):'not on the list';
+ const ta=el('textarea',{rows:'5',class:'words',placeholder:'car test = MOT, inspection\nmum = Margaret\ndentist = dr, appointment',spellcheck:'false'});ta.value=S.words||'';
+ const note=el('div',{class:'note'}),check=()=>{const bad=(ta.value.split('\n').map((x,i)=>[x.trim(),i+1])).filter(([x])=>x&&!x.startsWith('#')&&!WORDLINE.test(x));const n=myWords().length;
+  note.className='note'+(bad.length?' no':'');note.textContent=bad.length?'line '+bad.map(b=>b[1]).join(', ')+': one word, then =, then the words your files use, a comma between':n?n+' line'+(n===1?'':'s')+' of your own, sealed with the rest':'none yet: your words go here, one line each'};
+ let tw;ta.addEventListener('input',()=>{S.words=ta.value;check();clearTimeout(tw);tw=setTimeout(()=>{remember();save();refreshSeal();subject=null;SEALED=false;stale();summary();steplist();flow()},400)});check();
+ const cb=el('input',{type:'checkbox',title:no||(used?'take it out':'add it')});cb.checked=used;cb.disabled=!!no&&!used;cb.addEventListener('change',()=>cb.checked?addPiece('starter-words'):removePiece('starter-words'));
+ return el('section',{class:'ownwords'},el('h3',{text:'Your own words'}),
+  el('p',{class:'msg',text:'What you call things, and what your files call them, so a question in your words finds them. Start from the starter list, add your own, or both. They’re kept like your key: beside your records, readable only by you.'}),
+  st?el('div',{class:'node'+(used?' on':'')+(no&&!used?' off':'')},cb,el('div',{class:'what'},el('b',{text:'starter-words'}),el('small',{text:st.line}))):null,
+  el('label',{},el('b',{text:'Your words'}),ta),note)}
 function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementById('shelfhead'),box=document.getElementById('shelf');head.innerHTML='';box.innerHTML='';
  if(!s||s.fixed)return;head.append(el('h3',{text:s.key==='folders'?'Add a folder':'Add-ons for this step'}));
  if(s.key==='folders'){const t=el('input',{type:'text',placeholder:'or type a path and press Enter'});t.addEventListener('keydown',e=>{if(e.key==='Enter'&&t.value.trim()){addFolder(t.value.trim());t.value=''}});
   box.append(el('div',{id:'picker'},el('div',{class:'pplaces',id:'pplaces'}),el('div',{class:'ppath',id:'ppath'}),el('div',{class:'plist',id:'plist'}),el('div',{style:'display:flex;gap:8px;margin-top:8px'},el('button',{class:'go',text:'Add this folder',onclick:()=>here&&addFolder(here)}))),el('div',{style:'margin-top:10px'},t));
   browse(here||S.folders.at(-1)?.path||'');return}
+ if(s.key==='words')box.append(ownWords());
  const q=el('input',{type:'text',placeholder:'filter these'}),list=el('div',{class:'tree'});box.append(q,list);
- const grouped=s.group!=='rank',mine=Object.values(P).filter(p=>stageOf(p)===s.key),inStage=new Set(grouped?[]:mine.map(p=>p.name));
+ const grouped=s.group!=='rank',mine=Object.values(P).filter(p=>stageOf(p)===s.key&&!(s.key==='words'&&p.name==='starter-words')),inStage=new Set(grouped?[]:mine.map(p=>p.name));
  head.append(el('p',{class:'proto',text:'Prototype: which step a piece is in is a guess from its card. Each card says why it’s here.'}));
  const under={};for(const p of mine)for(const h of(p.hard||[]))if(inStage.has(h))(under[h]??=[]).push(p.name);
  const nIn=mine.filter(p=>all().includes(p.name)).length,nNo=mine.filter(p=>cantAdd(p.name)&&!all().includes(p.name)).length,hidden=n=>HIDE&&!!cantAdd(n)&&!all().includes(n);
@@ -539,13 +556,13 @@ function shelf(){const s=STAGES.find(x=>x.key===cur),head=document.getElementByI
 function summary(){const n=all().length,b=pulled().length,net=[...new Set([...all(),...pulled()].map(x=>P[x]?.network).filter(x=>x&&x!=='none'))];
  const s=document.getElementById('sum');s.innerHTML='';s.append(el('b',{text:`${S.folders.length} folder${S.folders.length===1?'':'s'}, ${n} piece${n===1?'':'s'}`}),b?` (and ${b} they bring along)`:'',' · ',away(net).length?el('span',{style:'color:var(--warn)',text:'goes online: '+away(net).join('; ')}):net.length?'stays on this machine':'never goes online')}
 async function look(){if(!S.folders.length){cur='folders';flow();shelf();say('Add a folder first: it’s what willow answers from.',1);return}if(cur!=='review')back=cur;
- const lanes=proposalDoc().lanes;
- const r=await api('propose',{name:'my willow',folders:S.folders.map(f=>f.path),lanes});if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
+ const r=await api('propose',proposalDoc());if(r.refused){say(r.refused,1);return}subject=r.subject;const a=r.arrangement;
  const named=k=>(S.stages[k]||[]).join(', ');const li=(t)=>el('li',{text:t});const rv=document.getElementById('review');rv.innerHTML='';cur='review';const f0=document.getElementById('find');if(f0.value){f0.value='';document.getElementById('findx').hidden=true}SEALED=false;
  const one=a.folders.length===1;
  const ul=el('ul',{},li('It reads '+a.folders.join(', ')+', and never changes '+(one?'it':'them')+'.'),
   named('reads')?null:li('It reads plain text, markdown and web pages; nothing else.'),
   li('It answers only from what it reads, with the file and line, and says so when nothing there holds an answer.'),
+  a.words?.length?li('It reads your words as yours: '+a.words.length+' line'+(a.words.length===1?'':'s')+' of your own, sealed with the rest.'):null,
   li(away(a.reach).length?'It goes online: '+away(a.reach).join('; ')+'.':a.reach.length?'It stays on this machine: some of it listens or asks here, and nowhere beyond.':'It never goes online.'),
   li('It writes its own record'+(a.writes.includes('to')?', and files only where you point it':'')+'.'),
   a.installs.length?li('Needs installing first: '+a.installs.join(', ')+'.'):null);

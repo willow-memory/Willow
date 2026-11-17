@@ -1,0 +1,1 @@
+`ui`: your own words open the words step, in a box of their own beside the starter list; each line is read the kernel's way, sealed with the rest of the pick, and written into the words list the records are made with

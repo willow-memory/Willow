@@ -1,0 +1,1 @@
+`approved-only`: `--scope proposal:SUBJECT` serves a sealed scope by its subject, so the older of two sealed scopes can be served; and a sealed scope one of whose passages has changed or gone since the seal now serves nothing and says so, where it served the rest without a word

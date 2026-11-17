@@ -539,8 +539,8 @@ def test_start_runs_the_page_over_every_folder_of_the_pick(site, tmp_path):
 
     cv, call = site
     one, two = a_folder(tmp_path / "one"), a_folder(tmp_path / "two")
-    pick = {"name": "two folders", "folders": [str(one), str(two)], "lanes": [
-        {"title": "watch", "steps": [{"name": "coming-up", "args": "--box {box} --days 30"}]}]}  # fmt: skip
+    pick = {"name": "two folders", "folders": [str(one), str(two)], "words": ["roof = estimate"],
+            "lanes": [{"title": "watch", "steps": [{"name": "coming-up", "args": "--box {box} --days 30"}]}]}  # fmt: skip
     subject = call("POST", "/tok/api/propose", pick)[1]["subject"]
     assert call("POST", "/tok/api/seal", {"subject": subject})[1]["sealed"] is True
     call("POST", "/tok/api/assemble", {"subject": subject})
@@ -559,6 +559,15 @@ def test_start_runs_the_page_over_every_folder_of_the_pick(site, tmp_path):
         # both are named "files": each its own record, the second "files-2"
         for slug in ("files", "files-2"):
             assert (cv.to / "mine" / slug / "page.md").is_file()
+        # their own words, as sealed, are the words list both records were made with
+        words = cv.to / "mine" / "my-words.txt"
+        assert "roof = estimate\n" in words.read_text(encoding="utf-8")
+        assert words.stat().st_mode & 0o077 == 0
+        for slug in ("files", "files-2"):
+            made = json.loads(
+                (cv.to / "mine" / slug / "box" / "kernel.json").read_text()
+            )
+            assert made["words"] == str(words)
         assert f"## over {one}" in cv.job["flow"] and f"## over {two}" in cv.job["flow"]
     finally:
         for proc in cv.browsers:
@@ -808,3 +817,62 @@ def test_a_stack_that_reaches_only_this_machine_is_not_said_to_go_online(stack_d
     assert "+' items'" in page and "fo.files+' files'" not in page, (
         "it counts folders too"
     )
+
+
+def watch_pick(folder, **more):
+    return {"name": "w", "folders": [str(folder)], **more, "lanes": [
+        {"title": "watch", "steps": [{"name": "coming-up", "args": "--box {box} --days 30"}]}]}  # fmt: skip
+
+
+def test_their_own_words_are_sealed_with_the_rest_and_said_in_the_stack(site, tmp_path):
+    cv, call = site
+    pick = watch_pick(
+        a_folder(tmp_path),
+        words=["car = MOT, inspection", "", "# mine", "  mum = margaret "],
+    )
+    status, r = call("POST", "/tok/api/propose", pick)
+    assert status == 200, r
+    assert r["arrangement"]["words"] == ["car = MOT, inspection", "mum = margaret"]
+    assert "<!-- word: car = MOT, inspection -->" in r["arrangement"]["stack_md"]
+    # what is sealed is the arrangement's bytes, so the words are under the seal
+    sealed = json.loads((cv.box / "proposals" / f"{r['subject'][9:]}.json").read_text())
+    assert json.loads(sealed["data"])["words"] == r["arrangement"]["words"]
+
+
+def test_a_line_the_kernel_would_not_read_is_refused_by_its_number(site, tmp_path):
+    cv, call = site
+    folder = a_folder(tmp_path)
+    for bad in (
+        ["car = MOT", "car test = MOT"],
+        ["car ="],
+        ["= MOT"],
+        "car = MOT",
+        [3],
+    ):
+        r = call("POST", "/tok/api/propose", watch_pick(folder, words=bad))[1]
+        assert "refused" in r, bad
+    r = call("POST", "/tok/api/propose", watch_pick(folder, words=["car = MOT", "car test = MOT"]))[1]  # fmt: skip
+    assert r["refused"].startswith("your words, line 2")
+
+
+def test_a_pick_with_no_words_is_the_arrangement_it_always_was(site, tmp_path):
+    cv, call = site
+    folder = a_folder(tmp_path)
+    for words in (None, [], ["", "# only a comment"]):
+        more = {} if words is None else {"words": words}
+        arr = call("POST", "/tok/api/propose", watch_pick(folder, **more))[1][
+            "arrangement"
+        ]
+        assert "words" not in arr and "word:" not in arr["stack_md"]
+
+
+def test_their_words_come_back_from_the_stack_file(site, tmp_path):
+    cv, call = site
+    arr = call("POST", "/tok/api/propose", watch_pick(a_folder(tmp_path), words=["car = MOT"]))[1]["arrangement"]  # fmt: skip
+    assert canvas.read_stack(arr["stack_md"])["words"] == ["car = MOT"]
+
+
+def test_the_page_puts_their_own_words_first_in_the_words_step():
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    assert "if(s.key==='words')box.append(ownWords());" in page
+    assert "words:myWords()" in page  # sent with what is proposed, so it is sealed

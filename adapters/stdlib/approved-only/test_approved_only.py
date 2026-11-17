@@ -201,3 +201,60 @@ def test_scope_says_how_many_pools_with_the_right_plural(tmp_path):
                     "mould roof"], check=True, capture_output=True)  # fmt: skip
     first = run(SERVE, "scope", "--box", str(box), *NOW).stdout.splitlines()[0]
     assert first.endswith("in 2 pools, peaks first"), first
+
+
+def test_a_sealed_scope_whose_passage_changed_serves_nothing_not_the_rest(tmp_path):
+    box, _ = a_box(tmp_path)
+    seal_the_scope(box)
+    (tmp_path / "pile" / "roof.md").write_text(
+        "2026-03-01 The roof estimate went up.\n"
+    )
+    out = tmp_path / "served.md"
+    got = run(SERVE, "--box", str(box), "--to", str(out), *NOW)
+    assert got.returncode == 2 and "not whole: 1 of 1 passages" in got.stderr
+    assert not out.exists()
+
+
+def a_second_scope(box: Path) -> str:
+    """Bite again, on the other file, and seal that scope too."""
+    subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(box), *NOW,
+                    "mould bedroom"], check=True, capture_output=True)  # fmt: skip
+    return seal_the_scope(box)
+
+
+def test_with_two_sealed_the_last_is_served_and_scope_names_the_other(tmp_path):
+    box, _ = a_box(tmp_path)
+    first = seal_the_scope(box)
+    a_second_scope(box)
+    last, older = tmp_path / "last.md", tmp_path / "older.md"
+    run(SERVE, "--box", str(box), "--to", str(last), *NOW)
+    assert "mould" in last.read_text() and "roof" not in last.read_text()
+    got = run(SERVE, "--box", str(box), "--to", str(older), "--scope", first, *NOW)
+    assert got.returncode == 0, got.stderr
+    assert "roof estimate" in older.read_text() and "mould" not in older.read_text()
+
+
+def test_a_scope_no_one_sealed_is_refused_by_name(tmp_path):
+    box, _ = a_box(tmp_path)
+    seal_the_scope(box)
+    out = tmp_path / "served.md"
+    got = run(
+        SERVE,
+        "--box",
+        str(box),
+        "--to",
+        str(out),
+        "--scope",
+        "proposal:" + "0" * 64,
+        *NOW,
+    )
+    assert got.returncode == 2 and "no sealed scope is proposal:" in got.stderr
+    assert not out.exists()
+
+
+def test_scope_takes_no_scope_to_serve(tmp_path):
+    box, _ = a_box(tmp_path)
+    assert (
+        run(SERVE, "scope", "--box", str(box), "--scope", "proposal:x", *NOW).returncode
+        == 2
+    )

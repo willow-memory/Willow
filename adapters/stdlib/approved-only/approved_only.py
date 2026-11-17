@@ -2,7 +2,7 @@
 sealed, grouped into pools, peaks first, by ids it can't guess. Python 3.9+.
 
     python adapters/stdlib/approved-only/approved_only.py scope --box DIR [--now TS]
-    python adapters/stdlib/approved-only/approved_only.py --box DIR --to FILE [--now TS]
+    python adapters/stdlib/approved-only/approved_only.py --box DIR --to FILE [--scope proposal:SUBJECT] [--now TS]
 
 The model never sees a box. It is served only the passages a human sealed,
 and holding the file is the permission (see docs/design/serve.md).
@@ -19,13 +19,16 @@ it never touches your key, and a forged seal is never served. The file is
 markdown: a `##` heading per pool, peaks first, and under it each passage as
 its `where`, an opaque per-run id, a trust label, and the text in a fenced
 block. No hashes, no row numbers: nothing the model could count or reverse.
-Without a sealed scope it serves nothing and says so (fails closed).
+Without a sealed scope it serves nothing and says so (fails closed). It serves
+the last scope sealed, or with `--scope` the sealed scope of that subject, and
+only whole: a scope one of whose passages has changed or gone from the folder
+since the seal serves nothing, rather than the rest without a word.
 
 This first cut seals through willow's own key (the `pgp`-verify seal the
 design note names is a separate step). Exit codes, the kernel's: 0 served, or
 a scope proposed with nothing waiting; 42 nothing to scope yet, or a scope
 waits on your seal; 2 refused (a bad command line, a broken record, or -- for
-the write form -- no sealed scope).
+the write form -- no sealed scope, none of that subject, or one not whole).
 """
 
 from __future__ import annotations
@@ -91,7 +94,7 @@ def do_scope(box: Path, ts: str) -> int:
     return code
 
 
-def do_serve(box: Path, to: Path) -> int:
+def do_serve(box: Path, to: Path, want: str | None = None) -> int:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
@@ -111,12 +114,27 @@ def do_serve(box: Path, to: Path) -> int:
     if not scopes:
         print("refused: no sealed scope; nothing served", file=sys.stderr)
         return kernel.REFUSED
-    subj, prop = scopes[-1]  # the last sealed scope
+    if want is None:
+        subj, prop = scopes[-1]  # the last sealed scope
+    else:
+        named = [(s, p) for s, p in scopes if s == want]
+        if not named:
+            print(
+                f"refused: no sealed scope is {want}; nothing served", file=sys.stderr
+            )
+            return kernel.REFUSED
+        subj, prop = named[0]
     by_id = {c["id"]: c for c in kernel.chunks(pile)}
+    gone = [i for i in prop["cites"] if i not in by_id]
+    if gone:  # a passage changed or went since the seal: the scope isn't whole
+        print(f"refused: the sealed scope is not whole: {len(gone)} of "
+              f"{len(prop['cites'])} passages changed or gone since the seal; "
+              "nothing served", file=sys.stderr)  # fmt: skip
+        return kernel.REFUSED
     refs = [
         {"id": i, "where": by_id[i]["path"] + f":{by_id[i]['line']}",
          "text": by_id[i]["text"]}
-        for i in prop["cites"] if i in by_id
+        for i in prop["cites"]
     ]  # fmt: skip
     key = os.urandom(16).hex()  # a serve key, fresh each run: ids can't be guessed
     page = served_page(refs, subj, key)
@@ -151,7 +169,7 @@ def served_page(refs: list[dict], subj: str, key: str) -> str:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--box", "--to", "--now"):
+        if a in ("--box", "--to", "--now", "--scope"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -165,14 +183,14 @@ def main(argv: list[str]) -> int:
         return kernel.REFUSED
     ts = opts.get("--now") or kernel.now()
     if verb == "scope":
-        if "--to" in opts:
+        if "--to" in opts or "--scope" in opts:
             print(__doc__.split("\n\n")[1], file=sys.stderr)
             return kernel.REFUSED
         return do_scope(box, ts)
     if not opts.get("--to"):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
-    return do_serve(box, Path(opts["--to"]))
+    return do_serve(box, Path(opts["--to"]), opts.get("--scope"))
 
 
 if __name__ == "__main__":

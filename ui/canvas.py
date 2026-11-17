@@ -95,6 +95,8 @@ WORD = re.compile(r"[a-z0-9][a-z0-9-]*")
 #: the plain form of a page step: `--box DIR`, then only optional flags
 PAGE_STEP = re.compile(r"--box DIR(\s+\[[^\]]*\])*")
 DEFAULT_ARGS = "--box {box}"
+#: the most lines of their own words the page takes: a words list, not a dictionary
+MAX_WORDS = 500
 
 
 def page_step(folder: Path, card: dict) -> bool:
@@ -586,6 +588,9 @@ class Canvas:
         kept = [n for n in dict.fromkeys(kept) if n not in named]
         if not named:
             return None, "the stack has no steps: none of its pieces makes a page"
+        words, why = self.own_words(doc.get("words"))
+        if why:
+            return None, why
         folders = [
             f for f in (self.folder(p) for p in doc.get("folders", [])) if f["ok"]
         ]
@@ -601,17 +606,39 @@ class Canvas:
         md += [f"<!-- reads: {f['path']} -->" for f in folders]
         if kept:  # put together with the rest; each runs its own way, not here
             md.append(f"<!-- in the stack, not run on the page: {', '.join(kept)} -->")
+        md += [f"<!-- word: {w} -->" for w in words]
         md.append("")
         for ln in lanes:
             md += [f"## {ln['title']}"] + [
                 f"- {s['name']} -- {s['args']}" for s in ln["steps"]
             ]
             md.append("")
-        return {
+        arr = {
             "name": name, "lanes": lanes, "folders": [f["path"] for f in folders],
             "kept": kept, "pulled_in": pulled, "pieces": every, "reach": reach, "writes": writes,
             "installs": installs, "stack_md": "\n".join(md),
-        }, ""  # fmt: skip
+        }  # fmt: skip
+        if words:  # only when there are some: a stack without keeps its subject
+            arr["words"] = words
+        return arr, ""
+
+    def own_words(self, given) -> tuple[list[str], str]:
+        """The person's own words-list lines, typed on the page: each one held
+        to the kernel's own reading of a words list, so what is sealed is what
+        the kernel will take. Blank and # lines are dropped."""
+        if given is None:
+            return [], ""
+        if not isinstance(given, list) or not all(isinstance(x, str) for x in given):
+            return [], "your words are lines of text"
+        lines = [x.strip() for x in given]
+        lines = [x for x in lines if x and not x.startswith("#")]
+        if len(lines) > MAX_WORDS:
+            return [], f"your words: {len(lines)} lines; at most {MAX_WORDS}"
+        for i, line in enumerate(lines, 1):
+            if len(line) > 300 or self.kernel.parse_words(line)[1]:
+                return [], (f"your words, line {i} ({line[:40]!r}): one word = one "
+                            "or more words, a comma between")  # fmt: skip
+        return lines, ""
 
     def propose(self, doc: dict) -> dict:
         arr, why = self.arrangement(doc)
@@ -762,20 +789,24 @@ class Canvas:
             mine = self.to / "mine"
             key = self.to / "keys" / "stack.key"
             words = None
-            if "starter-words" in have and "starter-words" in arr["pieces"]:
+            starter = "starter-words" in have and "starter-words" in arr["pieces"]
+            if starter or arr.get("words"):
                 words = mine / "my-words.txt"
                 if not words.exists():
                     mine.mkdir(parents=True, exist_ok=True)
-                    starter = (
-                        self.stack
-                        / "adapters"
-                        / "stdlib"
-                        / "starter-words"
-                        / "words.txt"
-                    )
-                    words.write_text(
-                        starter.read_text(encoding="utf-8"), encoding="utf-8"
-                    )
+                    text = ""
+                    if starter:
+                        text = (
+                            self.stack
+                            / "adapters"
+                            / "stdlib"
+                            / "starter-words"
+                            / "words.txt"
+                        ).read_text(encoding="utf-8")
+                    if arr.get("words"):
+                        text += "\n# your own words, as you sealed them\n"
+                        text += "".join(w + "\n" for w in arr["words"])
+                    words.write_text(text, encoding="utf-8")
                     words.chmod(0o600)
             boxes, taken = [], set()
             for folder in arr["folders"]:
@@ -1038,6 +1069,8 @@ def read_stack(text: str) -> dict:
     for ln in text.splitlines():
         if m := re.match(r"# stack: (.+)$", ln):
             doc["name"] = m.group(1).strip()
+        elif m := re.match(r"<!-- word: (.+) -->$", ln):
+            doc.setdefault("words", []).append(m.group(1).strip())
         elif m := re.match(r"<!-- reads: (.+) -->$", ln):
             doc["folders"].append(m.group(1).strip())
         elif m := re.match(r"<!-- in the stack, not run on the page: (.+) -->$", ln):

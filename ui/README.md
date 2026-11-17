@@ -33,8 +33,15 @@ way a person does:
    by tag, or step by step, ticked or dragged into place. A piece comes with
    what its card `uses`, as a language pack comes with its program, and
    taking out a piece another needs asks first. Undo takes back each change.
+   **Your own words** open the words step: the starter list, ticked or not,
+   and a box for lines of your own (`car = MOT, inspection`: your word, then
+   what your files call it). Each line is read the kernel's way when you look
+   it over, and one it wouldn't take is refused by its number. The lines are
+   part of what you seal, and **Start it** writes them, after the starter
+   list if you took it, into the words list your records are made with,
+   readable only by you.
 4. **Save what you picked as a batch**, to bring back on any folder. Your
-   folders aren't part of it, and a deleted batch is gone.
+   folders and your words aren't part of it, and a deleted batch is gone.
 5. **Look it over, and seal it**, the last step. Nothing runs until you do.
    Then **Put it together** copies the add-ons into your stack, and **Start
    it** sets up your record over your folders, runs each add-on's own tests

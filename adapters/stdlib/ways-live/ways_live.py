@@ -444,14 +444,17 @@ def check_chrome(place: Place) -> str | None:
         target = chrome.send("Target.createTarget", {"url": url})["targetId"]
         session = chrome.send("Target.attachToTarget",
                               {"targetId": target, "flatten": True})["sessionId"]  # fmt: skip
+        # a new tab's first document is about:blank, already "complete":
+        # wait for the page's own address as well, or the snapshot is empty
         state = ""
         for _ in range(100):
-            state = chrome.send("Runtime.evaluate", {"expression": "document.readyState",
-                                "returnByValue": True}, session)["result"].get("value")  # fmt: skip
-            if state == "complete":
+            state = chrome.send("Runtime.evaluate",
+                                {"expression": "document.readyState + ' ' + location.href",
+                                 "returnByValue": True}, session)["result"].get("value") or ""  # fmt: skip
+            if state == f"complete {url}":
                 break
             time.sleep(0.1)
-        if state != "complete":
+        if state != f"complete {url}":
             return f"the page never finished loading: {state}"
         mht = chrome.send("Page.captureSnapshot", {"format": "mhtml"}, session)["data"]
         drawn = chrome.send("Runtime.evaluate", {"expression": "document.documentElement.outerHTML",
