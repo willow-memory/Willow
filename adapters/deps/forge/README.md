@@ -55,8 +55,10 @@ of thing, each row the card and what it says:
   while its seal proves under your key and the proposal still hashes to
   what you sealed. It is a step now, and you are not asked twice;
 - **fork “word”**: one word that reaches several add-ons, the cards as the
-  options and their lines and promises as the tradeoffs. That is a decision
-  for the Forge's checkpoint to put to you once and remember;
+  options and their lines and promises as the tradeoffs, and `none` beside
+  them, for when the alias line that offered them points wrong. That is a
+  decision for the Forge's checkpoint to put to you once and remember, keyed
+  by the word, so it holds for any sentence that says it;
 - **stale seals, asked again**: a seal whose card no longer does that word
   here (the alias file changed, say);
 - **ideas**: an add-on you named that isn't built yet;
@@ -122,11 +124,18 @@ waits its turn until the first no longer stands.
     ## each
       forge/decisions/willow-close-….json  “…”: tip-pin, rank 1 of tip-pin, hook-pin, weights-pin (row 9)
 
-`scores` reads the close forks you settled back off your record: only the
-ones you sealed that still stand, through the kernel's `sealed` and
-`standing`. It is how often the search's first card was the one you took,
-counted by place and kept apart per matcher, so a change to similar.py or
-the words list starts a count of its own. That count is the matchmaker's
+Every fork's proposal keeps what you were shown, a word's as well as the
+search's: the cards in their order, the one recommended (only the close
+fork has one), where your pick fell, and the matcher's hashes.
+
+`scores` reads the forks you settled back off your record: only the ones
+you sealed that still stand, through the kernel's `sealed` and `standing`.
+For the close fork it is how often the search's first card was the one you
+took, counted by place and kept apart per matcher, so a change to
+similar.py or the words list starts a count of its own. For a word's fork
+it is how often that word's alias line offered a card you took, and how
+often you said none: a word that keeps getting none is a line of
+ui/search-words.txt to argue. That count is the matchmaker's
 measured hit rate, and the only thing a close fork's confidence may ever be
 made from; until there is one, a fork says no confidence at all. It writes
 nothing.

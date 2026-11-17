@@ -6,4 +6,7 @@ nothing; the proposal keeps what was shown (the cards in order, the one
 recommended, the pick's rank, the matcher's hashes), and `suggest.py scores`
 counts where each sealed pick fell, by place and per matcher; a card the
 scan reached alone is a step only while the search agrees it is near the
-words, and one the search puts nowhere near joins the close fork instead
+words, and one the search puts nowhere near joins the close fork instead;
+every fork offers `none` now, a word's as well as the search's, every
+settled fork keeps what was shown, and `scores` says for each word how
+often its alias line's cards were taken

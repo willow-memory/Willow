@@ -387,7 +387,14 @@ def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
     before = len(rows(box))
     text, doc = scored(box)
     assert text.returncode == 0 and len(rows(box)) == before, "scores writes nothing"
-    assert doc["said"] == "2 close forks settled by your seal; the first taken 0 of 2"
+    assert (
+        doc["said"] == "2 forks settled by your seal: 2 close, the first taken 0 of 2"
+    )
+    assert [g["name"] for g in doc["groups"]] == [
+        "close: by rank",
+        "close: by matcher",
+        "each",
+    ]
     by_rank = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
     assert by_rank["rank 1"].endswith(": 0 of 2") and by_rank["rank 2"].endswith(
         ": 1 of 2"
@@ -399,6 +406,59 @@ def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
     assert (
         each[0].startswith(f"“{COUNT}”: {second}, rank 2 of ") and "none of " in each[1]
     )
+
+
+def test_a_words_fork_offers_none_and_keeps_what_was_shown(box):
+    """An alias line can point wrong; saying so is an outcome. A word's fork
+    has no recommendation: its order is only the scan's."""
+    text, doc = suggested(box, "my email")
+    (g,) = doc["groups"]
+    assert [r["what"].split(":", 1)[0] for r in g["rows"]] == [
+        "apple-mail",
+        "mail",
+        "none",
+    ]
+    got = run(
+        "propose", "my email", "--box", str(box), "--choose", "email=none", "--json"
+    )
+    assert got.returncode == 42, got.stderr
+    rows_ = json.loads(got.stdout)["groups"][0]["rows"]
+    assert len(rows_) == 1 and rows_[0]["where"] == "forge/decisions/willow-email.json"
+    assert json.loads(got.stdout)["said"].endswith("no stack: nothing settled runs")
+    subj = rows_[0]["what"].split()[0]
+    data = json.loads(
+        json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())["data"]
+    )
+    assert data["kind"] == "word" and data["offered"] == ["apple-mail", "mail"]
+    assert data["recommended"] is None and data["rank"] is None and data["card"] is None
+    assert k("seal", "--box", str(box), subj).returncode == 0
+    text, after = suggested(box, "my email")
+    assert text.returncode == 0 and after["said"] == (
+        "you sealed that none of the cards offered does it for “email”; nothing to run"
+    )
+    assert [g["name"] for g in after["groups"]] == ["you sealed none of them"], (
+        "not stale"
+    )
+
+
+def test_scores_count_whether_a_words_line_held(box):
+    took = proposed(box, "email=mail", "due=none", sentence=EMAIL)
+    seal_all(box, {p: s for p, s in took.items() if p != "forge/stack.md"})
+    text, doc = scored(box)
+    assert (
+        doc["said"] == "2 forks settled by your seal: 2 by a word, a card taken 1 of 2"
+    )
+    assert [g["name"] for g in doc["groups"]] == [
+        "by a word: did its line's cards hold",
+        "each",
+    ]
+    held = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert held == {
+        "“due”": "a card taken 0 of 1, none 1",
+        "“email”": "a card taken 1 of 1, none 0",
+    }
+    each = [r["what"] for r in doc["groups"][1]["rows"]]
+    assert any(e.startswith("“email”: mail, rank 2 of apple-mail, mail") for e in each)
 
 
 def test_without_similars_search_a_sentence_that_names_no_card_is_empty(
@@ -445,7 +505,7 @@ def test_an_unsettled_fork_is_refused_naming_its_options_and_nothing_is_written(
     got = run("propose", EMAIL, "--box", str(box), "--choose", "email=mail")
     assert (
         got.returncode == 2
-        and "“due” is not settled: --choose due=coming-up|renewals" in got.stderr
+        and "“due” is not settled: --choose due=coming-up|renewals|none" in got.stderr
     )
     assert len(rows(box)) == before and not (box / "proposals").exists()
 
