@@ -283,7 +283,7 @@ CHROME = r"""
 import json, os, quopri, sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-mode, url, buf = os.environ.get("FAKE_CHROME", ""), "", b""
+mode, url, buf, asked = os.environ.get("FAKE_CHROME", ""), "", b"", 0
 (Path(os.environ["HOME"]) / "argv.json").write_text(json.dumps(sys.argv[1:]))
 def page():
     text = Path(unquote(urlsplit(url).path)).read_text(encoding="utf-8")
@@ -306,10 +306,16 @@ while True:
         elif m == "Target.attachToTarget":
             reply(msg, {"sessionId": "S1"})
         elif m == "Runtime.evaluate":
-            v = "complete" if p["expression"] == "document.readyState" else page()
+            if "readyState" in p["expression"]:
+                asked += 1  # a new tab is about:blank, already complete, at first
+                v = ("complete about:blank" if mode == "blank-first" and asked == 1
+                     else "complete " + url)
+            else:
+                v = page()
             reply(msg, {"result": {"type": "string", "value": v}})
         elif m == "Page.captureSnapshot":
-            body = quopri.encodestring(page().encode()).decode()
+            blank = mode == "blank-first" and asked < 2  # snapshotted too soon: empty
+            body = "" if blank else quopri.encodestring(page().encode()).decode()
             reply(msg, {"data": "From: <Saved by Blink>\r\nSnapshot-Content-Location: " + url
                 + '\r\nMIME-Version: 1.0\r\nContent-Type: multipart/related; type="text/html";'
                 + ' boundary="B"\r\n\r\n--B\r\nContent-Type: text/html\r\n'
@@ -329,6 +335,14 @@ def chrome(fakes):
 
 
 def test_chrome_saves_a_page_web_pages_reads_both_ways(chrome):
+    assert live.one("chrome") == (live.WORKS, "")
+
+
+def test_chrome_waits_past_a_new_tabs_blank_page_before_saving(chrome, monkeypatch):
+    """A new tab's first document is about:blank and already complete: a
+    check that stopped there saved an empty page, and tools:chrome went red
+    on main (#373). It waits for the page's own address too."""
+    monkeypatch.setenv("FAKE_CHROME", "blank-first")
     assert live.one("chrome") == (live.WORKS, "")
 
 
