@@ -60,6 +60,43 @@ def test_a_long_line_still_finds_the_short_entry_it_contains():
     assert sim.near(every, "dated sea shells") == []  # one shared word is never near
 
 
+def wanted(*lines: tuple[str, str]) -> list[dict]:
+    return [{**idea(n, ln), "network": "none", "tags": ""} for n, ln in lines]
+
+
+def test_want_puts_a_card_you_named_first_then_what_a_word_usually_means():
+    every = wanted(
+        ("mail", "Email in eml and mbox files, as text."),
+        ("coming-up", "Dates written in your files in the next days."),
+        ("renewals", "What renews when, from your files."),
+        ("tides", "High and low water, from a tide table."),
+    )
+    want = sim.Want(every, alias={"due": ["coming", "renewals"]})
+    found = want.find("read my mail and tell me when the boiler is due")["found"]
+    assert found[0] == {"name": "mail", "why": "you named it"}
+    means = [f for f in found if f["why"] == "what “due” usually means here"]
+    assert {f["name"] for f in means} == {"coming-up", "renewals"}
+    assert [f["name"] for f in found].index("coming-up") < len(means) + 1
+    assert want.find("   ") == {"state": "empty", "found": []}
+    assert len(want.find("mail", top=1)["found"]) == 1
+
+
+def test_want_with_no_words_list_still_searches(tmp_path):
+    assert sim.search_words(tmp_path / "absent.txt") == {}
+    bad = tmp_path / "words.txt"
+    bad.write_text("this is not a words list\n")
+    assert sim.search_words(bad) == {}
+    every = wanted(("mail", "Email in eml and mbox files, as text."))
+    assert sim.Want(every, alias={}).find("my mail")["found"][0]["name"] == "mail"
+
+
+def test_want_on_the_command_line():
+    got = cli("want", "use it from vim")
+    assert got.returncode == 0, got.stderr
+    assert got.stdout.splitlines()[0] == "- vim: you named it"
+    assert len(got.stdout.splitlines()) <= sim.WANT_TOP
+
+
 def test_an_entry_is_never_near_itself():
     every = sim.entries()
     pdf = next(a for a in every if a["name"] == "pdf")

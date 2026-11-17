@@ -1,6 +1,7 @@
 """similar.py: what's already on the list, before you build or add something.
 
     python adapters/stdlib/similar/similar.py near "your idea in a sentence"
+    python adapters/stdlib/similar/similar.py want "what you want done"
     python adapters/stdlib/similar/similar.py check
     python adapters/stdlib/similar/similar.py new --base REF
     python adapters/stdlib/similar/similar.py tags [NAME...]
@@ -8,6 +9,12 @@
 The list is every add-on in this repo, built and planned: each one's line,
 and the one tag a person chose for it, if any. Nothing outside this repo is
 read.
+
+`want` is the canvas's search, here so the canvas and anything else that
+looks for a card in a person's words ask the same one (`Want`): BM25 over
+each whole card, a card you named first, then one a word of yours usually
+means by ui/search-words.txt, then the ranking. Five at most, each with why.
+The ranking finds a card for any sentence: it points, it never answers.
 
 `near` asks the kernel's own search (`kernel.rank`, the same as a `bite`)
 which entries hold your words: up to three, each with the words it shares.
@@ -65,6 +72,7 @@ readme = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(readme)
 
 USAGE = """usage: similar.py near "your idea in a sentence"
+       similar.py want "what you want done, in your own words"
        similar.py check
        similar.py new --base REF
        similar.py tags [NAME...]"""
@@ -108,6 +116,8 @@ idea ideas com www http https org toward nearly three four five ons guess
 #: the other: it groups a handful, never most of the list
 TOPIC_USE = (2, 25)
 NEIGHBOURS = 6
+#: how many cards `want` prints; the canvas's page asks for more
+WANT_TOP = 5
 #: what the install and network tags can be; the card's own tag is never one
 FACT_TAGS = {
     "no-install",
@@ -256,6 +266,82 @@ def line_of(a: dict, shared: list[str]) -> str:
     return f"- {name}, {what}. {a['line']} (shares: {', '.join(shared)})"
 
 
+# ── want: the cards for what a person says they want ─────────────────────────
+#: how people ask, and the words the cards use for it
+WORDS = ROOT / "ui" / "search-words.txt"
+
+
+def search_words(path: Path = WORDS) -> dict[str, list[str]]:
+    """The words list at `path`, in the kernel's own format and parser: one
+    of your words, then the cards' words for it. Absent, or one the kernel
+    won't read, is no list, and the search goes on without it."""
+    if not path.is_file():
+        return {}
+    alias, why = kernel.parse_words(path.read_text(encoding="utf-8"))
+    return {} if why else alias
+
+
+class Want:
+    """Cards for what a person says they want, in their own words: BM25 over
+    each whole card (pile-rank's, the ranking the tags are made with), its
+    name, line and topic tags weighed as its title. A card you named comes
+    first ("vim", "mail" in "my email"), then one a word of yours usually
+    means (the words list: "remind" is coming-up), then the ranking. The
+    ranking points and never answers: it finds a card for any sentence."""
+
+    def __init__(
+        self, every: list[dict] | None = None, alias: dict | None = None,
+        root: Path = ROOT,
+    ):  # fmt: skip
+        self.every = entries() if every is None else every
+        self.alias = search_words() if alias is None else alias
+        tags = worked_out(self.every, root)
+        docs = []
+        for a in self.every:
+            # name, line and tags as the passage's heading, which pile-rank weighs
+            # double: what a card says it is outranks what its body mentions
+            head = f"# {a['name'].replace('-', ' ')} {a['line']} {' '.join(tags[a['name']]['tags'][2:])}"
+            text = head + "\n" + card_text(a, root)
+            docs.append({"path": a["name"], "line": 1, "text": text, "id": kernel.h256(text)})  # fmt: skip
+        self.ranker = pile_rank.Ranker(docs)
+
+    def find(self, words: str, top: int = 12) -> dict:
+        """{state, found: [{name, why}]}, best first, at most `top`."""
+        words = words.strip()
+        if not words:
+            return {"state": "empty", "found": []}
+        said = [w.lower() for w in kernel.words(words)]
+        asked = list(said)
+        asked += [a + b for a, b in zip(said, said[1:])]  # "back up" is also "backup"
+        means = {}  # a card's word, and the word you said it stands for
+        for w in list(asked):
+            for m in self.alias.get(w, []):
+                means.setdefault(m, w)
+        ranked = self.ranker.rank(" ".join(dict.fromkeys(asked + list(means))), top * 2)
+
+        def named(name: str, words) -> str | None:
+            plain = HOW | kernel.FUNCTION  # "read" in "read my email" names nothing
+            return next((p for p in [name, *name.split("-")]
+                         if p in words and len(p) >= 3 and p not in plain), None)  # fmt: skip
+
+        def tier(r):
+            n = r[0]["path"]
+            return 0 if named(n, asked) else 1 if named(n, means) else 2
+
+        ranked.sort(key=tier)
+        found = []
+        for c, _, ph in ranked[:top]:
+            n = c["path"]
+            if named(n, asked):
+                why = "you named it"
+            elif part := named(n, means):
+                why = f"what “{means[part]}” usually means here"
+            else:
+                why = "uses " + ", ".join(ph) if ph else "close to what you said"
+            found.append({"name": n, "why": why})
+        return {"state": "populated" if found else "empty", "found": found}
+
+
 def duplicates(every: list[dict]) -> list[tuple[str, str]]:
     first: dict[str, str] = {}
     out = []
@@ -325,6 +411,12 @@ def main(argv: list[str]) -> int:
         print(
             "\n".join(line_of(a, s) for a, s in found)
             or "Nothing on the list is close."
+        )
+        return kernel.ALIVE
+    if len(argv) == 2 and argv[0] == "want":
+        found = Want(every).find(argv[1], top=WANT_TOP)["found"]
+        print(
+            "\n".join(f"- {f['name']}: {f['why']}" for f in found) or "Nothing found."
         )
         return kernel.ALIVE
     if argv == ["check"]:
