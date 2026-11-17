@@ -2,6 +2,7 @@
 
     python adapters/stdlib/claude-code/hook.py setup --box DIR [--index INDEX]
     python adapters/stdlib/claude-code/hook.py prompt --box DIR [--index INDEX]    (Claude Code runs this)
+    python adapters/stdlib/claude-code/hook.py bite --box DIR [--index INDEX] "question"
 
 `setup` prints what to add to Claude Code's settings.json: a UserPromptSubmit
 hook that runs `prompt` at every prompt, and the `claude mcp add` line that
@@ -24,6 +25,10 @@ index-cache: while its manifest says the folder hasn't changed, the bite is
 answered from the index in a few seconds, with the same row on the record
 and the same passages, not by reading every file again. Else, or without
 scan and index-cache, the kernel reads the folder as before.
+
+`bite` is that bite for another program: it prints what `kernel.py bite`
+prints, the same JSON and the same exit code, answered from the index when
+it is current, else by the kernel reading the folder.
 """
 
 from __future__ import annotations
@@ -78,7 +83,7 @@ def sibling(folder: str, module: str):
     return mod
 
 
-def indexed(box: Path, text: str, at: Path) -> dict | None:
+def indexed(box: Path, text: str, at: Path, ts: str | None = None) -> dict | None:
     """The kernel's bite, answered from scan's index at `at` instead of a
     fresh read of the whole folder: the same row on the record and the same
     passages, since scan only narrows which ones the kernel's own `rank`
@@ -103,7 +108,7 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
     k = kernel.bite_key(text)
     if breaks or k is None:
         return None  # the kernel's bite says why
-    ts = kernel.now()
+    ts = ts or kernel.now()
     for subj, row in kernel.sealed(box, rows).items():  # a sealed answer first
         prop, asked, why = kernel.standing(box, rows, subj, row)
         if why is None and asked == k:
@@ -115,6 +120,30 @@ def indexed(box: Path, text: str, at: Path) -> dict | None:
     kernel.append(box, ts, "bite", bite_key=k, served=refs, **listed)
     return {"state": "populated" if refs else "empty", "bite_key": k,
             "served": [{**r, "text": c["text"]} for r, c in zip(refs, served)]}  # fmt: skip
+
+
+def bite(box: Path, text: str, index: Path | None = None) -> tuple[int, str, str]:
+    """The kernel's bite as `kernel.py bite` gives it: (exit code, the JSON it
+    prints, what it says on stderr). From the index when it is current, with
+    the kernel's own states (an answer only echoing the question is `echo`),
+    else the kernel's bite itself."""
+    doc = None
+    if index is not None and (box / "kernel.json").exists():
+        try:
+            doc = indexed(box, text, index)
+        except (OSError, ValueError):
+            doc = None  # an index half there: the kernel reads the folder
+    if doc is not None and doc["state"] == "sealed":
+        return kernel.ALIVE, json.dumps(doc) + "\n", ""
+    if doc is not None:
+        answers = [s for s in doc["served"] if not s["echo"]]
+        doc["state"] = "populated" if answers else "echo" if doc["served"] else "empty"
+        code = kernel.ALIVE if answers else kernel.ESCALATE
+        return code, json.dumps(doc, ensure_ascii=False) + "\n", ""
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        code = kernel.main(["bite", "--box", str(box), text])
+    return code, out.getvalue(), err.getvalue()
 
 
 def prompt(box: Path, stdin, index: Path | None = None) -> str:
@@ -184,6 +213,17 @@ def setup(box: Path, index: Path | None = None) -> str:
 
 
 def main(argv: list[str], stdin=None) -> int:
+    if argv[:1] == ["bite"]:
+        rest, index = argv[1:-1], None
+        if len(rest) == 4 and rest[2] == "--index" and rest[3]:
+            rest, index = rest[:2], Path(rest[3])
+        if len(argv) < 4 or rest[:1] != ["--box"] or len(rest) != 2:
+            print(__doc__.split("\n\n")[1], file=sys.stderr)
+            return kernel.REFUSED
+        code, out, err = bite(Path(rest[1]), argv[-1], index)
+        print(out, end="")
+        print(err, end="", file=sys.stderr)
+        return code
     index = None
     if len(argv) == 5 and argv[3] == "--index" and argv[4]:
         index, argv = Path(argv[4]), argv[:3]

@@ -3,7 +3,7 @@ section: Assistants
 line: Claude Code sees cited passages from your folder with each prompt, through its prompt hook.
 source: bot
 added: 2026-10-24
-version: 0.1.2
+version: 0.2.0
 writes: record
 network: none
 hands: the passages served for each prompt, to Claude Code's model
@@ -45,6 +45,16 @@ prints the hook with `--index`, and the [index-cache](../index-cache/) line
 that keeps the index current: run it now, and when your folder changes. An
 index that isn't current (index-cache's manifest says a file moved) is never
 asked; the kernel reads the folder, as without one.
+
+**The same bite, for another program:**
+
+    python adapters/stdlib/claude-code/hook.py bite --box DIR [--index INDEX] "question"
+
+prints what `kernel.py bite` prints, the same JSON and the same exit code
+(0 an answer, 42 none, 2 refused), and puts the same row on the record:
+from the index while it is current, else by the kernel reading the folder.
+Only the kernel's `look` hints, printed for a person, aren't given from an
+index.
 
 The hook always exits 0. In Claude Code a hook that exits 2 blocks the
 prompt, and your folder being unreadable is no reason to stop you typing.

@@ -1,6 +1,6 @@
 """session_seal.py: one seal at the end of a session, over all of it. Python 3.9+.
 
-    python adapters/stdlib/session-seal/session_seal.py --box DIR [--now TS] [--json]
+    python adapters/stdlib/session-seal/session_seal.py --box DIR [--index INDEX] [--now TS] [--json]
     python adapters/stdlib/session-seal/session_seal.py --box DIR check [--json]
 
 A session is the record's rows since the last one was bundled (from row 0,
@@ -22,6 +22,12 @@ contract), a group per state, and `--json` gives the same report as one
 JSON object. Closing a session with `--json` gives its report too: what it
 bundled, and the one proposal waiting on the person's seal. `check` as a function prints its own lines, as it always has.
 
+With `--index INDEX`, an index of the box's folder that index-cache keeps
+current, the bite is answered from it by claude-code's indexed bite, the
+same row on the record without reading every file again: on a big folder,
+seconds instead of a minute. An index that isn't current, or claude-code,
+index-cache or scan not here, and the kernel reads the folder as before.
+
 Exit codes, the kernel's: 0 nothing waits (for `check`, every session
 sealed, or none yet: empty); 42 a session waits on the person's seal, or
 (for `check`) one's bundle is broken; 2 refused (a record that doesn't
@@ -34,6 +40,7 @@ import contextlib
 import io
 import json
 import sys
+import types
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
@@ -84,7 +91,32 @@ def quiet(fn, *args) -> tuple[int, str]:
     return code, out.getvalue()
 
 
-def close(box: Path, ts: str, as_json: bool = False) -> int:
+def claude_code():
+    """claude-code's hook module, for its indexed bite; None when it isn't here."""
+    path = Path(__file__).resolve().parents[1] / "claude-code" / "hook.py"
+    if not path.is_file():
+        return None
+    mod = types.ModuleType("session_seal_claude_code")
+    mod.__file__ = str(path)
+    exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), mod.__dict__)
+    return mod
+
+
+def bitten(box: Path, ask: str, ts: str, index: Path | None) -> tuple[int, str]:
+    """The session's bite: from the index while it is current, else the
+    kernel's own, reading the folder. (exit code, what it said)"""
+    cc = claude_code() if index is not None else None
+    if cc is not None:
+        try:
+            doc = cc.indexed(box, ask, index, ts)
+        except (OSError, ValueError):
+            doc = None  # an index half there: the kernel reads the folder
+        if doc is not None:
+            return kernel.ALIVE, ""
+    return quiet(kernel.bite, box, ask, ts)
+
+
+def close(box: Path, ts: str, as_json: bool = False, index: Path | None = None) -> int:
     rows, _ = kernel.read(box / "record.jsonl")
     first = start(rows)
     if first >= len(rows):
@@ -95,7 +127,7 @@ def close(box: Path, ts: str, as_json: bool = False) -> int:
         return kernel.ALIVE
     b = bundle(rows, first)
     ask = f"session {b['from']} to {b['to']}"
-    code, said = quiet(kernel.bite, box, ask, ts)
+    code, said = bitten(box, ask, ts, index)
     if code == kernel.REFUSED:
         print(f"refused: the kernel wouldn't take the bite: {said.strip()}",
               file=sys.stderr)  # fmt: skip
@@ -221,13 +253,17 @@ def main(argv: list[str]) -> int:
     args: list[str] = []
     it = iter(argv)
     for a in it:
-        if a in ("--box", "--now"):
+        if a in ("--box", "--now", "--index"):
             opts[a] = next(it, "")
         elif a == "--json":
             opts[a] = "yes"
         else:
             args.append(a)
-    if not opts.get("--box") or args not in ([], ["check"]):
+    if (
+        not opts.get("--box")
+        or args not in ([], ["check"])
+        or opts.get("--index") == ""
+    ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box = Path(opts["--box"])
@@ -242,7 +278,8 @@ def main(argv: list[str]) -> int:
         doc, code = check_report(box, rows)
         say(doc, "--json" in opts)
         return code
-    return close(box, opts.get("--now") or kernel.now(), "--json" in opts)
+    index = Path(opts["--index"]) if "--index" in opts else None
+    return close(box, opts.get("--now") or kernel.now(), "--json" in opts, index)
 
 
 if __name__ == "__main__":

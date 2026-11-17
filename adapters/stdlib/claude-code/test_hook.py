@@ -275,3 +275,53 @@ def test_an_index_asks_with_their_words_list_as_the_kernel_does(tmp_path, monkey
     wl.chmod(0o644)  # readable by others: the kernel refuses, nothing answered
     got = hk.prompt(b, io.StringIO(json.dumps(ask)), at)
     assert got.startswith("willow: couldn't read your folder (")
+
+
+def kernel_bite(b: Path, text: str) -> tuple[int, dict]:
+    run = subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(b), text],
+                         capture_output=True, text=True)  # fmt: skip
+    return run.returncode, json.loads(run.stdout)
+
+
+@pytest.mark.skipif(
+    not BESIDE,
+    reason="scan and index-cache aren't beside it; the test above holds it alone",
+)
+def test_bite_prints_what_the_kernels_bite_prints_from_a_current_index(
+    tmp_path, monkeypatch, capsys
+):
+    """`bite` for another program: the kernel's JSON, exit code and row, from
+    the index while it is current, else from the kernel reading the folder."""
+    b, pile, at = indexed_box(tmp_path)
+    ask = "when does the bus leave the square"
+    code, plain = kernel_bite(b, ask)
+    reads = []
+    real = hk.kernel.chunks
+    monkeypatch.setattr(hk.kernel, "chunks", lambda *a: reads.append(a) or real(*a))
+    assert hk.main(["bite", "--box", str(b), "--index", str(at), ask]) == code == 0
+    got = json.loads(capsys.readouterr().out)
+    plain.pop("look", None)  # hints the kernel prints for them; the index has none
+    assert got == plain and reads == []
+    first, second = bites(b)
+    assert first == second
+    # nothing holds it: the kernel's `empty`, and its exit code
+    code, plain = kernel_bite(b, "what colour is the boat")
+    assert hk.main(["bite", "--box", str(b), "--index", str(at), "what colour is the boat"]) == code  # fmt: skip
+    assert json.loads(capsys.readouterr().out)["state"] == plain["state"] == "empty"
+    # the folder changed: the kernel reads it, as without an index
+    (pile / "o.md").write_text("The last bus leaves the square at midnight.\n")
+    assert hk.main(["bite", "--box", str(b), "--index", str(at), ask]) == 0
+    assert reads and "o.md:1" in capsys.readouterr().out
+
+
+def test_bite_without_an_index_is_the_kernels_bite_and_its_refusals(tmp_path, capsys):
+    b = box(tmp_path)
+    code, plain = kernel_bite(b, "when does the bus leave")
+    assert hk.main(["bite", "--box", str(b), "when does the bus leave"]) == code
+    assert json.loads(capsys.readouterr().out) == plain
+    (b / "record.jsonl").write_text("not a record\n")
+    assert hk.main(["bite", "--box", str(b), "when does the bus leave"]) == 2
+    assert "refused" in capsys.readouterr().err
+    for bad in (["bite"], ["bite", "--box", str(b)], ["bite", "--rank", str(b), "q"],
+                ["bite", "--box", str(b), "--index", "", "q"]):  # fmt: skip
+        assert hk.main(bad) == 2, bad

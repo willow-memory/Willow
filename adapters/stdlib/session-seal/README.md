@@ -3,7 +3,8 @@ section: Trust and proof
 line: One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
 source: bot
 added: 2026-10-24
-version: 0.2.0
+version: 0.3.0
+looks-for: claude-code, index-cache
 writes: record
 network: none
 role: tools
@@ -49,6 +50,17 @@ which rows it covers and the subject to seal.
 The bite and proposal it makes, and that `session` row, come after the
 session they close, so no session holds its own bundle. The seal you make
 lands in the next session, where it belongs: it is something you did then.
+
+**A big folder:** the bite reads every file, so on tens of thousands a
+close waits half a minute. Name an index of the folder that
+[index-cache](../index-cache/) keeps current, and the bite is answered from
+it by [claude-code](../claude-code/)'s indexed bite, the same row on the
+record, in seconds:
+
+    python adapters/stdlib/session-seal/session_seal.py --box DIR --index INDEX
+
+An index that isn't current, or those add-ons not here, and the kernel
+reads the folder, as without one.
 
 `check` reads each session back: `sealed`, `waiting`, or `broken` when its
 bundle's file no longer hashes to its subject or its rows no longer match
