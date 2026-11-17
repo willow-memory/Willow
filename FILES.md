@@ -2917,6 +2917,7 @@ willow/
 │   │   ├── FROZEN.json
 │   │   ├── KEPT.json
 │   │   ├── results/
+│   │   │   ├── 2026-11-16-close.txt
 │   │   │   └── 2026-11-16.txt
 │   │   ├── score.py          demo/want-finders/score.py: the ways into willow's add-on cards, scored on
 │   │   ├── wants.json

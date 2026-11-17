@@ -105,3 +105,37 @@ What failed, by finder:
 Written after reading the results, not a frozen rule: similar's and canvas's
 hits at 1 fall on different wants, and between them one or the other has
 the right card first for eight of the nine.
+
+### 2026-11-16, suggest with the close fork
+
+The same freeze, after two changes: the canvas's search moved into similar
+as `Want` (this study printed the first run's results byte for byte on that
+code), and the forge add-on's `suggest` asks it when a sentence names no
+card and no alias line reaches one, offering its first three built cards
+as the `close` fork, the first recommended, with `none` beside them. One
+run on the same box as the first; what it printed is
+[results/2026-11-16-close.txt](results/2026-11-16-close.txt). `kernel.py
+verify`: "the chain holds: 19 rows, 0 sealed"; the last row is
+`want-finders:R0:canvas`, hash `94f83c6b…bbca2f41`.
+
+| finder | R1, hit at 1 | R5, hit at 5 | R0, nothing offered for W10 |
+|---|---|---|---|
+| suggest | 4 of 9 (was 0) | 6 of 9 (was 0) | no: offered `people` |
+| similar | 6 of 9 | 6 of 9 | yes |
+| canvas | 5 of 9 | 8 of 9 | no: offered five |
+
+What changed, and what didn't:
+
+- **Four wants now find their card first through suggest**: W01
+  (`forecast-ask`), W03 (`decisions`), W05 (`tip-pin`, which similar
+  misses) and W08 (`stack-bridges`). W02 has it at 2 and W06 at 3, behind
+  cards that share one part of their name with a word of the want, as on
+  the canvas.
+- **W09 is still `against`, and W07 still `digest`, `handover` and
+  `repo-digest`.** The scan found a card by a word ("against"; the alias
+  line `stands = handover, digest`), so the search was never asked: a
+  wrong name or alias hit keeps the close fork from forming.
+- **W04 misses by one place.** `mutants` is the search's fourth; the fork
+  takes three built cards.
+- **`none` is offered with every close fork**, and score.py reads it as a
+  name; it is never a right card, so it moves no score.

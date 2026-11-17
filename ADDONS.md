@@ -1718,7 +1718,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="forge"></a>[**forge**](adapters/deps/forge/) \
   A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs. \
-  Needs forge-play; Apache-2.0. Uses stack. *new* `needs-install` `offline` `sentence` `forge` · near: stack-share, kart, sentences
+  Needs forge-play; Apache-2.0. Uses stack, similar. *new* `needs-install` `offline` `sentence` `forge` · near: stack-share, kart, sentences
 
 ## Ways to use it
 

@@ -31,6 +31,14 @@ on willow's side. So the place to help is this repository's
 near and not as a hit, so the person can add the alias line knowing which
 cards they meant.
 
+*Since, 2026-11-16:* built, one step further. A sentence no name or alias
+line reaches now gets the `close` fork: what similar's search (`Want`, the
+canvas's own) points at, each row marked close and not named, the first as
+the fork's recommendation with no confidence, and `none` beside them, so
+the person's pick (or their no) is on the record as the matchmaker's
+outcome. [demo/want-finders](../../demo/want-finders/) is what measured the
+need: the scan found the right card for none of its nine wants.
+
 ### 2. One alias file, three readers, three sets of rules (seen)
 
 `ui/search-words.txt` is read by:

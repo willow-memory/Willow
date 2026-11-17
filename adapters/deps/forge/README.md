@@ -3,14 +3,14 @@ section: Assistants
 line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
-version: 0.1.1
+version: 0.2.0
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
 network: none
 role: repo
 output: report
-uses: stack
+uses: stack, similar
 looks-for: ci
 runs-in: repo
 -->
@@ -59,7 +59,22 @@ of thing, each row the card and what it says:
   for the Forge's checkpoint to put to you once and remember;
 - **stale seals, asked again**: a seal whose card no longer does that word
   here (the alias file changed, say);
-- **ideas**: an add-on you named that isn't built yet.
+- **ideas**: an add-on you named that isn't built yet;
+- **fork “close”**: when your words name no card and no alias line reaches
+  one, what [similar](../../stdlib/similar/)'s search (`Want`, the canvas's
+  search) points at: up to three built cards, the first recommended, each
+  row saying it is close and not named, and `none` beside them. Pointing is
+  not answering, so it is a fork and never a step. Its decision is this
+  sentence's own, so a seal for these words settles no other sentence;
+  `--choose close=none`, sealed, keeps the miss on your record and runs
+  nothing, and the next time the report says so.
+
+      forge: populated, 1 fork waits on you
+      ## fork “close”: no card named, these are close to what you said
+        adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first
+        adapters/stdlib/assistant-scores/README.md  assistant-scores: ...; close, not named: uses often each, suggestion seal
+        adapters/stdlib/forecast-ask/README.md      forecast-ask: ...; close, not named: uses count often
+        none                                        none: none of these does it: sealed, the miss is on your record and nothing runs
 
 A stack you sealed for these very words comes first, as the kernel serves
 any sealed answer, and nothing is asked.
@@ -105,8 +120,9 @@ parent must exist; it makes no folder but the one you named.
 the whole as the Forge reads it: the cards counted, the steps, the forks,
 what is sealed, the ideas, and `plan`, a document the Forge's `plan_shape`
 validates, its `decision_extract` turns into decisions and its `build_loop`
-resolves. A fork carries no recommendation and no confidence: nothing is
-guessed, and no made-up 0.5 is scored. When a real sentence misses, add a
+resolves. A fork carries no confidence: no made-up 0.5 is scored. Only the
+`close` fork carries a recommendation, the search's first, so the Forge can
+count how often you take it. When a real sentence misses, add a
 line to `ui/search-words.txt`; when one maps wrong, argue the line.
 
 Exit codes, the report's: 0 steps found and nothing waits on you, a stack
@@ -122,9 +138,11 @@ words already, a card beside this script that won't read).
 **Uses:** the kernel's `bite` and `propose`, so every question and every
 suggestion is a row; its `sealed` and `standing`, so a seal is believed only
 on the kernel's word; its exit codes; `ui/assemble.py` and the stack add-on,
-to build and run what you sealed.
+to build and run what you sealed; similar's `Want`, to point when nothing is
+named.
 
 **Never:** seals, reads the key (the kernel reads it, to check a proof),
 writes anything but through the kernel or under the folder you name, runs a
-stack you didn't seal, ranks, or asks a model. `suggest` writes nothing at
+stack you didn't seal, ranks on its own (what similar's search ranks is only
+ever the `close` fork's options), or asks a model. `suggest` writes nothing at
 all. The forks are yours to settle, and the seal is yours.
