@@ -172,3 +172,41 @@ verify`: "the chain holds: 28 rows, 0 sealed"; the last row is
 - **It costs a second only when there is a step to check.** On this
   machine, a sentence with only forks took 0.30 s, as before; one with a
   named step 1.15 s, against 0.33 s before: building the search once.
+
+### 2026-11-16, the search ranks by relevance
+
+W04 was read before this change, and it showed two faults in similar's
+`Want`, so in the canvas's search and the close fork both. **One part of a
+card's name counted as naming it**: "code" put risky-code, code-stats,
+code-comments and ai-code-tracking first, "tests" slow-tests and
+fast-tests, "count" noised-count; by the ranking alone, mutants is fourth
+for W04. **And the order depended on how many were asked for**: the ranking
+was read twice as deep as asked, so twelve let in more of those cards than
+five. Four ways were tried by hand on these wants before one was built:
+the old one, whole names only, whole names with one depth, and no named
+tier at all. The last scored best and is what was built: a card a word of
+yours usually means comes first (the words list), then the ranking, read to
+one depth whatever is asked; a card whose whole name you said is said to be
+named, and is not moved for it. What it printed is
+[results/2026-11-16-relevance.txt](results/2026-11-16-relevance.txt);
+`kernel.py verify`: "the chain holds: 37 rows, 0 sealed"; the last row is
+`want-finders:R0:canvas`, hash `a8cf0792…526e0b37b`.
+
+| finder | R1, hit at 1 | R5, hit at 5 | R0 |
+|---|---|---|---|
+| suggest | 7 of 9 (was 5) | 8 of 9 (was 7) | no: offered `people` |
+| similar | 6 of 9 | 6 of 9 | yes |
+| canvas | 6 of 9 (was 5) | 8 of 9 | no |
+
+- **W02 and W06 now find their card first**, in suggest and on the canvas.
+- **W04 has mutants second in the close fork**, after risky-code, whose
+  line ("code lines matching a dangerous pattern") shares the most words
+  with "a broken line of code". That is the ranking being right about the
+  words, not the fork being short.
+- **W09 is second on the canvas now** (`witness` first), where the old
+  named tier had put `model-exam` first: the one want this change cost.
+- **Seen outside the study:** "back up my photos" now puts restore-drill
+  first and backup, which it names, second: the words list's `backup =
+  ..., restore` line reaches restore-drill, and naming no longer moves a
+  card. Putting named cards back on top fixes that one and puts `stack`
+  first for W08; it was not done.

@@ -64,7 +64,7 @@ def wanted(*lines: tuple[str, str]) -> list[dict]:
     return [{**idea(n, ln), "network": "none", "tags": ""} for n, ln in lines]
 
 
-def test_want_puts_a_card_you_named_first_then_what_a_word_usually_means():
+def test_want_puts_what_a_word_usually_means_first_and_says_when_you_named_one():
     every = wanted(
         ("mail", "Email in eml and mbox files, as text."),
         ("coming-up", "Dates written in your files in the next days."),
@@ -73,12 +73,39 @@ def test_want_puts_a_card_you_named_first_then_what_a_word_usually_means():
     )
     want = sim.Want(every, alias={"due": ["coming", "renewals"]})
     found = want.find("read my mail and tell me when the boiler is due")["found"]
-    assert found[0] == {"name": "mail", "why": "you named it"}
     means = [f for f in found if f["why"] == "what “due” usually means here"]
     assert {f["name"] for f in means} == {"coming-up", "renewals"}
-    assert [f["name"] for f in found].index("coming-up") < len(means) + 1
+    assert [f["name"] for f in found[:2]] == [f["name"] for f in means]
+    assert {"name": "mail", "why": "you named it"} in found
+    assert "tides" not in [f["name"] for f in found[:3]]
     assert want.find("   ") == {"state": "empty", "found": []}
     assert len(want.find("mail", top=1)["found"]) == 1
+
+
+def test_one_part_of_a_name_moves_no_card_and_a_whole_one_is_said():
+    """ "count" is one part of noised-count; the card about counting how
+    often suggestions were sealed is the one these words mean."""
+    every = wanted(
+        ("noised-count", "A number of yours, noised before it is sent."),
+        (
+            "assistant-scores",
+            "How often each assistant's suggestions were sealed or set aside.",
+        ),
+        ("box-health", "What a box needs: rows waiting, files it can't read."),
+    )
+    want = sim.Want(every, alias={})
+    found = want.find("count how often each suggestion was sealed")["found"]
+    assert found[0]["name"] == "assistant-scores"
+    assert all(f["why"] != "you named it" for f in found)
+    health = want.find("the health of my box")["found"]
+    assert health[0] == {"name": "box-health", "why": "you named it"}
+
+
+def test_the_first_five_are_the_same_whatever_is_asked_for():
+    want = sim.Want()
+    for words in ("check that my tests catch a broken line of code", "my email"):
+        five = [f["name"] for f in want.find(words, top=5)["found"]]
+        assert [f["name"] for f in want.find(words, top=12)["found"]][:5] == five
 
 
 def test_want_with_no_words_list_still_searches(tmp_path):

@@ -175,10 +175,10 @@ def near(sentence: str, by_name: dict, leave_out: set = frozenset()) -> list[dic
     found = searched(sentence) or []
     out = [f for f in found if f["name"] in by_name and by_name[f["name"]].built
            and f["name"] not in leave_out]  # fmt: skip
-    # the search's "you named it" is a word of yours that is one part of a
-    # card's name ("count", noised-count): said as that, since nothing named it
+    # the search's "you named it" (its whole name's words are in yours, in
+    # another form than the scan reads) is said as that: the scan named none
     return [
-        {**f, "why": "a word of yours is part of its name"}
+        {**f, "why": "the words of its name are in yours"}
         if f["why"] == "you named it"
         else f
         for f in out[:NEAR]
