@@ -71,5 +71,37 @@ report shape instead.
 
 ## Results
 
-None yet: the first scored run comes after this freeze, in a commit of its
-own.
+### 2026-11-16, the first scored run
+
+On the freeze (`f8f0c9f7`), with forge-play 0.10.0, one run on a fresh box
+outside the repository; what it printed is
+[results/2026-11-16.txt](results/2026-11-16.txt). `kernel.py verify` on
+that box: "the chain holds: 10 rows, 0 sealed"; its last row is
+`want-finders:R0:canvas`, hash `c8825bd5…cc1241`.
+
+| finder | R1, hit at 1 | R5, hit at 5 | R0, nothing offered for W10 |
+|---|---|---|---|
+| suggest | 0 of 9 | 0 of 9 | no: offered `people` |
+| similar | 6 of 9 | 6 of 9 | yes |
+| canvas | 5 of 9 | 8 of 9 | no: offered five |
+
+What failed, by finder:
+
+- **suggest found none.** For seven wants it offered nothing; for three it
+  offered a card that doesn't answer: W07 `digest`, `handover` and
+  `repo-digest` (from the line `stands = handover, digest`), W09 `against`
+  (the word "against"), W10 `people` (the word "people"). It reaches a card
+  only by its name or an alias line, and the wants name neither.
+- **similar missed W01, W05 and W07**, offering nothing for each. It reads
+  only a card's one line, and those lines don't share half of the want's
+  words. Its offers are short (three at most) and, when made, right first.
+- **canvas missed only W07**, but put a card that shares one part of its name
+  with a word of the want ahead of the right one: `noised-count` for
+  "count" (W02, right at 2), `risky-code` for "code" (W04, at 4),
+  `slow-tests` and `fast-tests` for "tests" (W06, at 3). It offers five for
+  any sentence, so it can't say nothing (W10).
+- **No finder found `stale-answers` for W07.**
+
+Written after reading the results, not a frozen rule: similar's and canvas's
+hits at 1 fall on different wants, and between them one or the other has
+the right card first for eight of the nine.

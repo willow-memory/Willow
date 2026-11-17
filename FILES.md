@@ -2915,6 +2915,9 @@ willow/
 │   │   └── test_words.py     the starter words list against her whole folder: her debt to Dev, served with it and not without
 │   ├── want-finders/
 │   │   ├── FROZEN.json
+│   │   ├── KEPT.json
+│   │   ├── results/
+│   │   │   └── 2026-11-16.txt
 │   │   ├── score.py          demo/want-finders/score.py: the ways into willow's add-on cards, scored on
 │   │   ├── wants.json
 │   │   ├── test_want_finders.py
