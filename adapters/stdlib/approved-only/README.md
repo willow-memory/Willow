@@ -3,7 +3,7 @@ section: Assistants
 line: The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else.
 source: bot
 added: 2026-10-26
-version: 0.1.1
+version: 0.2.0
 writes: record, to
 network: none
 role: guards
@@ -15,7 +15,7 @@ model never sees a box; holding the file is the permission. The shape and the
 reasoning are the design note, `docs/design/serve.md`.
 
     python adapters/stdlib/approved-only/approved_only.py scope --box DIR [--now TS]
-    python adapters/stdlib/approved-only/approved_only.py --box DIR --to FILE [--now TS]
+    python adapters/stdlib/approved-only/approved_only.py --box DIR --to FILE [--scope proposal:SUBJECT] [--now TS]
 
 ## scope — propose what to serve
 
@@ -54,9 +54,18 @@ A scope counts only while its proposal file is still the bytes you sealed
 (the kernel's `standing`): one widened or changed after the seal serves
 nothing.
 
+**Which scope:** the last one sealed, or with `--scope` the sealed scope of
+that subject, so a person who sealed two can serve the older one.
+
+**Only whole.** A sealed scope one of whose passages has changed or gone from
+your folder since the seal serves nothing ("the sealed scope is not whole: 1
+of 2 passages changed or gone since the seal"), rather than the rest
+without a word. Seal it again to serve what the folder holds now.
+
 This first cut seals through willow's own key; the `pgp`-verify seal the
 design note names (a script checks the signature, the model never sees the
 key) is a separate step. Exit codes, the kernel's: 0 served, or a scope
 proposed with nothing left waiting; 42 nothing to scope yet, or a scope waits
 on your seal; 2 refused (a bad command line, a broken record, or — for the
-write form — no sealed scope).
+write form — no sealed scope, no sealed scope of that subject, or one that
+isn't whole).
