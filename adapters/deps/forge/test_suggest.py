@@ -31,6 +31,8 @@ spec.loader.exec_module(suggest)
 EMAIL = "I want to read my email about the flat and know when the boiler is due"
 #: a want no card name or alias line reaches, which similar's search can point at
 COUNT = "count how often each suggestion was sealed or declined"
+#: a want whose one scan hit (`against`, by an ordinary word) the search doubts
+MODEL = "score a model against the answers the person sealed"
 #: words nothing here holds, by name, by alias or by the search
 NONSENSE = "qqqq zzzz kkwq"
 HEAD = re.compile(r"[a-z0-9-]+: (?:populated|empty|unreachable), \S.*")
@@ -247,7 +249,9 @@ def test_a_sentence_that_names_no_card_gets_the_close_fork(box):
     text, doc = suggested(box, COUNT)
     assert text.returncode == 42 and doc["said"] == "1 fork waits on you"
     (g,) = doc["groups"]
-    assert g["name"].startswith("fork “close”: no card named")
+    assert g["name"].startswith(
+        "fork “close”: nothing named that the search agrees with"
+    )
     names = [r["what"].split(":", 1)[0] for r in g["rows"]]
     assert "assistant-scores" in names and names[-1] == "none" and len(names) <= 4
     assert all("close, not named: " in r["what"] for r in g["rows"][:-1])
@@ -259,6 +263,33 @@ def test_a_sentence_that_names_no_card_gets_the_close_fork(box):
         "nothing named it"
     )
     assert len(rows(box)) == before, "suggest writes nothing to the record"
+
+
+def test_a_card_named_by_an_ordinary_word_the_search_puts_nowhere_near_is_asked_about(
+    box,
+):
+    """`against` is a card, and "against" is an ordinary word here; the search
+    puts that card nowhere near these words, so it is no step: it joins the
+    close fork beside what the search does put near, saying why."""
+    text, doc = suggested(box, MODEL)
+    assert text.returncode == 42 and [g["name"] for g in doc["groups"]] == [
+        "fork “close”: nothing named that the search agrees with; these are close to what you said"
+    ]
+    rows = {r["what"].split(":", 1)[0]: r["what"] for r in doc["groups"][0]["rows"]}
+    assert list(rows)[0] == "model-exam" and list(rows)[-1] == "none"
+    assert rows["against"].endswith(
+        "named, but not close: the search puts it nowhere near your words"
+    )
+    assert rows["model-exam"].endswith("; recommended, the search's first")
+
+
+def test_a_named_card_the_search_agrees_with_stays_a_step(box, monkeypatch, capsys):
+    """And with no search to ask, a named card is a step as before."""
+    text, doc = suggested(box, "a merkle proof of one row")
+    assert [g["name"] for g in doc["groups"]] == ["steps"]
+    monkeypatch.setattr(suggest, "wanting", lambda: None)
+    assert suggest.main(["suggest", MODEL, "--box", str(box)]) == 0
+    assert "against: " in capsys.readouterr().out
 
 
 def test_the_close_fork_carries_its_recommendation_and_no_confidence(box):

@@ -130,6 +130,7 @@ SIMILAR = ROOT / "adapters/stdlib/similar/similar.py"
 CLOSE, NONE = "close", "none"
 #: how many cards similar's search may put in that fork
 NEAR = 3
+DOUBTED = "named, but not close: the search puts it nowhere near your words"
 NONE_TRADEOFF = (
     "none of these does it: sealed, the miss is on your record and nothing runs"
 )
@@ -150,15 +151,30 @@ def wanting():
     return getattr(mod, "Want", None)
 
 
-def near(sentence: str, by_name: dict) -> list[dict]:
+#: how far down similar's search a card the scan reached alone may sit and
+#: still be a step: past it, the search doesn't place the card near your words
+AGREE = NEAR * 4
+_SEARCH: dict = {}
+
+
+def searched(sentence: str) -> list[dict] | None:
+    """similar's search for a sentence, its first AGREE as [{name, why}], or
+    None when this willow's similar hasn't one. Built once a run."""
+    if _SEARCH.get("from") is not wanting:  # built again if the search was swapped
+        want = wanting()
+        _SEARCH.update({"from": wanting, "want": want() if want is not None else None})
+    if _SEARCH["want"] is None:
+        return None
+    return _SEARCH["want"].find(sentence, top=AGREE)["found"]
+
+
+def near(sentence: str, by_name: dict, leave_out: set = frozenset()) -> list[dict]:
     """The built cards similar's search points at for a sentence, best
     first, at most NEAR: [{name, why}]. Pointing, never answering: they are
     a fork's options and its recommendation, and never a step."""
-    want = wanting()
-    if want is None:
-        return []
-    found = want().find(sentence, top=NEAR * 4)["found"]
-    out = [f for f in found if f["name"] in by_name and by_name[f["name"]].built]
+    found = searched(sentence) or []
+    out = [f for f in found if f["name"] in by_name and by_name[f["name"]].built
+           and f["name"] not in leave_out]  # fmt: skip
     # the search's "you named it" is a word of yours that is one part of a
     # card's name ("count", noised-count): said as that, since nothing named it
     return [
@@ -418,11 +434,26 @@ def plan(box, hits, shape, rec, sealed: dict, sentence: str = "") -> dict:
     found = list(box.lookup(hits))
     forks = box.forks(hits)
     by_name = {c.name: c for c in box.cards}
-    close = near(sentence, by_name) if sentence and not found else []
-    if close:
+    reached = {c.name for c in found}
+    # a card the scan reached alone is a step only while similar's search
+    # agrees it is near these words; one it puts nowhere near is asked about
+    in_forks = {n for names in forks.values() for n in names}
+    alone = [c for c in found if c.name not in in_forks and by_name[c.name].built]
+    doubted = []  # the search is built only when there is a step to check (a second)
+    if sentence and alone and (ranked := searched(sentence)) is not None:
+        placed = {f["name"] for f in ranked}
+        doubted = [c for c in alone if c.name not in placed]
+        found = [c for c in found if c not in doubted]
+    close = (
+        near(sentence, by_name, reached) if sentence and (doubted or not found) else []
+    )
+    options = [f["name"] for f in close] + [c.name for c in doubted]
+    if options:
         found += [SimpleNamespace(name=f["name"], why=f["why"]) for f in close]
-        forks[CLOSE] = [f["name"] for f in close] + [NONE]
-    why_close = {f["name"]: f["why"] for f in close}
+        found += [SimpleNamespace(name=c.name, why=DOUBTED) for c in doubted]
+        forks[CLOSE] = options + [NONE]
+    why_close = {f["name"]: f"close, not named: {f['why']}" for f in close}
+    why_close.update({c.name: DOUBTED for c in doubted})
     settled, open_forks = {}, {}
     for word, names in forks.items():
         dt = fork_type(rec, word, sentence)
@@ -472,8 +503,8 @@ def plan(box, hits, shape, rec, sealed: dict, sentence: str = "") -> dict:
                 continue
             card = by_name[n]
             said = tradeoff(card)
-            if word == CLOSE:  # pointed at, never named: said so on every row
-                said += f"; close, not named: {why_close[n]}"
+            if word == CLOSE:  # pointed at, or named and doubted: said on every row
+                said += f"; {why_close[n]}"
             options.append(shape.ForkOption(label=n, tradeoff=said))
             resolves[n] = (
                 (shape.FileWrite(dest_path=f"steps/{n}.md", content=step_line(n)),)
@@ -482,7 +513,7 @@ def plan(box, hits, shape, rec, sealed: dict, sentence: str = "") -> dict:
             )
             docs.append({"name": n, "where": card.where, "tradeoff": said})
         if word == CLOSE:
-            surface = (f"“{sentence}” names no add-on; similar's search points at "
+            surface = (f"“{sentence}” names no add-on the search agrees with; the fork holds "
                        f"{', '.join(names[:-1])}: which, if any, does it?")  # fmt: skip
             recommended = names[
                 0
@@ -543,7 +574,7 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
         rows = [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options]
         if word == CLOSE:  # the search's first is the recommendation, and says so
             rows[0] = (rows[0][0], rows[0][1] + "; recommended, the search's first")
-            groups.append((f"fork “{CLOSE}”: no card named, these are close to what you said", rows))  # fmt: skip
+            groups.append((f"fork “{CLOSE}”: nothing named that the search agrees with; these are close to what you said", rows))  # fmt: skip
         else:
             groups.append((f"fork “{word}”", rows))
     groups.append(("stale seals, asked again", [

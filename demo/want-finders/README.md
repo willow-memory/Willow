@@ -139,3 +139,36 @@ What changed, and what didn't:
   takes three built cards.
 - **`none` is offered with every close fork**, and score.py reads it as a
   name; it is never a right card, so it moves no score.
+
+### 2026-11-16, a step the search doesn't place near is asked about
+
+The same freeze, after one more change to `suggest`: a card the scan
+reached alone, by name or alias line, is a step only while similar's search
+has it in its first twelve for the sentence; one it puts nowhere near joins
+the close fork instead, after the search's own cards, its row saying it was
+named but isn't close. One run on the same box; what it printed is
+[results/2026-11-16-doubt.txt](results/2026-11-16-doubt.txt). `kernel.py
+verify`: "the chain holds: 28 rows, 0 sealed"; the last row is
+`want-finders:R0:canvas`, hash `5ffe298d…0465aa5a2`.
+
+| finder | R1, hit at 1 | R5, hit at 5 | R0 |
+|---|---|---|---|
+| suggest | 5 of 9 (was 4) | 7 of 9 (was 6) | no: offered `people` |
+| similar | 6 of 9 | 6 of 9 | yes |
+| canvas | 5 of 9 | 8 of 9 | no |
+
+- **W09 moved, and only W09.** "against" is an ordinary word to the search
+  (similar's `HOW` list), so the card `against` is nowhere in its first
+  twelve; the fork is now `model-exam`, `forge`, `translate`, `against`,
+  `none`, and `model-exam` is first.
+- **W07 is unchanged, and was always going to be.** Its scan hit is a fork
+  (`stands`), not a step, and a fork is already asked; and the search
+  doesn't find `stale-answers` either. The fix the repository's own rule
+  names is an alias line, written when a real sentence misses; W07 is this
+  study's sentence, and a line written to pass it would only be the study
+  grading itself.
+- **W10 is unchanged.** "people" is a card's whole name, and the search
+  agrees: it is named.
+- **It costs a second only when there is a step to check.** On this
+  machine, a sentence with only forks took 0.30 s, as before; one with a
+  named step 1.15 s, against 0.33 s before: building the search once.

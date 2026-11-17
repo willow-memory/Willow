@@ -63,7 +63,13 @@ of thing, each row the card and what it says:
 - **fork “close”**: when your words name no card and no alias line reaches
   one, what [similar](../../stdlib/similar/)'s search (`Want`, the canvas's
   search) points at: up to three built cards, the first recommended, each
-  row saying it is close and not named, and `none` beside them. Pointing is
+  row saying it is close and not named, and `none` beside them. A card your
+  words reach alone, by name or alias line, is a step only while that
+  search agrees it is near them (in its first twelve); one it puts nowhere
+  near ("against" in "score a model against the answers", which reaches the
+  pull request card `against`) joins this fork instead, its row saying it
+  was named but isn't close. A fork's options are never doubted: they are
+  already asked. Pointing is
   not answering, so it is a fork and never a step. Its decision is this
   sentence's own, so a seal for these words settles no other sentence;
   `--choose close=none`, sealed, keeps the miss on your record and runs
@@ -73,7 +79,7 @@ of thing, each row the card and what it says:
   them.
 
       forge: populated, 1 fork waits on you
-      ## fork “close”: no card named, these are close to what you said
+      ## fork “close”: nothing named that the search agrees with; these are close to what you said
         adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first
         adapters/stdlib/assistant-scores/README.md  assistant-scores: ...; close, not named: uses often each, suggestion seal
         adapters/stdlib/forecast-ask/README.md      forecast-ask: ...; close, not named: uses count often
