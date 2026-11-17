@@ -1,0 +1,15 @@
+{
+ "about": "demo/want-finders, frozen before its first scored run: each file's SHA-256, held by test_want_finders.py. The wants, their right cards and the hit rule are in these two files; a change to either is a new freeze, in its own commit, with its reason.",
+ "frozen": "2026-11-16",
+ "files": {
+  "wants.json": "8b9998835a78f6f068b51d9dbe6b55d0d3d0fa4c99e68c548302c06f54caf434",
+  "score.py": "85f48ced1863528a4abecdf5e868f44b9d2bf2daab297f24abe07f7c666501f9"
+ },
+ "hit_rule": "a want with right cards hits at k when one of them is among the first k names the finder offers, in its order, at most 5; a want with no right card hits when nothing is offered",
+ "rules": {
+  "R1": "hits at 1, over the wants with right cards",
+  "R5": "hits at 5, over the wants with right cards",
+  "R0": "the wants with no right card that were offered nothing"
+ },
+ "before_the_freeze": "the ten wants were asked by hand of suggest, similar and the canvas's search on 2026-11-16 before this freeze, by the agent session that wrote them; the README says what was seen"
+}
