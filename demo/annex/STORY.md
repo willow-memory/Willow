@@ -167,7 +167,13 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
   box, a briefing assistant that reads only the file `approved-only` served, and
   two clocks in the header that disagree by an hour. The rumour is in none of
   it. Counterintel seals a scope for the briefing, so its seals are two.
-- **Still to play:** the planner's log and the corridor mode, then the freeze.
+- **The planner's log, played:** Karst's planner asked about the Helio lead at
+  06:10; Intake's gate log issued her badge at 07:42, 92 minutes later, and
+  badges issue from 07:30. Karst and Intake each seal their own line under the
+  inspector's standing rule and send it to Oversight; `fixity`, run before and
+  after, says the planner log is as first seen. Nothing explains it. ANNEX-OS
+  shows it in the header and on the witness run.
+- **Still to play:** the corridor mode, then the freeze.
 
 ## Open questions
 

@@ -40,7 +40,7 @@ def test_every_chain_holds_and_only_the_five_who_sealed_have_seals(played):
     assert len(boxes) == 8
     assert all(b["held"] for b in boxes.values())
     assert {k: b["seals"] for k, b in boxes.items() if b["seals"]} == {
-        "vask": 2, "lumen": 3, "karst": 2, "program": 2, "intake": 2, "counter": 2,
+        "vask": 2, "lumen": 3, "karst": 3, "program": 2, "intake": 3, "counter": 2,
     }  # fmt: skip
     # oversight only received; prior never left its wall
     assert boxes["oversight"]["seals"] == boxes["prior"]["seals"] == 0
@@ -95,6 +95,7 @@ def test_annex_os_builds_one_page_without_the_rumour(played, tmp_path):
     assert len(data["boxes"]) == 8
     assert data["clocks"] == {"program": "08:00", "intake": "09:00"}
     assert data["found"]["rewritten"] == ["rewritten"]
+    assert data["found"]["planner"]["minutes"] == 92
     for rumour in ("Halvern", "affairs", "intelligence service"):
         assert rumour not in html
     assert "review" in data["served"] and "affairs" not in data["served"]
@@ -103,3 +104,14 @@ def test_annex_os_builds_one_page_without_the_rumour(played, tmp_path):
 
 def test_annex_os_refuses_a_bad_command_line(tmp_path):
     assert py(HERE / "annex_os.py", "build").returncode == 2
+
+
+def test_the_planner_asked_before_the_badge_and_the_log_is_untouched(played):
+    planner = played["doc"]["found"]["planner"]
+    assert planner == {
+        "asked": "06:10",
+        "badge": "07:42",
+        "minutes": 92,
+        "fixity": "untouched",
+    }
+    assert "92 minutes before the badge" in played["got"].stdout

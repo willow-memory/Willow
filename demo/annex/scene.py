@@ -23,20 +23,25 @@ a seal key and an identity under --to, which must not be there yet. Then:
 8. The spec asks every party for its manifest before tasking (2.2), so three
    boxes each send Karst a sealed answer. The pattern is in Karst's chain and
    in each sender's, and in no one chain alone.
-9. Counterintel, asked, seals the one innocent line about its review log and
+9. The planner's log. Karst's planning model keeps a log of what it was asked;
+   the inspector's standing rule has each party seal and send its own. Its
+   line, at 06:10, asks for a profile of the Helio evaluation lead, a
+   psychologist. Intake's gate log says a Helio badge was issued at 07:42, and
+   the schedule has badges issuing from 07:30. `fixity` says the log was not
+   touched. Nothing explains it, and the scene does not try to.
+10. Counterintel, asked, seals the one innocent line about its review log and
    sends it to Oversight. Later its chain is rewritten: the seal backdated to
    before the day, every row after it re-hashed, so its own `verify` still says
    the chain holds. Oversight holds each chain to the packages it kept
    (`share witness`): every chain holds but one, and that one is `rewritten`.
-10. Counterintel seals a scope for an assistant (`approved-only`): the one file
+11. Counterintel seals a scope for an assistant (`approved-only`): the one file
     a model may read holds the review line, and the rumour is not in it.
-11. No package holds a line of another box's pile, the rumour is in no
+12. No package holds a line of another box's pile, the rumour is in no
     package or served file, and every chain verifies with only its owner's
     seals on it. The inspector's report is due at close of day, and is outside
     every chain.
 
-`annex_os.py` puts a fictional terminal over what this writes. Still to play:
-the planner's log. It writes a transcript to standard
+`annex_os.py` puts a fictional terminal over what this writes. It writes a transcript to standard
 output and scene.json under --to. Exit 0 when the scene plays as told, 1 when a
 step went otherwise.
 """
@@ -58,6 +63,7 @@ from kernel import canon, h256  # noqa: E402
 
 KERNEL = ROOT / "kernel.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
+FIXITY = ROOT / "adapters" / "stdlib" / "fixity" / "fixity.py"
 APPROVED = ROOT / "adapters" / "stdlib" / "approved-only" / "approved_only.py"
 SHARE = ROOT / "adapters" / "stdlib" / "share" / "share.py"
 BOXES = ["intake", "vask", "karst", "lumen", "program", "counter", "oversight", "prior"]
@@ -114,6 +120,18 @@ MANIFEST = ("vask", "does Helio deliver model weights", "helio/task-order.md",
 REVIEW = ("counter", "when was the summary last reviewed", "review.md",
           "The summary file was last reviewed on 2026-11-17 and marked hold, not for release.",
           "the review log")  # fmt: skip
+
+
+#: the planner's line and the gate's, each sealed by its own box
+PLANNED = [
+    ("karst", "what was the planner asked about the Helio evaluation lead", "planner/log.md",
+     "Karst's planner log: at 06:10 on 2026-11-18 it was asked for a profile of the Helio "
+     "evaluation lead, background in clinical psychology.",
+     "the planner's own log"),
+    ("intake", "when was a badge issued to Helio", "badge-log.md",
+     "The gate log: a badge was issued to one Helio visitor at 07:42 on 2026-11-18.",
+     "the gate badge log"),
+]  # fmt: skip
 
 
 class Scene:
@@ -292,6 +310,34 @@ class Scene:
         self.say(f"  karst received from three and sent to {', '.join(sorted(sent_by_karst))} "
                  "only: spec 2.2 took from each what it gave none")  # fmt: skip
 
+    def planned(self) -> dict:
+        """The planner was asked about Vask before her badge existed. fixity says
+        the log is as it was first seen; the scene does not explain it."""
+        karst = self.box("karst")
+        first = self.run(FIXITY, "--box", karst, "--now", self.ts())
+        for who, q, src, data, claim in PLANNED:
+            subj = self.seal(who, q, src, data, claim)
+            pkg = self.send(who, subj, "oversight", f"{who}-log-to-oversight",
+                            "Sealed under the inspector's standing rule")  # fmt: skip
+            self.receive("oversight", pkg)
+        again = self.run(FIXITY, "--box", karst, "--now", self.ts())
+        if "needs you" in first + again or "holds" not in again:
+            self.wrong.append(
+                f"fixity said something about the planner log: {again.strip()}"
+            )
+        asked = re.findall(r"\d\d:\d\d", self.said["karst"][-1]["data"])[0]
+        badge = re.findall(r"\d\d:\d\d", self.said["intake"][-1]["data"])[0]
+        mins = (int(badge[:2]) * 60 + int(badge[3:])) - (
+            int(asked[:2]) * 60 + int(asked[3:])
+        )
+        self.say(f"\n  PLANNER  asked about the Helio lead at {asked}")
+        self.say(f"  GATE     issued the Helio badge at {badge}")
+        self.say(f"  {mins} minutes before the badge, and before badges issue (07:30)."
+                 "\n  fixity: the planner log is as it was first seen. Nothing explains it.")  # fmt: skip
+        if mins <= 0:
+            self.wrong.append("the planner's query does not predate the badge")
+        return {"asked": asked, "badge": badge, "minutes": mins, "fixity": "untouched"}
+
     def rows(self, who: str) -> list[dict]:
         text = (self.box(who) / "record.jsonl").read_text()
         return [json.loads(line) for line in text.splitlines()]
@@ -395,13 +441,16 @@ class Scene:
         self.say("\n── 8. the spec asks for everything, of everyone")
         self.asked()
 
-        self.say("\n── 9. the rewrite, and the witness")
-        self.found = self.witness()
+        self.say("\n── 9. the planner's log")
+        planner = self.planned()
 
-        self.say("\n── 10. the one file an assistant may read")
+        self.say("\n── 10. the rewrite, and the witness")
+        self.found = {**self.witness(), "planner": planner}
+
+        self.say("\n── 11. the one file an assistant may read")
         self.briefing()
 
-        self.say("\n── 11. what crossed, and what did not")
+        self.say("\n── 12. what crossed, and what did not")
         self.walls()
         return self.summary()
 

@@ -23,7 +23,8 @@ The page is a green-screen terminal, and none of it is real:
 - **Briefing.** An assistant that reads only the served file. A toy matcher
   (it keeps to the words of a question, nothing like the kernel's rank): what
   the file doesn't hold, it says it wasn't given.
-- **The clocks.** The header shows two clocks that disagree by an hour.
+- **The clocks.** The header shows two clocks that disagree by an hour, and a
+  planner that asked about Vask 92 minutes before her badge.
 """
 
 from __future__ import annotations
@@ -69,6 +70,7 @@ pre{white-space:pre-wrap;margin:6px 0}
   <h1>ANNEX-OS</h1>
   <span class="note">COMPARTMENTED RECORDS TERMINAL &middot; ONLY WHAT IS ON RECORD</span>
   <span class="clock flick">SYS <b id="c1"></b> &middot; GATE <b id="c2"></b> <span class="note">(unexplained)</span></span>
+  <span class="clock flick">PLANNER ASKED <b id="c3"></b> &middot; BADGE <b id="c4"></b> <span class="note">(unexplained)</span></span>
 </header>
 <nav>
   <label>BADGE <select id="badge"></select></label>
@@ -90,6 +92,7 @@ const el = (t, c, h) => { const e = document.createElement(t); if (c) e.classNam
 let badge = 'vask', view = 'doors', openDoor = null;
 
 $('c1').textContent = D.clocks.program; $('c2').textContent = D.clocks.intake;
+$('c3').textContent = D.found.planner.asked; $('c4').textContent = D.found.planner.badge;
 for (const n of NAMES) { const o = el('option', '', LABEL[n]); o.value = n; $('badge').appendChild(o); }
 $('badge').value = badge;
 
@@ -154,6 +157,8 @@ function witnessRun(m) {
     if (!w) { m.appendChild(el('pre', 'note', `${LABEL[n].padEnd(18)} no package kept. no witness. rows after the last one kept have none either.`)); continue; }
     m.appendChild(el('pre', w === 'holds' ? '' : 'bad', `${LABEL[n].padEnd(18)} own verify HOLDS \u00b7 witness ${w.toUpperCase()}`));
   }
+  const pl = D.found.planner;
+  m.appendChild(el('pre', 'warn', `\nPLANNER LOG (Karst): asked about the Helio lead at ${pl.asked}.\nGATE LOG (Intake): the Helio badge was issued at ${pl.badge}. ${pl.minutes} minutes later.\nfixity: the planner log is ${pl.fixity} since first seen. NO EXPLANATION ON RECORD.`));
   const b = el('button', '', 'RUN IT AGAINST THE COPY OF COUNTERINTEL');
   b.onclick = () => { $('darktext').textContent =
     `CHAIN: COUNTER\nITS OWN VERIFY: HOLDS\nWITNESS (oversight's package): ${D.found.rewritten.join(', ').toUpperCase()}\n\n` +
