@@ -131,6 +131,18 @@ def test_the_other_marks_count_anywhere_in_a_line_in_any_case(tmp_path):
           "* [ ] tune the fiddle"}  # fmt: skip
 
 
+def test_a_checkbox_that_opens_with_a_templates_blank_is_nothing_to_do(tmp_path):
+    assert marked(
+        tmp_path,
+        "- [ ] {item}",
+        "- [ ] {step} — {owner} — {due}",
+        "* [ ]   {item not done}  ← if any are unchecked, explain",
+        "- [ ] fill in {owner} before Friday",
+        "- [ ] {unclosed blank",
+        "- [ ] {} has nothing in it but is a blank still",
+    ) == {"- [ ] fill in {owner} before Friday", "- [ ] {unclosed blank"}
+
+
 def test_nothing_marked(tmp_path):
     pile = tmp_path / "pile"
     pile.mkdir()

@@ -11,7 +11,9 @@ A mark counts as it is written to mark something. TODO and FIXME count in
 capitals, and not as a file's name: "the todo add-on" and TODO.md are prose
 about one. "need to" counts where a thing to do is said: opening a line or
 a sentence ("Sold the van. Need to call the insurer."), or after I or we;
-"the file does not need to fit in memory" is not something to do.
+"the file does not need to fit in memory" is not something to do. An open
+checkbox counts unless it opens with a template's blank (`- [ ] {item}`):
+a form not yet filled in is nothing to do.
 
     todo: populated, 3 lines marked to do, the oldest from 2021-04-02
       memos/2021-04-02.txt:3       2021-04-02  Need to call Mesa Mutual and take it off the policy.
@@ -51,7 +53,9 @@ MARK = re.compile(
     # TODO and FIXME as they are written, in capitals: "the todo add-on" is
     # prose about one, and TODO.md is a file's name
     r"\bTODO\b(?!\.\w)|\bFIXME\b"
-    r"|(?i:^\s*[-*]\s*\[ \])"
+    # an open checkbox, unless what it opens with is a template's blank,
+    # {item}: that is a form not yet filled in, not a thing to do
+    r"|(?i:^\s*[-*]\s*\[ \](?!\s*\{[^{}]*\}))"
     # "need to" where a thing to do is said: opening a line or a sentence, or
     # after I or we. "it does not need to fit in memory" is not one
     r"|(?i:(?:^\s*(?:[-*>]\s+)?|[.!?:;]\s+|\b(?:I|we)\s+(?:still\s+|also\s+|really\s+)?)"

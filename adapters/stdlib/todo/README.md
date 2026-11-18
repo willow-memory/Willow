@@ -35,7 +35,8 @@ to", or is an open checkbox. A mark counts as it is written to mark something:
 |---|---|---|
 | TODO, FIXME | in capitals: `TODO: fix the install step` | "the todo add-on", "Todo lists", and a file's name (TODO with a dot and an ending after it) |
 | "need to" | opening a line or a sentence, or after I or we: "Sold the van. Need to call the insurer.", "I need to book the MOT" | "the file does not need to fit in memory", "you need to restart it" |
-| "don't forget", "remember to", an open checkbox | anywhere in a line, in any case | a ticked checkbox |
+| "don't forget", "remember to" | anywhere in a line, in any case | |
+| an open checkbox | `- [ ] buy strings` | a ticked one, and one that opens with a template's blank, `- [ ] {item}`: a form not yet filled in |
 
 Each is dated by the kernel's own date for its
 passage (the latest date in it, its file's name, or the log heading above it);
