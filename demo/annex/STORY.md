@@ -152,8 +152,15 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
   person) and the clocks (Program 08:00; Intake 09:00) each arrive at Oversight
   as sealed answers. Oversight's side-by-side is the scene's own comparison:
   no add-on reads received packages yet, a gap this demo found.
-- **Still to play:** the planner's log, the rewritten chain and the witness
-  (the ending), then ANNEX-OS and the corridor mode.
+- **Slice three, played (the ending):** spec 2.2 takes a sealed answer from
+  Vask, Lumen and Program and gives none back, a pattern in Karst's chain and
+  the senders' and in none alone. Counterintel, asked, seals one innocent line
+  and sends it up; later its seal is backdated to before the day and every row
+  after it re-hashed. Its own `verify` still says the chain holds. Oversight
+  holds every chain to the packages it kept (`share witness`): six hold, one is
+  `rewritten`. R4 in a first form. The report is buried, off every chain.
+- **Still to play:** the planner's log, ANNEX-OS and the corridor mode, then the
+  freeze.
 
 ## Open questions
 

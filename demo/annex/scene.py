@@ -20,10 +20,19 @@ a seal key and an identity under --to, which must not be there yet. Then:
    Lumen's data sheet says a person. The program schedule says integration day
    began at 08:00; the gate log says 09:00. Each box seals its own line and
    sends it to Oversight, the one place both sides arrive.
-8. No package holds a line of another box's pile, the rumour is in no package,
-   and every chain verifies with only its owner's seals on it.
+8. The spec asks every party for its manifest before tasking (2.2), so three
+   boxes each send Karst a sealed answer. The pattern is in Karst's chain and
+   in each sender's, and in no one chain alone.
+9. Counterintel, asked, seals the one innocent line about its review log and
+   sends it to Oversight. Later its chain is rewritten: the seal backdated to
+   before the day, every row after it re-hashed, so its own `verify` still says
+   the chain holds. Oversight holds each chain to the packages it kept
+   (`share witness`): every chain holds but one, and that one is `rewritten`.
+10. No package holds a line of another box's pile, the rumour is in no
+   package, and every chain verifies with only its owner's seals on it. The
+   inspector's report is due at close of day, and is outside every chain.
 
-Still to play: the planner's log, the rewritten chain and the witness. It writes a transcript to standard
+Still to play: the planner's log. It writes a transcript to standard
 output and scene.json under --to. Exit 0 when the scene plays as told, 1 when a
 step went otherwise.
 """
@@ -32,6 +41,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -40,7 +50,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT))
-from kernel import h256  # noqa: E402
+from kernel import canon, h256  # noqa: E402
 
 KERNEL = ROOT / "kernel.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
@@ -91,6 +101,16 @@ STACKS = [
 ]  # fmt: skip
 
 
+#: what the spec's 2.2 asks of each party, sealed from its own papers
+MANIFEST = ("vask", "does Helio deliver model weights", "helio/task-order.md",
+            "Helio delivers the evaluation harness; it does not deliver model weights.",
+            "the Helio task order")  # fmt: skip
+#: Counterintel's one innocent line, asked for by Oversight
+REVIEW = ("counter", "when was the summary last reviewed", "review.md",
+          "The summary file was last reviewed on 2026-11-17 and marked hold, not for release.",
+          "the review log")  # fmt: skip
+
+
 class Scene:
     def __init__(self, life: Path, to: Path, now: datetime):
         self.life, self.to, self.now = life, to, now
@@ -98,6 +118,7 @@ class Scene:
         self.ids: dict[str, Path] = {}
         self.wrong: list[str] = []
         self.sealed: dict[str, list[str]] = {b: [] for b in BOXES}
+        self.answers: dict[str, list[str]] = {b: [] for b in BOXES}
         self.packages: list[Path] = []
 
     def ts(self) -> str:
@@ -151,6 +172,7 @@ class Scene:
         subj = out.split()[1] if out.startswith("pass") else ""
         self.run(KERNEL, "seal", "--box", self.box(who), subj, "--now", self.ts())
         self.sealed[who].append(subj)
+        self.answers[who].append(subj)
         self.say(f"  {who} sealed: {data}")
         return subj
 
@@ -236,6 +258,86 @@ class Scene:
         self.say(f"  CLOCK      Program: {clocks['program'][0]}    Intake: {clocks['intake'][0]}"
                  "   (one hour, in no single box)")  # fmt: skip
 
+    def asked(self) -> None:
+        """Spec 2.2 asks every party for its manifest. Three send; the pattern is
+        in no one chain, but in all of them."""
+        mine = self.seal(*MANIFEST)
+        gave = {"vask": mine, "lumen": self.answers["lumen"][0],
+                "program": self.answers["program"][0]}  # fmt: skip
+        for who, subj in gave.items():
+            pkg = self.send(who, subj, "karst", f"{who}-to-karst", "As spec 2.2 asks")
+            self.receive("karst", pkg)
+        names = {self.pub[b]: b for b in BOXES}
+        self.say("\n  every chain's sent rows, read together (the scene's view: no one "
+                 "box has it)")  # fmt: skip
+        got_by: dict[str, set[str]] = {b: set() for b in BOXES}
+        for who in BOXES:
+            for r in self.rows(who):
+                if r["kind"] == "sent":
+                    got_by[names[r["to"]]].add(who)
+        for b in ("karst", "oversight"):
+            self.say(f"  {b:10} was sent to by {', '.join(sorted(got_by[b]))}")
+        if got_by["karst"] != {"vask", "lumen", "program"}:
+            self.wrong.append("Karst did not receive from the three boxes it asked")
+        sent_by_karst = {
+            names[r["to"]] for r in self.rows("karst") if r["kind"] == "sent"
+        }
+        self.say(f"  karst received from three and sent to {', '.join(sorted(sent_by_karst))} "
+                 "only: spec 2.2 took from each what it gave none")  # fmt: skip
+
+    def rows(self, who: str) -> list[dict]:
+        text = (self.box(who) / "record.jsonl").read_text()
+        return [json.loads(line) for line in text.splitlines()]
+
+    def rewrite(self) -> dict:
+        """Counterintel's seal is backdated to before the day and every row after
+        it re-hashed, so its own verify can't see it."""
+        real = self.box("counter")
+        fake = self.to / "counter-rewritten"
+        shutil.copytree(real, fake)
+        rows = [json.loads(x) for x in (fake / "record.jsonl").read_text().splitlines()]
+        n = [r["n"] for r in rows if r["kind"] == "seal"][0]
+        rows[n]["ts"] = "2026-11-17T22:00:00Z"
+        for i in range(n, len(rows)):
+            rows[i]["prev"] = rows[i - 1]["hash"]
+            body = {k: v for k, v in rows[i].items() if k != "hash"}
+            rows[i]["hash"] = h256(canon(body))
+        (fake / "record.jsonl").write_text("".join(canon(r) + "\n" for r in rows))
+        said = self.run(KERNEL, "verify", "--box", fake).strip()
+        self.say(f"  Counterintel's rewritten copy, by its own verify: {said}")
+        if not said.startswith("the chain holds"):
+            self.wrong.append("the rewritten copy did not fool verify")
+        return {"real": real, "fake": fake}
+
+    def witness(self) -> dict:
+        self.say("  Counterintel, asked, seals one innocent line and sends it up")
+        line = self.seal(*REVIEW)
+        cpkg = self.send("counter", line, "oversight", "counter-to-oversight",
+                         "The review log, as asked")  # fmt: skip
+        self.receive("oversight", cpkg)
+        boxes = self.rewrite()
+        out: dict[str, str] = {}
+        self.say("\n  Oversight holds each chain to the packages it kept")
+        for who in ("vask", "lumen", "karst", "program", "intake", "counter"):
+            kept = [str(p) for p in self.packages if p.stem.startswith(f"{who}-")
+                    and p.stem.endswith("-to-oversight")]  # fmt: skip
+            got = self.run(SHARE, "witness", "--box", boxes["real"] if who == "counter"
+                           else self.box(who), "--package", ",".join(kept), want=(0,))  # fmt: skip
+            verdicts = {ln.split()[0] for ln in got.splitlines()}
+            out[who] = "holds" if verdicts == {"holds"} else "/".join(sorted(verdicts))
+            self.say(f"  {who:10} real record: {out[who]}")
+        got = self.run(SHARE, "witness", "--box", boxes["fake"], "--package",
+                       str(self.to / "counter-to-oversight.pkg"), want=(42,))  # fmt: skip
+        verdicts = {ln.split()[0] for ln in got.splitlines()}
+        self.say(f"  counter    rewritten copy: {'/'.join(sorted(verdicts))}")
+        if set(out.values()) != {"holds"}:
+            self.wrong.append(f"a real chain did not hold: {out}")
+        if verdicts != {"rewritten"}:
+            self.wrong.append("the witness did not name the rewritten chain")
+        self.say("\n  Oversight's report is due at close of day. What it says is "
+                 "outside every chain.")  # fmt: skip
+        return {"real": out, "rewritten": sorted(verdicts)}
+
     def play(self) -> dict:
         self.say("── 1. eight boxes, each over its own pile")
         self.setup()
@@ -283,7 +385,13 @@ class Scene:
         self.say("\n── 7. the clash and the clocks arrive at Oversight")
         self.clash()
 
-        self.say("\n── 8. what crossed, and what did not")
+        self.say("\n── 8. the spec asks for everything, of everyone")
+        self.asked()
+
+        self.say("\n── 9. the rewrite, and the witness")
+        self.found = self.witness()
+
+        self.say("\n── 10. what crossed, and what did not")
         self.walls()
         return self.summary()
 
@@ -296,7 +404,7 @@ class Scene:
         before = len(self.wrong)
         for pkg in self.packages:
             body = pkg.read_text(encoding="utf-8")
-            sender = pkg.stem.split("-to-")[0]
+            sender = pkg.stem.split("-")[0]
             if "Halvern" in body:
                 self.wrong.append(f"the rumour is in {pkg.name}")
             for b, lines in piles.items():
@@ -307,7 +415,11 @@ class Scene:
                      "holds only its sender's pile")  # fmt: skip
 
     def summary(self) -> dict:
-        doc: dict = {"boxes": {}, "wrong": self.wrong}
+        doc: dict = {
+            "boxes": {},
+            "found": getattr(self, "found", {}),
+            "wrong": self.wrong,
+        }
         for who in BOXES:
             ver = self.run(KERNEL, "verify", "--box", self.box(who))
             out = self.run(KERNEL, "out", "--box", self.box(who))

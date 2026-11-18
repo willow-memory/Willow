@@ -40,10 +40,10 @@ def test_every_chain_holds_and_only_the_five_who_sealed_have_seals(played):
     assert len(boxes) == 8
     assert all(b["held"] for b in boxes.values())
     assert {k: b["seals"] for k, b in boxes.items() if b["seals"]} == {
-        "vask": 1, "lumen": 3, "karst": 2, "program": 2, "intake": 2,
+        "vask": 2, "lumen": 3, "karst": 2, "program": 2, "intake": 2, "counter": 1,
     }  # fmt: skip
-    # counter holds the rumour and sealed nothing; oversight only received
-    assert boxes["counter"]["seals"] == boxes["oversight"]["seals"] == 0
+    # oversight only received; prior never left its wall
+    assert boxes["oversight"]["seals"] == boxes["prior"]["seals"] == 0
 
 
 def test_each_box_alone_sees_no_clash_and_oversight_sees_both(played):
@@ -65,3 +65,19 @@ def test_the_scene_refuses_a_folder_that_is_there(played):
     got = py(HERE / "scene.py", "run", "--life", played["tmp"] / "life",
              "--to", played["tmp"] / "scene")  # fmt: skip
     assert got.returncode == 2
+
+
+def test_the_witness_names_exactly_the_rewritten_chain(played):
+    found = played["doc"]["found"]
+    assert set(found["real"].values()) == {"holds"}
+    assert found["rewritten"] == ["rewritten"]
+    assert (
+        "the chain holds"
+        in played["got"].stdout.split("rewritten copy, by its own verify: ")[1]
+    )
+
+
+def test_the_rumour_is_in_no_package(played):
+    assert not any(
+        "Halvern" in p.read_text() for p in (played["tmp"] / "scene").glob("*.pkg")
+    )
