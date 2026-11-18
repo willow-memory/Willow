@@ -1071,6 +1071,10 @@ willow/
 │   │   │   ├── prov.py   the record as W3C PROV-JSON: what came from what, by which step, sealed by whom
 │   │   │   ├── test_prov.py
 │   │   │   └── README.md
+│   │   ├── removed/
+│   │   │   ├── removed.py    a file you are about to delete or archive, written on the record first
+│   │   │   ├── test_removed.py
+│   │   │   └── README.md     its card
 │   │   ├── ro-crate/
 │   │   │   ├── ro_crate.py   a box snapshot as an RO-Crate zip: every file with its SHA-256, size, kind and licence, and the record's tip pinned
 │   │   │   ├── test_ro_crate.py

@@ -1206,6 +1206,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="prov"></a>[**prov**](adapters/stdlib/prov/) \
   The record exported as W3C PROV: what came from what, by which step, sealed by whom. \
   *new* `no-install` `offline` `prov` `tool` · near: cloudevents, annotations, in-toto
+- <a id="removed"></a>[**removed**](adapters/stdlib/removed/) \
+  A file you are about to delete or archive written on the record first: its name, size and SHA-256, never its words, so the hole stays. \
+  *new* `no-install` `offline` `sha` `deleted` · near: copy-in, hook-pin, snapshot
 - <a id="ro-crate"></a>[**ro-crate**](adapters/stdlib/ro-crate/) \
   Your willow (the files it reads, its record, your approved answers) as an RO-Crate research object that Zenodo and other archives can read. \
   *new* `no-install` `offline` `tool` · near: in-toto, annotations, cloudevents
