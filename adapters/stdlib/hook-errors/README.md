@@ -3,7 +3,7 @@ section: Assistants
 line: Each failed command an assistant runs kept as a row of its hash and exit code, so the third time it fails it's named, not retried blind.
 source: new
 added: 2026-11-07
-version: 0.1.1
+version: 0.1.2
 writes: record
 network: none
 role: guards
@@ -26,6 +26,7 @@ Cursor send on standard input:
 | Event | What happens |
 |---|---|
 | PostToolUse (an exit code is present) | a non-zero exit appends a `hook-errors` row (command hash, exit, and the call's `session_id` when sent), never the command's words; the call is allowed |
+| PostToolUseFailure (Claude Code's event for a command that failed) | it sends no exit code field, so the code is the number its `error` opens with (`Exit code 2`), and the row is the same; a failure that names none (a timeout, an interrupt) keeps nothing |
 | PreToolUse (no exit code yet) | if this session already has two rows for the same command hash and the same exit, the third try is blocked (exit 2) and named; otherwise allowed |
 | anything else | allowed; nothing is written |
 
@@ -41,7 +42,9 @@ hash alone: the assistant that ran it has it in hand at the third try.
 
 To use it, put the `run` line where the assistant's settings name a
 PreToolUse hook for Bash (or Shell) and a PostToolUse hook for the same
-tools, so failures are recorded and the third identical try is stopped.
+tools (in Claude Code, a PostToolUseFailure hook too: that is where a failed
+command arrives), so failures are recorded and the third identical try is
+stopped.
 
 It never reads the key. Exit codes: 0 allowed (or `check` none at the block
 rung); 42 `check` found a repeated failure; 2 refused or blocked.

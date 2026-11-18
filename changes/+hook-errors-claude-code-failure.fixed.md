@@ -1,0 +1,1 @@
+`hook-errors`: a command that fails in Claude Code is recorded; it is sent as PostToolUseFailure with the exit code only in its `error` ("Exit code 2"), where the hook never looked, so no failure was kept and the third try was never blocked

@@ -15,6 +15,11 @@ Cursor send on standard input:
         which can carry the person's (CONST-VI-8). The call is allowed;
         recording never blocks.
 
+    PostToolUseFailure (Claude Code's event for a command that failed)
+        it sends no exit code field: the code is the number its `error`
+        opens with ("Exit code 2"), and the row is the same. A failure
+        with no such number (a timeout, an interrupt) keeps nothing.
+
     PreToolUse (no exit code yet)
         if this session already has two rows for the same command hash and
         the same exit, the third try is blocked: exit 2, and a reason that
@@ -34,6 +39,7 @@ block rung); 42 `check` found a repeated failure; 2 refused or blocked.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -43,6 +49,8 @@ import kernel  # noqa: E402
 KIND = "hook-errors"
 BLOCK_AT = 2  # two prior same (hash, exit) → third attempt blocked
 SHELL = {"Bash", "Shell", "run_terminal_cmd"}
+#: how Claude Code's `error` opens when a command exits non-zero
+FAILED = re.compile(r"Exit code (\d+)\b")
 
 
 def session_of(call: dict) -> str:
@@ -58,11 +66,23 @@ def command_of(call: dict) -> str | None:
     return c if isinstance(c, str) and c else None
 
 
+def failed(call: dict) -> bool:
+    """Whether this is Claude Code's event for a tool that failed."""
+    return call.get("hook_event_name") == "PostToolUseFailure"
+
+
 def exit_of(call: dict) -> int | None:
-    """The tool's exit code when this is a PostToolUse shape, else None."""
+    """The tool's exit code when this is a PostToolUse shape, else None.
+    Claude Code sends a failed command as PostToolUseFailure with no exit
+    code field: the code is the number its `error` opens with."""
     raw = call.get("exit_code")
     if isinstance(raw, int):
         return raw
+    error = call.get("error")
+    if failed(call) and isinstance(error, str):
+        m = FAILED.match(error)
+        if m:
+            return int(m.group(1))
     for key in ("tool_response", "response"):
         r = call.get(key)
         if isinstance(r, dict):
@@ -131,6 +151,8 @@ def judge(raw: str, box: Path, ts: str) -> tuple[int, str]:
             session=session_of(call),
         )
         return 0, ""
+    if failed(call):  # it failed without an exit code: nothing to keep,
+        return 0, ""  # and a command that already ran is never blocked
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return 2, "refused: the record doesn't verify: " + "; ".join(breaks)

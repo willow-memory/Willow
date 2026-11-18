@@ -76,6 +76,79 @@ def post(
     )
 
 
+def failure(
+    error: object = "Exit code 2\nls: cannot access 'x': No such file or directory",
+    command: str = CMD,
+    session: str = "s1",
+    event: str = "PostToolUseFailure",
+) -> str:
+    """What Claude Code sends when a command fails, as captured on
+    2026-11-17: no exit_code and no tool_response, only `error`."""
+    return json.dumps(
+        {
+            "hook_event_name": event,
+            "tool_name": "Bash",
+            "tool_input": {"command": command, "description": "x"},
+            "error": error,
+            "is_interrupt": False,
+            "session_id": session,
+        }
+    )
+
+
+def errors(b: Path) -> list[dict]:
+    return [
+        json.loads(line)
+        for line in (b / "record.jsonl").read_text().splitlines()
+        if '"hook-errors"' in line
+    ]
+
+
+def test_claude_codes_failed_command_is_recorded_by_the_exit_its_error_names(tmp_path):
+    b = make(tmp_path)
+    for _ in range(2):
+        got = run("--box", str(b), "run", *NOW, data=failure())
+        assert got.returncode == 0 and got.stderr == ""
+    assert [r["exit"] for r in errors(b)] == [2, 2]
+    assert "cannot access" not in (b / "record.jsonl").read_text()
+    blocked = run("--box", str(b), "run", *NOW, data=pre())
+    assert blocked.returncode == 2
+    assert "failed 2 times with exit 2" in blocked.stderr
+
+
+def test_the_exit_is_the_whole_number_the_error_opens_with(tmp_path):
+    b = make(tmp_path)
+    run("--box", str(b), "run", *NOW, data=failure("Exit code 127\nnot found"))
+    run("--box", str(b), "run", *NOW, data=failure("Exit code 1"))
+    assert [r["exit"] for r in errors(b)] == [127, 1]
+
+
+def test_a_failure_that_names_no_exit_keeps_nothing_and_is_never_blocked(tmp_path):
+    b = make(tmp_path)
+    for _ in range(2):  # the next try would be blocked
+        run("--box", str(b), "run", *NOW, data=failure())
+    before = (b / "record.jsonl").read_text()
+    for error in (
+        "Command timed out after 2m 0s",
+        "it said Exit code 2 somewhere later",
+        "Exit code 2x",
+        "",
+        None,
+        2,
+    ):
+        got = run("--box", str(b), "run", *NOW, data=failure(error))
+        assert (got.returncode, got.stderr) == (0, ""), error
+    assert (b / "record.jsonl").read_text() == before
+
+
+def test_an_error_on_any_other_event_names_no_exit(tmp_path):
+    b = make(tmp_path)
+    before = (b / "record.jsonl").read_text()
+    got = run("--box", str(b), "run", *NOW, data=failure(event="PostToolUse"))
+    assert got.returncode == 0
+    assert (b / "record.jsonl").read_text() == before
+
+
 def test_a_bad_command_line_is_refused_and_names_the_script():
     got = run()
     assert got.returncode == 2 and "hook_errors.py" in got.stderr
