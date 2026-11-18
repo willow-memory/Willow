@@ -3,7 +3,7 @@ section: Finding things
 line: Everyone your files name, and every place each is mentioned.
 source: new
 added: 2026-10-27
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: page
@@ -25,6 +25,13 @@ $ python adapters/stdlib/people/people.py --box DIR ferris
 2026-08-21  messages/sms_dad_2026.txt:81  [2026-08-21 19:36] Dad: Ferris came by, we played cards
 27 mentions of "Ferris" in 6 files
 ```
+
+`--json` gives the roster and every drill-down at once, as one
+[report](../ci/README.md#the-report-contract): a group a person, most
+mentioned first, and a row a mention, its place and then its date and line.
+A program that wants everyone's places asks once, and your folder is read
+once, where asking a person at a time read it again for each. With a name,
+only that person's group.
 
 **A name is known by what the files do with it**, not by a list of names: it
 is written capitalized at least as often as lowercase ("Walked" starts

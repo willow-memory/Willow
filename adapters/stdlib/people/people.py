@@ -1,6 +1,6 @@
 """people.py: everyone your files name, and every place each is mentioned.
 
-    python adapters/stdlib/people/people.py --box DIR [WHO]
+    python adapters/stdlib/people/people.py --box DIR [WHO] [--json]
 
 The roster of the people your folder speaks of, most mentioned first, and,
 named, any one of them with every place they're mentioned:
@@ -38,12 +38,19 @@ the nearest date written above it in its file, else the date its file is
 named for; the roster's spans skip what no date reaches, and the drill-down
 lists undated mentions last. WHO is matched as a word, case aside.
 
+`--json` gives the roster and every drill-down at once, as one report
+(adapters/stdlib/ci/README.md, the report contract): a group a person, most
+mentioned first, and a row a mention, its place and then its date and line.
+A program that wants everyone's places asks once, and the folder is read
+once. With WHO, only that person's group.
+
 It only reads. Exit codes, the kernel's: 0 people found; 42 none, or WHO is
 no one the files name; 2 refused.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -159,8 +166,31 @@ def drill(who: str, ms: list[dict]) -> list[str]:
     return out
 
 
+def report(found: dict[str, list[dict]]) -> dict:
+    """The roster and every drill-down as one report (ci/README.md, the
+    report contract): a group a person, most mentioned first, and a row a
+    mention, in the drill-down's order, its place and then its date and
+    line. One read of the folder gives all of it."""
+    groups = []
+    for w, ms in sorted(found.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+        ms = sorted(
+            ms, key=lambda m: (m["when"] == "", m["when"], m["path"], m["line"])
+        )
+        groups.append({"name": w.capitalize(),
+                       "rows": [{"where": f"{m['path']}:{m['line']}",
+                                 "what": f"{day(m['when'])}  {m['text'][:100]}"}
+                                for m in ms]})  # fmt: skip
+    said = f"{len(groups)} people, by what the files do with a name"
+    return {"addon": "people", "state": "populated", "said": said, "groups": groups}
+
+
+def nobody(said: str) -> dict:
+    return {"addon": "people", "state": "empty", "said": said, "groups": []}
+
+
 def main(argv: list[str]) -> int:
-    opts, args, it = {}, [], iter(argv)
+    as_json = "--json" in argv
+    opts, args, it = {}, [], iter(a for a in argv if a != "--json")
     for a in it:
         if a == "--box":
             opts[a] = next(it, "")
@@ -176,16 +206,24 @@ def main(argv: list[str]) -> int:
     pile = kernel.pile_of_box(kernel.config(box))
     names = persons(pile)
     if not names:
-        print("No word of your folder does what the files do with a name.")
+        said = "No word of your folder does what the files do with a name."
+        print(json.dumps(nobody(said), ensure_ascii=False) if as_json else said)
         return kernel.ESCALATE
     found = mentions(pile, names)
     if args:
         who = args[0].lower()
         if who not in found:
-            print(f'No one your files name answers to "{args[0]}".')
+            said = f'No one your files name answers to "{args[0]}".'
+            print(json.dumps(nobody(said), ensure_ascii=False) if as_json else said)
             return kernel.ESCALATE
+        if as_json:
+            print(json.dumps(report({who: found[who]}), ensure_ascii=False))
+            return kernel.ALIVE
         for line in drill(who, found[who]):
             print(line)
+        return kernel.ALIVE
+    if as_json:
+        print(json.dumps(report(found), ensure_ascii=False))
         return kernel.ALIVE
     for line in roster(found):
         print(line)
