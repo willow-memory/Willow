@@ -262,3 +262,34 @@ def test_a_line_whose_one_date_is_mid_line_is_placed_at_it(tmp_path):
     assert rows == [
         "2026-03-09  log.md:1  Wrote to the landlord on 2026-03-09 about the mould."
     ]
+
+
+def test_every_keeps_only_the_passages_that_hold_all_the_words(tmp_path):
+    b = box(tmp_path, {
+        "a.md": "The boiler broke.\n",
+        "b.md": "Boiler engineer came, the landlord paid.\n",
+        "boiler/d.md": "The landlord rang.\n",
+    })  # fmt: skip
+    got = run(str(HERE / "timeline.py"), "--box", str(b), "--to", str(tmp_path / "t.txt"),
+              "--every", "boiler landlord")  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    text = (tmp_path / "t.txt").read_text()
+    # both words, in the text or the folder's name: in; one of two: out
+    assert "b.md:1" in text and "boiler/d.md:1" in text and "a.md:1" not in text
+    assert "holds every one of these words" in text
+    none = run(str(HERE / "timeline.py"), "--box", str(b), "--to", str(tmp_path / "u.txt"),
+               "--every", "boiler landlord engineer car")  # fmt: skip
+    assert none.returncode == 42 and not (tmp_path / "u.txt").exists()
+
+
+def test_a_line_with_no_letter_and_no_digit_is_left_out(tmp_path):
+    b = box(tmp_path, {
+        "log.md": "2026-03-01 Mould in the bedroom.\n| Room | Mould |\n|---|---|\n"
+                  "```\n---\n| bedroom | yes |\n",
+    })  # fmt: skip
+    timeline(b, tmp_path / "t.txt", "mould")
+    text = (tmp_path / "t.txt").read_text()
+    assert "3 lines" in text and "log.md:2" in text and "log.md:6" in text
+    for n in (3, 4, 5):
+        assert f"log.md:{n} " not in text
+    assert "(date from line 1)" in text  # the lines kept are still dated from above

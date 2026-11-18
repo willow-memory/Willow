@@ -3,7 +3,7 @@ section: Trust and proof
 line: A dated timeline of one matter (a dispute, an illness, a tenancy), every line cited, to hand to a lawyer, doctor or council.
 source: new
 added: 2026-10-24
-version: 0.1.1
+version: 0.1.2
 writes: to
 network: none
 role: makes
@@ -14,7 +14,7 @@ One matter from your folder, a dispute, an illness, a tenancy, as a dated
 list of the lines about it, each with the file and line it came from. Made to
 hand to someone who needs the story in order: a lawyer, a doctor, a council.
 
-    python adapters/stdlib/timeline/timeline.py --box DIR --to FILE "mould landlord"
+    python adapters/stdlib/timeline/timeline.py --box DIR --to FILE [--every] "mould landlord"
 
     2026-03-01  tenancy/log.md:3         2026-03-01 Reported the mould in the back bedroom.
     2026-03-01  tenancy/log.md:4         The landlord said someone would come.  (date from line 3)
@@ -40,6 +40,12 @@ you have one), gives all of its lines, oldest first.
 - **Two dates are two facts.** A line's own date and the date its file is
   named for can differ (a letter written up the next day). When they do,
   both are shown, and the line is placed by its own.
+- **A line that says nothing is left out.** One with no letter and no
+  digit, a table's rule, a code fence, a row of dashes, isn't a line of the
+  story.
+- **`--every` for a narrower matter.** A passage is in when it holds half
+  or more of your words; with `--every` it must hold all of them, for a
+  folder where two of three words turn up everywhere.
 - **Undated lines stay.** They come after the dated ones, by file and line,
   marked "undated": your files don't say when, and the timeline says that.
 

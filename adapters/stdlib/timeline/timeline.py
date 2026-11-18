@@ -1,6 +1,6 @@
 """timeline.py: one matter's lines from your folder, by date, every line cited.
 
-    python adapters/stdlib/timeline/timeline.py --box DIR --to FILE "your words"
+    python adapters/stdlib/timeline/timeline.py --box DIR --to FILE [--every] "your words"
 
 The matter is chosen by words, as a question is: "mould landlord", "knee
 physio", "council tax". Every passage of your folder that holds them, by the
@@ -21,7 +21,13 @@ its file, and says which line that was; a line with neither takes its file's nam
 line's own date and its file's are two facts: when they differ, both are
 shown, and it is placed by its own. Undated lines come after the dated ones,
 by file and line. Nothing is merged, shortened or reworded: a passage that
-appears twice is listed twice, at both places.
+appears twice is listed twice, at both places. A line with no letter and no
+digit (a table's rule, a code fence, a row of dashes) says nothing, and is
+left out.
+
+`--every` keeps only the passages that hold every one of your words, where
+the kernel's rule is half of them: for a folder where two of three words
+turn up everywhere.
 
 It never changes your files, and writes only FILE: never inside your folder
 or the box, never over a file that exists, and readable only by you.
@@ -44,15 +50,17 @@ def day(d: str) -> str:
     return f"{d[:4]}-{d[4:6]}-{d[6:]}" if d else "undated"
 
 
-def held(pile: list[dict], matter: str, alias: dict) -> set[int]:
+def held(pile: list[dict], matter: str, alias: dict, every: bool = False) -> set[int]:
     """The passages holding the matter's words, by the kernel's rule (`rank`'s
     `HOLD` of the content words, in the text or the path), every one of them:
-    no top three, and a passage repeated in two places is held in both."""
+    no top three, and a passage repeated in two places is held in both. With
+    `every`, a passage must hold all of the words, not `HOLD` of them."""
     want = set(kernel.words(matter)) - kernel.FUNCTION
+    share = 1 if every else kernel.HOLD
     out = set()
     for i, c in enumerate(pile):
         toks = kernel.toks(c)
-        if sum(kernel.held_by(w, toks, alias) for w in want) >= kernel.HOLD * len(want):
+        if sum(kernel.held_by(w, toks, alias) for w in want) >= share * len(want):
             out.add(i)
     return out
 
@@ -86,7 +94,7 @@ def lines(pile: list[dict], keep: set[int]) -> list[dict]:
         for j, text in enumerate(c["text"].splitlines()):
             n = c["line"] + j
             said, several = said_of(text)
-            if i in keep:
+            if i in keep and any(ch.isalnum() for ch in text):
                 out.append({"said": said, "above": above, "from": src,
                             "filed": filed, "path": c["path"], "line": n,
                             "several": several, "text": text.strip()})  # fmt: skip
@@ -113,14 +121,15 @@ def show(r: dict, width: int) -> str:
     return f"{day(r['when']):<10}  {where:<{width}}  {r['text']}{tail}"
 
 
-def page(matter: str, found: list[dict]) -> str:
+def page(matter: str, found: list[dict], every: bool = False) -> str:
     undated = sum(r["when"] == "" for r in found)
     width = max(len(f"{r['path']}:{r['line']}") for r in found)
     head = [
         f"Timeline: {matter}",
         "",
         f"{len(found)} lines, oldest first: {len(found) - undated} dated, {undated} undated.",
-        "Every line of each passage in the folder that holds these words, as",
+        "Every line of each passage in the folder that holds "
+        + ("every one of these words, as" if every else "these words, as"),
         "written, with its file and line. A line's own date and the date its",
         "file is named for are both shown when they differ.",
         "",
@@ -138,6 +147,8 @@ def main(argv: list[str]) -> int:
     for a in it:
         if a in ("--box", "--to"):
             opts[a] = next(it, "")
+        elif a == "--every":
+            opts[a] = "yes"
         else:
             args.append(a)
     if not opts.get("--box") or not opts.get("--to") or len(args) != 1:
@@ -162,7 +173,8 @@ def main(argv: list[str]) -> int:
         print(f'"{args[0]}" is only common words, held by everything; say more.')
         return kernel.ESCALATE
     chunks = kernel.chunks(pile)
-    found = lines(chunks, held(chunks, args[0], alias))
+    every = "--every" in opts
+    found = lines(chunks, held(chunks, args[0], alias, every))
     if not found:
         print(f'Nothing in your folder holds "{args[0]}". Nothing written.')
         return kernel.ESCALATE
@@ -171,7 +183,7 @@ def main(argv: list[str]) -> int:
     except OSError as e:
         return refuse(f"could not write {to}: {type(e).__name__}")
     with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
-        f.write(page(args[0], found))
+        f.write(page(args[0], found, every))
     undated = sum(r["when"] == "" for r in found)
     print(f"wrote {len(found)} lines to {opts['--to']}; {undated} undated")
     return kernel.ALIVE
