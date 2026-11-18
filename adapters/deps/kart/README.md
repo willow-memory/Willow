@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.4
+version: 0.1.5
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -90,7 +90,9 @@ look up a name and read a planted variable, and holds it to finding none.
 **What it records.** A `ran` row: the job, how it ended, its exit code, its
 output's SHA-256, the sandbox engine, the network mode and what was bound,
 and `tools`, the SHA-256 of bash and of each program the job names, as found
-on that PATH; never the output. What it printed is written to FILE, new, outside the box
+on that PATH; never the output. How a failed job ended is kept as Kartikeya's
+name for it (`exited 3`, `timeout`) and not the line it adds after, which is
+the last thing the job printed. What it printed is written to FILE, new, outside the box
 and your folder. A job that ended well is proposed as an answer of yours,
 citing nothing, waiting on your seal: it came from your files, so nothing
 of it leaves but by your seal and `share send`. Its claim names the tools'
@@ -133,8 +135,9 @@ AppArmor unless allowed.
 proposed, waiting on your seal, or a job that failed or broke its shape; 2
 refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
 sandbox on this machine, in its own words, before anything runs or is
-recorded; a resource group named in `KART_CGROUP_PARENT` that isn't there,
-likewise; a job not sealed; one asking for the network; a job file
+recorded; a resource group set up for Kartikeya that isn't ready (by
+Kartikeya's own `cgroup-status`: a restart undoes `kartikeya setup-cgroup`),
+likewise, naming the command to run; a job not sealed; one asking for the network; a job file
 `write` can't take).
 
 **Uses:** [share](../../stdlib/share/) to read packages; the kernel's

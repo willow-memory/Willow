@@ -288,29 +288,92 @@ def test_a_bubblewrap_that_cant_sandbox_here_refuses_before_anything_runs(
     assert walt.rows() == before and not (tmp_path / "o").exists()
 
 
-def test_a_resource_group_that_isnt_there_refuses_before_anything_runs(
-    walt, tmp_path, monkeypatch
+def kart_itself():
+    """kart.py loaded here, to hold its checks to answers a machine can't
+    be made to give on demand (a resource group that is or isn't ready)."""
+    sys.path.insert(0, str(HERE))
+    import kart  # noqa: PLC0415
+
+    return kart
+
+
+@pytest.mark.parametrize(("status", "said"), [
+    ({"ready": True, "env_parent": "/g"}, None),
+    ({"ready": False, "env_parent": None, "systemd_parent": None,
+      "slice_unit_path": "/nowhere/kart.slice"}, None),  # none set up: rlimits
+    ({"ready": False, "env_parent": "/g/kart.slice", "systemd_parent": None,
+      "slice_unit_path": "/nowhere/kart.slice"}, "isn't ready (/g/kart.slice)"),
+    ({"ready": False, "env_parent": None, "systemd_parent": "/s/kart.slice",
+      "slice_unit_path": "/nowhere/kart.slice"}, "isn't ready (/s/kart.slice)"),
+    ({"ready": False, "env_parent": None, "systemd_parent": None,
+      "slice_unit_path": __file__}, f"isn't ready ({__file__})"),  # the unit alone
+])  # fmt: skip
+def test_a_resource_group_set_up_but_not_ready_is_named_with_what_to_run(
+    monkeypatch, status, said
 ):
-    """KART_CGROUP_PARENT set for a fleet whose slice isn't running: said by
-    name, and nothing on the record, where Kartikeya's own refusal left a
-    failed run saying only cgroup_setup_failed."""
-    monkeypatch.setattr(sys.modules[__name__], "KEEP_GROUP", {"KART_CGROUP_PARENT"})
+    """A restarted kart.slice has lost what `kartikeya setup-cgroup` wrote
+    (seen 2026-11-18: every job failed saying only cgroup_setup_failed)."""
+    kart = kart_itself()
+    from kartikeya import cgroup_setup  # noqa: PLC0415
+
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", lambda: status)
+    got = kart.group_not_ready()
+    if said is None:
+        assert got is None
+        return
+    assert said in got and "nothing ran" in got and "kartikeya setup-cgroup" in got
+
+    def broke():
+        raise OSError("no systemd")
+
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", broke)
+    assert (
+        "couldn't say" in kart.group_not_ready()
+        and "nothing ran" in kart.group_not_ready()
+    )
+
+
+def test_a_group_that_isnt_ready_refuses_before_anything_runs_or_is_recorded(
+    walt, tmp_path, monkeypatch, capsys
+):
+    kart = kart_itself()
     subj = walt.job("echo hi")
-    gone = tmp_path / "kart.slice"
+    job = tmp_path / "j.sh"
+    job.write_text("echo hi\n")
+    monkeypatch.setattr(
+        kart, "group_not_ready", lambda: "a resource group isn't ready; nothing ran"
+    )
     before = walt.rows()
-    env = {**os.environ, "KART_CGROUP_PARENT": str(gone)}
-    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
-    assert got.returncode == 2, got.stdout + got.stderr
-    assert f"names a resource group that isn't there ({gone})" in got.stderr
-    assert "nothing ran" in got.stderr and "unset the variable" in got.stderr
+    for argv in (["run", "--box", str(walt.box), "--job", subj, "--to", str(tmp_path / "o")],
+                 ["try", "--box", str(walt.box), "--file", str(job), "--to", str(tmp_path / "o")]):  # fmt: skip
+        assert kart.main([*argv, *NOW]) == 2
+        assert "isn't ready; nothing ran" in capsys.readouterr().err
     assert walt.rows() == before and not (tmp_path / "o").exists()
-    (tmp_path / "file").write_text("x")  # a file is no group either
-    env["KART_CGROUP_PARENT"] = str(tmp_path / "file")
-    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
-    assert got.returncode == 2 and "isn't there" in got.stderr
-    env["KART_CGROUP_PARENT"] = ""  # set to nothing is not named
-    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
+
+
+def test_how_a_run_failed_is_recorded_without_what_it_printed(walt, tmp_path):
+    """Kartikeya's error for a job that exits badly ends with the last line
+    it printed (seen 2026-11-18, on a real record). That line is the
+    person's files'."""
+    job = tmp_path / "leak.sh"
+    job.write_text("cat {pile}/cases.md; exit 3\n")
+    got = walt.kart("try", "--file", job, "--to", tmp_path / "o", *NOW)
     assert got.returncode == 42, got.stdout + got.stderr
+    assert "Johnson" in (tmp_path / "o").read_text()  # in the file, on their machine
+    subj = walt.job("grep -h Kessler {pile}/cases.md; exit 4")
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o2", *NOW)
+    assert got.returncode == 42, got.stdout + got.stderr
+    tried, ran = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert (tried["refused"], ran["refused"]) == ("exited 3", "exited 4")
+    for row in (tried, ran):
+        for word in ("Johnson", "Kessler", "stain", "pipe"):
+            assert word not in json.dumps(row), (word, row)
+    kart = kart_itself()
+    assert (
+        kart.why_failed({"error": "KART-SECURITY: blocked a socket"}) == "KART-SECURITY"
+    )
+    assert kart.why_failed({"error": "timeout"}) == "timeout"
+    assert kart.why_failed({}) is None and kart.why_failed({"error": " "}) is None
 
 
 def test_the_policy_is_willows_and_says_so(walt):

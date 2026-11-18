@@ -192,11 +192,9 @@ def missing() -> str | None:
         return "Kartikeya isn't installed: pip install -r adapters/deps/kart/requirements.txt"
     if shutil.which("bwrap") is None:
         return "bubblewrap isn't installed: the bwrap program (apt install bubblewrap)"
-    group = os.environ.get("KART_CGROUP_PARENT")
-    if group and not Path(group).is_dir():
-        return (f"KART_CGROUP_PARENT names a resource group that isn't there ({group}); "
-                "nothing ran. start it, or unset the variable to run under "
-                "per-process limits")  # fmt: skip
+    why = group_not_ready()
+    if why:
+        return why
     try:
         # an empty pipe for its input, not the null device: opening that is a
         # write by the guard's rule, and this add-on writes record and to only
@@ -209,6 +207,40 @@ def missing() -> str | None:
         return (f"bubblewrap can't make a sandbox on this machine ({said}); "
                 "nothing ran. a container's or AppArmor's rules may forbid it")  # fmt: skip
     return None
+
+
+def why_failed(result: dict) -> str | None:
+    """How a run failed, as the record keeps it: Kartikeya's name for it
+    ("exited 3", "timeout", "cgroup_setup_failed", its scan's label) and
+    never what follows the colon, which is the last thing the job printed:
+    a line of the person's files, if that is what it was reading."""
+    said = str(result.get("error") or "").strip()
+    return said.split(":", 1)[0].strip()[:80] or None
+
+
+def group_not_ready() -> str | None:
+    """Why a resource group that is set up for Kartikeya can't be used, or
+    None. Kartikeya's own check: a group counts as set up when
+    KART_CGROUP_PARENT names one, or its kart.slice unit is installed, and
+    it then refuses to run a task without it. A slice that was restarted,
+    or a machine that was, has lost what `kartikeya setup-cgroup` wrote, so
+    this says that before anything runs or is recorded."""
+    from kartikeya import cgroup_setup  # noqa: PLC0415
+
+    try:
+        st = cgroup_setup.cgroup_status()
+    except Exception as e:  # noqa: BLE001  its check is its own; never run blind
+        return f"Kartikeya couldn't say whether its resource group is ready ({e}); nothing ran"
+    if st.get("ready"):
+        return None
+    unit = st.get("slice_unit_path")
+    named = st.get("env_parent") or st.get("systemd_parent")
+    if not named and not (unit and Path(unit).exists()):
+        return None  # none set up: Kartikeya runs under per-process limits
+    return (f"a resource group is set up for Kartikeya but isn't ready ({named or unit}); "
+            "nothing ran. run: kartikeya setup-cgroup (a restart of the slice or "
+            "the machine undoes it); or, to run under per-process limits, unset "
+            "KART_CGROUP_PARENT and remove the kart.slice unit")  # fmt: skip
 
 
 def do_policy(opts: dict) -> int:
@@ -307,7 +339,7 @@ def do_try(opts: dict, ts: str) -> int:
         output_sha256=kernel.h256(out), engine=manifest.get("engine"),
         network=manifest.get("network_mode"), bound_ro=manifest.get("bound_ro"),
         bound_rw=len(manifest.get("bound_rw") or []),
-        refused=(result.get("error") or None) if status != "completed" else None,
+        refused=why_failed(result) if status != "completed" else None,
         tools=used, locale=LOCALE,
     )  # fmt: skip
     print(
@@ -392,7 +424,7 @@ def do_run(opts: dict, ts: str) -> int:
         returncode=result.get("returncode"), output_sha256=kernel.h256(out),
         engine=manifest.get("engine"), network=manifest.get("network_mode"),
         bound_ro=manifest.get("bound_ro"), bound_rw=len(manifest.get("bound_rw") or []),
-        refused=(result.get("error") or None) if status != "completed" else None,
+        refused=why_failed(result) if status != "completed" else None,
         shape=shape, held_shape=shaped(out, shape) if status == "completed" else None,
         tools=used, locale=LOCALE,
     )  # fmt: skip
