@@ -523,6 +523,103 @@ def test_a_job_you_try_is_held_to_what_every_job_is(walt, tmp_path):
     assert got.returncode == 2 and "is not a job you sealed" in got.stderr
 
 
+# ── queue, work, status: jobs of your own, run later ────────────────────────
+def queued(walt, tmp_path, text, name="j.sh"):
+    f = tmp_path / name
+    f.write_text(text)
+    got = walt.kart("queue", "--file", f, "--db", tmp_path / "q.db")
+    assert got.returncode == 0 and got.stdout.startswith("queued  "), got.stderr
+    return got.stdout.split()[1]
+
+
+def status(walt, tmp_path, tid, *more):
+    got = walt.kart("status", "--db", tmp_path / "q.db", "--id", tid, *more)
+    assert got.returncode == 0, got.stderr
+    return json.loads(got.stdout)
+
+
+def test_a_queued_job_runs_when_worked_and_says_where_it_stands(walt, tmp_path):
+    a = queued(walt, tmp_path, "grep -rhi johnson {pile} | wc -l\n")
+    b = queued(walt, tmp_path, "cat {pile}/cases.md; exit 3\n", "b.sh")
+    assert status(walt, tmp_path, a) == {"characters": None, "how": None, "id": a,
+                                         "returncode": None, "status": "pending"}  # fmt: skip
+    assert not [r for r in walt.rows() if r["kind"] == "ran"]  # queueing runs nothing
+    got = walt.kart(
+        "status", "--db", tmp_path / "q.db", "--id", a, "--to", tmp_path / "o"
+    )
+    assert (
+        got.returncode == 2
+        and "hasn't ended" in got.stderr
+        and not (tmp_path / "o").exists()
+    )
+    got = walt.kart("work", "--db", tmp_path / "q.db", *NOW)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "worked 2 queued jobs; the queue is empty" in got.stdout
+    assert (
+        status(walt, tmp_path, a, "--to", tmp_path / "a.txt")["status"] == "completed"
+    )
+    assert (tmp_path / "a.txt").read_text().strip() == "2"
+    bad = status(walt, tmp_path, b, "--to", tmp_path / "b.txt")
+    assert (bad["status"], bad["how"], bad["returncode"]) == ("failed", "exited 3", 3)
+    assert "Johnson" in (tmp_path / "b.txt").read_text()
+    ran = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert [r["queued"] for r in ran] == [a, b] and all(
+        r["sealed"] is False for r in ran
+    )
+    assert "Johnson" not in json.dumps(ran) and seals(walt) == 0
+    assert not list((walt.box / "proposals").glob("*"))
+    # worked again: nothing queued, nothing run, nothing left running
+    got = walt.kart("work", "--db", tmp_path / "q.db", *NOW)
+    assert got.returncode == 0 and "worked 0 queued jobs" in got.stdout
+    assert len([r for r in walt.rows() if r["kind"] == "ran"]) == 2
+
+
+def test_a_queue_is_held_to_what_every_job_is(walt, tmp_path):
+    ok = tmp_path / "ok.sh"
+    ok.write_text("echo hi\n")
+    net = tmp_path / "net.sh"
+    net.write_text("# allow_net\ncurl x\n")
+    before = walt.rows()
+    for argv, why in (
+        (["queue", "--file", net, "--db", tmp_path / "q.db"], "asks for the network"),
+        (["queue", "--file", walt.box / "record.jsonl", "--db", tmp_path / "q.db"], "is inside the box"),
+        (["queue", "--file", ok, "--db", walt.box / "q.db"], "is inside the box"),
+        (["queue", "--file", ok, "--db", walt.dir / "pile" / "q.db"], "is inside your folder"),
+        (["queue", "--file", ok, "--db", tmp_path / "no" / "q.db"], "never makes one"),
+        (["work", "--db", tmp_path / "none.db"], "isn't a queue"),
+        (["status", "--db", tmp_path / "none.db", "--id", "x"], "isn't a queue"),
+    ):  # fmt: skip
+        got = walt.kart(*argv)
+        assert got.returncode == 2 and why in got.stderr, (argv, got.stderr)
+    assert walt.rows() == before and not (tmp_path / "q.db").exists()
+    tid = queued(walt, tmp_path, "echo hi\n")
+    got = walt.kart("status", "--db", tmp_path / "q.db", "--id", "nope")
+    assert got.returncode == 2 and "isn't a job in this queue" in got.stderr
+    got = walt.kart("work", "--db", tmp_path / "q.db", "--timeout", "soon")
+    assert got.returncode == 2 and "whole seconds" in got.stderr
+    env = {**os.environ, "PATH": str(tmp_path / "empty")}
+    got = walt.kart("work", "--db", tmp_path / "q.db", env=env)
+    assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
+    assert status(walt, tmp_path, tid)["status"] == "pending"  # still waiting, not lost
+
+
+def test_a_network_line_put_in_the_queue_file_by_hand_is_still_never_run(
+    walt, tmp_path
+):
+    """The queue is a file: what is in it is held again when it is worked."""
+    queued(walt, tmp_path, "echo hi\n")
+    sys.path.insert(0, str(HERE))
+    from kartikeya import SqliteTaskQueue  # noqa: PLC0415
+
+    SqliteTaskQueue(tmp_path / "q.db").submit("by-hand", "# allow_net\necho out\n")
+    got = walt.kart("work", "--db", tmp_path / "q.db", *NOW)
+    assert got.returncode == 0 and "refused  by-hand" in got.stdout, got.stdout
+    assert "worked 1 queued job;" in got.stdout
+    bad = status(walt, tmp_path, "by-hand")
+    assert (bad["status"], bad["how"]) == ("failed", "asks for the network")
+    assert len([r for r in walt.rows() if r["kind"] == "ran"]) == 1
+
+
 # ── write: a job of your own ────────────────────────────────────────────────
 def test_a_job_you_wrote_waits_on_your_seal_and_runs_once_you_seal_it(walt, tmp_path):
     job = tmp_path / "count.sh"

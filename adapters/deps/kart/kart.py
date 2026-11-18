@@ -4,6 +4,9 @@
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words" [--now TS]
     python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words" [--now TS]
     python adapters/deps/kart/kart.py try    --box DIR --file JOB --to FILE [--timeout SECONDS] [--now TS]
+    python adapters/deps/kart/kart.py queue  --box DIR --file JOB --db QUEUE
+    python adapters/deps/kart/kart.py work   --box DIR --db QUEUE [--timeout SECONDS] [--now TS]
+    python adapters/deps/kart/kart.py status --box DIR --db QUEUE --id ID [--to FILE]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS] [--now TS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words" [--now TS]
 
@@ -18,6 +21,13 @@ kernel. `run` runs a job you sealed, and nothing else.
 and proposes nothing: what it printed is in FILE on your machine, the run
 is on your record, and nothing of it is an answer of yours or can be
 shared. A job that is to go anywhere is written, sealed and run.
+
+`queue` puts a job of your own in a queue file (Kartikeya's, SQLite) to be
+run later; `work` runs everything queued, one at a time, as `try` runs one,
+and stops when the queue is empty: nothing is left running. `status` says
+where a queued job stands and, with --to, writes what it printed to FILE.
+The queue file holds what jobs printed, so it is kept outside the box and
+your folder, on your machine.
 
 It runs in Kartikeya's bubblewrap sandbox under a policy of willow's, not
 Kartikeya's default: your folder read-only, one scratch folder of its own,
@@ -82,6 +92,9 @@ FLAGS = {
     "take": ({"--box", "--package", "--words"}, {"--now"}),
     "write": ({"--box", "--file", "--words"}, {"--now"}),
     "try": ({"--box", "--file", "--to"}, {"--timeout", "--now"}),
+    "queue": ({"--box", "--file", "--db"}, set()),
+    "work": ({"--box", "--db"}, {"--timeout", "--now"}),
+    "status": ({"--box", "--db", "--id"}, {"--to"}),
     "run": ({"--box", "--job", "--to"}, {"--timeout", "--now", "--shape"}),
     "gather": ({"--box", "--package", "--words"}, {"--now"}),
 }
@@ -354,6 +367,146 @@ def do_try(opts: dict, ts: str) -> int:
     return kernel.ALIVE
 
 
+# ── queue, work, status: jobs of your own, run later ────────────────────────
+LATER = 1800  # seconds a queued job may run: Kartikeya's batch lane's
+
+
+def queue_at(db: Path, box: Path, must_exist: bool):
+    """(Kartikeya's SQLite queue at db, why not). The file holds what jobs
+    printed, so it is never in the box or the folder it reads."""
+    if importlib.util.find_spec("kartikeya") is None:
+        return (
+            None,
+            "Kartikeya isn't installed: pip install -r adapters/deps/kart/requirements.txt",
+        )
+    pile = kernel.folder(kernel.config(box)).resolve()
+    for name, root in (("the box", box.resolve()), ("your folder", pile)):
+        if db.resolve().is_relative_to(root):
+            return None, f"{db} is inside {name}; a queue holds what jobs printed"
+    if must_exist and not db.is_file():
+        return None, f"{db} isn't a queue: nothing was queued there"
+    if not db.parent.is_dir():
+        return None, f"{db.parent} isn't a folder; this never makes one"
+    from kartikeya import SqliteTaskQueue  # noqa: PLC0415
+
+    try:
+        return SqliteTaskQueue(db), None
+    except Exception as e:  # noqa: BLE001  a file that isn't a queue
+        return None, f"{db} can't be opened as a queue ({e})"
+
+
+def do_queue(opts: dict) -> int:
+    """A job in a file of yours, queued to run later. Held to what every job
+    is before it is queued; queueing runs nothing."""
+    box = Path(opts["--box"])
+    _, why = box_rows(box)
+    if why:
+        return refuse(why)
+    job, why = own_job(Path(opts["--file"]), box)
+    if why:
+        return refuse(why)
+    queue, why = queue_at(Path(opts["--db"]), box, must_exist=False)
+    if why:
+        return refuse(why)
+    tid = f"{kernel.h256(job)[:12]}-{os.urandom(4).hex()}"
+    queue.submit(tid, job, submitted_by="kart queue")
+    print(f"queued  {tid}  it runs when you run: kart.py work")
+    return kernel.ALIVE
+
+
+def do_work(opts: dict, ts: str) -> int:
+    """Run everything queued, one at a time, each as `try` runs one, and stop
+    when the queue is empty. A job a worker died holding is failed first, so
+    it is never run twice or left looking as if it runs."""
+    box = Path(opts["--box"])
+    _, why = box_rows(box)
+    if why:
+        return refuse(why)
+    queue, why = queue_at(Path(opts["--db"]), box, must_exist=True)
+    why = why or missing()
+    if why:
+        return refuse(why)
+    try:
+        timeout = int(opts.get("--timeout", str(LATER)))
+    except ValueError:
+        return refuse("--timeout is whole seconds")
+    pile = kernel.folder(kernel.config(box)).resolve()
+    for tid in queue.reap_stale():
+        print(f"gave up  {tid}  a worker stopped while it ran; it is not run again")
+    done = 0
+    while True:
+        rows = queue.claim_pending("kart", 1)
+        if not rows:
+            break
+        row = rows[0]
+        why = asks_network(row.task)  # held again here: the queue is a file
+        if why:
+            queue.mark_done(row.task_id, status="failed",
+                            result=json.dumps({"stdout": "", "how": "asks for the network"}))  # fmt: skip
+            print(f"refused  {row.task_id}  {why}")
+            continue
+        used = tools(row.task)
+        status, result = sandboxed(row.task, pile, timeout)
+        out = str(result.get("stdout") or "")
+        manifest = result.get("sandbox_manifest") or {}
+        rec = kernel.append(
+            box, opts.get("--now") or kernel.now(), "ran", who="kart",
+            job=f"text:{kernel.h256(row.task)}", sealed=False, queued=row.task_id,
+            status=status, returncode=result.get("returncode"),
+            output_sha256=kernel.h256(out), engine=manifest.get("engine"),
+            network=manifest.get("network_mode"), bound_ro=manifest.get("bound_ro"),
+            bound_rw=len(manifest.get("bound_rw") or []),
+            refused=why_failed(result) if status != "completed" else None,
+            tools=used, locale=LOCALE,
+        )  # fmt: skip
+        queue.mark_done(
+            row.task_id, status="completed" if status == "completed" else "failed",
+            result=json.dumps({"stdout": out, "returncode": result.get("returncode"),
+                               "how": why_failed(result) if status != "completed" else None,
+                               "row": rec["n"]}),
+        )  # fmt: skip
+        done += 1
+        print(
+            f"ran    {row.task_id}  {status}, exit {result.get('returncode')}, row {rec['n']}"
+        )
+    print(f"worked {done} queued job{'' if done == 1 else 's'}; the queue is empty")
+    return kernel.ALIVE
+
+
+def do_status(opts: dict) -> int:
+    """Where one queued job stands, as one line of JSON; with --to, what it
+    printed, written to FILE once it has ended."""
+    box = Path(opts["--box"])
+    _, why = box_rows(box)
+    if why:
+        return refuse(why)
+    queue, why = queue_at(Path(opts["--db"]), box, must_exist=True)
+    if why:
+        return refuse(why)
+    got = queue.get(opts["--id"])
+    if got is None:
+        return refuse(f"{opts['--id']} isn't a job in this queue")
+    try:
+        res = json.loads(got.get("result") or "{}")
+    except ValueError:
+        res = {}
+    ended = got["status"] in ("completed", "failed")
+    out = str(res.get("stdout") or "")
+    if "--to" in opts:
+        if not ended:
+            return refuse(
+                f"{opts['--id']} hasn't ended ({got['status']}); nothing to write yet"
+            )
+        why = share.new_file(Path(opts["--to"]), "", 0o600, box)
+        if why:
+            return refuse(why)
+        Path(opts["--to"]).write_text(out, encoding="utf-8")
+    print(json.dumps({"id": opts["--id"], "status": got["status"],
+                      "returncode": res.get("returncode"), "how": res.get("how"),
+                      "characters": len(out) if ended else None}, sort_keys=True))  # fmt: skip
+    return kernel.ALIVE
+
+
 # ── write: a job of your own, at your door ──────────────────────────────────
 def do_write(opts: dict) -> int:
     """A job in a file of yours, put at the kernel's door as `take` puts a
@@ -587,6 +740,12 @@ def main(argv: list[str]) -> int:
         return do_write(opts)
     if cmd == "try":
         return do_try(opts, opts.get("--now") or kernel.now())
+    if cmd == "queue":
+        return do_queue(opts)
+    if cmd == "work":
+        return do_work(opts, opts.get("--now") or kernel.now())
+    if cmd == "status":
+        return do_status(opts)
     if cmd == "gather":
         return do_gather(opts)
     return do_run(opts, opts.get("--now") or kernel.now())

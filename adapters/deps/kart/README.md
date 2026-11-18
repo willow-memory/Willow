@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.5
+version: 0.1.6
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -23,6 +23,9 @@ once you seal it; what it found waits on your seal before it goes anywhere.
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words"
     python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words"
     python adapters/deps/kart/kart.py try    --box DIR --file JOB --to FILE [--timeout SECONDS]
+    python adapters/deps/kart/kart.py queue  --box DIR --file JOB --db QUEUE
+    python adapters/deps/kart/kart.py work   --box DIR --db QUEUE [--timeout SECONDS]
+    python adapters/deps/kart/kart.py status --box DIR --db QUEUE --id ID [--to FILE]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words"
 
@@ -55,6 +58,18 @@ refusals as any job, its output is written to FILE on your machine, and the
 Nothing is proposed, so nothing of it is an answer of yours or can be
 shared; whoever reads FILE is yours to decide. A job whose result is to go
 to someone is written, sealed and run.
+
+**Jobs of your own, run later.** `queue` puts a job in a queue file, which
+is Kartikeya's own SQLite queue: its claim is atomic, so two workers never
+run one job twice. `work` runs everything queued, one at a time, each as
+`try` runs one (the same sandbox, a `ran` row naming the queued id,
+`sealed: false`, nothing proposed), for up to 30 minutes each, and stops
+when the queue is empty: nothing is left running. A job a worker died
+holding is failed, never run again. `status` prints where one job stands
+as a line of JSON and, with `--to`, writes what it printed to FILE. The
+queue file holds what jobs printed, so it is refused inside the box or your
+folder; a job with a network line is refused when queued, and again when
+worked.
 
 **The sandbox is Kartikeya's; the policy is willow's.** Kartikeya runs the
 job in bubblewrap, and its own scan refuses commands it reads as harmful
@@ -131,7 +146,8 @@ Resource limits are Kartikeya's (a delegated cgroup if you set one up,
 user namespace, which bubblewrap does; Ubuntu 24.04 keeps that behind
 AppArmor unless allowed.
 
-**Exit codes:** 0 the policy printed, or a job tried and ended well; 42 a job taken or written, a result or a total
+**Exit codes:** 0 the policy printed, a job tried and ended well, a job
+queued, the queue worked, or a status given; 42 a job taken or written, a result or a total
 proposed, waiting on your seal, or a job that failed or broke its shape; 2
 refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
 sandbox on this machine, in its own words, before anything runs or is
