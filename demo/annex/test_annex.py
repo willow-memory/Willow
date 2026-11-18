@@ -40,7 +40,7 @@ def test_every_chain_holds_and_only_the_five_who_sealed_have_seals(played):
     assert len(boxes) == 8
     assert all(b["held"] for b in boxes.values())
     assert {k: b["seals"] for k, b in boxes.items() if b["seals"]} == {
-        "vask": 2, "lumen": 3, "karst": 2, "program": 2, "intake": 2, "counter": 1,
+        "vask": 2, "lumen": 3, "karst": 2, "program": 2, "intake": 2, "counter": 2,
     }  # fmt: skip
     # oversight only received; prior never left its wall
     assert boxes["oversight"]["seals"] == boxes["prior"]["seals"] == 0
@@ -81,3 +81,25 @@ def test_the_rumour_is_in_no_package(played):
     assert not any(
         "Halvern" in p.read_text() for p in (played["tmp"] / "scene").glob("*.pkg")
     )
+
+
+def test_annex_os_builds_one_page_without_the_rumour(played, tmp_path):
+    page = tmp_path / "annex-os.html"
+    got = py(
+        HERE / "annex_os.py", "build", "--scene", played["tmp"] / "scene", "--to", page
+    )
+    assert got.returncode == 0, got.stderr
+    html = page.read_text(encoding="utf-8")
+    assert "ANNEX-OS" in html and html.count('id="data"') == 1
+    data = json.loads(html.split('type="application/json">')[1].split("</script>")[0])
+    assert len(data["boxes"]) == 8
+    assert data["clocks"] == {"program": "08:00", "intake": "09:00"}
+    assert data["found"]["rewritten"] == ["rewritten"]
+    for rumour in ("Halvern", "affairs", "intelligence service"):
+        assert rumour not in html
+    assert "review" in data["served"] and "affairs" not in data["served"]
+    assert "src=" not in html and "http" not in html  # no network, nothing fetched
+
+
+def test_annex_os_refuses_a_bad_command_line(tmp_path):
+    assert py(HERE / "annex_os.py", "build").returncode == 2

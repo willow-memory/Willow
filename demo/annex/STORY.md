@@ -159,8 +159,15 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
   after it re-hashed. Its own `verify` still says the chain holds. Oversight
   holds every chain to the packages it kept (`share witness`): six hold, one is
   `rewritten`. R4 in a first form. The report is buried, off every chain.
-- **Still to play:** the planner's log, ANNEX-OS and the corridor mode, then the
-  freeze.
+- **ANNEX-OS, built:** `annex_os.py build --scene DIR --to FILE.html` makes one
+  self-contained green-screen page from `scene.json`: a badge (a door opens only
+  for its own badge, any other is "nothing on record", exit 42; Oversight's
+  opens none and shows the witness), a manifest printer that refuses the
+  unsealed summary, a witness run whose dead-man's page goes dark and names the
+  box, a briefing assistant that reads only the file `approved-only` served, and
+  two clocks in the header that disagree by an hour. The rumour is in none of
+  it. Counterintel seals a scope for the briefing, so its seals are two.
+- **Still to play:** the planner's log and the corridor mode, then the freeze.
 
 ## Open questions
 

@@ -28,11 +28,15 @@ a seal key and an identity under --to, which must not be there yet. Then:
    before the day, every row after it re-hashed, so its own `verify` still says
    the chain holds. Oversight holds each chain to the packages it kept
    (`share witness`): every chain holds but one, and that one is `rewritten`.
-10. No package holds a line of another box's pile, the rumour is in no
-   package, and every chain verifies with only its owner's seals on it. The
-   inspector's report is due at close of day, and is outside every chain.
+10. Counterintel seals a scope for an assistant (`approved-only`): the one file
+    a model may read holds the review line, and the rumour is not in it.
+11. No package holds a line of another box's pile, the rumour is in no
+    package or served file, and every chain verifies with only its owner's
+    seals on it. The inspector's report is due at close of day, and is outside
+    every chain.
 
-Still to play: the planner's log. It writes a transcript to standard
+`annex_os.py` puts a fictional terminal over what this writes. Still to play:
+the planner's log. It writes a transcript to standard
 output and scene.json under --to. Exit 0 when the scene plays as told, 1 when a
 step went otherwise.
 """
@@ -54,6 +58,7 @@ from kernel import canon, h256  # noqa: E402
 
 KERNEL = ROOT / "kernel.py"
 STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
+APPROVED = ROOT / "adapters" / "stdlib" / "approved-only" / "approved_only.py"
 SHARE = ROOT / "adapters" / "stdlib" / "share" / "share.py"
 BOXES = ["intake", "vask", "karst", "lumen", "program", "counter", "oversight", "prior"]
 
@@ -119,6 +124,7 @@ class Scene:
         self.wrong: list[str] = []
         self.sealed: dict[str, list[str]] = {b: [] for b in BOXES}
         self.answers: dict[str, list[str]] = {b: [] for b in BOXES}
+        self.said: dict[str, list[dict]] = {b: [] for b in BOXES}
         self.packages: list[Path] = []
 
     def ts(self) -> str:
@@ -173,6 +179,7 @@ class Scene:
         self.run(KERNEL, "seal", "--box", self.box(who), subj, "--now", self.ts())
         self.sealed[who].append(subj)
         self.answers[who].append(subj)
+        self.said[who].append({"data": data, "claim": claim, "cite": source})
         self.say(f"  {who} sealed: {data}")
         return subj
 
@@ -391,9 +398,40 @@ class Scene:
         self.say("\n── 9. the rewrite, and the witness")
         self.found = self.witness()
 
-        self.say("\n── 10. what crossed, and what did not")
+        self.say("\n── 10. the one file an assistant may read")
+        self.briefing()
+
+        self.say("\n── 11. what crossed, and what did not")
         self.walls()
         return self.summary()
+
+    def briefing(self) -> None:
+        """The one file an assistant may read: only a scope its owner sealed."""
+        who = "counter"
+        self.run(KERNEL, "bite", "--box", self.box(who), "what was marked hold, not for release",
+                 "--now", self.ts(), want=(0, 42))  # fmt: skip
+        out = self.run(
+            APPROVED, "scope", "--box", self.box(who), "--now", self.ts(), want=(42,)
+        )
+        subj = next(
+            (
+                w
+                for ln in out.splitlines()
+                for w in ln.split()
+                if w.startswith("proposal:")
+            ),
+            "",
+        )
+        self.run(KERNEL, "seal", "--box", self.box(who), subj, "--now", self.ts())
+        self.sealed[who].append(subj)
+        served = self.to / who / "served.md"
+        self.run(APPROVED, "--box", self.box(who), "--to", served, "--now", self.ts())
+        text = served.read_text(encoding="utf-8") if served.is_file() else ""
+        self.say(
+            f"  counter seals a scope and serves {len(text.splitlines())} lines to an assistant"
+        )
+        if "review" not in text or "Halvern" in text or "affairs" in text:
+            self.wrong.append("the served file is not the sealed scope alone")
 
     def walls(self) -> None:
         """No package holds a long line of any pile but its sender's, and none
@@ -415,7 +453,9 @@ class Scene:
                      "holds only its sender's pile")  # fmt: skip
 
     def summary(self) -> dict:
+        served = self.to / "counter" / "served.md"
         doc: dict = {
+            "served": served.read_text(encoding="utf-8") if served.is_file() else "",
             "boxes": {},
             "found": getattr(self, "found", {}),
             "wrong": self.wrong,
@@ -426,8 +466,19 @@ class Scene:
             held = "holds" in ver.lower() or "ok" in ver.lower()
             seals = len(self.sealed[who])
             self.say(f"{who:10} {ver.strip().splitlines()[-1] if ver.strip() else '?'}")
+            names = {self.pub[b]: b for b in BOXES}
+            pre = {self.pub[b][:12]: b for b in BOXES}
+            rows = self.rows(who)
             doc["boxes"][who] = {"pub": self.pub[who], "seals": seals, "verify": ver.strip(),
-                                 "held": held, "out": out.strip()[:200]}  # fmt: skip
+                                 "held": held, "out": out.strip()[:200], "rows": len(rows),
+                                 "said": self.said[who],
+                                 "sent": [{"to": names.get(r["to"], "?"), "package": r["package"][:20],
+                                           "n": r["n"], "ts": r["ts"]}
+                                          for r in rows if r["kind"] == "sent"],
+                                 "received": [{"from": pre.get(r["from"][:12], "?"),
+                                               "package": r["package"][:20], "verdict": r["verdict"],
+                                               "n": r["n"]}
+                                              for r in rows if r["kind"] == "received"]}  # fmt: skip
             if not held:
                 self.wrong.append(f"{who}'s chain did not verify")
         return doc
