@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.2
+version: 0.1.3
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -21,10 +21,11 @@ once you seal it; what it found waits on your seal before it goes anywhere.
     pip install -r adapters/deps/kart/requirements.txt    # and: apt install bubblewrap
     python adapters/deps/kart/kart.py policy --box DIR
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words"
+    python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words"
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words"
 
-`take`, `run` and `gather` take `--now TS` as the kernel does.
+`take`, `write`, `run` and `gather` take `--now TS` as the kernel does.
 
 **The computation goes to the folder, never the folder to it.** A job is a
 shell task that came to you in a [share](../../stdlib/share/) package:
@@ -37,6 +38,14 @@ package your record says held, at the kernel's door as a proposal of yours,
 under your own words, citing nothing, its claim naming who sent it. Only you
 seal it, through the kernel. `run` runs only a job you sealed this way, and
 refuses an answer of yours that isn't one.
+
+**A job of your own.** `write` puts a job in a file of yours at the same
+door, with no package: under your own words, citing nothing, its claim
+saying you wrote it and naming its text's SHA-256. It is held to what a
+received job is: no network line, sealed by you before it runs, the same
+sandbox, and its result waiting on a second seal. A file inside the box,
+one that isn't text, an empty one and one over 20,000 characters are
+refused. Writing a job runs nothing.
 
 **The sandbox is Kartikeya's; the policy is willow's.** Kartikeya runs the
 job in bubblewrap, and its own scan refuses commands it reads as harmful
@@ -51,6 +60,15 @@ stranger's job should see, so `run` hands it willow's instead, which
   programs are found on the system's `/usr/bin:/bin`, not your PATH, and
   its locale is `C`, not your LANG, which would change what `sort` and
   `grep -i` say;
+- none of a fleet's settings either: a machine that also runs Kartikeya for
+  a fleet has `KART_` and `WILLOW_` variables exported, and one of them
+  (`WILLOW_ROOT`) would put that fleet's venv on the job's PATH. Kartikeya
+  is handed willow's settings and none of those, but the resource group
+  (`KART_CGROUP_PARENT`), which is yours to set up;
+- none of Kartikeya's own either: it gives a task where it is installed,
+  the Python it runs on and a fleet's sender name, which are paths and a
+  name of yours. The job starts again under `env -i` with PATH, LANG and
+  HOME alone, the last its own empty folder;
 - no network: a job naming Kartikeya's `# allow_net`, `# allow_db` or
   `# allow_localhost` is refused before anything runs, and is not even
   taken.
@@ -102,11 +120,13 @@ Resource limits are Kartikeya's (a delegated cgroup if you set one up,
 user namespace, which bubblewrap does; Ubuntu 24.04 keeps that behind
 AppArmor unless allowed.
 
-**Exit codes:** 0 the policy printed; 42 a job taken, a result or a total
+**Exit codes:** 0 the policy printed; 42 a job taken or written, a result or a total
 proposed, waiting on your seal, or a job that failed or broke its shape; 2
 refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
 sandbox on this machine, in its own words, before anything runs or is
-recorded; a job not sealed; one asking for the network).
+recorded; a resource group named in `KART_CGROUP_PARENT` that isn't there,
+likewise; a job not sealed; one asking for the network; a job file
+`write` can't take).
 
 **Uses:** [share](../../stdlib/share/) to read packages; the kernel's
 `read`, `append`, `sealed`, `standing`, `config`, `h256` and its command

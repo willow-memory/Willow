@@ -2,13 +2,16 @@
 
     python adapters/deps/kart/kart.py policy --box DIR
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words" [--now TS]
+    python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words" [--now TS]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS] [--now TS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words" [--now TS]
 
 A job is a shell task, as Kartikeya runs them, that came to you in a share
-package. It never runs because it arrived. `take` puts it at the kernel's
-door as a proposal of yours, under your own words, citing nothing; only you
-seal it, through the kernel. `run` runs a job you sealed, and nothing else.
+package, or that you wrote yourself. It never runs because it arrived, or
+because it was written. `take` puts a received job at the kernel's door as
+a proposal of yours, under your own words, citing nothing, and `write` does
+the same for a job in a file of your own; only you seal it, through the
+kernel. `run` runs a job you sealed, and nothing else.
 
 It runs in Kartikeya's bubblewrap sandbox under a policy of willow's, not
 Kartikeya's default: your folder read-only, one scratch folder of its own,
@@ -38,7 +41,8 @@ Exit codes, the kernel's: 0 the policy printed; 42 a job taken, a result or
 a total proposed, waiting on your seal, or a job that failed or broke its
 shape; 2 refused (no
 bubblewrap or Kartikeya, a bubblewrap that can't make a sandbox here, a job
-not sealed, one asking for the network).
+not sealed, one asking for the network, a job file that can't be read as
+text, is empty or too long, or is inside the box).
 """
 
 from __future__ import annotations
@@ -70,11 +74,13 @@ OUTPUT = 20_000  # characters of a job's output proposed as an answer
 FLAGS = {
     "policy": ({"--box"}, set()),
     "take": ({"--box", "--package", "--words"}, {"--now"}),
+    "write": ({"--box", "--file", "--words"}, {"--now"}),
     "run": ({"--box", "--job", "--to"}, {"--timeout", "--now", "--shape"}),
     "gather": ({"--box", "--package", "--words"}, {"--now"}),
 }
 SHAPES = ("numbers",)  # what --shape may hold a job's output to
 MOST = 100  # lines a numbers-shaped output may have
+JOB = 20_000  # characters of a job you wrote: what a person reads before sealing
 
 
 def shaped(out: str, shape: str | None) -> bool:
@@ -151,6 +157,10 @@ PROBE = ["bwrap", "--unshare-all", "--die-with-parent", "--ro-bind", "/", "/",
 #: so one job reads the same on everyone's machine but for the tools themselves
 PATH = "/usr/bin:/bin"
 LOCALE = "C"
+#: settings of Kartikeya's and a fleet's that a person's environment may hold,
+#: never handed on to a run; but the resource group, which is theirs to set up
+SETTINGS = ("KART_", "WILLOW_")
+KEPT = ("KART_CGROUP_PARENT",)
 
 
 def tools(job: str) -> dict[str, str]:
@@ -168,12 +178,18 @@ def tools(job: str) -> dict[str, str]:
 
 
 def missing() -> str | None:
-    """Why a job can't run here, or None: Kartikeya and bubblewrap, named, and
-    a bubblewrap that can't make a sandbox on this machine, in its own words."""
+    """Why a job can't run here, or None: Kartikeya and bubblewrap, named, a
+    resource group you named that isn't there, and a bubblewrap that can't
+    make a sandbox on this machine, in its own words."""
     if importlib.util.find_spec("kartikeya") is None:
         return "Kartikeya isn't installed: pip install -r adapters/deps/kart/requirements.txt"
     if shutil.which("bwrap") is None:
         return "bubblewrap isn't installed: the bwrap program (apt install bubblewrap)"
+    group = os.environ.get("KART_CGROUP_PARENT")
+    if group and not Path(group).is_dir():
+        return (f"KART_CGROUP_PARENT names a resource group that isn't there ({group}); "
+                "nothing ran. start it, or unset the variable to run under "
+                "per-process limits")  # fmt: skip
     try:
         # an empty pipe for its input, not the null device: opening that is a
         # write by the guard's rule, and this add-on writes record and to only
@@ -231,6 +247,40 @@ def do_take(opts: dict) -> int:
         print(said, end="")
         return refuse("the kernel didn't take the job as a proposal")
     print(f"taken  {subj}  waiting on your seal; then: kart.py run --job {subj}")
+    return kernel.ESCALATE
+
+
+# ── write: a job of your own, at your door ──────────────────────────────────
+def do_write(opts: dict) -> int:
+    """A job in a file of yours, put at the kernel's door as `take` puts a
+    received one: it ran nowhere and runs nowhere until you seal it."""
+    box = Path(opts["--box"])
+    _, why = box_rows(box)
+    if why:
+        return refuse(why)
+    src = Path(opts["--file"])
+    if src.resolve().is_relative_to(box.resolve()):
+        return refuse(f"{src} is inside the box; a job is a file of your own")
+    try:
+        job = src.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return refuse(f"{src} can't be read as text")
+    if not job.strip():
+        return refuse(f"{src} is empty; there is no job in it")
+    if len(job) > JOB:
+        return refuse(f"{src} is {len(job)} characters; a job is at most {JOB}, "
+                      "what a person reads before sealing")  # fmt: skip
+    why = asks_network(job)
+    if why:
+        return refuse(why)
+    now = ["--now", opts["--now"]] if opts.get("--now") else []
+    prop = {"path": f"kart/jobs/{src.name}", "data": job, "cites": [],
+            "claim": f"a job you wrote yourself, text {kernel.h256(job)}; it runs only once sealed"}  # fmt: skip
+    subj, said = propose(box, opts["--words"], prop, now)
+    if subj is None:
+        print(said, end="")
+        return refuse("the kernel didn't take the job as a proposal")
+    print(f"written  {subj}  waiting on your seal; then: kart.py run --job {subj}")
     return kernel.ESCALATE
 
 
@@ -396,13 +446,24 @@ def sandboxed(job: str, pile: Path, timeout: int) -> tuple[str, dict]:
         conf.write_text(json.dumps(policy(pile, scratch)), encoding="utf-8")
         task = job.replace("{pile}", shlex.quote(str(pile)))
         task = task.replace("{scratch}", shlex.quote(str(scratch)))
+        # Kartikeya gives a task variables of its own: where it is installed,
+        # the Python it runs on, a fleet's sender name. Those are the person's.
+        # The job starts again with an empty environment and these three.
+        task = (f"cd {shlex.quote(str(home))} && exec env -i PATH={PATH} LANG={LOCALE} "
+                f"HOME={shlex.quote(str(home))} bash -c {shlex.quote(task)}")  # fmt: skip
         # bwrap itself is looked up on PATH too: its folder goes last, where
         # the job can't see it (only /usr is mounted)
         bwrap = os.path.dirname(shutil.which("bwrap") or "/usr/bin/bwrap")
         path = PATH if bwrap in PATH.split(":") else f"{PATH}:{bwrap}"
         swap = {"KART_SANDBOX_CONFIG": str(conf), "WILLOW_HOME": str(home),
                 "HOME": str(home), "PATH": path, "LANG": LOCALE}  # fmt: skip
-        keep = {k: os.environ.get(k) for k in swap}
+        # Kartikeya reads its own settings from the environment, and a
+        # person's may carry a fleet's: WILLOW_ROOT puts that fleet's venv on
+        # the job's PATH. It sees what is set here and none of theirs.
+        theirs = [k for k in os.environ if k.startswith(SETTINGS) and k not in KEPT]
+        keep = {k: os.environ.get(k) for k in [*swap, *theirs]}
+        for k in theirs:
+            del os.environ[k]
         os.environ.update(swap)
         try:
             return run_shell_task(task, timeout=timeout)
@@ -429,6 +490,8 @@ def main(argv: list[str]) -> int:
         return do_policy(opts)
     if cmd == "take":
         return do_take(opts)
+    if cmd == "write":
+        return do_write(opts)
     if cmd == "gather":
         return do_gather(opts)
     return do_run(opts, opts.get("--now") or kernel.now())
