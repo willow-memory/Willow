@@ -136,8 +136,18 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
       FROZEN.json       written in the freeze commit, held by a test
       test_annex.py
 
+## Decided
+
+- The protagonist stays **Vask**.
+- All four science-fiction dashes stay.
+- **Third Co. gets a moment:** Pell Auclair, Lumen's field engineer, seals her
+  firm's manifest answer and sends it to Oversight, asked by no one. It is true
+  and it is not the whole truth, and she says so in the note.
+- A skeleton first: `make_life.py` writes all eight piles, `scene.py` plays the
+  first beats (the wall, two sealed sends, an edit in transit refused, every
+  chain verified). It tests R1, R2, R3 and R5 in a first form. The stacks, the
+  spec clash, the clocks, the planner's log and the rewritten chain come next.
+
 ## Open questions
 
-- Protagonist's name (Vask is a placeholder).
-- Whether Third Co. gets one sympathetic moment.
-- How much of the corridor mode is in the first build.
+- How much of the corridor mode is in the first full build.
