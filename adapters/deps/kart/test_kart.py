@@ -393,6 +393,73 @@ def test_a_job_asking_for_the_network_is_not_even_taken(walt, tmp_path):
     assert got.returncode == 2 and "asks for the network" in got.stderr
 
 
+# ── try: a job of your own, with no seal ────────────────────────────────────
+def test_a_job_you_try_runs_in_the_sandbox_and_proposes_nothing(walt, tmp_path):
+    job = tmp_path / "count.sh"
+    job.write_text("grep -rhi johnson {pile} | wc -l\necho \"key: $(cat " + str(walt.key)
+                   + " 2>/dev/null | wc -c)\"\n")  # fmt: skip
+    got = walt.kart("try", "--file", job, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert (tmp_path / "o").read_text().splitlines() == ["2", "key: 0"]
+    text = hashlib.sha256(job.read_bytes()).hexdigest()
+    assert got.stdout.startswith(f"tried  text:{text}  completed, exit 0, row ")
+    assert "nothing is proposed" in got.stdout
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert (ran["job"], ran["sealed"], ran["status"]) == (
+        f"text:{text}",
+        False,
+        "completed",
+    )
+    assert ran["network"] == "isolated"
+    out = (tmp_path / "o").read_text()
+    assert ran["output_sha256"] == hashlib.sha256(out.encode()).hexdigest()
+    assert not list((walt.box / "proposals").glob("*")) and seals(walt) == 0
+    assert "Johnson" not in json.dumps(walt.rows())
+
+
+def test_a_job_you_try_that_fails_says_so_and_is_on_the_record(walt, tmp_path):
+    job = tmp_path / "bad.sh"
+    job.write_text("echo partial; exit 3\n")
+    got = walt.kart("try", "--file", job, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 42 and "failed, exit 3" in got.stdout, (
+        got.stdout + got.stderr
+    )
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert ran["status"] == "failed" and ran["returncode"] == 3
+    assert not list((walt.box / "proposals").glob("*"))
+
+
+def test_a_job_you_try_is_held_to_what_every_job_is(walt, tmp_path):
+    ok = tmp_path / "ok.sh"
+    ok.write_text("echo hi\n")
+    net = tmp_path / "net.sh"
+    net.write_text("# allow_net\ncurl x\n")
+    (tmp_path / "mine").write_text("mine")
+    before = walt.rows()
+    for argv, why in (
+        (["--file", net, "--to", tmp_path / "o"], "asks for the network"),
+        (["--file", walt.box / "record.jsonl", "--to", tmp_path / "o"], "is inside the box"),
+        (["--file", tmp_path / "gone.sh", "--to", tmp_path / "o"], "can't be read as text"),
+        (["--file", ok, "--to", walt.box / "o"], "inside the box"),
+        (["--file", ok, "--to", walt.dir / "pile" / "o"], "inside your folder"),
+        (["--file", ok, "--to", tmp_path / "mine"], ""),
+        (["--file", ok, "--to", tmp_path / "o", "--timeout", "soon"], "whole seconds"),
+    ):  # fmt: skip
+        got = walt.kart("try", *argv, *NOW)
+        assert got.returncode == 2 and why in got.stderr, (argv, got.stderr)
+    assert walt.rows() == before and not (tmp_path / "o").exists()
+    assert (tmp_path / "mine").read_text() == "mine"
+    env = {**os.environ, "PATH": str(tmp_path / "empty")}
+    got = walt.kart("try", "--file", ok, "--to", tmp_path / "o", *NOW, env=env)
+    assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
+    # what a tried job printed is never an answer: run refuses its text as a job
+    got = walt.kart("try", "--file", ok, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 0
+    text = hashlib.sha256(ok.read_bytes()).hexdigest()
+    got = walt.kart("run", "--job", f"text:{text}", "--to", tmp_path / "o2", *NOW)
+    assert got.returncode == 2 and "is not a job you sealed" in got.stderr
+
+
 # ── write: a job of your own ────────────────────────────────────────────────
 def test_a_job_you_wrote_waits_on_your_seal_and_runs_once_you_seal_it(walt, tmp_path):
     job = tmp_path / "count.sh"

@@ -3,6 +3,7 @@
     python adapters/deps/kart/kart.py policy --box DIR
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words" [--now TS]
     python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words" [--now TS]
+    python adapters/deps/kart/kart.py try    --box DIR --file JOB --to FILE [--timeout SECONDS] [--now TS]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS] [--now TS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words" [--now TS]
 
@@ -12,6 +13,11 @@ because it was written. `take` puts a received job at the kernel's door as
 a proposal of yours, under your own words, citing nothing, and `write` does
 the same for a job in a file of your own; only you seal it, through the
 kernel. `run` runs a job you sealed, and nothing else.
+
+`try` runs a job in a file of your own with no seal, in the same sandbox,
+and proposes nothing: what it printed is in FILE on your machine, the run
+is on your record, and nothing of it is an answer of yours or can be
+shared. A job that is to go anywhere is written, sealed and run.
 
 It runs in Kartikeya's bubblewrap sandbox under a policy of willow's, not
 Kartikeya's default: your folder read-only, one scratch folder of its own,
@@ -37,7 +43,7 @@ that held and that your record received, of numbers, all naming the same
 job text by its SHA-256 and each from its own chain, adds them line by
 line, and proposes the totals as your answer, waiting on your seal.
 
-Exit codes, the kernel's: 0 the policy printed; 42 a job taken, a result or
+Exit codes, the kernel's: 0 the policy printed, or a job tried and ended well; 42 a job taken, a result or
 a total proposed, waiting on your seal, or a job that failed or broke its
 shape; 2 refused (no
 bubblewrap or Kartikeya, a bubblewrap that can't make a sandbox here, a job
@@ -75,6 +81,7 @@ FLAGS = {
     "policy": ({"--box"}, set()),
     "take": ({"--box", "--package", "--words"}, {"--now"}),
     "write": ({"--box", "--file", "--words"}, {"--now"}),
+    "try": ({"--box", "--file", "--to"}, {"--timeout", "--now"}),
     "run": ({"--box", "--job", "--to"}, {"--timeout", "--now", "--shape"}),
     "gather": ({"--box", "--package", "--words"}, {"--now"}),
 }
@@ -250,6 +257,71 @@ def do_take(opts: dict) -> int:
     return kernel.ESCALATE
 
 
+def own_job(src: Path, box: Path) -> tuple[str, str | None]:
+    """(a job in a file of the person's, why not): text, not in the box, not
+    empty, not too long to read, and asking for no network."""
+    if src.resolve().is_relative_to(box.resolve()):
+        return "", f"{src} is inside the box; a job is a file of your own"
+    try:
+        job = src.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return "", f"{src} can't be read as text"
+    if not job.strip():
+        return "", f"{src} is empty; there is no job in it"
+    if len(job) > JOB:
+        return "", (f"{src} is {len(job)} characters; a job is at most {JOB}, "
+                    "what a person reads before sealing")  # fmt: skip
+    return job, asks_network(job)
+
+
+# ── try: a job of your own, run with no seal and proposing nothing ──────────
+def do_try(opts: dict, ts: str) -> int:
+    """A job in a file of yours, run in the sandbox as a sealed one is. No
+    seal, since nothing leaves by running it: its output is in FILE, the run
+    is on the record by the job text's hash, and nothing is proposed."""
+    box = Path(opts["--box"])
+    _, why = box_rows(box)
+    if why:
+        return refuse(why)
+    job, why = own_job(Path(opts["--file"]), box)
+    why = why or missing()
+    if why:
+        return refuse(why)
+    try:
+        timeout = int(opts.get("--timeout", "120"))
+    except ValueError:
+        return refuse("--timeout is whole seconds")
+    to = Path(opts["--to"])
+    why = share.new_file(to, "", 0o600, box)  # new, outside the box and folder
+    if why:
+        return refuse(why)
+    pile = kernel.folder(kernel.config(box)).resolve()
+    used = tools(job)
+    status, result = sandboxed(job, pile, timeout)
+    out = str(result.get("stdout") or "")
+    to.write_text(out, encoding="utf-8")
+    manifest = result.get("sandbox_manifest") or {}
+    row = kernel.append(
+        box, ts, "ran", who="kart", job=f"text:{kernel.h256(job)}", sealed=False,
+        status=status, returncode=result.get("returncode"),
+        output_sha256=kernel.h256(out), engine=manifest.get("engine"),
+        network=manifest.get("network_mode"), bound_ro=manifest.get("bound_ro"),
+        bound_rw=len(manifest.get("bound_rw") or []),
+        refused=(result.get("error") or None) if status != "completed" else None,
+        tools=used, locale=LOCALE,
+    )  # fmt: skip
+    print(
+        f"tried  text:{kernel.h256(job)}  {status}, exit {result.get('returncode')}, row {row['n']}"
+    )
+    print(f"output written to {to} ({len(out)} characters); nothing is proposed")
+    if status != "completed":
+        print(
+            f"  {str(result.get('error') or result.get('stderr') or '').strip()[:300]}"
+        )
+        return kernel.ESCALATE
+    return kernel.ALIVE
+
+
 # ── write: a job of your own, at your door ──────────────────────────────────
 def do_write(opts: dict) -> int:
     """A job in a file of yours, put at the kernel's door as `take` puts a
@@ -259,18 +331,7 @@ def do_write(opts: dict) -> int:
     if why:
         return refuse(why)
     src = Path(opts["--file"])
-    if src.resolve().is_relative_to(box.resolve()):
-        return refuse(f"{src} is inside the box; a job is a file of your own")
-    try:
-        job = src.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
-        return refuse(f"{src} can't be read as text")
-    if not job.strip():
-        return refuse(f"{src} is empty; there is no job in it")
-    if len(job) > JOB:
-        return refuse(f"{src} is {len(job)} characters; a job is at most {JOB}, "
-                      "what a person reads before sealing")  # fmt: skip
-    why = asks_network(job)
+    job, why = own_job(src, box)
     if why:
         return refuse(why)
     now = ["--now", opts["--now"]] if opts.get("--now") else []
@@ -492,6 +553,8 @@ def main(argv: list[str]) -> int:
         return do_take(opts)
     if cmd == "write":
         return do_write(opts)
+    if cmd == "try":
+        return do_try(opts, opts.get("--now") or kernel.now())
     if cmd == "gather":
         return do_gather(opts)
     return do_run(opts, opts.get("--now") or kernel.now())

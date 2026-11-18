@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.3
+version: 0.1.4
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -22,10 +22,11 @@ once you seal it; what it found waits on your seal before it goes anywhere.
     python adapters/deps/kart/kart.py policy --box DIR
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words"
     python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words"
+    python adapters/deps/kart/kart.py try    --box DIR --file JOB --to FILE [--timeout SECONDS]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words"
 
-`take`, `write`, `run` and `gather` take `--now TS` as the kernel does.
+`take`, `write`, `try`, `run` and `gather` take `--now TS` as the kernel does.
 
 **The computation goes to the folder, never the folder to it.** A job is a
 shell task that came to you in a [share](../../stdlib/share/) package:
@@ -46,6 +47,14 @@ received job is: no network line, sealed by you before it runs, the same
 sandbox, and its result waiting on a second seal. A file inside the box,
 one that isn't text, an empty one and one over 20,000 characters are
 refused. Writing a job runs nothing.
+
+**Trying a job of your own.** `try` runs a job in a file of yours with no
+seal: nothing leaves by running it. It gets the same sandbox and the same
+refusals as any job, its output is written to FILE on your machine, and the
+`ran` row names the job by its text's SHA-256 and says `sealed: false`.
+Nothing is proposed, so nothing of it is an answer of yours or can be
+shared; whoever reads FILE is yours to decide. A job whose result is to go
+to someone is written, sealed and run.
 
 **The sandbox is Kartikeya's; the policy is willow's.** Kartikeya runs the
 job in bubblewrap, and its own scan refuses commands it reads as harmful
@@ -120,7 +129,7 @@ Resource limits are Kartikeya's (a delegated cgroup if you set one up,
 user namespace, which bubblewrap does; Ubuntu 24.04 keeps that behind
 AppArmor unless allowed.
 
-**Exit codes:** 0 the policy printed; 42 a job taken or written, a result or a total
+**Exit codes:** 0 the policy printed, or a job tried and ended well; 42 a job taken or written, a result or a total
 proposed, waiting on your seal, or a job that failed or broke its shape; 2
 refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
 sandbox on this machine, in its own words, before anything runs or is
@@ -132,6 +141,7 @@ likewise; a job not sealed; one asking for the network; a job file
 `read`, `append`, `sealed`, `standing`, `config`, `h256` and its command
 line for the bite and the proposal.
 
-**Never:** seals anything; reads your key; runs a job you didn't seal;
+**Never:** seals anything; reads your key; runs a job someone sent that you
+didn't seal; proposes or shares what an unsealed job printed;
 gives a job the network, your environment, the box or the key; writes but
 FILE, the record through the kernel, and its own scratch.
