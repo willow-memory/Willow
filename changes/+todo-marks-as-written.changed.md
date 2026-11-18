@@ -1,0 +1,1 @@
+`todo`: a mark counts as it is written to mark something: TODO and FIXME in capitals and not as a file's name (TODO.md), and "need to" opening a line or a sentence or after I or we, so "the todo add-on" and "it does not need to fit in memory" are no longer things to do; over one real folder of notes, commits and code 571 lines had counted, most of them prose
