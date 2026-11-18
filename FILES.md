@@ -2108,11 +2108,16 @@ willow/
 │   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
 │   │   ├── forge-and-pages.md Design note: the forge, and the pages a person approves on
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
+│   │   ├── my-installs.md    Design note: my-installs, what is already installed here
 │   │   ├── one-shape.md      proposal: one shape at every size: the pile apart from the record, an answer that says its source and kind, a gap kept
 │   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   ├── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
-│   │   └── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
+│   │   ├── server-picks.md   Design note: server-picks, the best current MCP servers
+│   │   ├── skill-picks.md    Design note: skill-picks, the best current skills, found and judged
+│   │   ├── still-kept.md     Design note: still-kept, is this project still looked after
+│   │   ├── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
+│   │   └── which-one.md      Design note: which-one, two tools for the same job
 │   ├── agents/               AGENTS.md's longer how-tos, one page a job
 │   │   ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
 │   │   ├── pull-requests.md  opening one, main moving under a branch, a new CI row
