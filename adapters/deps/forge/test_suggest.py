@@ -255,9 +255,12 @@ def test_a_sentence_that_names_no_card_gets_the_close_fork(box):
     names = [r["what"].split(":", 1)[0] for r in g["rows"]]
     assert "assistant-scores" in names and names[-1] == "none" and len(names) <= 4
     assert all("close, not named: " in r["what"] for r in g["rows"][:-1])
-    assert g["rows"][0]["what"].endswith("; recommended, the search's first")
+    assert g["rows"][0]["what"].endswith(
+        "; recommended, the search's first"
+        "; no confidence yet: 0 of 5 close picks sealed on this matcher"
+    ), "and says it has no confidence, and why"
     assert not any(
-        r["what"].endswith("recommended, the search's first") for r in g["rows"][1:]
+        "recommended, the search's first" in r["what"] for r in g["rows"][1:]
     )
     assert "you named it" not in " ".join(r["what"] for r in g["rows"]), (
         "nothing named it"
@@ -280,7 +283,7 @@ def test_a_card_named_by_an_ordinary_word_the_search_puts_nowhere_near_is_asked_
     assert rows["against"].endswith(
         "named, but not close: the search puts it nowhere near your words"
     )
-    assert rows["model-exam"].endswith("; recommended, the search's first")
+    assert "; recommended, the search's first; no confidence yet" in rows["model-exam"]
 
 
 def test_a_named_card_the_search_agrees_with_stays_a_step(box, monkeypatch, capsys):
@@ -393,8 +396,15 @@ def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
     assert [g["name"] for g in doc["groups"]] == [
         "close: by rank",
         "close: by matcher",
+        "close: its confidence",
         "each",
     ]
+    assert doc["groups"][2]["rows"] == [
+        {
+            "where": "now",
+            "what": "no confidence yet: 2 of 5 close picks sealed on this matcher",
+        }
+    ], "no confidence was said, so none is scored"
     by_rank = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
     assert by_rank["rank 1"].endswith(": 0 of 2") and by_rank["rank 2"].endswith(
         ": 1 of 2"
@@ -402,10 +412,109 @@ def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
     assert by_rank["none"] == "none of them: 1 of 2"
     (m,) = doc["groups"][1]["rows"]
     assert m["what"] == "the first taken 0 of 2"
-    each = [r["what"] for r in doc["groups"][2]["rows"]]
+    each = [r["what"] for r in doc["groups"][3]["rows"]]
     assert (
         each[0].startswith(f"“{COUNT}”: {second}, rank 2 of ") and "none of " in each[1]
     )
+
+
+# ── the close fork's confidence: from your sealed picks, and scored ──────────
+
+
+def picked(rank, *, matcher=None, kind="close", conf=None) -> dict:
+    """One sealed outcome as `outcomes` reads it, for `confidence` alone."""
+    return {"kind": kind, "rank": rank, "confidence": conf,
+            "matcher": matcher or {"similar": "s", "words": "w"}}  # fmt: skip
+
+
+NOW = {"similar": "s", "words": "w"}
+
+
+def test_no_confidence_before_five_close_picks_are_sealed_on_this_matcher():
+    four = [picked(1)] * 4
+    assert suggest.confidence(four, NOW) == (
+        None,
+        "no confidence yet: 4 of 5 close picks sealed on this matcher",
+    )
+    other = four + [picked(1, matcher={"similar": "s", "words": "older"})]
+    assert suggest.confidence(other, NOW)[0] is None, (
+        "another matcher's pick counts not"
+    )
+    worded = four + [picked(1, kind="word")]
+    assert suggest.confidence(worded, NOW)[0] is None, "a word's fork counts not"
+
+
+def test_the_confidence_is_k_plus_one_over_n_plus_two_never_a_certainty():
+    assert suggest.confidence([picked(1)] * 5, NOW) == (
+        0.86,
+        "confidence 0.86: its first taken 5 of 5 on this matcher",
+    )
+    four_of_five = [picked(1)] * 4 + [picked(None)]
+    assert suggest.confidence(four_of_five, NOW)[0] == 0.71, "none is a miss"
+    assert suggest.confidence([picked(1)] * 500, NOW)[0] == 0.99, "never 1"
+    half = [picked(1)] * 3 + [picked(2)] * 3
+    assert suggest.confidence(half, NOW)[0] == 0.5, "one half is said"
+
+
+def test_under_half_says_no_confidence_and_why():
+    two_of_five = [picked(1)] * 2 + [picked(2)] * 2 + [picked(None)]
+    assert suggest.confidence(two_of_five, NOW) == (
+        None,
+        "no confidence: its first taken 2 of 5 on this matcher, under half",
+    )
+
+
+#: five wants no name or alias line reaches, each its own close fork
+WANTS = [
+    "count how often each suggestion was sealed",
+    "count how often each suggestion was declined",
+    "count how often each suggestion was taken",
+    "count how often each suggestion was refused",
+    "count how often each suggestion was kept",
+]
+
+
+def first_sealed(box: Path, sentence: str) -> None:
+    """Take the search's first for a sentence's close fork, and seal it."""
+    shown = json.loads(run("suggest", sentence, "--box", str(box), "--plan").stdout)
+    first = shown["forks"]["close"][0]["name"]
+    took = proposed(box, f"close={first}", sentence=sentence)
+    seal_all(box, {p: s for p, s in took.items() if p != "forge/stack.md"})
+
+
+def test_five_sealed_firsts_give_the_next_close_fork_a_confidence_that_is_scored(box):
+    plan_shape = pytest.importorskip("forge.plan_shape")
+    pytest.importorskip("forge.calibration")
+    for want in WANTS:
+        first_sealed(box, want)
+    d = json.loads(run("suggest", COUNT, "--box", str(box), "--plan").stdout)
+    (fork,) = [e for e in plan_shape.validate(d["plan"]).entries
+               if isinstance(e, plan_shape.Fork)]  # fmt: skip
+    assert fork.confidence == 0.86 and fork.recommended == fork.options[0].label
+    assert d["close"] == {
+        "confidence": 0.86,
+        "said": "confidence 0.86: its first taken 5 of 5 on this matcher",
+    }
+    text, doc = suggested(box, COUNT)
+    assert doc["groups"][0]["rows"][0]["what"].endswith(
+        "; recommended, the search's first; confidence 0.86: its first taken 5 of 5 on this matcher"
+    )
+    second = d["forks"]["close"][1]["name"]
+    took = proposed(box, f"close={second}", sentence=COUNT)
+    (path,) = [p for p in took if p != "forge/stack.md"]
+    data = json.loads(
+        json.loads((box / "proposals" / f"{took[path][9:]}.json").read_text())["data"]
+    )
+    assert data["confidence"] == 0.86, "the proposal keeps the confidence it was shown"
+    seal_all(box, {path: took[path]})
+    text, doc = scored(box)
+    trust = {r["where"]: r["what"] for r in doc["groups"][2]["rows"]}
+    assert doc["groups"][2]["name"] == "close: its confidence"
+    assert trust == {
+        "now": "confidence 0.75: its first taken 5 of 6 on this matcher",
+        # one said (0.86), and missed: (0.86 - 0)^2 = 0.7396
+        "scored": "brier 0.740 over 1 said; mean said 0.86, its first taken 0.00",
+    }
 
 
 def test_a_words_fork_offers_none_and_keeps_what_was_shown(box):
