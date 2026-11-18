@@ -39,6 +39,12 @@ the person's pick (or their no) is on the record as the matchmaker's
 outcome. [demo/want-finders](../../demo/want-finders/) is what measured the
 need: the scan found the right card for none of its nine wants.
 
+*Since, 2026-11-17:* the recommendation's confidence comes from those
+outcomes alone. After five close picks sealed on one matcher, the fork
+states (k+1)/(n+2) for k of n firsts taken, or none under one half; each
+proposal keeps the confidence it was shown, and `suggest.py scores` scores
+it with the Forge's calibration.
+
 ### 2. One alias file, three readers, three sets of rules (seen)
 
 `ui/search-words.txt` is read by:

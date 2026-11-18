@@ -3,7 +3,7 @@ section: Assistants
 line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
-version: 0.2.0
+version: 0.3.0
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
@@ -64,7 +64,8 @@ of thing, each row the card and what it says:
 - **ideas**: an add-on you named that isn't built yet;
 - **fork “close”**: when your words name no card and no alias line reaches
   one, what [similar](../../stdlib/similar/)'s search (`Want`, the canvas's
-  search) points at: up to three built cards, the first recommended, each
+  search) points at: up to three built cards, the first recommended (with
+  a confidence once your seals have measured one; see `scores`), each
   row saying it is close and not named, and `none` beside them. A card your
   words reach alone, by name or alias line, is a step only while that
   search agrees it is near them (in its first twelve); one it puts nowhere
@@ -82,7 +83,7 @@ of thing, each row the card and what it says:
 
       forge: populated, 1 fork waits on you
       ## fork “close”: nothing named that the search agrees with; these are close to what you said
-        adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first
+        adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first; no confidence yet: 0 of 5 close picks sealed on this matcher
         adapters/stdlib/assistant-scores/README.md  assistant-scores: ...; close, not named: uses often each, suggestion seal
         adapters/stdlib/forecast-ask/README.md      forecast-ask: ...; close, not named: uses count often
         none                                        none: none of these does it: sealed, the miss is on your record and nothing runs
@@ -121,6 +122,8 @@ waits its turn until the first no longer stands.
       none    none of them: 1 of 2
     ## by matcher
       similar 1f3a…, words 2e43…  the first taken 1 of 2
+    ## its confidence
+      now     no confidence yet: 2 of 5 close picks sealed on this matcher
     ## each
       forge/decisions/willow-close-….json  “…”: tip-pin, rank 1 of tip-pin, hook-pin, weights-pin (row 9)
 
@@ -136,8 +139,16 @@ similar.py or the words list starts a count of its own. For a word's fork
 it is how often that word's alias line offered a card you took, and how
 often you said none: a word that keeps getting none is a line of
 ui/search-words.txt to argue. That count is the matchmaker's
-measured hit rate, and the only thing a close fork's confidence may ever be
-made from; until there is one, a fork says no confidence at all. It writes
+measured hit rate, and the only thing a close fork's confidence is made
+from. Once you have sealed five close picks on one matcher, the next close
+fork says you took the search's first k of n and states (k+1)/(n+2) as its
+confidence: five of five is 0.86, never a certainty, and a rate under one
+half says no confidence (the Forge states one only in the direction it
+believes). Before that, or under half, the fork says why it has none, and
+the Forge records no prediction. Each close proposal keeps the confidence
+it was shown, and `scores` scores those against what you took with the
+Forge's own calibration: its Brier score (0 is foresight, 0.25 a coin at
+one half), the mean said and how often the first was taken. It writes
 nothing.
 
 To share a stack you sealed, with your reasons, see
@@ -160,9 +171,10 @@ parent must exist; it makes no folder but the one you named.
 the whole as the Forge reads it: the cards counted, the steps, the forks,
 what is sealed, the ideas, and `plan`, a document the Forge's `plan_shape`
 validates, its `decision_extract` turns into decisions and its `build_loop`
-resolves. A fork carries no confidence: no made-up 0.5 is scored. Only the
-`close` fork carries a recommendation, the search's first, so the Forge can
-count how often you take it. When a real sentence misses, add a
+resolves. A word's fork carries no confidence: no made-up 0.5 is scored.
+Only the `close` fork carries a recommendation, the search's first, and a
+confidence only once your seals have measured one, so the Forge's build
+loop records a prediction only when there is something to score. When a real sentence misses, add a
 line to `ui/search-words.txt`; when one maps wrong, argue the line.
 
 Exit codes, the report's: 0 steps found and nothing waits on you, a stack
