@@ -618,10 +618,18 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 
 #### Checking a model before you trust it: ideas, not built yet
 
+- <a id="server-picks"></a>**server-picks** (idea) \
+  The best, current MCP servers for a job, ranked on upkeep and source, with what each can touch, pinned to a version. \
+  Goes online: api.github.com, to read public repositories and their recent activity. *new* `no-install` `online` `server` `upkeep` `mcp` · near: mcp, hosts,
+  home-upkeep
 - <a id="skill-picks"></a>**skill-picks** (idea) \
   The best, current skills people have written for assistants, ranked on upkeep and source, with what each can touch, pinned to a version. \
   Goes online: api.github.com, to read public skill repositories and their recent activity. *new* `no-install` `online` `ranked` `upkeep` `skills` · near:
   home-upkeep, tip-pin, oracle-text
+- <a id="which-one"></a>**which-one** (idea) \
+  Two or more libraries or tools for the same job, side by side on upkeep, licence and fit, with the evidence printed. \
+  Goes online: api.github.com, to read public repositories and their recent activity. *new* `no-install` `online` `upkeep` `compare` · near: contradictions,
+  second-opinion, sheet-drift
 
 ### What it makes for elsewhere
 
@@ -1183,6 +1191,10 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="narrator-review"></a>**narrator-review** (idea) \
   A narrator's corrections to their own transcript, each proposed against the line it fixes and sealed by them; the original stays. \
   *new* `no-install` `offline` `narrator` `transcript` · near: hook-feedback, turns, consent-register
+- <a id="still-kept"></a>**still-kept** (idea) \
+  Whether a repo or package is still looked after: last commit, who is left, deprecation notices, and how issues get answered. \
+  Goes online: api.github.com, to read public repositories and their recent activity. *new* `no-install` `online` `commit` `left` `upkeep` · near: git-notes,
+  provenance, issue-answer
 
 ### What guards it
 
@@ -1406,6 +1418,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="privacy"></a>[**privacy**](adapters/stdlib/privacy/) \
   Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid. \
   *bot* `no-install` `offline` `numbers` · near: sentences, readings, pii-audit
+
+#### What guards it: ideas, not built yet
+
+- <a id="my-installs"></a>**my-installs** (idea) \
+  The skills, plugins, extensions and hooks installed here: what each can touch, and what changed since you last looked. \
+  *new* `no-install` `offline` `hook` `installed` · near: what-changed, policy-watch, hook-read-first
 
 ### What it makes for elsewhere
 
