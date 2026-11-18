@@ -63,8 +63,37 @@ def stop(
     )
 
 
-def start(session: str = "s2", event: str = "SessionStart") -> str:
-    return json.dumps({"hook_event_name": event, "session_id": session})
+def start(session: str = "s2", event: str = "SessionStart", cwd: str = "") -> str:
+    call = {"hook_event_name": event, "session_id": session}
+    return json.dumps({**call, "cwd": cwd} if cwd else call)
+
+
+def test_a_session_gets_the_handoff_of_its_own_folder_not_the_last_anywhere(tmp_path):
+    b = make(tmp_path)
+    run("--box", str(b), "run", *NOW, data=stop("s1", cwd="/home/you/garden"))
+    run("--box", str(b), "run", *NOW, data=stop("s2", cwd="/home/you/boat"))
+    got = run("--box", str(b), "run", *NOW, data=start("s3", cwd="/home/you/garden"))
+    said = json.loads(got.stdout)["additionalContext"]
+    assert "session s1 ended in /home/you/garden (row 1)" in said
+    # a folder no session ended in hears nothing, though the box holds two
+    got = run("--box", str(b), "run", *NOW, data=start("s4", cwd="/home/you/shed"))
+    assert got.returncode == 0 and got.stdout == ""
+    # a folder is matched whole, never by how it starts
+    got = run("--box", str(b), "run", *NOW, data=start("s5", cwd="/home/you/boat2"))
+    assert got.stdout == ""
+    # and a call that names no folder gets the last one anywhere, as before
+    got = run("--box", str(b), "run", *NOW, data=start("s6"))
+    assert "ended in /home/you/boat" in json.loads(got.stdout)["additionalContext"]
+
+
+def test_its_own_last_stop_in_a_folder_hides_no_one_elses_before_it(tmp_path):
+    """The latest in the folder is its own: it hears nothing, as it did
+    when one box heard one folder."""
+    b = make(tmp_path)
+    run("--box", str(b), "run", *NOW, data=stop("s1", cwd="/home/you/garden"))
+    run("--box", str(b), "run", *NOW, data=stop("s2", cwd="/home/you/garden"))
+    got = run("--box", str(b), "run", *NOW, data=start("s2", cwd="/home/you/garden"))
+    assert got.returncode == 0 and got.stdout == ""
 
 
 def test_a_bad_command_line_is_refused_and_names_the_script():
