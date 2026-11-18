@@ -66,6 +66,11 @@ MARK = re.compile(
 
 def todos(pile: list[dict]) -> list[tuple[str, str, str]]:
     out = []
+    # a passage is dated by its own file alone (`kernel.dates`), so only the
+    # files that hold a marked line are read for dates: the rest say nothing
+    marked = {c["path"] for c in pile
+              if any(MARK.search(line) for line in c["text"].splitlines())}  # fmt: skip
+    pile = [c for c in pile if c["path"] in marked]
     for c, d in zip(pile, kernel.dates(pile)):
         when = f"{str(d)[:4]}-{str(d)[4:6]}-{str(d)[6:]}" if d else "undated"
         for i, line in enumerate(c["text"].splitlines()):

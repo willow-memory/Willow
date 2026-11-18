@@ -87,7 +87,12 @@ def lines(pile: list[dict], keep: set[int]) -> list[dict]:
     ranks by: after "hearing set for 2026-12-01", the next line was still
     written in March."""
     out, path, above, src = [], None, "", None
+    # a date above a line is only ever one in its own file: a file with no
+    # kept passage dates nothing, so its lines are never read for dates
+    files = {pile[i]["path"] for i in keep}
     for i, c in enumerate(pile):
+        if c["path"] not in files:
+            continue
         if c["path"] != path:
             path, above = c["path"], ""
         filed = kernel.newest(c["path"])
