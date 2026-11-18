@@ -2007,7 +2007,7 @@
   "name": "skill-picks",
   "kind": "stdlib",
   "section": "Finding things",
-  "line": "The best, current skills people have written for assistants, ranked by recent use and upkeep, each with what it does and can touch.",
+  "line": "The best, current skills people have written for assistants, ranked on upkeep and source, with what each can touch, pinned to a version.",
   "source": "new",
   "writes": "nothing",
   "network": "api.github.com, to read public skill repositories and their recent activity",

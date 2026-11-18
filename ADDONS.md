@@ -619,9 +619,9 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
 #### Checking a model before you trust it: ideas, not built yet
 
 - <a id="skill-picks"></a>**skill-picks** (idea) \
-  The best, current skills people have written for assistants, ranked by recent use and upkeep, each with what it does and can touch. \
+  The best, current skills people have written for assistants, ranked on upkeep and source, with what each can touch, pinned to a version. \
   Goes online: api.github.com, to read public skill repositories and their recent activity. *new* `no-install` `online` `ranked` `upkeep` `skills` · near:
-  home-upkeep, oracle-text, almanac-keep
+  home-upkeep, tip-pin, oracle-text
 
 ### What it makes for elsewhere
 
