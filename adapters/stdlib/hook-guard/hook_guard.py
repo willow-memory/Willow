@@ -1,12 +1,12 @@
 """hook_guard.py: a hook that refuses, by rule and never by judgment, a call
 that would read the key or write a box outside the kernel. Python 3.9+.
 
-    python adapters/stdlib/hook-guard/hook_guard.py run --box DIR
+    python adapters/stdlib/hook-guard/hook_guard.py run --box DIR [--also DIR]...
     python adapters/stdlib/hook-guard/hook_guard.py rules
 
 `run` is a PreToolUse hook. It reads what the assistant is about to do (the
 JSON Claude Code, Gemini CLI and Cursor send on standard input) and holds it to
-two rules, each named when it refuses (exit 2, the reason on standard error):
+its rules, each named when it refuses (exit 2, the reason on standard error):
 
     key        the call names the box's key file: a Read of it, a command that
                has its path in it. The key is the person's; no assistant opens
@@ -16,6 +16,10 @@ two rules, each named when it refuses (exit 2, the reason on standard error):
                notebook edit, or a command that redirects into it or runs rm, mv,
                cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i
                on it. Reading the box is fine; `kernel.py` is how it is written.
+
+    beside-write  with --also DIR (repeatable): the same as box-write, for a
+               folder kept beside the box that only its own program writes in.
+               The folder need not exist yet. Reading it is fine.
 
     refused: rule box-write: this Write is inside the box; only kernel.py writes there.
 
@@ -28,7 +32,7 @@ against the call's own working directory, `cwd`, when it sends one. Input that
 is not a JSON object is refused: a hook that can't read the call can't say it is
 safe (hook-fail-closed puts the same rule round any hook).
 
-`rules` lists the two rules. It never reads the key, only the path the box's
+`rules` lists the rules. It never reads the key, only the path the box's
 config names for it, and writes nothing. Exit codes: 0 allowed (or `rules`);
 2 refused, or a bad command line.
 """
@@ -47,6 +51,7 @@ import kernel  # noqa: E402
 RULES = {
     "key": "the call names the box's key file",
     "box-write": "the call would change a file inside the box other than through kernel.py",
+    "beside-write": "with --also DIR, the call would change a file inside that folder kept beside the box",
 }
 WRITERS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 READERS = {"Read", "NotebookRead"}
@@ -111,6 +116,7 @@ def names_key(command: str, key: Path, cwd: str) -> bool:
 
 
 def writes_box(command: str, box: Path, cwd: str) -> bool:
+    """Whether the command would change something in the folder `box`."""
     for cmd in words(command):
         for i, w in enumerate(cmd):
             target = cmd[i + 1] if i + 1 < len(cmd) else ""
@@ -130,6 +136,8 @@ def writes_box(command: str, box: Path, cwd: str) -> bool:
             return True
         if head in CHANGES_LAST and args and inside(args[-1], box, cwd):
             return True
+        if head == "mv" and any(inside(a, box, cwd) for a in args[:-1]):
+            return True  # a file moved out of the folder changes it too
         if head == "sed" and any(
             a.startswith("-i") or a == "--in-place" for a in cmd[1:]
         ):
@@ -142,8 +150,11 @@ def writes_box(command: str, box: Path, cwd: str) -> bool:
     return False
 
 
-def judge(raw: str, box: Path, key: Path) -> tuple[int, str]:
-    """(exit code, reason) for what a hook was sent."""
+def judge(
+    raw: str, box: Path, key: Path, also: tuple[Path, ...] = ()
+) -> tuple[int, str]:
+    """(exit code, reason) for what a hook was sent. `also` are folders held
+    from change like the box (rule beside-write)."""
     try:
         call = json.loads(raw)
     except ValueError:
@@ -168,6 +179,11 @@ def judge(raw: str, box: Path, key: Path) -> tuple[int, str]:
             2,
             f"refused: rule box-write: this {tool} is inside the box; only kernel.py writes there.",
         )
+    if tool in WRITERS and any(inside(p, f, cwd) for p in paths for f in also):
+        return (
+            2,
+            f"refused: rule beside-write: this {tool} is inside a folder kept beside the box; only the runtime writes there.",
+        )
     if tool == "Bash" and isinstance(given.get("command"), str):
         command = given["command"]
         if names_key(command, key, cwd):
@@ -179,6 +195,11 @@ def judge(raw: str, box: Path, key: Path) -> tuple[int, str]:
             return (
                 2,
                 "refused: rule box-write: this command changes something inside the box; only kernel.py writes there.",
+            )
+        if any(writes_box(command, f, cwd) for f in also):
+            return (
+                2,
+                "refused: rule beside-write: this command changes something inside a folder kept beside the box; only the runtime writes there.",
             )
     return 0, ""
 
@@ -192,14 +213,24 @@ def main(argv: list[str]) -> int:
         for name, what in RULES.items():
             print(f"{name:<10} {what}")
         return kernel.ALIVE
-    if len(argv) == 3 and argv[0] == "run" and argv[1] == "--box":
+    also: list[str] = []
+    rest = argv[3:]
+    while len(rest) >= 2 and rest[0] == "--also":
+        also.append(rest[1])
+        rest = rest[2:]
+    if len(argv) >= 3 and argv[:2] == ["run", "--box"] and not rest:
         box = Path(argv[2])
         if not (box / "kernel.json").exists():
             print("refused: not a kernel box; init first", file=sys.stderr)
             return kernel.REFUSED
         key = Path(kernel.config(box)["key"]).expanduser()
         try:
-            code, why = judge(sys.stdin.read(), box.resolve(), key.resolve())
+            code, why = judge(
+                sys.stdin.read(),
+                box.resolve(),
+                key.resolve(),
+                tuple(Path(a).expanduser().resolve() for a in also),
+            )
         except OSError:
             return kernel.REFUSED
         if why:

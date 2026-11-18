@@ -212,6 +212,7 @@ def test_rules_are_listed_and_a_bad_command_line_is_refused(tmp_path):
     assert got.returncode == 0 and got.stdout.splitlines() == [
         "key        the call names the box's key file",
         "box-write  the call would change a file inside the box other than through kernel.py",
+        "beside-write with --also DIR, the call would change a file inside that folder kept beside the box",
     ]
     for argv in (
         [],
@@ -257,3 +258,120 @@ def test_a_command_that_seals_is_refused(tmp_path):
             "Bash", command=f"python {KERNEL} {verb} --box {b} proposal:{'0' * 64}"
         )
         assert hg.judge(raw, b, key)[0] == 2
+
+
+def beside(tmp_path: Path) -> tuple[Path, Path, Path]:
+    b, key = box(tmp_path)
+    return b, key, tmp_path / "box.runtime"  # kept beside the box, not made yet
+
+
+def run_also(b: Path, also: Path, raw: str) -> subprocess.CompletedProcess:
+    return run("run", "--box", str(b), "--also", str(also), stdin=raw)
+
+
+def test_a_folder_kept_beside_the_box_is_held_like_the_box_and_may_be_read(tmp_path):
+    b, _, side = beside(tmp_path)
+    for tool, field in (
+        ("Write", "file_path"),
+        ("Edit", "file_path"),
+        ("MultiEdit", "file_path"),
+        ("NotebookEdit", "notebook_path"),
+    ):
+        got = run_also(b, side, call(tool, **{field: str(side / "stopped.json")}))
+        assert got.returncode == 2, tool
+        assert (
+            got.stderr
+            == f"refused: rule beside-write: this {tool} is inside a folder kept beside the box; only the runtime writes there.\n"
+        )
+    for c in (
+        f"echo x > {side}/stopped.json", f"rm {side}/names.txt", f"rm -rf {side}", f"tee {side}/sent.jsonl < /tmp/a",
+        f"mkdir {side}/shelf", f"sed -i s/a/b/ {side}/names.txt", f"cp /tmp/a {side}/x", f"dd if=/dev/zero of={side}/x",
+        f"mv {side}/names.txt /tmp/x", f"mv a {side}/x", f"echo x>>{side}/sent.jsonl",
+    ):  # fmt: skip
+        got = run_also(b, side, call("Bash", command=c))
+        assert got.returncode == 2 and "rule beside-write" in got.stderr, c
+    for raw in (
+        call("Read", file_path=str(side / "stopped.json")),
+        call("Bash", command=f"cat {side}/names.txt"),
+        call("Bash", command=f"cp {side}/names.txt /tmp/copy"),
+        call("Bash", command=f"grep a {side}/sent.jsonl > /tmp/out"),
+        call("Write", file_path=str(tmp_path / "pile" / "new.md")),
+        call("Write", file_path=str(side) + "-old/x"),
+        call("Write", file_path=str(side) + "/../box.runtime-old/x"),
+    ):
+        got = run_also(b, side, raw)
+        assert got.returncode == 0 and got.stderr == "", (raw, got.stderr)
+
+
+def test_a_folder_that_does_not_exist_yet_is_held_and_dots_and_links_do_not_hide_it(
+    tmp_path,
+):
+    b, _, side = beside(tmp_path)
+    assert not side.exists()
+    dots = str(tmp_path / "pile" / ".." / "box.runtime" / "stopped.json")
+    assert run_also(b, side, call("Write", file_path=dots)).returncode == 2
+    link = tmp_path / "ln"
+    link.symlink_to(tmp_path)
+    got = run_also(b, side, call("Write", file_path=str(link / "box.runtime" / "x")))
+    assert got.returncode == 2
+    raw = json.dumps(
+        {"tool_name": "Write", "cwd": str(side), "tool_input": {"file_path": "x"}}
+    )
+    assert run_also(b, side, raw).returncode == 2, "a relative path, against cwd"
+    assert not side.exists(), "the hook made nothing"
+
+
+def test_more_than_one_also_folder_is_held_and_without_also_only_the_box_is(tmp_path):
+    b, _, side = beside(tmp_path)
+    other = tmp_path / "other"
+    argv = ["run", "--box", str(b), "--also", str(side), "--also", str(other)]
+    for f in (side, other):
+        got = run(*argv, stdin=call("Write", file_path=str(f / "x")))
+        assert got.returncode == 2 and "beside-write" in got.stderr
+    assert (
+        run(*argv, stdin=call("Write", file_path=str(tmp_path / "x"))).returncode == 0
+    )
+    plain = ["run", "--box", str(b)]
+    assert run(*plain, stdin=call("Bash", command=f"rm {side}/x")).returncode == 0
+    assert run(*plain, stdin=call("Bash", command=f"rm {b}/x")).returncode == 2
+
+
+def test_the_box_is_still_named_box_write_when_also_is_given(tmp_path):
+    b, _, side = beside(tmp_path)
+    got = run_also(b, side, call("Write", file_path=str(b / "record.jsonl")))
+    assert got.returncode == 2 and "rule box-write" in got.stderr
+    got = run_also(b, side, call("Bash", command=f"rm {b}/x"))
+    assert got.returncode == 2 and "rule box-write" in got.stderr
+
+
+def test_a_file_moved_out_of_the_box_changes_it_but_a_move_into_it_from_elsewhere_still_does_too(
+    tmp_path,
+):
+    b, _ = box(tmp_path)
+    for c in (
+        f"mv {b}/record.jsonl /tmp/x",
+        f"mv -f {b}/a {b}/b",
+        f"mv /tmp/a {b}/x",
+        f"mv {b}/a /tmp/b /tmp/dir/",
+    ):
+        got = run("run", "--box", str(b), stdin=call("Bash", command=c))
+        assert got.returncode == 2 and "rule box-write" in got.stderr, c  # fmt: skip
+    for c in (
+        "mv /tmp/a /tmp/b",
+        f"mv /tmp/a {b}-not/x",
+        f"cp {b}/record.jsonl /tmp/x",
+    ):
+        assert (
+            run("run", "--box", str(b), stdin=call("Bash", command=c)).returncode == 0
+        ), c
+
+
+def test_a_bad_also_is_a_bad_command_line(tmp_path):
+    b, _ = box(tmp_path)
+    for argv in (
+        ["run", "--box", str(b), "--also"],
+        ["run", "--box", str(b), "--also", str(tmp_path), "x"],
+        ["run", "--also", str(tmp_path), "--box", str(b)],
+        ["run", "--box", str(b), "--also", str(tmp_path), "--stray"],
+    ):
+        assert run(*argv).returncode == 2, argv
