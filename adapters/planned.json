@@ -2004,6 +2004,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "skill-picks",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The best, current skills people have written for assistants, ranked by recent use and upkeep, each with what it does and can touch.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "api.github.com, to read public skill repositories and their recent activity",
+  "role": "suggests",
+  "version": "0.0.1",
+  "tags": "skills"
+ },
+ {
   "name": "socratic",
   "kind": "stdlib",
   "section": "Ways to use it",

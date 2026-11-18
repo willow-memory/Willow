@@ -613,6 +613,16 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   A model on this machine suggests a category for each file your phrases didn't place, citing a passage, for your seal. \
   Uses openai-compatible, sort. Reaches this machine only. *new* `no-install` `this-machine` `category` `sorted` · near: sort, land, local-model
 
+### Checking a model before you trust it
+
+
+#### Checking a model before you trust it: ideas, not built yet
+
+- <a id="skill-picks"></a>**skill-picks** (idea) \
+  The best, current skills people have written for assistants, ranked by recent use and upkeep, each with what it does and can touch. \
+  Goes online: api.github.com, to read public skill repositories and their recent activity. *new* `no-install` `online` `ranked` `upkeep` `skills` · near:
+  home-upkeep, oracle-text, almanac-keep
+
 ### What it makes for elsewhere
 
 - <a id="batch-ask"></a>[**batch-ask**](adapters/stdlib/batch-ask/) \
