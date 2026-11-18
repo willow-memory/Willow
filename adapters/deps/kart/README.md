@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.6
+version: 0.1.7
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -151,9 +151,11 @@ queued, the queue worked, or a status given; 42 a job taken or written, a result
 proposed, waiting on your seal, or a job that failed or broke its shape; 2
 refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
 sandbox on this machine, in its own words, before anything runs or is
-recorded; a resource group set up for Kartikeya that isn't ready (by
-Kartikeya's own `cgroup-status`: a restart undoes `kartikeya setup-cgroup`),
-likewise, naming the command to run; a job not sealed; one asking for the network; a job file
+recorded; a resource group set up for Kartikeya that can't be readied,
+likewise, naming the command to run. A reload of systemd empties the
+group's `cgroup.subtree_control`, which `kartikeya setup-cgroup` had
+written; `kart` writes that one line back when the group is there, and says
+so. It writes no unit and reloads nothing; a job not sealed; one asking for the network; a job file
 `write` can't take).
 
 **Uses:** [share](../../stdlib/share/) to read packages; the kernel's

@@ -333,6 +333,62 @@ def test_a_resource_group_set_up_but_not_ready_is_named_with_what_to_run(
     )
 
 
+def test_limits_a_reload_undid_are_put_back_and_only_those(
+    tmp_path, monkeypatch, capsys
+):
+    """A daemon-reload empties the group's cgroup.subtree_control (seen
+    2026-11-18, twice in one evening). The group is the person's own setup:
+    what `kartikeya setup-cgroup` wrote there is written again, and nothing
+    else is touched."""
+    kart = kart_itself()
+    from kartikeya import cgroup_setup  # noqa: PLC0415
+
+    group = tmp_path / "kart.slice"
+    group.mkdir()
+    (group / "cgroup.controllers").write_text("cpu memory pids\n")
+    (group / "cgroup.subtree_control").write_text("\n")
+    (group / "cgroup.procs").write_text("")
+    wrote = []
+
+    def enable(parent):  # the kernel answers a write of "+memory +pids" this way
+        wrote.append(parent)
+        (Path(parent) / "cgroup.subtree_control").write_text("memory pids\n")
+
+    def status():
+        ready = cgroup_setup.is_delegated_cgroup_parent(str(group))
+        return {"ready": ready, "env_parent": str(group), "systemd_parent": None,
+                "slice_unit_path": "/nowhere/kart.slice"}  # fmt: skip
+
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", status)
+    monkeypatch.setattr(cgroup_setup, "enable_subtree_control", enable)
+    assert kart.group_not_ready() is None and wrote == [str(group)]
+    assert f"restored the resource group's limits ({group})" in capsys.readouterr().out
+    assert kart.group_not_ready() is None and wrote == [
+        str(group)
+    ]  # ready: not written again
+    assert sorted(p.name for p in group.iterdir()) == [
+        "cgroup.controllers", "cgroup.procs", "cgroup.subtree_control"]  # fmt: skip
+    # a write the kernel refuses is said, and nothing runs
+    (group / "cgroup.subtree_control").write_text("\n")
+    monkeypatch.setattr(
+        cgroup_setup, "enable_subtree_control", lambda parent: "cannot write: denied"
+    )
+    got = kart.group_not_ready()
+    assert (
+        "could not be put back (cannot write: denied)" in got and "nothing ran" in got
+    )
+    # a group that can't have them (no memory controller), or isn't there, is never written
+    (group / "cgroup.controllers").write_text("cpu\n")
+    monkeypatch.setattr(
+        cgroup_setup, "enable_subtree_control", lambda parent: wrote.append("x")
+    )
+    assert "isn't ready" in kart.group_not_ready() and "x" not in wrote
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", lambda: {
+        "ready": False, "env_parent": str(tmp_path / "gone"), "systemd_parent": None,
+        "slice_unit_path": "/nowhere/kart.slice"})  # fmt: skip
+    assert "isn't ready" in kart.group_not_ready() and "x" not in wrote
+
+
 def test_a_group_that_isnt_ready_refuses_before_anything_runs_or_is_recorded(
     walt, tmp_path, monkeypatch, capsys
 ):

@@ -235,9 +235,10 @@ def group_not_ready() -> str | None:
     """Why a resource group that is set up for Kartikeya can't be used, or
     None. Kartikeya's own check: a group counts as set up when
     KART_CGROUP_PARENT names one, or its kart.slice unit is installed, and
-    it then refuses to run a task without it. A slice that was restarted,
-    or a machine that was, has lost what `kartikeya setup-cgroup` wrote, so
-    this says that before anything runs or is recorded."""
+    it then refuses to run a task without it. A reload of systemd undoes
+    what `kartikeya setup-cgroup` wrote into the group; that is put back
+    here when it can be. A group that can't be readied is refused by name
+    before anything runs or is recorded."""
     from kartikeya import cgroup_setup  # noqa: PLC0415
 
     try:
@@ -250,7 +251,25 @@ def group_not_ready() -> str | None:
     named = st.get("env_parent") or st.get("systemd_parent")
     if not named and not (unit and Path(unit).exists()):
         return None  # none set up: Kartikeya runs under per-process limits
-    return (f"a resource group is set up for Kartikeya but isn't ready ({named or unit}); "
+    # the one thing a reload of systemd undoes is the group handing its
+    # memory and process limits down to the groups under it. Where the group
+    # is there and can, that is put back, as `kartikeya setup-cgroup` wrote
+    # it: no unit is written and nothing is reloaded.
+    why = ""
+    if named and cgroup_setup.controllers_available(named) \
+            and not cgroup_setup.subtree_control_enabled(named):  # fmt: skip
+        why = cgroup_setup.enable_subtree_control(named) or ""
+        if not why:
+            try:
+                if cgroup_setup.cgroup_status().get("ready"):
+                    print(
+                        f"restored the resource group's limits ({named}), lost to a reload"
+                    )
+                    return None
+            except Exception as e:  # noqa: BLE001
+                why = str(e)
+    return (f"a resource group is set up for Kartikeya but isn't ready ({named or unit})"
+            f"{', and its limits could not be put back (' + why + ')' if why else ''}; "
             "nothing ran. run: kartikeya setup-cgroup (a restart of the slice or "
             "the machine undoes it); or, to run under per-process limits, unset "
             "KART_CGROUP_PARENT and remove the kart.slice unit")  # fmt: skip
