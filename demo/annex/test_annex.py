@@ -35,11 +35,23 @@ def test_the_scene_plays_as_told(played):
     assert played["doc"]["wrong"] == []
 
 
-def test_every_chain_holds_and_only_vask_and_lumen_sealed(played):
+def test_every_chain_holds_and_only_the_five_who_sealed_have_seals(played):
     boxes = played["doc"]["boxes"]
     assert len(boxes) == 8
     assert all(b["held"] for b in boxes.values())
-    assert {k for k, b in boxes.items() if b["seals"]} == {"vask", "lumen"}
+    assert {k: b["seals"] for k, b in boxes.items() if b["seals"]} == {
+        "vask": 1, "lumen": 3, "karst": 2, "program": 2, "intake": 2,
+    }  # fmt: skip
+    # counter holds the rumour and sealed nothing; oversight only received
+    assert boxes["counter"]["seals"] == boxes["oversight"]["seals"] == 0
+
+
+def test_each_box_alone_sees_no_clash_and_oversight_sees_both(played):
+    out = played["got"].stdout
+    assert out.count("0 of 1 steps flagged") == 4
+    assert "OPERATOR   Karst: an operator is a running process" in out
+    assert "Lumen: an operator is the person" in out
+    assert "CLOCK      Program: 08:00    Intake: 09:00" in out
 
 
 def test_the_wall_holds(played):

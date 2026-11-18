@@ -13,11 +13,17 @@ a seal key and an identity under --to, which must not be there yet. Then:
 4. Lumen's field engineer has her moment: her firm's manifest answer, sealed
    and sent to Oversight, asked of no one.
 5. A package edited on the way is refused where it lands.
-6. No package holds a line of another box's pile, the rumour is in no package,
+6. Four boxes seal a stack of their own (Intake's gate check, Program's
+   schedule check, Karst's and Lumen's claim checks) and run it over their own
+   pile. Each finds nothing wrong: no box sees its own clash.
+7. The clash, and the clocks. Karst's spec says an operator is a process;
+   Lumen's data sheet says a person. The program schedule says integration day
+   began at 08:00; the gate log says 09:00. Each box seals its own line and
+   sends it to Oversight, the one place both sides arrive.
+8. No package holds a line of another box's pile, the rumour is in no package,
    and every chain verifies with only its owner's seals on it.
 
-This is a skeleton: the other boxes' stacks, the spec clash, the clocks and
-the rewritten chain are not yet played. It writes a transcript to standard
+Still to play: the planner's log, the rewritten chain and the witness. It writes a transcript to standard
 output and scene.json under --to. Exit 0 when the scene plays as told, 1 when a
 step went otherwise.
 """
@@ -25,6 +31,7 @@ step went otherwise.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -32,7 +39,11 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+sys.path.insert(0, str(ROOT))
+from kernel import h256  # noqa: E402
+
 KERNEL = ROOT / "kernel.py"
+STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
 SHARE = ROOT / "adapters" / "stdlib" / "share" / "share.py"
 BOXES = ["intake", "vask", "karst", "lumen", "program", "counter", "oversight", "prior"]
 
@@ -48,6 +59,35 @@ SEALED = [
      "notes/manifest.md",
      "One sensor stream was delivered to the program on 2026-11-18, under contract L-4.",
      "the Lumen manifest; the other delivery is not on it"),
+]  # fmt: skip
+
+
+#: the clash and the clocks: each box's own line, sealed by its owner
+CLASH = [
+    ("karst", "what is an operator", "spec/interface.md",
+     "Karst's interface spec, 2.1: an operator is a running process that holds a tasking channel.",
+     "the interface specification, section 2.1"),
+    ("lumen", "what is an operator", "sheet/datasheet.md",
+     "Lumen's data sheet: an operator is the person who tasks the sensor array.",
+     "the data sheet"),
+    ("program", "when does integration day begin", "schedule.md",
+     "The schedule says integration day begins at 08:00.",
+     "the integration day schedule"),
+    ("intake", "when does integration day begin", "badge-log.md",
+     "The gate log says integration day begins at 09:00.",
+     "the gate badge log"),
+]  # fmt: skip
+
+#: each box's own stack: (who, the words it is sealed under, why, [(pool, add-on)])
+STACKS = [
+    ("intake", "stack gate log check", "what the gate log shows about itself",
+     [("where the log stops", "gaps")]),
+    ("program", "stack schedule check", "whether the program's own papers agree",
+     [("where the papers disagree", "contradictions")]),
+    ("karst", "stack claim check", "whether Karst's own papers agree",
+     [("where the papers disagree", "contradictions")]),
+    ("lumen", "stack claim check", "whether Lumen's own papers agree",
+     [("where the papers disagree", "contradictions")]),
 ]  # fmt: skip
 
 
@@ -131,6 +171,71 @@ class Scene:
             self.say(f"  {line}")
         return out
 
+    def stack_text(self, who: str, why: str, steps: list) -> str:
+        """The stack file, each step's add-on pinned by SHA-256 on a comment line."""
+        out = [f"# {who}'s stack: {why}"]
+        for _, step in steps:
+            path = (
+                ROOT / "adapters" / "stdlib" / step / (step.replace("-", "_") + ".py")
+            )
+            out.append(f"# pin {step} {h256(path.read_text(encoding='utf-8'))}")
+        for pool, step in steps:
+            out += ["", f"## {pool}", f"- {step} -- --box {{box}}"]
+        return "\n".join(out) + "\n"
+
+    def keep(self, who: str, words: str, name: str, text: str, claim: str) -> str:
+        """A stack is sealed like an answer that cites nothing: the owner's act."""
+        self.run(KERNEL, "bite", "--box", self.box(who), words, "--now", self.ts(),
+                 want=(0, 42))  # fmt: skip
+        sug = self.to / who / "suggestion.jsonl"
+        sug.write_text(json.dumps({"path": f"stacks/{name}.md", "data": text,
+                                   "cites": [], "claim": claim}) + "\n")  # fmt: skip
+        out = self.run(KERNEL, "propose", "--box", self.box(who), "--file", sug,
+                       "--now", self.ts(), want=(42,))  # fmt: skip
+        sug.unlink()
+        subj = out.split()[1] if out.startswith("pass") else ""
+        self.run(KERNEL, "seal", "--box", self.box(who), subj, "--now", self.ts())
+        self.sealed[who].append(subj)
+        return subj
+
+    def own_stacks(self) -> None:
+        for who, words, why, steps in STACKS:
+            name = words.split(" ", 1)[1].replace(" ", "-")
+            self.keep(who, words, name, self.stack_text(who, why, steps), why)
+            kept = self.box(who) / "written" / "stacks" / f"{name}.md"
+            ran = subprocess.run([sys.executable, str(STACK), "--box", str(self.box(who)),
+                                  "--stack", str(kept)], capture_output=True, text=True)  # fmt: skip
+            first = next((ln for ln in ran.stdout.splitlines()[::-1] if ln.strip()), "")
+            self.say(f"  {who:8} seals its {name.replace('-', ' ')} and runs it: exit "
+                     f"{ran.returncode}, {first.strip()[:80]}")  # fmt: skip
+            if ran.returncode not in (0, 42) or not ran.stdout.strip():
+                self.wrong.append(f"{who}'s {name} printed nothing")
+            if "DATE" in ran.stdout or "AMOUNT" in ran.stdout:
+                self.wrong.append(f"{who}'s own box found a clash it should not see")
+
+    def clash(self) -> None:
+        got: dict[str, tuple[str, Path]] = {}
+        for who, q, src, data, claim in CLASH:
+            subj = self.seal(who, q, src, data, claim)
+            pkg = self.send(who, subj, "oversight", f"{who}-clash-to-oversight",
+                            "Sealed from my own papers, as asked")  # fmt: skip
+            self.receive("oversight", pkg)
+            got[who] = (data, pkg)
+        self.say("\n  Oversight lays what arrived side by side (the scene's own "
+                 "comparison: no add-on reads\n  received packages yet)")  # fmt: skip
+        k, l_ = got["karst"][0], got["lumen"][0]
+        if "process" not in k or "person" not in l_:
+            self.wrong.append("the operator definitions did not arrive as sealed")
+        self.say(f"  OPERATOR   Karst: {k.split(': ', 1)[1][:60]}")
+        self.say(
+            f"             Lumen: {l_.split(': ', 1)[1][:60]}   (neither side is picked)"
+        )
+        clocks = {w: re.findall(r"\d\d:\d\d", got[w][0]) for w in ("program", "intake")}
+        if clocks["program"] != ["08:00"] or clocks["intake"] != ["09:00"]:
+            self.wrong.append("the two clocks did not arrive as sealed")
+        self.say(f"  CLOCK      Program: {clocks['program'][0]}    Intake: {clocks['intake'][0]}"
+                 "   (one hour, in no single box)")  # fmt: skip
+
     def play(self) -> dict:
         self.say("── 1. eight boxes, each over its own pile")
         self.setup()
@@ -172,7 +277,13 @@ class Scene:
         if " broken" not in (bad.splitlines() or [""])[0]:
             self.wrong.append("the edited copy wasn't refused as broken")
 
-        self.say("\n── 6. what crossed, and what did not")
+        self.say("\n── 6. each box's own stack, over its own pile")
+        self.own_stacks()
+
+        self.say("\n── 7. the clash and the clocks arrive at Oversight")
+        self.clash()
+
+        self.say("\n── 8. what crossed, and what did not")
         self.walls()
         return self.summary()
 

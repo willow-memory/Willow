@@ -145,8 +145,15 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
   and it is not the whole truth, and she says so in the note.
 - A skeleton first: `make_life.py` writes all eight piles, `scene.py` plays the
   first beats (the wall, two sealed sends, an edit in transit refused, every
-  chain verified). It tests R1, R2, R3 and R5 in a first form. The stacks, the
-  spec clash, the clocks, the planner's log and the rewritten chain come next.
+  chain verified). It tests R1, R2, R3 and R5 in a first form.
+- **Slice two, played:** Intake, Program, Karst and Lumen each seal a stack of
+  their own and run it over their own pile; each finds nothing, because the
+  clash is never in one box. The "operator" clash (Karst: a process; Lumen: a
+  person) and the clocks (Program 08:00; Intake 09:00) each arrive at Oversight
+  as sealed answers. Oversight's side-by-side is the scene's own comparison:
+  no add-on reads received packages yet, a gap this demo found.
+- **Still to play:** the planner's log, the rewritten chain and the witness
+  (the ending), then ANNEX-OS and the corridor mode.
 
 ## Open questions
 
