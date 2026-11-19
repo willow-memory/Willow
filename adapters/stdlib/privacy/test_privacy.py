@@ -108,6 +108,8 @@ def test_each_kind_is_withheld_and_counted(text, kind):
         "the gate code changed, ask Walt",  # a label with no number after it
         "a combination of 300 parts",  # the number isn't the label's
         "pin 12 to the board",  # too few digits for a code
+        "the gate 4471",  # a miss the card says: what it opens isn't named
+        "4471",  # a few digits alone read as a year, a time, a house number
         "PIN-protected and spinning 4471",  # PIN inside a word; no label before
         "the DL folder and dl 5 files",
         "std::vector and a::b",  # C++, not a host
