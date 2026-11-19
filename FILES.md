@@ -2157,6 +2157,8 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── blackout/             a steelworks' insider-trading training, the SEC's rules pinned, a window that moved (a draft)
+│   │   └── STORY.md          the story bible, a draft
 │   ├── corwin/
 │   │   ├── CHARACTER.md      Corwin Tamsett
 │   │   ├── fetch.py          the papers in Corwin's catalogue, fetched again and held to their hashes
