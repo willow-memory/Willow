@@ -1,0 +1,7 @@
+# id | a question the rules do not answer
+O1 | how big is the fine for insider trading
+O2 | how do I fill in item 2.05 of a Form 8-K
+O3 | what discount do I get on my plan shares
+O4 | when does the company report earnings
+O5 | who owns the most Brannock stock
+O6 | what is the weather in Pittsburgh in November

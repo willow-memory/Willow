@@ -2163,6 +2163,12 @@ willow/
 │   │   ├── make_life.py      the eight boxes' papers (and, with --rules, the public rules in every box)
 │   │   ├── scene.py          the SEC stack in every box, what each person seals, and what Audit alone can see
 │   │   ├── kiosk.py          the compliance kiosk, a fictional page on a 2013 PC (ES5, tables, a stuck clock)
+│   │   ├── rules_study.py    does the kernel serve the right rule to a worker's question: three pass rules over the pinned rules
+│   │   ├── questions/
+│   │   │   ├── workers.txt   twelve questions in a worker's words, each with the rule it should reach
+│   │   │   ├── offtopic.txt  six no rule answers
+│   │   │   └── nonsense.txt  six that are nonsense
+│   │   ├── test_rules_study.py
 │   │   ├── sources.json      each rule's address and SHA-256, never its text
 │   │   └── test_blackout.py
 │   ├── corwin/
