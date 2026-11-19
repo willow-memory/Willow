@@ -7,6 +7,7 @@
     python kernel.py decline --box DIR proposal:<sha256>
     python kernel.py verify  --box DIR
     python kernel.py out     --box DIR
+    python kernel.py words   --box DIR --words FILE
     python kernel.py test
 
 The pile (--pile) is your own folder, and it is only ever read. Your files
@@ -357,6 +358,41 @@ def init(
     (box / "kernel.json").write_text(json.dumps(cfg, sort_keys=True) + "\n")
     row = append(box, ts, "boot", loop="open", **placed)
     print(f"ready: record started, row {row['n']} {row['hash'][:16]}")
+    return ALIVE
+
+
+def relist(box: Path, wl: Path, ts: str) -> int:
+    """Their words list, named after the box was made: the box reads `wl` from
+    now on, and a row says so. The words a person uses for their own things
+    change, and a box made without a list, or with an early one, is not held
+    to that. What was asked and sealed before stays as it was: each ask's row
+    already names the list it was read through, and nothing is rewritten."""
+    alias, sha, why = read_words(wl, box)
+    if why is not None:
+        print(f"refused: {why}", file=sys.stderr)
+        return REFUSED
+    if read(box / "record.jsonl")[1]:
+        print(
+            "refused: the record doesn't verify; nothing was changed", file=sys.stderr
+        )
+        return REFUSED
+    cfg = config(box)
+    was = cfg.get("words")
+    if was == str(wl.resolve()):
+        print(f"ready: this box already reads {was}")
+        return ALIVE
+    before = read_words(Path(was), box)[1] if was else ""
+    # the row first: a box that names a list its record never heard of would
+    # be the kernel's own settings saying more than the record does
+    row = append(box, ts, "words", words_sha256=sha, was_sha256=before)
+    cfg["words"] = str(wl.resolve())
+    new = box / "kernel.json.new"
+    new.write_text(json.dumps(cfg, sort_keys=True) + "\n")
+    os.replace(new, box / "kernel.json")
+    print(
+        f"ready: this box reads {wl} from now on ({len(alias)} words), "
+        f"row {row['n']} {row['hash'][:16]}"
+    )
     return ALIVE
 
 
@@ -1422,6 +1458,8 @@ def main(argv: list[str]) -> int:
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return REFUSED
+    if verb == "words" and opts.get("--words") and not args:
+        return relist(box, Path(opts["--words"]), ts)
     if verb == "bite" and len(args) == 1:
         return bite(box, args[0], ts)
     if verb == "propose" and opts.get("--file") and not args:

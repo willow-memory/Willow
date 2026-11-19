@@ -607,6 +607,102 @@ def test_her_words_list_reads_her_word_as_her_folders(tmp_path):
     assert (box / "record.jsonl").read_text() == before
 
 
+def test_a_box_takes_a_words_list_after_it_was_made_and_the_record_says_so(tmp_path):
+    """Vocabulary moves. A box made without a list, or with an early one, is
+    given one with `words`: it is read from the next ask on, a row says the
+    list changed (its hash, never its words), and nothing earlier is rewritten."""
+    pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
+    pile.mkdir()
+    (pile / "log.txt").write_text("2026-10-16 Calvin\n  next: Oct 2027\n")
+    mine.mkdir(mode=0o700)
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    assert (
+        cli("init", *b, "--pile", str(pile), "--key", str(mine / "k.hex")).returncode
+        == 0
+    )
+    assert cli("bite", *b, "who's due").returncode == 42  # no list: "due" finds nothing
+    early = (box / "record.jsonl").read_text()
+    wl = mine / "words.txt"
+    wl.write_text("due = next, overdue\n")
+    wl.chmod(0o600)
+    got = cli("words", *b, "--words", str(wl))
+    assert got.returncode == 0 and got.stdout.startswith(
+        f"ready: this box reads {wl} from now on (1 words), row 2 "
+    )
+    record = (box / "record.jsonl").read_text()
+    assert record.startswith(early)  # what was there is as it was
+    row = json.loads(record.splitlines()[-1])
+    assert row["kind"] == "words" and row["was_sha256"] == ""
+    assert row["words_sha256"] == k.hashlib.sha256(wl.read_bytes()).hexdigest()
+    assert "next" not in json.dumps(row) and "due" not in json.dumps(row)
+    assert k.config(box)["words"] == str(wl.resolve())
+    assert cli("bite", *b, "who's due").returncode == 0  # read through the list now
+    assert cli("verify", "--box", str(box)).returncode == 0
+    # the same list again: nothing to change, and no row
+    again = cli("words", *b, "--words", str(wl))
+    assert (
+        again.returncode == 0
+        and again.stdout == f"ready: this box already reads {wl.resolve()}\n"
+    )
+    assert len((box / "record.jsonl").read_text().splitlines()) == 4
+    # another list later: the row names the one it replaced, by hash
+    later = mine / "later.txt"
+    later.write_text("due = next\nowed = unpaid\n")
+    later.chmod(0o600)
+    assert cli("words", *b, "--words", str(later)).returncode == 0
+    row = json.loads((box / "record.jsonl").read_text().splitlines()[-1])
+    assert row["was_sha256"] == k.hashlib.sha256(wl.read_bytes()).hexdigest()
+    assert row["words_sha256"] == k.hashlib.sha256(later.read_bytes()).hexdigest()
+    assert k.config(box)["words"] == str(later.resolve())
+    assert not (box / "kernel.json.new").exists()
+
+
+def test_a_words_list_the_kernel_would_not_take_changes_nothing(tmp_path):
+    pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
+    pile.mkdir()
+    (pile / "log.txt").write_text("next: Oct 2027\n")
+    mine.mkdir(mode=0o700)
+    b = ["--box", str(box)]
+    assert (
+        cli("init", *b, "--pile", str(pile), "--key", str(mine / "k.hex")).returncode
+        == 0
+    )
+    settings, record = (
+        (box / "kernel.json").read_text(),
+        (box / "record.jsonl").read_text(),
+    )
+    bad = mine / "bad.txt"
+    bad.write_text("due = next week\n")  # two words on the right
+    bad.chmod(0o600)
+    open_ = mine / "open.txt"
+    open_.write_text("due = next\n")
+    open_.chmod(0o644)  # readable beyond its owner
+    inside = box / "words.txt"
+    inside.write_text("due = next\n")
+    inside.chmod(0o600)
+    for wl, why in ((bad, "words list line 1"), (open_, "readable beyond its owner"),
+                    (inside, "can't live inside the box"), (mine / "none.txt", "could not be read")):  # fmt: skip
+        got = cli("words", *b, "--words", str(wl))
+        assert got.returncode == 2 and why in got.stderr, why
+        assert (box / "kernel.json").read_text() == settings
+        assert (box / "record.jsonl").read_text() == record
+    # no list named, a stray word, or no box: the usage, and nothing changed
+    assert cli("words", *b).returncode == 2
+    assert cli("words", *b, "--words", str(open_), "extra").returncode == 2
+    assert (
+        cli("words", "--box", str(tmp_path / "nowhere"), "--words", str(bad)).returncode
+        == 2
+    )
+    # a record that doesn't verify is not built on
+    good = mine / "good.txt"
+    good.write_text("due = next\n")
+    good.chmod(0o600)
+    (box / "record.jsonl").write_text(record.replace('"boot"', '"b00t"'))
+    got = cli("words", *b, "--words", str(good))
+    assert got.returncode == 2 and "doesn't verify; nothing was changed" in got.stderr
+    assert (box / "kernel.json").read_text() == settings
+
+
 def test_a_words_list_line_is_one_word_then_words():
     assert k.parse_words("due = next, overdue\nDUE = Next") == (
         {"due": ["next", "overdue"]},
