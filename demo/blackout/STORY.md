@@ -136,11 +136,31 @@ Rules above are drafts; the frozen ones come after the piles exist.
       FROZEN.json        written in the freeze commit, held by a test
       test_blackout.py
 
+## Decided
+
+- The company stays **Brannock Steel Works**.
+- The historian dash stays: the second arc furnace went to HOLD at 02:10 on
+  Sunday 2026-10-18 and no one acknowledged it, a day before the order board
+  went to zero.
+- **A PC from 2013 runs it.** The fictional page, when it is built, is a
+  shop-floor kiosk on a 2013 office PC: a beige-grey Windows 7 look, a
+  1024 by 768 screen, an old browser's plain HTML with no modern script, a
+  slow cursor, a dot-matrix-ish receipt for what it prints. Nothing on it is
+  newer than the machine.
+- **The piles are built:** `make_life.py` writes eight boxes (`trainee`,
+  `compliance`, `legal`, `ir`, `floor`, `plan`, `steward`, `audit`) and copies
+  only the filing and the press release of 2026-11-05, which are public, into
+  every one. `--rules PILE` also mirrors the eCFR sections `fetch.py` kept into
+  each box's `rules/`; without it the piles need no network.
+- The quiz key is written with its original answer (14 days); the scene is to
+  edit it on 2026-10-26, after `fixity` has seen it once, so the edit is a real
+  one in the box.
+- The join that shows who sold is across boxes on purpose: the plan
+  administrator's log holds employee numbers, the steward's seniority list
+  holds departments, the plant manager is on no union list.
+
 ## Open questions
 
-- The company's name (Brannock is a placeholder), and whether to keep the
-  historian dash.
-- Whether the Form 8-K item text is worth a contact for sec.gov, or the demo
-  keeps to what eCFR and the Federal Register hold.
-- Whether this one also gets a fictional terminal page like ANNEX-OS, and what
-  it would be (a shop-floor kiosk is my first guess).
+- Whether the kiosk prints (on screen only, or a receipt-style page).
+- How the scene ends (a sealed attestation from the trainee to Audit, and what
+  Audit does with it).

@@ -2160,6 +2160,7 @@ willow/
 │   ├── blackout/             a steelworks' insider-trading training, the SEC's rules pinned, a window that moved (a draft)
 │   │   ├── STORY.md          the story bible, a draft
 │   │   ├── fetch.py          fetches the public rules once and checks them offline; the contact goes to sec.gov alone
+│   │   ├── make_life.py      the eight boxes' papers (and, with --rules, the public rules in every box)
 │   │   ├── sources.json      each rule's address and SHA-256, never its text
 │   │   └── test_blackout.py
 │   ├── corwin/
