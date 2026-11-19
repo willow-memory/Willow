@@ -23,6 +23,10 @@ The page is a green-screen terminal, and none of it is real:
 - **Briefing.** An assistant that reads only the served file. A toy matcher
   (it keeps to the words of a question, nothing like the kernel's rank): what
   the file doesn't hold, it says it wasn't given.
+- **Corridor.** Two people talk and no chain hears it: the page turns RECORD
+  off, shows what the chains do show (no row in the window, a gap on Vask's
+  chain, a row afterwards that holds a hash and not her words), and plays the
+  talk from corridor.md a line at a time, marked as not evidence.
 - **The clocks.** The header shows two clocks that disagree by an hour, and a
   planner that asked about Vask 92 minutes before her badge.
 """
@@ -78,6 +82,8 @@ pre{white-space:pre-wrap;margin:6px 0}
   <button id="bprint">MANIFEST PRINTER</button>
   <button id="bwit">WITNESS RUN</button>
   <button id="bbrief">BRIEFING</button>
+  <button id="bcorr">CORRIDOR</button>
+  <span id="rec" class="note">RECORD: ON</span>
 </nav>
 <main id="main"></main>
 <div id="dark" role="alert"><pre id="darktext"></pre><p style="text-align:center"><button id="undark">ACKNOWLEDGE</button></p></div>
@@ -188,13 +194,33 @@ function briefing(m) {
   f.append(i, go); m.append(f, out, el('pre', 'note', '(a toy matcher for the demo: the kernel\u2019s own rank is stricter)'));
 }
 
+function corridor(m) {
+  const c = D.found.corridor;
+  m.appendChild(el('h2', '', 'CORRIDOR \u2014 outside the integration room'));
+  m.appendChild(el('pre', 'bad', 'RECORD: OFF\nNOT ON ANY RECORD. WHAT FOLLOWS IS WHAT THE TWO OF THEM REMEMBER. IT IS NOT EVIDENCE.'));
+  const l = el('section'); l.appendChild(el('h2', '', 'WHAT THE CHAINS SHOW'));
+  l.appendChild(el('pre', '', `window: ${c.from} to ${c.to}\nrows written on any of the eight chains: ${c.rows_in_window}\n` +
+    `${c.silent_chains} chains wrote nothing at all after ${c.from}\nVask's chain: ${c.vask_gap_minutes} minutes from the row before to the row after\n` +
+    `the row after is a question to her own box. It holds ${c.bite_row}\u2026, not her words.`));
+  m.appendChild(l);
+  const box = el('section'); const talk = el('div'); box.appendChild(talk); m.appendChild(box);
+  let at = 0;
+  const show = n => { while (at < n && at < c.lines.length) {
+    const t = c.lines[at++]; const cls = t.startsWith('VASK:') ? 'sealed' : t.startsWith('THE FORMER:') ? 'warn' : 'note';
+    talk.appendChild(el('pre', cls, t)); } more.disabled = at >= c.lines.length; all.disabled = more.disabled; };
+  const more = el('button', '', 'NEXT'), all = el('button', '', 'SHOW ALL');
+  more.onclick = () => show(at + 1); all.onclick = () => show(c.lines.length);
+  const row = el('div', 'row'); row.append(more, all); m.appendChild(row); show(1);
+}
+
 function render() {
   const m = $('main'); m.textContent = '';
-  for (const [id, v] of [['bdoors', 'doors'], ['bprint', 'print'], ['bwit', 'wit'], ['bbrief', 'brief']]) $(id).classList.toggle('on', view === v);
-  ({ doors, print: printer, wit: witnessRun, brief: briefing })[view](m);
+  for (const [id, v] of [['bdoors', 'doors'], ['bprint', 'print'], ['bwit', 'wit'], ['bbrief', 'brief'], ['bcorr', 'corr']]) $(id).classList.toggle('on', view === v);
+  $('rec').textContent = view === 'corr' ? 'RECORD: OFF' : 'RECORD: ON'; $('rec').className = view === 'corr' ? 'bad' : 'note';
+  ({ doors, print: printer, wit: witnessRun, brief: briefing, corr: corridor })[view](m);
 }
 $('badge').onchange = e => { badge = e.target.value; openDoor = null; render(); };
-for (const [id, v] of [['bdoors', 'doors'], ['bprint', 'print'], ['bwit', 'wit'], ['bbrief', 'brief']]) $(id).onclick = () => { view = v; render(); };
+for (const [id, v] of [['bdoors', 'doors'], ['bprint', 'print'], ['bwit', 'wit'], ['bbrief', 'brief'], ['bcorr', 'corr']]) $(id).onclick = () => { view = v; render(); };
 $('undark').onclick = () => $('dark').classList.remove('on');
 render();
 </script></body></html>

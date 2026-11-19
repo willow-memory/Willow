@@ -2138,6 +2138,7 @@ willow/
 │   ├── annex/                a skeleton: eight compartments that never touch, a rumour in one, a wall, a forged copy refused
 │   │   ├── STORY.md          the story bible, a draft
 │   │   ├── annex_os.py       ANNEX-OS, a fictional terminal page over the scene's results
+│   │   ├── corridor.md       two people talk, off every record
 │   │   ├── make_life.py      the eight piles
 │   │   ├── scene.py          the first beats of integration day
 │   │   └── test_annex.py

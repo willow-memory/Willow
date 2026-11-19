@@ -450,9 +450,59 @@ class Scene:
         self.say("\n── 11. the one file an assistant may read")
         self.briefing()
 
-        self.say("\n── 12. what crossed, and what did not")
+        self.say("\n── 12. the corridor")
+        self.found["corridor"] = self.corridor()
+
+        self.say("\n── 13. what crossed, and what did not")
         self.walls()
         return self.summary()
+
+    def corridor(self) -> dict:
+        """Two people talk, and no chain hears it. What is checked is what is
+        missing: no row in the window, and a question asked afterwards whose row
+        holds a hash, not its words."""
+        paras = (HERE / "corridor.md").read_text(encoding="utf-8").split("\n\n")
+        talk = [ln for ln in "\n\n".join(paras[2:]).splitlines() if ln.strip()]
+        last = max(r["ts"] for b in BOXES for r in self.rows(b))
+        self.say(f"  the last row on any chain is at {last}. The corridor starts here.")
+        self.say("  ── OFF THE RECORD " + "─" * 40)
+        for ln in talk:
+            self.say(f"  | {ln}")
+        self.say("  ── " + "─" * 55)
+        self.now += timedelta(minutes=33)
+        question = "what is known about the Halvern chief executive"
+        got = subprocess.run(
+            [sys.executable, KERNEL, "bite", "--box", self.box("vask"), question,
+             "--now", self.ts()], capture_output=True, text=True)  # fmt: skip
+        after = self.rows("vask")[-1]
+        if got.returncode != 42 or after["kind"] != "bite":
+            self.wrong.append(
+                "Vask's question after the corridor was not an empty bite"
+            )
+        if any(
+            w in json.dumps(after).lower() for w in ("halvern", "executive", "chief")
+        ):
+            self.wrong.append("a row on Vask's chain holds the words of her question")
+        inside = [(b, r["n"]) for b in BOXES for r in self.rows(b)
+                  if last < r["ts"] < after["ts"]]  # fmt: skip
+        if inside:
+            self.wrong.append(f"rows were written in the corridor's window: {inside}")
+        fmt = "%Y-%m-%dT%H:%M:%SZ"
+        before = max(r["ts"] for r in self.rows("vask") if r["ts"] <= last)
+        gap = int((datetime.strptime(after["ts"], fmt)
+                   - datetime.strptime(before, fmt)).total_seconds() // 60)  # fmt: skip
+        silent = [b for b in BOXES if b != "vask"
+                  and max(r["ts"] for r in self.rows(b)) <= last]  # fmt: skip
+        self.say(
+            f"  rows written on any of the eight chains in that window: {len(inside)}"
+        )
+        self.say(f"  vask's chain: {gap} minutes from the row before to the row after")
+        self.say(f"  the other seven: {len(silent)} wrote nothing at all after {last}")
+        self.say("  vask asks her box about the executive: exit 42, and her record's row "
+                 f"holds {after['bite_key'][:12]}\u2026, not the question")  # fmt: skip
+        return {"from": last, "to": after["ts"], "rows_in_window": len(inside),
+                "vask_gap_minutes": gap, "silent_chains": len(silent),
+                "bite_row": after["bite_key"][:12], "lines": talk}  # fmt: skip
 
     def briefing(self) -> None:
         """The one file an assistant may read: only a scope its owner sealed."""

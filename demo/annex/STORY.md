@@ -173,7 +173,14 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
   inspector's standing rule and send it to Oversight; `fixity`, run before and
   after, says the planner log is as first seen. Nothing explains it. ANNEX-OS
   shows it in the header and on the witness run.
-- **Still to play:** the corridor mode, then the freeze.
+- **The corridor, played:** `corridor.md` is Vask and the Former by the vending
+  machine: he offers to clear her manifest if she carries out the thing nobody
+  has sealed; she carries only what she can show. It is not evidence and says
+  so. The scene checks what is missing: not one row on any of the eight chains
+  in the window, seven chains silent after it, and the only row afterwards (her
+  question to her own box) holds a hash and none of her words. ANNEX-OS turns
+  its RECORD light off for it and plays it a line at a time.
+- **Still to play:** the freeze.
 
 ## Open questions
 

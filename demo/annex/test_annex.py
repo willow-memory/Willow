@@ -115,3 +115,32 @@ def test_the_planner_asked_before_the_badge_and_the_log_is_untouched(played):
         "fixity": "untouched",
     }
     assert "92 minutes before the badge" in played["got"].stdout
+
+
+def test_the_corridor_wrote_no_row_and_the_question_after_it_holds_no_words(played):
+    c = played["doc"]["found"]["corridor"]
+    assert c["rows_in_window"] == 0 and c["silent_chains"] == 7
+    assert c["vask_gap_minutes"] >= 30 and len(c["bite_row"]) == 12
+    assert any(ln.startswith("THE FORMER:") for ln in c["lines"])
+    out = played["got"].stdout
+    assert (
+        "OFF THE RECORD" in out
+        and "rows written on any of the eight chains in that window: 0" in out
+    )
+
+
+def test_annex_os_has_a_corridor_that_says_it_is_not_evidence(played, tmp_path):
+    page = tmp_path / "p.html"
+    assert (
+        py(
+            HERE / "annex_os.py",
+            "build",
+            "--scene",
+            played["tmp"] / "scene",
+            "--to",
+            page,
+        ).returncode
+        == 0
+    )
+    html = page.read_text(encoding="utf-8")
+    assert 'id="bcorr"' in html and "IT IS NOT EVIDENCE" in html
