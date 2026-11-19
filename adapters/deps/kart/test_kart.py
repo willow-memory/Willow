@@ -314,7 +314,9 @@ def test_a_resource_group_set_up_but_not_ready_is_named_with_what_to_run(
     """A restarted kart.slice has lost what `kartikeya setup-cgroup` wrote
     (seen 2026-11-18: every job failed saying only cgroup_setup_failed)."""
     kart = kart_itself()
-    from kartikeya import cgroup_setup  # noqa: PLC0415
+    cgroup_setup = pytest.importorskip(
+        "kartikeya.cgroup_setup"
+    )  # not in an old Kartikeya
 
     monkeypatch.setattr(cgroup_setup, "cgroup_status", lambda: status)
     got = kart.group_not_ready()
@@ -341,7 +343,9 @@ def test_limits_a_reload_undid_are_put_back_and_only_those(
     what `kartikeya setup-cgroup` wrote there is written again, and nothing
     else is touched."""
     kart = kart_itself()
-    from kartikeya import cgroup_setup  # noqa: PLC0415
+    cgroup_setup = pytest.importorskip(
+        "kartikeya.cgroup_setup"
+    )  # not in an old Kartikeya
 
     group = tmp_path / "kart.slice"
     group.mkdir()

@@ -238,8 +238,13 @@ def group_not_ready() -> str | None:
     it then refuses to run a task without it. A reload of systemd undoes
     what `kartikeya setup-cgroup` wrote into the group; that is put back
     here when it can be. A group that can't be readied is refused by name
-    before anything runs or is recorded."""
-    from kartikeya import cgroup_setup  # noqa: PLC0415
+    before anything runs or is recorded. A Kartikeya from before it had a
+    resource group to check has none to ready: it runs a task under its
+    per-process limits, as it always did."""
+    try:
+        from kartikeya import cgroup_setup  # noqa: PLC0415
+    except ImportError:
+        return None
 
     try:
         st = cgroup_setup.cgroup_status()
@@ -450,7 +455,8 @@ def do_work(opts: dict, ts: str) -> int:
     except ValueError:
         return refuse("--timeout is whole seconds")
     pile = kernel.folder(kernel.config(box)).resolve()
-    for tid in queue.reap_stale():
+    # an old Kartikeya's queue has no stale jobs to take back
+    for tid in getattr(queue, "reap_stale", list)():
         print(f"gave up  {tid}  a worker stopped while it ran; it is not run again")
     done = 0
     while True:
