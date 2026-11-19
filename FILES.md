@@ -1359,6 +1359,10 @@ willow/
 │   │   │   ├── approved_only.py the one markdown file a model reads -- only the scope a human
 │   │   │   ├── test_approved_only.py
 │   │   │   └── README.md     its card
+│   │   ├── hook-ask-first/
+│   │   │   ├── hook_ask_first.py a PreToolUse hook that refuses reading by hand a file a
+│   │   │   ├── test_hook_ask_first.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-compact/
 │   │   │   ├── hook_compact.py   what the record holds open, before a summary
 │   │   │   ├── test_hook_compact.py
@@ -1403,15 +1407,15 @@ willow/
 │   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
 │   │   │   ├── test_hook_pin.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from hook-read-first/
+
+```
 │   │   ├── hook-read-first/
 │   │   │   ├── hook_read_first.py refuses an edit to a file the assistant hasn't read this session, or that changed since
 │   │   │   ├── test_hook_read_first.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from hook-replay/
-
-```
 │   │   ├── hook-replay/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py

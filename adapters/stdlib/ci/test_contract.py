@@ -728,6 +728,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "habits": ("habits.py", ["--box", "{box}"]),
     "handover": ("handover.py", ["--project", "{box}/.."]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
+    "hook-ask-first": ("hook_ask_first.py", ["run", "--boxes", "{tmp}/out"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
     "hook-elsewhere": ("hook_elsewhere.py", ["list"]),
     "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
