@@ -1,0 +1,1 @@
+`claude-code` has `bite`: the kernel's bite for another program, the same JSON, exit code and row as `kernel.py bite`, answered from a current index (index-cache) without reading the folder. `session-seal` takes `--index` for the same: closing a session on a big folder takes seconds, not a minute.

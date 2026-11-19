@@ -64,6 +64,85 @@ def test_oldest_first_undated_last_and_every_marker(tmp_path):
     }
 
 
+def marked(tmp_path, *lines: str) -> list[str]:
+    """The lines of one file the report takes as marked to do, in order."""
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("\n\n".join(lines) + "\n")
+    b = tmp_path / "box"
+    run(str(KERNEL), "init", "--box", str(b), "--pile", str(pile), "--key",
+        str(tmp_path / "k"), *NOW)  # fmt: skip
+    doc = json.loads(run(str(HERE / "todo.py"), "--box", str(b), "--json").stdout)
+    # as a set: the report orders rows by their place, which isn't the point here
+    return {r["what"] for g in doc["groups"] for r in g["rows"]}
+
+
+def test_todo_and_fixme_count_as_written_in_capitals_and_not_as_a_files_name(tmp_path):
+    assert marked(
+        tmp_path,
+        "TODO: water the beans",
+        "x = 1  # FIXME off by one",
+        "the todo add-on prints a report",
+        "Todo lists are kept in the kitchen",
+        "see TODO.md for the rest",
+        "a fixme in lower case is prose too",
+        "TODO. And then the next thing",
+    ) == {"TODO: water the beans", "x = 1  # FIXME off by one",
+          "TODO. And then the next thing"}  # fmt: skip
+
+
+def test_need_to_counts_where_a_thing_to_do_is_said(tmp_path):
+    assert marked(
+        tmp_path,
+        "Need to call the insurer.",
+        "need to call the vet",
+        "- need to buy strings",
+        "Sold the van. Need to call the insurer too.",
+        "Note: need to renew the passport",
+        "I need to book the MOT",
+        "we still need to pay the fencer",
+        "The file is read as a stream, so it does not need to fit in memory.",
+        "You need to restart the server after that.",
+        "There is no need to hurry.",
+        "They will need to ask twice.",
+    ) == {
+        "Need to call the insurer.",
+        "need to call the vet",
+        "- need to buy strings",
+        "Sold the van. Need to call the insurer too.",
+        "Note: need to renew the passport",
+        "I need to book the MOT",
+        "we still need to pay the fencer",
+    }
+
+
+def test_the_other_marks_count_anywhere_in_a_line_in_any_case(tmp_path):
+    assert marked(
+        tmp_path,
+        "And DON'T FORGET the milk",
+        "dont forget the bread",
+        "I must remember to lock the shed",
+        "- [ ] buy strings",
+        "* [ ] tune the fiddle",
+        "- [x] done already",
+        "text with a [ ] in the middle of it",
+    ) == {"And DON'T FORGET the milk", "dont forget the bread",
+          "I must remember to lock the shed", "- [ ] buy strings",
+          "* [ ] tune the fiddle"}  # fmt: skip
+
+
+def test_a_checkbox_that_opens_with_a_templates_blank_is_nothing_to_do(tmp_path):
+    assert marked(
+        tmp_path,
+        "- [ ] {item}",
+        "- [ ] {step} — {owner} — {due}",
+        "* [ ]   {item not done}  ← if any are unchecked, explain",
+        "- [ ] fill in {owner} before Friday",
+        "- [ ] {unclosed blank",
+        "- [ ] {} has nothing in it but is a blank still",
+    ) == {"- [ ] fill in {owner} before Friday", "- [ ] {unclosed blank"}
+
+
 def test_nothing_marked(tmp_path):
     pile = tmp_path / "pile"
     pile.mkdir()

@@ -20,9 +20,13 @@ ROOT = HERE.parents[2]
 KERNEL = ROOT / "kernel.py"
 SHARE = ROOT / "adapters" / "stdlib" / "share" / "share.py"
 NOW = ["--now", "2026-10-23T00:00:00Z"]
+KEEP_GROUP: set[str] = set()  # a test that means the group puts its name here
 
 
 def run(*argv, env=None) -> subprocess.CompletedProcess:
+    # a resource group this machine exports for a fleet is not these tests'
+    env = {k: v for k, v in (os.environ if env is None else env).items()
+           if k != "KART_CGROUP_PARENT" or k in KEEP_GROUP}  # fmt: skip
     return subprocess.run([sys.executable, *map(str, argv)], capture_output=True,
                           text=True, stdin=subprocess.DEVNULL, env=env)  # fmt: skip
 
@@ -123,6 +127,34 @@ def test_a_job_runs_on_the_systems_path_and_locale_not_yours(walt, tmp_path):
     lang, path = (tmp_path / "o").read_text().splitlines()
     assert lang == "C" and path.split(":")[:2] == ["/usr/bin", "/bin"]
     assert str(tmp_path) not in path
+
+
+def test_a_fleets_settings_in_your_environment_never_reach_a_job(walt, tmp_path):
+    """A machine that also runs a fleet's Kartikeya has its settings exported:
+    WILLOW_ROOT would put that fleet's venv first on the job's PATH, and
+    Kartikeya adds its own (where it is installed, the Python it runs on, a
+    sender's name). A job's environment is three variables of kart's and the
+    shell's own, and no path of the person's."""
+    fleet = tmp_path / "fleet"
+    (fleet / ".venv" / "bin").mkdir(parents=True)
+    conf = tmp_path / "theirs.json"
+    conf.write_text(json.dumps({"version": 1, "bind_read_only": [str(walt.box)]}))
+    subj = walt.job("env | sort; echo \"box: $(ls " + str(walt.box) + " 2>/dev/null | wc -l)\"")  # fmt: skip
+    env = {**os.environ, "WILLOW_ROOT": str(fleet), "KART_SANDBOX_CONFIG": str(conf),
+           "KART_PROBE": "planted", "WILLOW_HOME": str(fleet),
+           "GROVE_SENDER": "walt-on-github"}  # fmt: skip
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW, env=env)
+    assert got.returncode == 42, got.stdout + got.stderr
+    out = (tmp_path / "o").read_text()
+    *held, box = out.splitlines()
+    names = {line.partition("=")[0] for line in held}
+    assert names == {"HOME", "LANG", "PATH", "PWD", "SHLVL", "_"}, out
+    assert "PATH=/usr/bin:/bin" in held and "LANG=C" in held and box == "box: 0"
+    for theirs in ("fleet", "walt-on-github", "planted", str(Path.home()), sys.prefix,
+                   "site-packages"):  # fmt: skip
+        assert theirs not in out, theirs
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert ran["status"] == "completed" and str(walt.box) not in json.dumps(ran)
 
 
 def test_a_run_is_on_your_record_without_its_output(walt, tmp_path):
@@ -256,6 +288,154 @@ def test_a_bubblewrap_that_cant_sandbox_here_refuses_before_anything_runs(
     assert walt.rows() == before and not (tmp_path / "o").exists()
 
 
+def kart_itself():
+    """kart.py loaded here, to hold its checks to answers a machine can't
+    be made to give on demand (a resource group that is or isn't ready)."""
+    sys.path.insert(0, str(HERE))
+    import kart  # noqa: PLC0415
+
+    return kart
+
+
+@pytest.mark.parametrize(("status", "said"), [
+    ({"ready": True, "env_parent": "/g"}, None),
+    ({"ready": False, "env_parent": None, "systemd_parent": None,
+      "slice_unit_path": "/nowhere/kart.slice"}, None),  # none set up: rlimits
+    ({"ready": False, "env_parent": "/g/kart.slice", "systemd_parent": None,
+      "slice_unit_path": "/nowhere/kart.slice"}, "isn't ready (/g/kart.slice)"),
+    ({"ready": False, "env_parent": None, "systemd_parent": "/s/kart.slice",
+      "slice_unit_path": "/nowhere/kart.slice"}, "isn't ready (/s/kart.slice)"),
+    ({"ready": False, "env_parent": None, "systemd_parent": None,
+      "slice_unit_path": __file__}, f"isn't ready ({__file__})"),  # the unit alone
+])  # fmt: skip
+def test_a_resource_group_set_up_but_not_ready_is_named_with_what_to_run(
+    monkeypatch, status, said
+):
+    """A restarted kart.slice has lost what `kartikeya setup-cgroup` wrote
+    (seen 2026-11-18: every job failed saying only cgroup_setup_failed)."""
+    kart = kart_itself()
+    cgroup_setup = pytest.importorskip(
+        "kartikeya.cgroup_setup"
+    )  # not in an old Kartikeya
+
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", lambda: status)
+    got = kart.group_not_ready()
+    if said is None:
+        assert got is None
+        return
+    assert said in got and "nothing ran" in got and "kartikeya setup-cgroup" in got
+
+    def broke():
+        raise OSError("no systemd")
+
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", broke)
+    assert (
+        "couldn't say" in kart.group_not_ready()
+        and "nothing ran" in kart.group_not_ready()
+    )
+
+
+def test_limits_a_reload_undid_are_put_back_and_only_those(
+    tmp_path, monkeypatch, capsys
+):
+    """A daemon-reload empties the group's cgroup.subtree_control (seen
+    2026-11-18, twice in one evening). The group is the person's own setup:
+    what `kartikeya setup-cgroup` wrote there is written again, and nothing
+    else is touched."""
+    kart = kart_itself()
+    cgroup_setup = pytest.importorskip(
+        "kartikeya.cgroup_setup"
+    )  # not in an old Kartikeya
+
+    group = tmp_path / "kart.slice"
+    group.mkdir()
+    (group / "cgroup.controllers").write_text("cpu memory pids\n")
+    (group / "cgroup.subtree_control").write_text("\n")
+    (group / "cgroup.procs").write_text("")
+    wrote = []
+
+    def enable(parent):  # the kernel answers a write of "+memory +pids" this way
+        wrote.append(parent)
+        (Path(parent) / "cgroup.subtree_control").write_text("memory pids\n")
+
+    def status():
+        ready = cgroup_setup.is_delegated_cgroup_parent(str(group))
+        return {"ready": ready, "env_parent": str(group), "systemd_parent": None,
+                "slice_unit_path": "/nowhere/kart.slice"}  # fmt: skip
+
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", status)
+    monkeypatch.setattr(cgroup_setup, "enable_subtree_control", enable)
+    assert kart.group_not_ready() is None and wrote == [str(group)]
+    assert f"restored the resource group's limits ({group})" in capsys.readouterr().out
+    assert kart.group_not_ready() is None and wrote == [
+        str(group)
+    ]  # ready: not written again
+    assert sorted(p.name for p in group.iterdir()) == [
+        "cgroup.controllers", "cgroup.procs", "cgroup.subtree_control"]  # fmt: skip
+    # a write the kernel refuses is said, and nothing runs
+    (group / "cgroup.subtree_control").write_text("\n")
+    monkeypatch.setattr(
+        cgroup_setup, "enable_subtree_control", lambda parent: "cannot write: denied"
+    )
+    got = kart.group_not_ready()
+    assert (
+        "could not be put back (cannot write: denied)" in got and "nothing ran" in got
+    )
+    # a group that can't have them (no memory controller), or isn't there, is never written
+    (group / "cgroup.controllers").write_text("cpu\n")
+    monkeypatch.setattr(
+        cgroup_setup, "enable_subtree_control", lambda parent: wrote.append("x")
+    )
+    assert "isn't ready" in kart.group_not_ready() and "x" not in wrote
+    monkeypatch.setattr(cgroup_setup, "cgroup_status", lambda: {
+        "ready": False, "env_parent": str(tmp_path / "gone"), "systemd_parent": None,
+        "slice_unit_path": "/nowhere/kart.slice"})  # fmt: skip
+    assert "isn't ready" in kart.group_not_ready() and "x" not in wrote
+
+
+def test_a_group_that_isnt_ready_refuses_before_anything_runs_or_is_recorded(
+    walt, tmp_path, monkeypatch, capsys
+):
+    kart = kart_itself()
+    subj = walt.job("echo hi")
+    job = tmp_path / "j.sh"
+    job.write_text("echo hi\n")
+    monkeypatch.setattr(
+        kart, "group_not_ready", lambda: "a resource group isn't ready; nothing ran"
+    )
+    before = walt.rows()
+    for argv in (["run", "--box", str(walt.box), "--job", subj, "--to", str(tmp_path / "o")],
+                 ["try", "--box", str(walt.box), "--file", str(job), "--to", str(tmp_path / "o")]):  # fmt: skip
+        assert kart.main([*argv, *NOW]) == 2
+        assert "isn't ready; nothing ran" in capsys.readouterr().err
+    assert walt.rows() == before and not (tmp_path / "o").exists()
+
+
+def test_how_a_run_failed_is_recorded_without_what_it_printed(walt, tmp_path):
+    """Kartikeya's error for a job that exits badly ends with the last line
+    it printed (seen 2026-11-18, on a real record). That line is the
+    person's files'."""
+    job = tmp_path / "leak.sh"
+    job.write_text("cat {pile}/cases.md; exit 3\n")
+    got = walt.kart("try", "--file", job, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 42, got.stdout + got.stderr
+    assert "Johnson" in (tmp_path / "o").read_text()  # in the file, on their machine
+    subj = walt.job("grep -h Kessler {pile}/cases.md; exit 4")
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o2", *NOW)
+    assert got.returncode == 42, got.stdout + got.stderr
+    tried, ran = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert (tried["refused"], ran["refused"]) == ("exited 3", "exited 4")
+    for row in (tried, ran):
+        for word in ("Johnson", "Kessler", "stain", "pipe"):
+            assert word not in json.dumps(row), (word, row)
+    kart = kart_itself()
+    assert (
+        kart.why_failed({"error": "KART-SECURITY: blocked a socket"}) == "KART-SECURITY"
+    )
+    assert kart.why_failed({"error": "timeout"}) == "timeout"
+    assert kart.why_failed({}) is None and kart.why_failed({"error": " "}) is None
+
+
 def test_the_policy_is_willows_and_says_so(walt):
     got = walt.kart("policy")
     assert got.returncode == 0
@@ -334,6 +514,246 @@ def test_a_job_asking_for_the_network_is_not_even_taken(walt, tmp_path):
     )
     got = walt.kart("take", "--package", tmp_path / "n.pkg", "--words", "x", *NOW)
     assert got.returncode == 2 and "asks for the network" in got.stderr
+
+
+# ── try: a job of your own, with no seal ────────────────────────────────────
+def test_a_job_you_try_runs_in_the_sandbox_and_proposes_nothing(walt, tmp_path):
+    job = tmp_path / "count.sh"
+    job.write_text("grep -rhi johnson {pile} | wc -l\necho \"key: $(cat " + str(walt.key)
+                   + " 2>/dev/null | wc -c)\"\n")  # fmt: skip
+    got = walt.kart("try", "--file", job, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert (tmp_path / "o").read_text().splitlines() == ["2", "key: 0"]
+    text = hashlib.sha256(job.read_bytes()).hexdigest()
+    assert got.stdout.startswith(f"tried  text:{text}  completed, exit 0, row ")
+    assert "nothing is proposed" in got.stdout
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert (ran["job"], ran["sealed"], ran["status"]) == (
+        f"text:{text}",
+        False,
+        "completed",
+    )
+    assert ran["network"] == "isolated"
+    out = (tmp_path / "o").read_text()
+    assert ran["output_sha256"] == hashlib.sha256(out.encode()).hexdigest()
+    assert not list((walt.box / "proposals").glob("*")) and seals(walt) == 0
+    assert "Johnson" not in json.dumps(walt.rows())
+
+
+def test_a_job_you_try_that_fails_says_so_and_is_on_the_record(walt, tmp_path):
+    job = tmp_path / "bad.sh"
+    job.write_text("echo partial; exit 3\n")
+    got = walt.kart("try", "--file", job, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 42 and "failed, exit 3" in got.stdout, (
+        got.stdout + got.stderr
+    )
+    [ran] = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert ran["status"] == "failed" and ran["returncode"] == 3
+    assert not list((walt.box / "proposals").glob("*"))
+
+
+def test_a_job_you_try_is_held_to_what_every_job_is(walt, tmp_path):
+    ok = tmp_path / "ok.sh"
+    ok.write_text("echo hi\n")
+    net = tmp_path / "net.sh"
+    net.write_text("# allow_net\ncurl x\n")
+    (tmp_path / "mine").write_text("mine")
+    before = walt.rows()
+    for argv, why in (
+        (["--file", net, "--to", tmp_path / "o"], "asks for the network"),
+        (["--file", walt.box / "record.jsonl", "--to", tmp_path / "o"], "is inside the box"),
+        (["--file", tmp_path / "gone.sh", "--to", tmp_path / "o"], "can't be read as text"),
+        (["--file", ok, "--to", walt.box / "o"], "inside the box"),
+        (["--file", ok, "--to", walt.dir / "pile" / "o"], "inside your folder"),
+        (["--file", ok, "--to", tmp_path / "mine"], ""),
+        (["--file", ok, "--to", tmp_path / "o", "--timeout", "soon"], "whole seconds"),
+    ):  # fmt: skip
+        got = walt.kart("try", *argv, *NOW)
+        assert got.returncode == 2 and why in got.stderr, (argv, got.stderr)
+    assert walt.rows() == before and not (tmp_path / "o").exists()
+    assert (tmp_path / "mine").read_text() == "mine"
+    env = {**os.environ, "PATH": str(tmp_path / "empty")}
+    got = walt.kart("try", "--file", ok, "--to", tmp_path / "o", *NOW, env=env)
+    assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
+    # what a tried job printed is never an answer: run refuses its text as a job
+    got = walt.kart("try", "--file", ok, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 0
+    text = hashlib.sha256(ok.read_bytes()).hexdigest()
+    got = walt.kart("run", "--job", f"text:{text}", "--to", tmp_path / "o2", *NOW)
+    assert got.returncode == 2 and "is not a job you sealed" in got.stderr
+
+
+# ── queue, work, status: jobs of your own, run later ────────────────────────
+def queued(walt, tmp_path, text, name="j.sh"):
+    f = tmp_path / name
+    f.write_text(text)
+    got = walt.kart("queue", "--file", f, "--db", tmp_path / "q.db")
+    assert got.returncode == 0 and got.stdout.startswith("queued  "), got.stderr
+    return got.stdout.split()[1]
+
+
+def status(walt, tmp_path, tid, *more):
+    got = walt.kart("status", "--db", tmp_path / "q.db", "--id", tid, *more)
+    assert got.returncode == 0, got.stderr
+    return json.loads(got.stdout)
+
+
+def test_a_queued_job_runs_when_worked_and_says_where_it_stands(walt, tmp_path):
+    a = queued(walt, tmp_path, "grep -rhi johnson {pile} | wc -l\n")
+    b = queued(walt, tmp_path, "cat {pile}/cases.md; exit 3\n", "b.sh")
+    assert status(walt, tmp_path, a) == {"characters": None, "how": None, "id": a,
+                                         "returncode": None, "status": "pending"}  # fmt: skip
+    assert not [r for r in walt.rows() if r["kind"] == "ran"]  # queueing runs nothing
+    got = walt.kart(
+        "status", "--db", tmp_path / "q.db", "--id", a, "--to", tmp_path / "o"
+    )
+    assert (
+        got.returncode == 2
+        and "hasn't ended" in got.stderr
+        and not (tmp_path / "o").exists()
+    )
+    got = walt.kart("work", "--db", tmp_path / "q.db", *NOW)
+    assert got.returncode == 0, got.stdout + got.stderr
+    assert "worked 2 queued jobs; the queue is empty" in got.stdout
+    assert (
+        status(walt, tmp_path, a, "--to", tmp_path / "a.txt")["status"] == "completed"
+    )
+    assert (tmp_path / "a.txt").read_text().strip() == "2"
+    bad = status(walt, tmp_path, b, "--to", tmp_path / "b.txt")
+    assert (bad["status"], bad["how"], bad["returncode"]) == ("failed", "exited 3", 3)
+    assert "Johnson" in (tmp_path / "b.txt").read_text()
+    ran = [r for r in walt.rows() if r["kind"] == "ran"]
+    assert [r["queued"] for r in ran] == [a, b] and all(
+        r["sealed"] is False for r in ran
+    )
+    assert "Johnson" not in json.dumps(ran) and seals(walt) == 0
+    assert not list((walt.box / "proposals").glob("*"))
+    # worked again: nothing queued, nothing run, nothing left running
+    got = walt.kart("work", "--db", tmp_path / "q.db", *NOW)
+    assert got.returncode == 0 and "worked 0 queued jobs" in got.stdout
+    assert len([r for r in walt.rows() if r["kind"] == "ran"]) == 2
+
+
+def test_a_queue_is_held_to_what_every_job_is(walt, tmp_path):
+    ok = tmp_path / "ok.sh"
+    ok.write_text("echo hi\n")
+    net = tmp_path / "net.sh"
+    net.write_text("# allow_net\ncurl x\n")
+    before = walt.rows()
+    for argv, why in (
+        (["queue", "--file", net, "--db", tmp_path / "q.db"], "asks for the network"),
+        (["queue", "--file", walt.box / "record.jsonl", "--db", tmp_path / "q.db"], "is inside the box"),
+        (["queue", "--file", ok, "--db", walt.box / "q.db"], "is inside the box"),
+        (["queue", "--file", ok, "--db", walt.dir / "pile" / "q.db"], "is inside your folder"),
+        (["queue", "--file", ok, "--db", tmp_path / "no" / "q.db"], "never makes one"),
+        (["work", "--db", tmp_path / "none.db"], "isn't a queue"),
+        (["status", "--db", tmp_path / "none.db", "--id", "x"], "isn't a queue"),
+    ):  # fmt: skip
+        got = walt.kart(*argv)
+        assert got.returncode == 2 and why in got.stderr, (argv, got.stderr)
+    assert walt.rows() == before and not (tmp_path / "q.db").exists()
+    tid = queued(walt, tmp_path, "echo hi\n")
+    got = walt.kart("status", "--db", tmp_path / "q.db", "--id", "nope")
+    assert got.returncode == 2 and "isn't a job in this queue" in got.stderr
+    got = walt.kart("work", "--db", tmp_path / "q.db", "--timeout", "soon")
+    assert got.returncode == 2 and "whole seconds" in got.stderr
+    env = {**os.environ, "PATH": str(tmp_path / "empty")}
+    got = walt.kart("work", "--db", tmp_path / "q.db", env=env)
+    assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
+    assert status(walt, tmp_path, tid)["status"] == "pending"  # still waiting, not lost
+
+
+def test_a_network_line_put_in_the_queue_file_by_hand_is_still_never_run(
+    walt, tmp_path
+):
+    """The queue is a file: what is in it is held again when it is worked."""
+    queued(walt, tmp_path, "echo hi\n")
+    sys.path.insert(0, str(HERE))
+    from kartikeya import SqliteTaskQueue  # noqa: PLC0415
+
+    SqliteTaskQueue(tmp_path / "q.db").submit("by-hand", "# allow_net\necho out\n")
+    got = walt.kart("work", "--db", tmp_path / "q.db", *NOW)
+    assert got.returncode == 0 and "refused  by-hand" in got.stdout, got.stdout
+    assert "worked 1 queued job;" in got.stdout
+    bad = status(walt, tmp_path, "by-hand")
+    assert (bad["status"], bad["how"]) == ("failed", "asks for the network")
+    assert len([r for r in walt.rows() if r["kind"] == "ran"]) == 1
+
+
+# ── write: a job of your own ────────────────────────────────────────────────
+def test_a_job_you_wrote_waits_on_your_seal_and_runs_once_you_seal_it(walt, tmp_path):
+    job = tmp_path / "count.sh"
+    job.write_text("grep -rhi johnson {pile} | wc -l\n")
+    before = walt.rows()
+    got = walt.kart("write", "--file", job, "--words", "count johnson", *NOW)
+    assert got.returncode == 42 and got.stdout.startswith("written  proposal:"), (
+        got.stderr
+    )
+    assert "waiting on your seal" in got.stdout
+    subj = got.stdout.split()[1]
+    prop = json.loads((walt.box / "proposals" / f"{subj[9:]}.json").read_text())
+    assert prop["path"] == "kart/jobs/count.sh" and prop["cites"] == []
+    assert prop["data"] == job.read_text()
+    text = hashlib.sha256(job.read_bytes()).hexdigest()
+    assert (
+        prop["claim"]
+        == f"a job you wrote yourself, text {text}; it runs only once sealed"
+    )
+    # writing ran nothing and sealed nothing
+    assert not [r for r in walt.rows() if r["kind"] in ("ran", "seal")]
+    assert len(walt.rows()) > len(before)
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 2 and "is not a job you sealed" in got.stderr
+    walt.seal(subj)
+    got = walt.kart("run", "--job", subj, "--to", tmp_path / "o", *NOW)
+    assert got.returncode == 42 and (tmp_path / "o").read_text().strip() == "2"
+    assert "result proposal:" in got.stdout and "waiting on your seal" in got.stdout
+
+
+@pytest.mark.parametrize("line", ["# allow_net", "  # ALLOW_DB", "# allow_localhost"])
+def test_a_job_you_wrote_asking_for_the_network_is_not_even_written(
+    walt, tmp_path, line
+):
+    job = tmp_path / "n.sh"
+    job.write_text(f"{line}\ncurl x\n")
+    before = walt.rows()
+    got = walt.kart("write", "--file", job, "--words", "x", *NOW)
+    assert got.returncode == 2 and "asks for the network" in got.stderr
+    assert walt.rows() == before
+
+
+def test_a_job_file_that_is_no_job_is_refused_and_nothing_is_proposed(walt, tmp_path):
+    (walt.box / "in.sh").write_text("echo hi\n")
+    (tmp_path / "empty.sh").write_text("  \n")
+    (tmp_path / "bin.sh").write_bytes(b"\xff\xfe\x00")
+    (tmp_path / "long.sh").write_text("echo hi\n" + "#" * 20_000)
+    (tmp_path / "most.sh").write_text("echo hi\n" + "#" * (20_000 - 8))
+    before = walt.rows()
+    for name, why in ((walt.box / "in.sh", "is inside the box"),
+                      (walt.box / "record.jsonl", "is inside the box"),
+                      (tmp_path / "gone.sh", "can't be read as text"),
+                      (tmp_path, "can't be read as text"),
+                      (tmp_path / "bin.sh", "can't be read as text"),
+                      (tmp_path / "empty.sh", "is empty"),
+                      (tmp_path / "long.sh", "is 20008 characters; a job is at most 20000")):  # fmt: skip
+        got = walt.kart("write", "--file", name, "--words", "x", *NOW)
+        assert got.returncode == 2 and why in got.stderr, (name, got.stderr)
+        assert got.stderr.startswith("refused: ")
+    assert walt.rows() == before and not list((walt.box / "proposals").glob("*"))
+    got = walt.kart("write", "--file", tmp_path / "most.sh", "--words", "x", *NOW)
+    assert got.returncode == 42, got.stderr  # exactly the most is still a job
+
+
+def test_a_job_you_wrote_goes_through_the_kernels_door_like_any_other(tmp_path):
+    """A box that isn't one, and words the kernel refuses, write nothing."""
+    job = tmp_path / "j.sh"
+    job.write_text("echo hi\n")
+    got = run(KART, "write", "--box", tmp_path / "nobox", "--file", job, "--words", "x")
+    assert got.returncode == 2 and "not a kernel box" in got.stderr
+    walt = Person(tmp_path, "walt", NOTES)
+    got = walt.kart("write", "--file", job, "--words", "", *NOW)
+    assert got.returncode == 2 and "didn't take the job" in got.stderr
+    assert not list((walt.box / "proposals").glob("*"))
 
 
 @pytest.mark.parametrize("argv", [[], ["go"], ["run", "--box", "x"], ["policy"],

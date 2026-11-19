@@ -3,7 +3,7 @@ section: Assistants
 line: A Stop hook that writes where the session ended, and the next session's first prompt gets it back, so nothing rides on memory.
 source: new
 added: 2026-11-07
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 hands: the session's id and the folder it ended in, never your files' words, to the next session's model
@@ -26,7 +26,7 @@ input and branches on the hook event:
 | Event | What happens |
 |---|---|
 | Stop | appends a `hook-handoff` row (cwd, session_id, and transcript path when sent). When `stop_hook_active` is true, nothing is written |
-| SessionStart, UserPromptSubmit | the latest handoff from a *different* session is printed as JSON `additionalContext`, once per new session; same session or none yet prints nothing |
+| SessionStart, UserPromptSubmit | the latest handoff from a *different* session is printed as JSON `additionalContext`, once per new session; same session or none yet prints nothing. When the call says which folder it is in (`cwd`), it is the latest handoff that ended in that same folder: one box hears every folder's sessions, and a session picks up its own folder's work, not whatever stopped last somewhere else |
 | anything else | allowed; nothing written or printed |
 
 ```

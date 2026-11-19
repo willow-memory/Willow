@@ -1,0 +1,1 @@
+`people`: `--json` gives the roster and every drill-down at once as one report, a group a person and a row a mention, so a program that wants everyone's places reads the folder once and not once a person

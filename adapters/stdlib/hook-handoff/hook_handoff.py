@@ -17,8 +17,11 @@ input and branches on the hook event:
     SessionStart, UserPromptSubmit
         the latest handoff from a *different* session is printed as the
         hook's JSON `additionalContext`, once per new session (a
-        `hook-handoff` served row marks it). Same session as the handoff,
-        or none yet: prints nothing. Exit 0 always here: a SessionStart
+        `hook-handoff` served row marks it). When the call says which
+        folder it is in (`cwd`), that is the latest handoff that ended in
+        the same folder: one box hears every folder's sessions, and a
+        session picks up its own folder's work. Same session as the
+        handoff, or none yet: prints nothing. Exit 0 always here: a SessionStart
         that exits non-zero has its context dropped.
 
     anything else
@@ -69,9 +72,12 @@ def event_of(call: dict) -> str:
     return e if isinstance(e, str) else ""
 
 
-def latest_handoff(rows: list[dict]) -> dict | None:
+def latest_handoff(rows: list[dict], cwd: str = "") -> dict | None:
+    """The latest handoff; with a folder, the latest that ended in it. One
+    box hears every folder's sessions, and a session picks up its own
+    folder's work, not whatever stopped last somewhere else."""
     for r in reversed(rows):
-        if r["kind"] == KIND:
+        if r["kind"] == KIND and (not cwd or r.get("cwd") == cwd):
             return r
     return None
 
@@ -127,7 +133,7 @@ def judge(raw: str, box: Path, ts: str) -> tuple[int, str, str]:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return 2, "refused: the record doesn't verify: " + "; ".join(breaks), ""
-    row = latest_handoff(rows)
+    row = latest_handoff(rows, cwd_of(call))  # this folder's, when it says which
     session = session_of(call)
     if row is None or row.get("session", "") == session:
         return 0, "", ""

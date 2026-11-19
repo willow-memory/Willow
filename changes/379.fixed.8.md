@@ -1,0 +1,1 @@
+`hook-handoff`: a session is handed the last handoff that ended in its own folder, when the call says which folder it is in; with one box hearing every folder's sessions, a session in one project was told to pick up where a session in another had stopped

@@ -1,0 +1,1 @@
+`removed`: a file about to be deleted or archived goes on the record first, as its name, size and SHA-256 and never its words, so the hole stays when the file is gone; for what is kept beside a record and one day cleared out

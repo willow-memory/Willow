@@ -3,7 +3,7 @@ section: Assistants
 line: A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back.
 source: box
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: guards
@@ -15,27 +15,35 @@ Keeps an assistant out of the two places a box is the person's alone: its key,
 and its record.
 
 ```
-python adapters/stdlib/hook-guard/hook_guard.py run --box DIR
+python adapters/stdlib/hook-guard/hook_guard.py run --box DIR [--also DIR]...
 python adapters/stdlib/hook-guard/hook_guard.py rules
 
 key        the call names the box's key file
 box-write  the call would change a file inside the box other than through kernel.py
+beside-write  with --also DIR, the call would change a file inside that folder
 ```
 
 `run` is a PreToolUse hook. It reads what the assistant is about to do (the
 JSON Claude Code, Gemini CLI and Cursor send on standard input) and holds it to
-two rules. A call that breaks one exits 2, and the reason on standard error
+its rules. A call that breaks one exits 2, and the reason on standard error
 names the rule:
 
 ```
 refused: rule box-write: this Write is inside the box; only kernel.py writes there.
+refused: rule beside-write: this Write is inside a folder kept beside the box; only the runtime writes there.
 refused: rule key: this command names the key file; the key is the person's.
 ```
 
 | Rule | It refuses | It leaves alone |
 |---|---|---|
 | `key` | a Read, Grep or Glob whose path is the key; a command with the key's path in it, or a word that resolves to it | every other file; the key's folder; the record |
-| `box-write` | a Write, Edit, MultiEdit or notebook edit of a file in the box; a command that redirects into it, or runs rm, mv, cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i on it (for mv, cp, ln, install the place it puts something) | reading the box, copying out of it, `kernel.py` run on it, a box's sibling folder |
+| `box-write` | a Write, Edit, MultiEdit or notebook edit of a file in the box; a command that redirects into it, or runs rm, mv, cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i on it (for mv, cp, ln, install the place it puts something; for mv also what it moves, since a file moved out of the box changes it) | reading the box, copying out of it, `kernel.py` run on it, a box's sibling folder |
+| `beside-write` | with `--also DIR`: the same as `box-write`, for that folder; the folder need not exist yet | reading it, copying out of it, a folder whose name only starts with the same letters |
+
+`--also DIR` may be given more than once. It is for a program that keeps its
+own files beside the box and writes them itself: the assistant's tool calls are
+held off that folder, the program's own code is not, since the hook judges only
+the assistant's calls.
 
 The key's path is the one the box's own config names (the kernel's `config`);
 the key itself is never opened. A relative path is read against the call's own
@@ -45,7 +53,11 @@ hide a path.
 **A rule is a test of paths and words, not a reading of the assistant's
 meaning.** The same call gets the same answer, and a call it can't tell is
 allowed, not guessed at: a command that builds the path at run time or hides it
-in a script gets through. That is the kernel's job, which never trusts a file in
+in a script gets through. What gets through, plainly: a path built at run time
+(`$VAR`, a command substitution, a script or program the assistant writes and
+runs), and a `cd` earlier in the same command that a later path is read against.
+So it stops a careless or direct tool call, not code written to get round it.
+For the box that is the kernel's job, which never trusts a file in
 the box (a proposal's bytes must still hash to what was sealed). Input that is
 not a JSON object is refused: a hook that can't read the call can't say it is
 safe ([hook-fail-closed](../hook-fail-closed/) puts the same rule round any

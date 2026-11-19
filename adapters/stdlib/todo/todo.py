@@ -7,6 +7,14 @@ Every line that marks something to do: `TODO`, `FIXME`, `- [ ]`, "need to",
 passage the line is in (its `dates`: the latest date in the passage, its
 file's name, or the log heading above it); undated ones last, by file.
 
+A mark counts as it is written to mark something. TODO and FIXME count in
+capitals, and not as a file's name: "the todo add-on" and TODO.md are prose
+about one. "need to" counts where a thing to do is said: opening a line or
+a sentence ("Sold the van. Need to call the insurer."), or after I or we;
+"the file does not need to fit in memory" is not something to do. An open
+checkbox counts unless it opens with a template's blank (`- [ ] {item}`):
+a form not yet filled in is nothing to do.
+
     todo: populated, 3 lines marked to do, the oldest from 2021-04-02
       memos/2021-04-02.txt:3       2021-04-02  Need to call Mesa Mutual and take it off the policy.
       notes/todo_2024-09-09.txt:2  2024-09-09  - Q3 estimate by 15th
@@ -42,13 +50,27 @@ import kernel  # noqa: E402
 NAME = "todo"
 
 MARK = re.compile(
-    r"\bTODO\b|\bFIXME\b|^\s*[-*]\s*\[ \]|\bneed to\b|\bdon'?t forget\b|\bremember to\b",
-    re.IGNORECASE,
+    # TODO and FIXME as they are written, in capitals: "the todo add-on" is
+    # prose about one, and TODO.md is a file's name
+    r"\bTODO\b(?!\.\w)|\bFIXME\b"
+    # an open checkbox, unless what it opens with is a template's blank,
+    # {item}: that is a form not yet filled in, not a thing to do
+    r"|(?i:^\s*[-*]\s*\[ \](?!\s*\{[^{}]*\}))"
+    # "need to" where a thing to do is said: opening a line or a sentence, or
+    # after I or we. "it does not need to fit in memory" is not one
+    r"|(?i:(?:^\s*(?:[-*>]\s+)?|[.!?:;]\s+|\b(?:I|we)\s+(?:still\s+|also\s+|really\s+)?)"
+    r"need to\b)"
+    r"|(?i:\bdon'?t forget\b|\bremember to\b)"
 )
 
 
 def todos(pile: list[dict]) -> list[tuple[str, str, str]]:
     out = []
+    # a passage is dated by its own file alone (`kernel.dates`), so only the
+    # files that hold a marked line are read for dates: the rest say nothing
+    marked = {c["path"] for c in pile
+              if any(MARK.search(line) for line in c["text"].splitlines())}  # fmt: skip
+    pile = [c for c in pile if c["path"] in marked]
     for c, d in zip(pile, kernel.dates(pile)):
         when = f"{str(d)[:4]}-{str(d)[4:6]}-{str(d)[6:]}" if d else "undated"
         for i, line in enumerate(c["text"].splitlines()):

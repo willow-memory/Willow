@@ -10,6 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 SCRIPT = HERE / "session_seal.py"
@@ -241,3 +243,46 @@ def test_check_as_a_function_prints_its_own_lines(tmp_path):
         f"waiting  rows 0 to 1: {waiting_subject(box)}",
         "1 sessions: 0 sealed, 1 waiting, 0 broken; 0 rows since, not yet bundled",
     ]
+
+
+def index_of(tmp_path: Path) -> Path:
+    """index-cache's index of make()'s folder, current."""
+    at = tmp_path / "index"
+    cache = HERE.parent / "index-cache" / "index_cache.py"
+    if not cache.is_file() or not (HERE.parent / "claude-code" / "hook.py").is_file():
+        # session-seal only looks for them: copied out alone, it has no index
+        pytest.skip("index-cache and claude-code aren't beside this add-on")
+    got = run("--from", str(tmp_path / "pile"), "--to", str(at), script=cache)
+    assert got.returncode == 0, got.stderr
+    return at
+
+
+def test_with_a_current_index_the_session_is_closed_without_reading_the_folder(
+    tmp_path, monkeypatch, capsys
+):
+    """The same bundle, rows and proposal as without the index; the folder is
+    read only when the index isn't current for it."""
+    (tmp_path / "a").mkdir()
+    (tmp_path / "b").mkdir()
+    box, plain = make(tmp_path / "a"), make(tmp_path / "b")
+    for b in (box, plain):
+        assert kernel("bite", "--box", str(b), "tomatoes sun", *NOW).returncode == 0
+    at = index_of(tmp_path / "a")
+    reads = []
+    real = ss.kernel.chunks
+    monkeypatch.setattr(ss.kernel, "chunks", lambda *a: reads.append(a) or real(*a))
+    assert ss.main(["--box", str(box), "--index", str(at), *NOW]) == 42
+    assert reads == []
+    assert run("--box", str(plain), *NOW).returncode == 42
+    keep = ("kind", "bite_key", "from", "to", "verdict", "who")
+    what = lambda b: [{k: r.get(k) for k in keep} for r in rows(b)]  # noqa: E731
+    assert what(box) == what(plain)  # each row the same; its folder's hashes aside
+    assert [r["kind"] for r in rows(box)][-3:] == ["bite", "proposal", "session"]
+    # the folder changed since: the kernel reads it, as without an index
+    (tmp_path / "a" / "pile" / "garden.md").write_text("The beans want water.\n")
+    assert kernel("bite", "--box", str(box), "beans water", *NOW).returncode == 0
+    reads.clear()
+    assert ss.main(["--box", str(box), "--index", str(at), *NOW]) == 42
+    assert reads
+    capsys.readouterr()
+    assert ss.main(["--box", str(box), "--index", ""]) == 2

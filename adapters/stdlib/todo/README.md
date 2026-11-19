@@ -3,7 +3,7 @@ section: Keeping track
 line: TODO, FIXME and "need to" lines across the folder, oldest first.
 source: box
 added: 2026-10-23
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: page
@@ -29,7 +29,16 @@ to 120 characters); the undated ones last, under their own heading.
 `--json` gives the same report as one JSON object.
 
 A line counts when it says TODO, FIXME, "need to", "don't forget" or "remember
-to", or is an open checkbox. Each is dated by the kernel's own date for its
+to", or is an open checkbox. A mark counts as it is written to mark something:
+
+| Mark | Counts | Doesn't |
+|---|---|---|
+| TODO, FIXME | in capitals: `TODO: fix the install step` | "the todo add-on", "Todo lists", and a file's name (TODO with a dot and an ending after it) |
+| "need to" | opening a line or a sentence, or after I or we: "Sold the van. Need to call the insurer.", "I need to book the MOT" | "the file does not need to fit in memory", "you need to restart it" |
+| "don't forget", "remember to" | anywhere in a line, in any case | |
+| an open checkbox | `- [ ] buy strings` | a ticked one, and one that opens with a template's blank, `- [ ] {item}`: a form not yet filled in |
+
+Each is dated by the kernel's own date for its
 passage (the latest date in it, its file's name, or the log heading above it);
 undated ones come last. The oldest open item is often the one that matters: a
 thing said once and never done doesn't get newer.
