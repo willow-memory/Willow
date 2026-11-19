@@ -176,8 +176,15 @@ Rules above are drafts; the frozen ones come after the piles exist.
   administrator's log holds employee numbers, the steward's seniority list
   holds departments, the plant manager is on no union list.
 
+- **The kiosk is built** (`kiosk.py`): a Windows 7 desktop at 1024 by 768 with a
+  blue title bar, a green orb and a taskbar clock stuck at 2:10 AM on 10/18/2026,
+  the minute the furnace went to HOLD. ES5 and tables only (a test holds that
+  nothing on it is newer than 2013). You log on as one of the eight and see only
+  their papers; the Audit desk is Mavis's alone and anyone else gets "Windows cannot
+  open this... nothing on record for this logon". Print makes a three-inch
+  receipt. It prints; the page is its own printer.
+
 ## Open questions
 
-- Whether the kiosk prints (on screen only, or a receipt-style page).
 - How the scene ends (a sealed attestation from the trainee to Audit, and what
   Audit does with it).

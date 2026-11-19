@@ -286,3 +286,30 @@ def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
     for rel, (sha, name) in held.items():
         got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
         assert got == sha, f"{rel} changed after {name}; a change is a new freeze"
+
+
+def test_the_kiosk_is_one_page_from_2013(played, tmp_path):
+    page = tmp_path / "kiosk.html"
+    got = py(
+        HERE / "kiosk.py", "build", "--scene", played["tmp"] / "scene", "--to", page
+    )
+    assert got.returncode == 0, got.stderr
+    html = page.read_text(encoding="utf-8")
+    data = json.loads(html.split('type="application/json">')[1].split("</script>")[0])
+    assert len(data["boxes"]) == 8 and data["found"]["join"]["on no list"] == 1
+    script = html.split("<script>")[1].split("</script>")[0]
+    # nothing on that machine is newer than that machine
+    for newer in ("=>", "let ", "const ", "`", "fetch(", "async ", "class ", ".includes(",
+                  ".padEnd(", "Object.entries", "Promise", "?."):  # fmt: skip
+        assert newer not in script, newer
+    assert not re.search(r"[(\[,]\s*\.\.\.[A-Za-z_]", script), "spread syntax"
+    for newer in ("display:flex", "display: flex", "grid", "var(--", "@supports"):
+        assert newer not in html, newer
+    # no network, and no address of anyone's in it
+    assert "http://" not in html and "https://" not in html and "src=" not in html
+    assert not re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", html)
+    assert "2:10 AM" in html and "10/18/2026" in html
+
+
+def test_the_kiosk_refuses_a_bad_command_line():
+    assert py(HERE / "kiosk.py", "build").returncode == 2
