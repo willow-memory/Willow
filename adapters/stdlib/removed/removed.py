@@ -45,14 +45,22 @@ def refuse(why: str) -> int:
 
 
 def main(argv: list[str]) -> int:
-    opts, names, it = {}, [], iter(argv)
+    opts, names, stray, it = {}, [], False, iter(argv)
     for a in it:
         if a in ("--box", "--root", "--how", "--to", "--what", "--now"):
             opts[a] = next(it, "")
+        elif a.startswith("--"):  # an option this doesn't have, never a file's name
+            stray = True
         else:
             names.append(a)
     how = opts.get("--how", "deleted")
-    if not opts.get("--box") or not opts.get("--root") or not names or how not in HOW:
+    if (
+        stray
+        or not opts.get("--box")
+        or not opts.get("--root")
+        or not names
+        or how not in HOW
+    ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
     box, root = Path(opts["--box"]), Path(opts["--root"])

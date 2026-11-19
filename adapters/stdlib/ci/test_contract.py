@@ -850,6 +850,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "record-history": ("record_history.py", ["--box", "{box}"]),
     "red-on-main": ("red_on_main.py", ["--pr", "{box}", "--main", "{box}"]),
     "ref-check": ("ref_check.py", ["--box", "{box}"]),
+    "removed": ("removed.py", ["--box", "{box}", "--root", "{pile}", *NOW, "garden.md"]),
     "renewals": ("renewals.py", ["--box", "{box}", *NOW]),
     "repo-digest": ("repo_digest.py", ["page"]),
     "repo-kinds": ("repo_kinds.py", ["count"]),

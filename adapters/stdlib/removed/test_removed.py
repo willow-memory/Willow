@@ -129,3 +129,13 @@ def test_the_record_still_verifies(tmp_path):
     got = subprocess.run([sys.executable, str(KERNEL), "verify", "--box", str(b)],
                          capture_output=True, text=True)  # fmt: skip
     assert got.returncode == 0, got.stdout + got.stderr
+
+
+def test_an_option_it_does_not_have_is_refused_and_nothing_is_written(tmp_path):
+    """A word that opens with -- is never taken for a file's name: the whole
+    command line is refused, with how to run it, before any row."""
+    box, root = make(tmp_path)
+    rows = (box / "record.jsonl").read_text()
+    got = run("--box", str(box), "--root", str(root), "two.bin", "--stray", "more")
+    assert got.returncode == 2 and "removed.py" in got.stderr
+    assert (box / "record.jsonl").read_text() == rows
