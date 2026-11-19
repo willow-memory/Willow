@@ -1,0 +1,39 @@
+{
+ "about": "The pre-registration of demo/blackout: each file's SHA-256, held by test_blackout.py, committed alone, before the scored runs. A change is a new freeze.",
+ "frozen": "2026-11-19",
+ "built_on": "e2d593b",
+ "not_blind": "The scene was played many times while it was built, so its rules were written before the code but tuned against its output; the first draft's mistakes (a policy log whose lines read as contradicting each other, answers that carried their document's date, a join that counted one sale twice) are in the README. The rules study's questions were not asked of the pile before this freeze except as nonsense (the dry run), but the author read the rules' text first, in order to write each question's expected phrase, and the expected phrases were each checked to sit in one line of the text. No question was asked of the kernel in a worker's words before the freeze.",
+ "pass_rules": {
+  "R1": "the SEC stack arrives in six boxes with two signatures and the same pins, five seal it and run it and flag only what the papers show, and the auditor declines",
+  "R2": "no sealed package holds a long line of any pile but its sender's, the public filing and release aside",
+  "R3": "no sealed answer holds a legal conclusion (material, violation, illegal, guilty, unlawful, tipping) as its own finding",
+  "R4": "kept-clash at Audit sets exactly two disagreements side by side, the blackout's 14 days against 7 and the shipments' 33 percent against 28, each between two senders, picking neither, where no box's own stack found either",
+  "R5": "the join of the plan log's employee numbers to the seniority list puts nine on the melt shop or rolling mill, one in plant services and one on no list",
+  "R6": "fixity says the quiz key was edited, in Compliance's box and no other, and Compliance's sealed answers do not say so",
+  "R7": "Audit's witness holds every sender's chain to the packages it kept, and every seal row is the person's own, as many as the scene's owners sealed",
+  "S1": "at least 8 of the 12 worker's questions are served, among their first three passages, one from the right file that holds its words",
+  "S2": "at most 2 of the 6 questions no rule answers are served anything",
+  "S3": "none of the 6 nonsense questions is served anything"
+ },
+ "dry_runs": "scene.py run --dry and rules_study.py run --dry: every question replaced by nonsense, each pile plus one nonsense passage the nonsense finds. They score nothing (rows named blackout:dry: and blackout-rules:dry:, state wired or broke) and skip the checks that read real content: the clash and join, the exit 42 of a box asked about another's papers, the figure's first mention, and whether any rule is served for a worker's words.",
+ "files": {
+  "make_life.py": "7c99b6e124b27fe674f4be7bbce7f4a95d906eb6b62920d91aae8c2f3a15b736",
+  "scene.py": "e39e74838f403a99765971c70f2751028336b36fe6c3606cf54f8c7c058117f0",
+  "kiosk.py": "595f9bfec6bae951cacd3933c06775cffc438a3ec77ebd28428b3f235f0a0f0a",
+  "fetch.py": "ce7d084d66e4b47f8b71c96c1e35eb6649140e96a4bc06db2c359be268c54652",
+  "sources.json": "7075e3341140291c371818132f6fd7c6f4970cf3a028a5d4d83ef6a5e932f2cc",
+  "rules_study.py": "c922c1cc0d3c755169c1aba8bf03bc0ea612a7a880eafac186bc775fee563141",
+  "questions/workers.txt": "e6183eb29411d4ef7bb3ff63f783c86a64a3ac41fd4b85ea05c6768801948b68",
+  "questions/offtopic.txt": "f69925ad8caa9000d7ee28c2cdab408091b18186848b191da9b42fc3f440c4af",
+  "questions/nonsense.txt": "f8b605492e827d26bd0ffe93c417260a36419a56d2601a90431d3451fcd5a4ca"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "b5cd7e931429a859035b02be8e70bd8c4c9356f90ccb23e9529f8186ce6da746",
+  "adapters/stdlib/share/share.py": "08134908e7e6ce83e6c173a5fbe109032385398ad0d820e7e1ee8ada6c28208b",
+  "adapters/stdlib/fixity/fixity.py": "d0330088d239d3e88a9e2c490acf02f90e081e951c45ed96f716031487f57e7b",
+  "adapters/stdlib/stack/stack.py": "b00e0ccfd0c35354b3014794655bdc3a0b88164b289ed6aa2da4f3f810f8f6e1",
+  "adapters/stdlib/contradictions/contradictions.py": "7354c0464b9ee03ad2326fa0462a3d7b5c1517147815b469ad71e83fc90ff0b4",
+  "adapters/stdlib/first-mention/first_mention.py": "740b7a8ef5a2d7aa4ea8ae3d7575183684d67f08904e5c5a746b2185098ae7b0",
+  "adapters/stdlib/kept-clash/kept_clash.py": "cfbf078ad2a6c2fe2f1db2b94b6cda65b906ea736c507be2602ce621f1a0c88f"
+ }
+}
