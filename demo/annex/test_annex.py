@@ -144,3 +144,55 @@ def test_annex_os_has_a_corridor_that_says_it_is_not_evidence(played, tmp_path):
     )
     html = page.read_text(encoding="utf-8")
     assert 'id="bcorr"' in html and "IT IS NOT EVIDENCE" in html
+
+
+def study_rows(box: Path) -> list[dict]:
+    rows = [json.loads(x) for x in (box / "record.jsonl").read_text().splitlines()]
+    return [r for r in rows if r["kind"] == "verdict"]
+
+
+def test_a_real_run_scores_every_rule_as_a_kernel_row(played, tmp_path):
+    to, box = tmp_path / "again", tmp_path / "study"
+    got = py(HERE / "scene.py", "run", "--life", played["tmp"] / "life", "--to", to,
+             "--box", box)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    rows = study_rows(box)
+    assert [r["gate"] for r in rows] == [f"annex:R{i}" for i in range(1, 9)]
+    assert {r["state"] for r in rows} == {"pass"}
+    assert all(
+        len(r["answers_sha256"]) == 64 and "kernel.py" in r["tools"] for r in rows
+    )
+    kernel = HERE.parents[1] / "kernel.py"
+    assert py(kernel, "verify", "--box", box).returncode == 0
+
+
+def test_the_dry_run_wires_every_step_and_scores_nothing(played, tmp_path):
+    to, box = tmp_path / "dry", tmp_path / "study"
+    got = py(HERE / "scene.py", "run", "--life", played["tmp"] / "life", "--to", to,
+             "--dry", "--box", box)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    rows = study_rows(box)
+    assert [r["gate"] for r in rows] == [f"annex:dry:R{i}" for i in range(1, 9)]
+    assert {r["state"] for r in rows} == {"wired"}
+    doc = json.loads((to / "scene.json").read_text())
+    assert doc["dry"] is True and all(b["held"] for b in doc["boxes"].values())
+    # every answer is nonsense: no real line of any pile was sealed or sent
+    assert all(
+        "nonsense answer" in a["data"] for b in doc["boxes"].values() for a in b["said"]
+    )
+
+
+def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
+    import hashlib
+
+    frozen = HERE / "FROZEN.json"
+    if not frozen.exists():
+        assert "DRAFT" in (HERE / "STORY.md").read_text(encoding="utf-8")
+        return
+    held = json.loads(frozen.read_text(encoding="utf-8"))["files"]
+    for rel, sha in held.items():
+        got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
+        assert got == sha, (
+            f"{rel} changed after it was frozen; a change is a new freeze"
+        )
+    assert {"make_life.py", "scene.py", "annex_os.py", "corridor.md"} <= set(held)

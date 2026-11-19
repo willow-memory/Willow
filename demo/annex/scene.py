@@ -1,6 +1,6 @@
 """scene.py: the first beats of integration day, in eight boxes that never touch.
 
-    python demo/annex/scene.py run --life DIR --to DIR [--now TS]
+    python demo/annex/scene.py run --life DIR --to DIR [--now TS] [--dry] [--box STUDYBOX]
 
 DIR for --life is what make_life.py wrote: one folder per box. Each gets a box,
 a seal key and an identity under --to, which must not be there yet. Then:
@@ -48,6 +48,8 @@ step went otherwise.
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import re
 import shutil
@@ -59,6 +61,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT))
+import kernel  # noqa: E402
 from kernel import canon, h256  # noqa: E402
 
 KERNEL = ROOT / "kernel.py"
@@ -70,6 +73,8 @@ BOXES = ["intake", "vask", "karst", "lumen", "program", "counter", "oversight", 
 
 #: the question both Vask and Counterintel are asked, word for word
 HALVERN = "what is known about the Halvern chief executive"
+#: what every question becomes in a dry run
+DRY_QUESTION = "qqqq zzzz"
 #: (who, question, file its cite comes from, the answer, why)
 SEALED = [
     ("vask", "what does the harness do with two programs that agree",
@@ -134,9 +139,32 @@ PLANNED = [
 ]  # fmt: skip
 
 
+#: the pass rules, as frozen: each is a check the scene makes and scores
+RULES = {
+    "R1": "no sealed package holds a long line of any pile but its sender's",
+    "R2": "the rumour is in no package and not in the file an assistant is served",
+    "R3": "asked about another box's subject, a box answers nothing on record (exit 42) "
+    "and serves nothing, while the box that holds it serves its own",
+    "R4": "the witness holds every real chain and names exactly the rewritten copy",
+    "R5": "a package edited on the way is refused as broken where it lands",
+    "R6": "nothing but the person's own `seal` wrote a seal: every seal row is "
+    "the person's, and each box holds as many as its owner sealed",
+    "R7": "the corridor wrote no row on any chain, and the question asked after "
+    "it holds no word of itself",
+    "R8": "no box alone finds the clash or the clocks: each box's own stack flags nothing",
+}
+#: the code a verdict is made with, hashed onto each verdict row
+TOOLS = ["kernel.py", "adapters/stdlib/share/share.py", "adapters/stdlib/fixity/fixity.py",
+         "adapters/stdlib/approved-only/approved_only.py", "adapters/stdlib/stack/stack.py",
+         "adapters/stdlib/contradictions/contradictions.py", "adapters/stdlib/gaps/gaps.py",
+         "demo/annex/scene.py", "demo/annex/make_life.py"]  # fmt: skip
+
+
 class Scene:
-    def __init__(self, life: Path, to: Path, now: datetime):
-        self.life, self.to, self.now = life, to, now
+    def __init__(self, life: Path, to: Path, now: datetime, dry: bool = False):
+        self.life, self.to, self.now, self.dry = life, to, now, dry
+        #: each pass rule's check, set False where a check fails (scored only on a real run)
+        self.ok = {f"R{i}": True for i in range(1, 9)}
         self.pub: dict[str, str] = {}
         self.ids: dict[str, Path] = {}
         self.wrong: list[str] = []
@@ -165,6 +193,17 @@ class Scene:
 
     def setup(self) -> None:
         self.to.mkdir()
+        if self.dry:
+            # every question is nonsense, so each pile gets one passage the nonsense finds
+            # (its words out of order, so it is no echo of the question)
+            pile = self.to / "_pile"
+            shutil.copytree(self.life, pile)
+            for who in BOXES:
+                (pile / who / "dry.md").write_text(
+                    f"# dry\n\nqqqq is not zzzz, says the {who} pile's one dry passage.\n",
+                    encoding="utf-8",
+                )
+            self.life = pile
         for who in BOXES:
             (self.to / who).mkdir()
             self.run(KERNEL, "init", "--box", self.box(who), "--pile", self.life / who,
@@ -176,6 +215,14 @@ class Scene:
     def seal(self, who: str, question: str, source: str, data: str, claim: str) -> str:
         """The person asks, writes the answer from what was served, and seals it:
         the person's act, played through the kernel's own `seal`."""
+        if self.dry:
+            # a repeated question would serve the earlier sealed answer first, so
+            # each one carries a different nonsense word the passage need not hold
+            question, source = (
+                f"{DRY_QUESTION} {'x' * (4 + len(self.said[who]))}",
+                "dry.md",
+            )
+            data = f"nonsense answer {len(self.said[who])} from {who}"
         bite = json.loads(self.run(KERNEL, "bite", "--box", self.box(who), question,
                                    "--now", self.ts(), want=(0, 42)))  # fmt: skip
         cites = [
@@ -259,6 +306,7 @@ class Scene:
                 self.wrong.append(f"{who}'s {name} printed nothing")
             if "DATE" in ran.stdout or "AMOUNT" in ran.stdout:
                 self.wrong.append(f"{who}'s own box found a clash it should not see")
+                self.ok["R8"] = False
 
     def clash(self) -> None:
         got: dict[str, tuple[str, Path]] = {}
@@ -270,6 +318,8 @@ class Scene:
             got[who] = (data, pkg)
         self.say("\n  Oversight lays what arrived side by side (the scene's own "
                  "comparison: no add-on reads\n  received packages yet)")  # fmt: skip
+        if self.dry:
+            return
         k, l_ = got["karst"][0], got["lumen"][0]
         if "process" not in k or "person" not in l_:
             self.wrong.append("the operator definitions did not arrive as sealed")
@@ -325,6 +375,8 @@ class Scene:
             self.wrong.append(
                 f"fixity said something about the planner log: {again.strip()}"
             )
+        if self.dry:
+            return {"asked": "", "badge": "", "minutes": 0, "fixity": "untouched"}
         asked = re.findall(r"\d\d:\d\d", self.said["karst"][-1]["data"])[0]
         badge = re.findall(r"\d\d:\d\d", self.said["intake"][-1]["data"])[0]
         mins = (int(badge[:2]) * 60 + int(badge[3:])) - (
@@ -385,8 +437,10 @@ class Scene:
         self.say(f"  counter    rewritten copy: {'/'.join(sorted(verdicts))}")
         if set(out.values()) != {"holds"}:
             self.wrong.append(f"a real chain did not hold: {out}")
+            self.ok["R4"] = False
         if verdicts != {"rewritten"}:
             self.wrong.append("the witness did not name the rewritten chain")
+            self.ok["R4"] = False
         self.say("\n  Oversight's report is due at close of day. What it says is "
                  "outside every chain.")  # fmt: skip
         return {"real": out, "rewritten": sorted(verdicts)}
@@ -399,15 +453,17 @@ class Scene:
         asked = {}
         for who in ("vask", "counter"):
             got = subprocess.run([sys.executable, KERNEL, "bite", "--box", self.box(who),
-                                  HALVERN, "--now", self.ts()], capture_output=True,
-                                 text=True)  # fmt: skip
+                                  DRY_QUESTION if self.dry else HALVERN, "--now", self.ts()],
+                                 capture_output=True, text=True)  # fmt: skip
             doc = json.loads(got.stdout)
             asked[who] = (got.returncode, doc)
             self.say(f"  {who:8} exit {got.returncode}, {len(doc['served'])} served")
-        if asked["vask"][0] != 42 or asked["vask"][1]["served"]:
+        if not self.dry and (asked["vask"][0] != 42 or asked["vask"][1]["served"]):
             self.wrong.append("Vask's box answered about the Halvern executive")
+            self.ok["R3"] = False
         if not asked["counter"][1]["served"]:
             self.wrong.append("Counterintel's box did not serve its own summary")
+            self.ok["R3"] = False
 
         self.say("\n── 3. Vask seals what her own files say, and sends it to Oversight")
         mine = self.seal(*SEALED[0])
@@ -424,13 +480,17 @@ class Scene:
 
         self.say("\n── 5. a copy edited on the way")
         text = vpkg.read_text(encoding="utf-8")
-        edited = text.replace("cannot tell two programs", "can tell two programs")
+        edited = text.replace(
+            "nonsense answer" if self.dry else "cannot tell two programs",
+            "forged answer" if self.dry else "can tell two programs",
+        )
         if edited == text:
             self.wrong.append("the edit found nothing to change")
         (self.to / "edited.pkg").write_text(edited, encoding="utf-8")
         bad = self.receive("oversight", self.to / "edited.pkg", want=(42,))
         if " broken" not in (bad.splitlines() or [""])[0]:
             self.wrong.append("the edited copy wasn't refused as broken")
+            self.ok["R5"] = False
 
         self.say("\n── 6. each box's own stack, over its own pile")
         self.own_stacks()
@@ -470,23 +530,26 @@ class Scene:
             self.say(f"  | {ln}")
         self.say("  ── " + "─" * 55)
         self.now += timedelta(minutes=33)
-        question = "what is known about the Halvern chief executive"
+        question = DRY_QUESTION if self.dry else HALVERN
         got = subprocess.run(
             [sys.executable, KERNEL, "bite", "--box", self.box("vask"), question,
              "--now", self.ts()], capture_output=True, text=True)  # fmt: skip
         after = self.rows("vask")[-1]
-        if got.returncode != 42 or after["kind"] != "bite":
+        if after["kind"] != "bite" or (not self.dry and got.returncode != 42):
             self.wrong.append(
                 "Vask's question after the corridor was not an empty bite"
             )
+            self.ok["R7"] = False
         if any(
             w in json.dumps(after).lower() for w in ("halvern", "executive", "chief")
         ):
             self.wrong.append("a row on Vask's chain holds the words of her question")
+            self.ok["R7"] = False
         inside = [(b, r["n"]) for b in BOXES for r in self.rows(b)
                   if last < r["ts"] < after["ts"]]  # fmt: skip
         if inside:
             self.wrong.append(f"rows were written in the corridor's window: {inside}")
+            self.ok["R7"] = False
         fmt = "%Y-%m-%dT%H:%M:%SZ"
         before = max(r["ts"] for r in self.rows("vask") if r["ts"] <= last)
         gap = int((datetime.strptime(after["ts"], fmt)
@@ -507,7 +570,8 @@ class Scene:
     def briefing(self) -> None:
         """The one file an assistant may read: only a scope its owner sealed."""
         who = "counter"
-        self.run(KERNEL, "bite", "--box", self.box(who), "what was marked hold, not for release",
+        self.run(KERNEL, "bite", "--box", self.box(who),
+                 DRY_QUESTION if self.dry else "what was marked hold, not for release",
                  "--now", self.ts(), want=(0, 42))  # fmt: skip
         out = self.run(
             APPROVED, "scope", "--box", self.box(who), "--now", self.ts(), want=(42,)
@@ -529,8 +593,9 @@ class Scene:
         self.say(
             f"  counter seals a scope and serves {len(text.splitlines())} lines to an assistant"
         )
-        if "review" not in text or "Halvern" in text or "affairs" in text:
+        if "Halvern" in text or "affairs" in text or not (self.dry or "review" in text):
             self.wrong.append("the served file is not the sealed scope alone")
+            self.ok["R2"] = False
 
     def walls(self) -> None:
         """No package holds a long line of any pile but its sender's, and none
@@ -544,12 +609,32 @@ class Scene:
             sender = pkg.stem.split("-")[0]
             if "Halvern" in body:
                 self.wrong.append(f"the rumour is in {pkg.name}")
+                self.ok["R2"] = False
             for b, lines in piles.items():
                 if b != sender and any(ln in body for ln in lines):
                     self.wrong.append(f"{pkg.name} holds a line of the {b} pile")
+                    self.ok["R1"] = False
         if len(self.wrong) == before:
             self.say(f"  {len(self.packages)} packages: the rumour in none, and each "
                      "holds only its sender's pile")  # fmt: skip
+
+    def rules(self) -> dict:
+        """Each pass rule's verdict. A dry run scores nothing: its rows say only
+        whether the wiring ran (`wired`) or broke."""
+        for who in BOXES:
+            seals = [r for r in self.rows(who) if r["kind"] == "seal"]
+            if len(seals) != len(self.sealed[who]) or any(
+                r.get("standing") != "sealed" or r.get("who") != "human" for r in seals
+            ):
+                self.ok["R6"] = False
+        out = {}
+        for rule, text in RULES.items():
+            if self.dry:
+                state = "wired" if self.ok[rule] and not self.wrong else "broke"
+            else:
+                state = "pass" if self.ok[rule] else "fail"
+            out[rule] = {"state": state, "text": text}
+        return out
 
     def summary(self) -> dict:
         served = self.to / "counter" / "served.md"
@@ -580,13 +665,37 @@ class Scene:
                                               for r in rows if r["kind"] == "received"]}  # fmt: skip
             if not held:
                 self.wrong.append(f"{who}'s chain did not verify")
+        doc["rules"] = self.rules()
+        doc["dry"] = self.dry
         return doc
+
+
+def verdict_rows(box: Path, doc: dict) -> None:
+    """One kernel row a rule, on a box outside the repo: its state, the rule, the
+    SHA-256 of the answers it was scored on and of the code that scored them."""
+    if not (box / "record.jsonl").exists():
+        with contextlib.redirect_stdout(io.StringIO()):
+            made = kernel.init(
+                box, HERE, box.parent / (box.name + ".key"), kernel.now()
+            )
+        if made != kernel.ALIVE:
+            raise SystemExit(f"refused: couldn't start a record at {box}")
+    tools = {rel: h256((ROOT / rel).read_text(encoding="utf-8")) for rel in TOOLS}
+    scored = {"rules": {k: v["state"] for k, v in doc["rules"].items()},
+              "found": {k: v for k, v in doc["found"].items() if k != "corridor"}}  # fmt: skip
+    answers = h256(canon(scored))
+    for rule, v in doc["rules"].items():
+        gate = f"annex:{'dry:' if doc['dry'] else ''}{rule}"
+        kernel.append(box, kernel.now(), "verdict", who="annex", gate=gate,
+                      state=v["state"], rule=v["text"], answers_sha256=answers, tools=tools)  # fmt: skip
 
 
 def main(argv: list[str]) -> int:
     if len(argv) < 2 or argv[0] != "run" or "--life" not in argv or "--to" not in argv:
         print(__doc__.split("\n\n")[0], file=sys.stderr)
         return 2
+    dry = "--dry" in argv
+    study = Path(argv[argv.index("--box") + 1]) if "--box" in argv else None
     life = Path(argv[argv.index("--life") + 1])
     to = Path(argv[argv.index("--to") + 1])
     now = datetime(2026, 11, 18, 8, 0, 0, tzinfo=timezone.utc)
@@ -596,11 +705,16 @@ def main(argv: list[str]) -> int:
     if to.exists():
         print(f"{to} is already there", file=sys.stderr)
         return 2
-    scene = Scene(life, to, now)
+    scene = Scene(life, to, now, dry)
     doc = scene.play()
     (to / "scene.json").write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
+    for rule, v in doc["rules"].items():
+        print(f"{rule}  {v['state']:6}  {v['text']}")
     for w in scene.wrong:
         print(f"WRONG: {w}")
+    if study is not None:
+        verdict_rows(study, doc)
+        print(f"verdicts appended to {study}: kernel.py verify --box {study}")
     return 1 if scene.wrong else 0
 
 
