@@ -1,10 +1,12 @@
-# The Annex: story bible (DRAFT, not frozen)
+# The Annex: story bible
 
-Working notes for a demo not yet built. Nothing here is asked of any box yet.
+The working notes the demo was built from, kept as written; the README has
+what it does and found, and FROZEN.json what is held. The pass rules below are
+the first draft: the frozen eight are in `scene.py`'s RULES.
 Everything is invented: the people, the firms, the program, the documents.
 No real person, company or program appears, and nobody in it is named after
-one. When this is built, the pass rules below get frozen in one commit before
-any question is asked ([studies](../../docs/agents/studies.md)).
+one. The rules were frozen in one commit before the scored run
+([studies](../../docs/agents/studies.md)).
 
 ## The premise
 
@@ -180,7 +182,8 @@ The demo is the ledger; it gives no verdict beyond what the rows say.
   in the window, seven chains silent after it, and the only row afterwards (her
   question to her own box) holds a hash and none of her words. ANNEX-OS turns
   its RECORD light off for it and plays it a line at a time.
-- **Still to play:** the freeze.
+- **Frozen:** 2026-11-19, in the commit `FROZEN.json` is in, alone. The README
+  has the dry run, the scored run and what failed.
 
 ## Open questions
 
