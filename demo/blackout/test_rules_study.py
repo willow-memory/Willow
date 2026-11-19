@@ -100,3 +100,30 @@ def test_no_question_file_holds_an_email_address(name):
 
     text = (HERE / "questions" / f"{name}.txt").read_text(encoding="utf-8")
     assert not re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", text)
+
+
+def test_a_words_list_is_read_privately_and_names_its_rows_apart(tmp_path, monkeypatch):
+    pile = tmp_path / "pile" / "ecfr"
+    pile.mkdir(parents=True)
+    (pile / "17-cfr-243.100.xml").write_text(
+        "<DIV><HEAD>A rule about words</HEAD></DIV>"
+    )
+    monkeypatch.setattr(rs, "held", lambda p: [])
+    study = tmp_path / "study"
+    words = HERE / "questions" / "words.txt"
+    got = rs.main(["run", "--pile", str(tmp_path / "pile"), "--to", str(tmp_path / "out"),
+                   "--dry", "--words", str(words), "--box", str(study)])  # fmt: skip
+    assert got == 0
+    assert (
+        tmp_path / "out" / "words.txt"
+    ).stat().st_mode & 0o077 == 0  # the owner's alone
+    rows = [json.loads(x) for x in (study / "record.jsonl").read_text().splitlines()]
+    assert [r["gate"] for r in rows if r["kind"] == "verdict"] == [
+        f"blackout-rules2:dry:S{i}" for i in (1, 2, 3)]  # fmt: skip
+
+
+def test_the_words_list_is_in_the_kernels_format():
+    lines = [ln for ln in (HERE / "questions/words.txt").read_text().splitlines()
+             if ln.strip() and not ln.startswith("#")]  # fmt: skip
+    assert len(lines) >= 20
+    assert all(" = " in ln and ln.split(" = ")[1].strip() for ln in lines)

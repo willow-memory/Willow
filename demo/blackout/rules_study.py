@@ -1,6 +1,6 @@
 """rules_study.py: does the kernel serve the right rule to a worker's question?
 
-    python demo/blackout/rules_study.py run --pile PILE --to DIR [--dry] [--box STUDYBOX]
+    python demo/blackout/rules_study.py run --pile PILE --to DIR [--dry] [--words FILE] [--box STUDYBOX]
 
 PILE is what fetch.py kept (the rules, by the hashes in sources.json, which a run
 checks first and refuses on). The eCFR sections in it, as plain text, are the
@@ -19,7 +19,9 @@ before any is asked:
 - S3: none of the 6 nonsense questions is served anything.
 
 Every miss is written down with what was served. The kernel's rank is the
-kernel's: nothing here loosens it. `--dry` asks every question as nonsense over
+kernel's: nothing here loosens it. `--words FILE` reads the box with a words list (a
+worker's word, then what the rules call it; questions/words.txt), which is how a box is
+told what its owner's words mean, and its rows are named blackout-rules2. `--dry` asks every question as nonsense over
 the pile plus one nonsense passage, to see the wiring after the kernel run (a
 passage is served, the hit rule reads it) and scores nothing; `--box STUDYBOX`
 appends one kernel row a rule to a box outside the repo. Exit 0 when the run ran
@@ -127,7 +129,7 @@ def bite(box: Path, question: str) -> tuple[int, list[dict]]:
     ]
 
 
-def build(pile: Path, to: Path, dry: bool) -> Path:
+def build(pile: Path, to: Path, dry: bool, words: Path | None = None) -> Path:
     mirror = to / "mirror"
     mirror.mkdir(parents=True)
     for p in sorted((pile / "ecfr").glob("*.xml")):
@@ -139,8 +141,14 @@ def build(pile: Path, to: Path, dry: bool) -> Path:
             "qqqq is not zzzz, says the one dry passage.\n", encoding="utf-8"
         )
     box = to / "box"
+    wl = None
+    if words is not None:
+        # a words list the kernel reads is its owner's alone: a private copy
+        wl = to / "words.txt"
+        wl.write_bytes(words.read_bytes())
+        wl.chmod(0o600)
     with contextlib.redirect_stdout(io.StringIO()):
-        made = kernel.init(box, mirror, to / "key", kernel.now())
+        made = kernel.init(box, mirror, to / "key", kernel.now(), wl)
     if made != kernel.ALIVE:
         raise SystemExit(f"refused: couldn't start a box at {box}")
     return box
@@ -162,7 +170,7 @@ def ask(box: Path, dry: bool) -> dict:
     return asked
 
 
-def verdict_rows(study: Path, results: dict, dry: bool) -> None:
+def verdict_rows(study: Path, results: dict, dry: bool, words: bool = False) -> None:
     if not (study / "record.jsonl").exists():
         with contextlib.redirect_stdout(io.StringIO()):
             made = kernel.init(
@@ -176,7 +184,7 @@ def verdict_rows(study: Path, results: dict, dry: bool) -> None:
              for k, rows in results["asked"].items()}  # fmt: skip
     answers = h256(canon(brief))
     for rule, v in results["scored"].items():
-        gate = f"blackout-rules:{'dry:' if dry else ''}{rule}"
+        gate = f"blackout-rules{'2' if words else ''}:{'dry:' if dry else ''}{rule}"
         kernel.append(study, kernel.now(), "verdict", who="blackout", gate=gate,
                       state=v["state"], number=v["number"], needed=v["needed"],
                       rule=RULES[rule][0], answers_sha256=answers, tools=tools)  # fmt: skip
@@ -184,10 +192,10 @@ def verdict_rows(study: Path, results: dict, dry: bool) -> None:
 
 def main(argv: list[str]) -> int:
     opts = {a: argv[i + 1] for i, a in enumerate(argv)
-            if a in ("--pile", "--to", "--box") and i + 1 < len(argv)}  # fmt: skip
+            if a in ("--pile", "--to", "--box", "--words") and i + 1 < len(argv)}  # fmt: skip
     dry = "--dry" in argv
     if (argv[:1] != ["run"] or not {"--pile", "--to"} <= opts.keys()
-            or any(a.startswith("--") and a not in ("--pile", "--to", "--box", "--dry")
+            or any(a.startswith("--") and a not in ("--pile", "--to", "--box", "--words", "--dry")
                    for a in argv)):  # fmt: skip
         print(__doc__.split("\n\n")[0], file=sys.stderr)
         return 2
@@ -199,7 +207,8 @@ def main(argv: list[str]) -> int:
             file=sys.stderr,
         )
         return 2
-    box = build(pile, to, dry)
+    words = Path(opts["--words"]) if "--words" in opts else None
+    box = build(pile, to, dry, words)
     asked = ask(box, dry)
     if dry:
         # wiring only: every question was nonsense, and a dry passage was served and read
@@ -218,7 +227,7 @@ def main(argv: list[str]) -> int:
             print(f"  MISS {a['id']}: {a['question']}\n       wanted {a['want']}; served "
                   f"{[s['where'] for s in a['served']] or 'nothing'}")  # fmt: skip
     if "--box" in opts:
-        verdict_rows(Path(opts["--box"]), results, dry)
+        verdict_rows(Path(opts["--box"]), results, dry, words is not None)
         print(
             f"verdicts appended to {opts['--box']}: kernel.py verify --box {opts['--box']}"
         )

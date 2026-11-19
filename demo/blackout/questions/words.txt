@@ -1,0 +1,27 @@
+# A worker's word, then what the rules call it. The kernel's words-list format.
+# Written after freeze 1's scored run (the worker's words reached nothing) and
+# before any question was asked with it.
+sell = sale, sold, sales
+shares = security, securities, stock
+stock = security, securities
+know = aware, awareness
+plan = contract, instruction, written
+wait = period, cooling
+trading = purchase, sale
+wife = spouse
+husband = spouse
+promised = agrees, agreed
+quiet = confidence, confidential
+analyst = broker, dealer, adviser
+company = issuer
+tell = disclose, disclosure, public
+everyone = public
+slip = disclosure, nonintentional
+accident = nonintentional
+fast = promptly
+employee = person, officer, agent
+talking = communicates, communication
+fraud = deceit, defraud
+lying = untrue, misleading
+fails = failure
+numbers = information, nonpublic
