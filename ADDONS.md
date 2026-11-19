@@ -1271,6 +1271,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="format-rot"></a>[**format-rot**](adapters/stdlib/format-rot/) \
   Files in formats that may stop opening (old office files, proprietary ones, ones no reader handles), flagged while you can convert them. \
   *new* `no-install` `offline` `office` `rot` · near: office, fixity, sheets
+- <a id="kept-clash"></a>[**kept-clash**](adapters/stdlib/kept-clash/) \
+  Sealed answers people sent you, side by side: one thing given two dates, times or amounts, or one word defined two ways. \
+  Uses share, contradictions. *new* `no-install` `offline` `sent` `amounts` · near: contradictions, share, wasm
 - <a id="restore-drill"></a>[**restore-drill**](adapters/stdlib/restore-drill/) \
   A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it. \
   Uses backup. *new* `no-install` `offline` `backup` `zip` · near: backup, diverge, ci
