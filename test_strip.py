@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -53,9 +54,22 @@ def run(copy: Path, *argv: str) -> subprocess.CompletedProcess:
                           text=True, timeout=900)  # fmt: skip
 
 
+REPORT = re.compile(r"^=+ (FAILURES|ERRORS) =+$", re.M)
+SHOWN = 60_000
+
+
+def why(stdout: str, stderr: str) -> str:
+    """What a failed run said, from pytest's first report of a failure on.
+    Its last lines are the summary, which names a failure and never says
+    why: a demo failing three runs deep showed only "failing (exit 1)"."""
+    m = REPORT.search(stdout)
+    said = stdout[m.start() :] if m else stdout[-2000:]
+    return said[-SHOWN:] + stderr[-1000:]
+
+
 def passes(copy: Path, *argv: str) -> None:
     got = run(copy, *argv)
-    assert got.returncode == 0, f"{' '.join(argv)}:\n{got.stdout[-2000:]}{got.stderr[-1000:]}"  # fmt: skip
+    assert got.returncode == 0, f"{' '.join(argv)}:\n{why(got.stdout, got.stderr)}"
 
 
 PYTEST = ("-m", "pytest", "-q", "-p", "no:cacheprovider")
@@ -135,3 +149,13 @@ def test_a_leftover_dependency_would_be_caught(tmp_path, without):
         encoding="utf-8",
     )
     assert run(copy, *PYTEST, "test_kernel.py").returncode == 1
+
+
+def test_a_failure_is_shown_from_its_report_not_its_last_lines():
+    table = "".join(f"demo:{n:<14} satisfied\n" for n in range(200))
+    out = ("." * 72 + "\n") * 40 + "=" * 35 + " FAILURES " + "=" * 35 + "\n"
+    out += "E   assert 'Prince Aldric is free' in rest\n" + table + "1 failed\n"
+    said = why(out, "")
+    assert "Prince Aldric is free" in said and said.endswith("1 failed\n")
+    assert "." * 72 not in said  # the progress dots before the report aren't
+    assert why("ok\n" * 2000, "boom") == ("ok\n" * 2000)[-2000:] + "boom"

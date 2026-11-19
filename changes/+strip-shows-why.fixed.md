@@ -1,0 +1,1 @@
+`test_strip.py`: a run that fails in the stripped copy is shown from pytest's first report of a failure on, not its last 2000 characters, which were only the summary: a demo failing three runs deep had shown "failing (exit 1)" and never why
