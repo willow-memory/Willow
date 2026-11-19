@@ -999,7 +999,7 @@ willow/
 │   │   │   ├── test_fixity.py
 │   │   │   └── README.md
 │   │   ├── kept-clash/
-│   │   │   ├── kept_clash.py Sealed answers other people sent you, read side by side: two that give a different date, time or amount for one thing, or define one word two ways, neither picked
+│   │   │   ├── kept_clash.py sealed answers other people sent you, read side by side
 │   │   │   ├── test_kept_clash.py
 │   │   │   └── README.md     its card
 │   │   ├── licenses/
