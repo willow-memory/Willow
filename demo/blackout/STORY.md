@@ -1,6 +1,7 @@
-# The Blackout Window: story bible (DRAFT, not frozen)
+# The Blackout Window: story bible
 
-Working notes for a demo not yet built. Nothing here is asked of any box yet.
+The working notes the demo was built from, kept as written; the README has what it
+does and found, and FROZEN.json and FROZEN-2.json what is held.
 Everything is invented: the people, the company, the plant, the documents.
 The company's name and ticker are placeholders and are not any real firm's.
 The rules it is checked against are real and public (the SEC's, kept by address

@@ -2158,7 +2158,10 @@ willow/
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
 │   ├── blackout/             a steelworks' insider-trading training, the SEC's rules pinned, a window that moved (a draft)
-│   │   ├── STORY.md          the story bible, a draft
+│   │   ├── README.md         the day, the ten pass rules, the dry runs, the scored runs, and what failed and what it doesn't show
+│   │   ├── FROZEN.json       the pre-registration: file and tool hashes, the pass rules, what was read first
+│   │   ├── FROZEN-2.json     freeze 2: the rules study asked again with a words list, and why
+│   │   ├── STORY.md          the story bible
 │   │   ├── fetch.py          fetches the public rules once and checks them offline; the contact goes to sec.gov alone
 │   │   ├── make_life.py      the eight boxes' papers (and, with --rules, the public rules in every box)
 │   │   ├── scene.py          the SEC stack in every box, what each person seals, and what Audit alone can see
@@ -2167,6 +2170,7 @@ willow/
 │   │   ├── questions/
 │   │   │   ├── workers.txt   twelve questions in a worker's words, each with the rule it should reach
 │   │   │   ├── offtopic.txt  six no rule answers
+│   │   │   ├── words.txt     a worker's words, then what the rules call them
 │   │   │   └── nonsense.txt  six that are nonsense
 │   │   ├── test_rules_study.py
 │   │   ├── sources.json      each rule's address and SHA-256, never its text
