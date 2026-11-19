@@ -2138,6 +2138,7 @@ willow/
 │   ├── annex/                a skeleton: eight compartments that never touch, a rumour in one, a wall, a forged copy refused
 │   │   ├── README.md         the day, the eight rules, the dry run, the scored run and what it doesn't show
 │   │   ├── FROZEN.json       the pre-registration: file and tool hashes, the pass rules
+│   │   ├── FROZEN-2.json     freeze 2: scene.py's add-on paths written whole, and why
 │   │   ├── STORY.md          the story bible
 │   │   ├── annex_os.py       ANNEX-OS, a fictional terminal page over the scene's results
 │   │   ├── corridor.md       two people talk, off every record

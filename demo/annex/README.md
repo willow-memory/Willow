@@ -90,6 +90,22 @@ served file says), so those are only exercised by the scored run.
 Sixteen verdict rows (eight dry, eight scored), each carrying the SHA-256 of the
 answers it was scored on and of the tools. Eight of eight pass.
 
+## Freeze 2
+
+[FROZEN-2.json](FROZEN-2.json), 2026-11-19, committed alone. CI on the pull
+request caught a fault in how `scene.py` spells its paths, not in anything the
+scene does: it built them part by part (`ROOT / "adapters" / ... / "stack.py"`),
+and `test-impact` reads a bare `"stack.py"` string as every file by that name,
+including `demo/bernadette/stack.py`. So a change to `what_changed.py`, which
+that stack runs, planned `demo:annex` and failed
+`test_impact.py::test_the_steps_are_ordered_cheapest_first`. The four paths
+(`STACK`, `FIXITY`, `APPROVED`, `SHARE`) are now one string each, as
+`demo/johnson` writes them. The diff against freeze 1 is those four lines; no
+rule, check or other file changed. The dry run and the scored run were made
+again on the new hash, on a fresh box outside the repo: `R1` to `R8` pass,
+`kernel.py verify` holds (17 rows). That run's rows carry the new `scene.py`
+hash, so they are not freeze 1's.
+
 ## What failed, and what this doesn't show
 
 - **The cross-box comparison is the scene's own.** Oversight receives the
