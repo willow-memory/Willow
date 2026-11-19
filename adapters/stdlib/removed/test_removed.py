@@ -56,6 +56,9 @@ def test_the_hole_is_one_row_of_names_sizes_and_fingerprints(tmp_path):
         "two.bin": {"sha256": hashlib.sha256(b"\x00\x01\x02").hexdigest(), "size": 3},
     }
     assert "row " in got.stdout and "2 files, deleted" in got.stdout
+    for name, f in row["files"].items():  # each as the README shows it: 12 of the hash
+        line = f"removed  {name}  {f['size']} bytes  {f['sha256'][:12]}…"
+        assert line in got.stdout.splitlines(), got.stdout
 
 
 def test_never_a_word_of_a_file_nor_a_path_of_the_machine(tmp_path):

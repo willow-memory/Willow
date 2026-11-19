@@ -35,6 +35,9 @@
   "red-on-main": {
     "3fe0b0e60f12": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
   },
+  "removed": {
+    "2dc6bc910193": "The block a file is read in to fingerprint it: any size reads every byte once, so the SHA-256 and the size on the row are the same."
+  },
   "restack-open": {
     "2007109c09fd": "How much of git's own message a refusal quotes: any length names the same git failure, and only a message longer than 200 characters would read differently."
   },
