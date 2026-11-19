@@ -6,7 +6,7 @@ added: 2026-11-19
 version: 0.1.0
 writes: nothing
 network: none
-role: page
+role: tools
 uses: share, contradictions
 -->
 

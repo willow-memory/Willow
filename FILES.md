@@ -998,10 +998,6 @@ willow/
 │   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
 │   │   │   ├── test_fixity.py
 │   │   │   └── README.md
-│   │   ├── kept-clash/
-│   │   │   ├── kept_clash.py sealed answers other people sent you, read side by side
-│   │   │   ├── test_kept_clash.py
-│   │   │   └── README.md     its card
 │   │   ├── licenses/
 │   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
 │   │   │   ├── test_licenses.py
@@ -1112,6 +1108,10 @@ willow/
 │   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
 │   │   │   ├── test_format_rot.py
 │   │   │   └── README.md
+│   │   ├── kept-clash/
+│   │   │   ├── kept_clash.py sealed answers other people sent you, read side by side
+│   │   │   ├── test_kept_clash.py
+│   │   │   └── README.md     its card
 │   │   ├── restore-drill/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
