@@ -2182,6 +2182,11 @@ willow/
 │   │   ├── PLANTED.md        PLANTED: answer key (testers: do not read until after scoring)
 │   │   ├── QUESTIONS.md      Questions Corwin might type
 │   │   └── STRIP.md          Corwin, blind: the strip-down
+```
+
+#### demo/, from craft-assembly/
+
+```
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
 │   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
@@ -2203,11 +2208,6 @@ willow/
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
 │   │       └── checks.md     what the kernel, xref and claim-check say of the report
-```
-
-#### demo/, from five-repos/
-
-```
 │   ├── five-repos/           five repositories through the stacks: the stacks, the words list, the reports, two records without their keys
 │   │   ├── README.md         what was run, what held, what failed and became #211, and the rule: proposed, never sealed
 │   │   ├── exam.txt          the twelve questions the model was asked
@@ -2229,6 +2229,11 @@ willow/
 │   │   │   ├── 10-timeline.md
 │   │   │   ├── 11-ways-in.md
 │   │   │   └── 12-landed.md
+```
+
+#### demo/five-repos/, from results/
+
+```
 │   │   ├── results/
 │   │   │   ├── play-record/
 │   │   │   │   └── record.jsonl  five games as rows, without its key
@@ -2253,11 +2258,6 @@ willow/
 │   │       ├── proof.md
 │   │       ├── voice.md
 │   │       └── ways-in.md
-```
-
-#### demo/, from game-box/
-
-```
 │   ├── game-box/
 │   │   ├── author.py         a story written as markdown, made into a world game-master plays
 │   │   ├── binder/
@@ -2288,6 +2288,11 @@ willow/
 │   │   │   └── wasp-nest.md  The Wasp Nest
 │   │   ├── table/
 │   │   │   └── test_game_box.py
+```
+
+#### demo/game-box/, from worlds/
+
+```
 │   │   ├── worlds/
 │   │   │   ├── aetheris.json
 │   │   │   ├── clockwork-cellar.json
@@ -2310,11 +2315,6 @@ willow/
 │   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
 │   │       ├── blind-claims.txt     the claims, reworded three ways, blind
 │   │       └── null.txt        thirty questions about the policy with nothing to do with ads
-```
-
-#### demo/, from hollis/
-
-```
 │   ├── hollis/               built blind, by an agent that never saw the code
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md
