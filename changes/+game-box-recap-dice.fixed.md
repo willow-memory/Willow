@@ -1,0 +1,1 @@
+`demo/game-box`: the recap test no longer fails one run in 36: its second night asserted a freed prince the dice decide, and both rolls missing (1 in 36) left him caged; Brann's Heart is set to 10, as the next-chapter test already does, so the riddle is always answered
