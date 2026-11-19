@@ -65,10 +65,10 @@ import kernel  # noqa: E402
 from kernel import canon, h256  # noqa: E402
 
 KERNEL = ROOT / "kernel.py"
-STACK = ROOT / "adapters" / "stdlib" / "stack" / "stack.py"
-FIXITY = ROOT / "adapters" / "stdlib" / "fixity" / "fixity.py"
-APPROVED = ROOT / "adapters" / "stdlib" / "approved-only" / "approved_only.py"
-SHARE = ROOT / "adapters" / "stdlib" / "share" / "share.py"
+STACK = ROOT / "adapters/stdlib/stack/stack.py"
+FIXITY = ROOT / "adapters/stdlib/fixity/fixity.py"
+APPROVED = ROOT / "adapters/stdlib/approved-only/approved_only.py"
+SHARE = ROOT / "adapters/stdlib/share/share.py"
 BOXES = ["intake", "vask", "karst", "lumen", "program", "counter", "oversight", "prior"]
 
 #: the question both Vask and Counterintel are asked, word for word

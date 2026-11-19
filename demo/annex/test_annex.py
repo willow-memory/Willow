@@ -189,10 +189,17 @@ def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
     if not frozen.exists():
         assert "DRAFT" in (HERE / "STORY.md").read_text(encoding="utf-8")
         return
-    held = json.loads(frozen.read_text(encoding="utf-8"))["files"]
-    for rel, sha in held.items():
+    # FROZEN.json, then FROZEN-2.json and on, each in its own commit and never
+    # edited after: a file is held to the hash of the latest freeze naming it
+    freezes = [frozen] + sorted(
+        HERE.glob("FROZEN-*.json"), key=lambda p: int(p.stem.split("-")[1])
+    )
+    held: dict[str, tuple[str, str]] = {}
+    for f in freezes:
+        for rel, sha in json.loads(f.read_text(encoding="utf-8"))["files"].items():
+            held[rel] = (sha, f.name)
+    for rel, (sha, name) in held.items():
         got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
-        assert got == sha, (
-            f"{rel} changed after it was frozen; a change is a new freeze"
-        )
-    assert {"make_life.py", "scene.py", "annex_os.py", "corridor.md"} <= set(held)
+        assert got == sha, f"{rel} changed after {name}; a change is a new freeze"
+    first = json.loads(frozen.read_text(encoding="utf-8"))["files"]
+    assert {"make_life.py", "scene.py", "annex_os.py", "corridor.md"} <= set(first)
