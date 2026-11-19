@@ -1139,6 +1139,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="fixity"></a>[**fixity**](adapters/stdlib/fixity/) \
   Your folder's files hashed again now and then, the hashes kept on the record, and a file that changed with no edit of yours flagged as rot. \
   *new* `no-install` `offline` `hash` `rot` · near: hook-replay, hook-pin, what-changed
+- <a id="kept-clash"></a>[**kept-clash**](adapters/stdlib/kept-clash/) \
+  Sealed answers people sent you, side by side: one thing given two dates, times or amounts, or one word defined two ways. \
+  Uses share, contradictions. *new* `no-install` `offline` `sent` `amounts` · near: contradictions, share, wasm
 - <a id="licenses"></a>[**licenses**](adapters/stdlib/licenses/) \
   The licence of every installed dependency, read from its own metadata on this machine: which are copyleft, and which file says so. \
   *new* `no-install` `offline` `dependency` · near: lending, on-this-day, browse

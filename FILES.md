@@ -998,6 +998,10 @@ willow/
 │   │   │   ├── fixity.py     files hashed again now and then; a hash that moved with no newer mtime is rot
 │   │   │   ├── test_fixity.py
 │   │   │   └── README.md
+│   │   ├── kept-clash/
+│   │   │   ├── kept_clash.py Sealed answers other people sent you, read side by side: two that give a different date, time or amount for one thing, or define one word two ways, neither picked
+│   │   │   ├── test_kept_clash.py
+│   │   │   └── README.md     its card
 │   │   ├── licenses/
 │   │   │   ├── licenses.py   the licence of every installed Python and npm package, and which are copyleft, by file and line
 │   │   │   ├── test_licenses.py
