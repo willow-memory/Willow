@@ -155,6 +155,15 @@ Rules above are drafts; the frozen ones come after the piles exist.
   its own, by Compliance, so it arrives with two signatures; each receiver checks
   its pins, seals it themselves and runs it over their own box. The auditor
   declines: an auditor runs no one's tools. It is demo/johnson's pattern.
+- **Audit uses `kept-clash`**, merged to main while this was built: the sealed
+  answers people sent are read side by side by a real add-on, not by the scene.
+  It sets the trainee's 14 days beside Compliance's 7, and Investor Relations'
+  33 percent beside Legal's 28 (the filing, sealed by Legal). The first draft
+  wrote each answer's document date into its text ("The Form 8-K of 2026-11-05
+  says...") and the tool read the two document dates as a third disagreement;
+  the dates now sit in no answer's text. The join of the plan log's numbers to the
+  seniority list is the scene's own, said so: no add-on joins two people's sealed
+  answers.
 - **The piles are built:** `make_life.py` writes eight boxes (`trainee`,
   `compliance`, `legal`, `ir`, `floor`, `plan`, `steward`, `audit`) and copies
   only the filing and the press release of 2026-11-05, which are public, into

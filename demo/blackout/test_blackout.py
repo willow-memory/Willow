@@ -161,22 +161,25 @@ import subprocess  # noqa: E402
 import pytest  # noqa: E402
 
 
+def py(*argv, cwd=None) -> subprocess.CompletedProcess:
+    return subprocess.run([sys.executable, *map(str, argv)], capture_output=True, text=True,
+                          cwd=cwd)  # fmt: skip
+
+
 @pytest.fixture(scope="module")
 def played(tmp_path_factory) -> dict:
     tmp = tmp_path_factory.mktemp("blackout")
     shutil.copy(HERE / "make_life.py", tmp / "make_life.py")
-    assert (
-        subprocess.run([sys.executable, tmp / "make_life.py"], cwd=tmp).returncode == 0
-    )
+    assert py(tmp / "make_life.py", cwd=tmp).returncode == 0
     to = tmp / "scene"
-    got = subprocess.run([sys.executable, HERE / "scene.py", "run", "--life", tmp / "life",
-                          "--to", to], capture_output=True, text=True)  # fmt: skip
+    got = py(HERE / "scene.py", "run", "--life", tmp / "life", "--to", to)
     return {"got": got, "doc": json.loads((to / "scene.json").read_text()), "tmp": tmp}
 
 
 def test_the_scene_plays_as_told(played):
     assert played["got"].returncode == 0, played["got"].stdout + played["got"].stderr
     assert played["doc"]["wrong"] == []
+    assert {v["state"] for v in played["doc"]["rules"].values()} == {"pass"}
 
 
 def test_the_stack_arrives_with_two_signatures_and_the_auditor_declines(played):
@@ -185,11 +188,14 @@ def test_the_stack_arrives_with_two_signatures_and_the_auditor_declines(played):
         assert (
             f"{who:10} receives it: 2 signatures, every pin the same code here" in out
         )
-    seals = {b: v["seals"] for b, v in played["doc"]["boxes"].items()}
-    assert seals == {"trainee": 1, "compliance": 1, "legal": 1, "ir": 1, "floor": 1,
-                     "plan": 1, "steward": 1, "audit": 0}  # fmt: skip
     assert played["doc"]["ran"]["audit"] == {"taken": False}
     assert all(v["held"] for v in played["doc"]["boxes"].values())
+
+
+def test_each_box_seals_what_its_owner_sealed_and_audit_seals_nothing(played):
+    seals = {b: v["seals"] for b, v in played["doc"]["boxes"].items()}
+    assert seals == {"trainee": 3, "compliance": 2, "legal": 3, "ir": 2, "floor": 3,
+                     "plan": 2, "steward": 2, "audit": 0}  # fmt: skip
 
 
 def test_fixity_names_the_edited_key_and_only_that(played):
@@ -201,14 +207,20 @@ def test_fixity_names_the_edited_key_and_only_that(played):
     assert all(
         r["flagged"] == [] for b, r in ran.items() if r["taken"] and b != "compliance"
     )
-
-
-def test_the_figure_first_appears_in_ir_before_the_filing(played):
-    ran = played["doc"]["ran"]
     assert ran["ir"]["first"] == "2026-10-27"
     assert {ran[b]["first"] for b in ("trainee", "floor", "plan", "steward")} == {
         "2026-11-05"
     }
+
+
+def test_audit_sees_the_two_clashes_no_one_box_could(played):
+    clash = played["doc"]["found"]["clash"]
+    assert sorted(tuple(sorted(c["values"])) for c in clash) == [
+        ("14 days", "7 days"), ("28 percent", "33 percent")]  # fmt: skip
+    assert all(len(set(c["senders"])) == 2 for c in clash)
+    assert played["doc"]["found"]["join"] == {"melt shop": 7, "rolling mill": 2,
+                                              "plant services": 1, "on no list": 1}  # fmt: skip
+    assert set(played["doc"]["found"]["witness"].values()) == {"holds"}
 
 
 def test_the_scene_edits_its_own_copy_and_never_the_repo(played):
@@ -218,7 +230,59 @@ def test_the_scene_edits_its_own_copy_and_never_the_repo(played):
 
 
 def test_the_scene_refuses_a_folder_that_is_there(played):
-    got = subprocess.run([sys.executable, HERE / "scene.py", "run", "--life",
-                          played["tmp"] / "life", "--to", played["tmp"] / "scene"],
-                         capture_output=True, text=True)  # fmt: skip
+    got = py(HERE / "scene.py", "run", "--life", played["tmp"] / "life",
+             "--to", played["tmp"] / "scene")  # fmt: skip
     assert got.returncode == 2
+
+
+def study_rows(box: Path) -> list[dict]:
+    rows = [json.loads(x) for x in (box / "record.jsonl").read_text().splitlines()]
+    return [r for r in rows if r["kind"] == "verdict"]
+
+
+def test_a_real_run_scores_every_rule_as_a_kernel_row(played, tmp_path):
+    box = tmp_path / "study"
+    got = py(HERE / "scene.py", "run", "--life", played["tmp"] / "life", "--to",
+             tmp_path / "again", "--box", box)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    rows = study_rows(box)
+    assert [r["gate"] for r in rows] == [f"blackout:R{i}" for i in range(1, 8)]
+    assert {r["state"] for r in rows} == {"pass"}
+    assert py(HERE.parents[1] / "kernel.py", "verify", "--box", box).returncode == 0
+
+
+def test_the_dry_run_wires_every_step_and_scores_nothing(played, tmp_path):
+    box = tmp_path / "study"
+    got = py(HERE / "scene.py", "run", "--life", played["tmp"] / "life", "--to",
+             tmp_path / "dry", "--dry", "--box", box)  # fmt: skip
+    assert got.returncode == 0, got.stdout + got.stderr
+    rows = study_rows(box)
+    assert [r["gate"] for r in rows] == [f"blackout:dry:R{i}" for i in range(1, 8)]
+    assert {r["state"] for r in rows} == {"wired"}
+    doc = json.loads((tmp_path / "dry" / "scene.json").read_text())
+    assert doc["dry"] is True and all(b["held"] for b in doc["boxes"].values())
+    # every answer is nonsense: no real line of any pile was sealed or sent
+    assert all(
+        "nonsense answer" in a["data"] for b in doc["boxes"].values() for a in b["said"]
+    )
+
+
+def test_frozen_files_are_as_frozen_or_the_study_says_it_is_a_draft():
+    import hashlib
+
+    frozen = HERE / "FROZEN.json"
+    if not frozen.exists():
+        assert "DRAFT" in (HERE / "STORY.md").read_text(encoding="utf-8")
+        return
+    # FROZEN.json, then FROZEN-2.json and on, each in its own commit and never
+    # edited after: a file is held to the hash of the latest freeze naming it
+    freezes = [frozen] + sorted(
+        HERE.glob("FROZEN-*.json"), key=lambda p: int(p.stem.split("-")[1])
+    )
+    held: dict[str, tuple[str, str]] = {}
+    for f in freezes:
+        for rel, sha in json.loads(f.read_text(encoding="utf-8"))["files"].items():
+            held[rel] = (sha, f.name)
+    for rel, (sha, name) in held.items():
+        got = hashlib.sha256((HERE / rel).read_bytes()).hexdigest()
+        assert got == sha, f"{rel} changed after {name}; a change is a new freeze"

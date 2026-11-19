@@ -2161,7 +2161,7 @@ willow/
 │   │   ├── STORY.md          the story bible, a draft
 │   │   ├── fetch.py          fetches the public rules once and checks them offline; the contact goes to sec.gov alone
 │   │   ├── make_life.py      the eight boxes' papers (and, with --rules, the public rules in every box)
-│   │   ├── scene.py          the SEC stack, signed by Legal and Compliance, run in every box
+│   │   ├── scene.py          the SEC stack in every box, what each person seals, and what Audit alone can see
 │   │   ├── sources.json      each rule's address and SHA-256, never its text
 │   │   └── test_blackout.py
 │   ├── corwin/
