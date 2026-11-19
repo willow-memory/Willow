@@ -10,6 +10,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 SCRIPT = HERE / "session_seal.py"
@@ -247,6 +249,9 @@ def index_of(tmp_path: Path) -> Path:
     """index-cache's index of make()'s folder, current."""
     at = tmp_path / "index"
     cache = HERE.parent / "index-cache" / "index_cache.py"
+    if not cache.is_file() or not (HERE.parent / "claude-code" / "hook.py").is_file():
+        # session-seal only looks for them: copied out alone, it has no index
+        pytest.skip("index-cache and claude-code aren't beside this add-on")
     got = run("--from", str(tmp_path / "pile"), "--to", str(at), script=cache)
     assert got.returncode == 0, got.stderr
     return at
