@@ -2158,7 +2158,10 @@ willow/
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
 │   ├── blackout/             a steelworks' insider-trading training, the SEC's rules pinned, a window that moved (a draft)
-│   │   └── STORY.md          the story bible, a draft
+│   │   ├── STORY.md          the story bible, a draft
+│   │   ├── fetch.py          fetches the public rules once and checks them offline; the contact goes to sec.gov alone
+│   │   ├── sources.json      each rule's address and SHA-256, never its text
+│   │   └── test_blackout.py
 │   ├── corwin/
 │   │   ├── CHARACTER.md      Corwin Tamsett
 │   │   ├── fetch.py          the papers in Corwin's catalogue, fetched again and held to their hashes
