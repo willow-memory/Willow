@@ -1182,6 +1182,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "my-installs",
+  "section": "Privacy and safety",
+  "line": "The skills, plugins, extensions and hooks installed here: what each can touch, and what changed since you last looked.",
+  "writes": "nothing",
+  "network": "none",
+  "role": "guards",
+  "tags": "installed",
+  "kind": "stdlib",
+  "source": "new",
+  "version": "0.0.1"
+ },
+ {
   "name": "my-lessons",
   "kind": "stdlib",
   "section": "Finding things",
@@ -1947,6 +1959,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "server-picks",
+  "section": "Finding things",
+  "line": "The best, current MCP servers for a job, ranked on upkeep and source, with what each can touch, pinned to a version.",
+  "writes": "nothing",
+  "network": "api.github.com, to read public repositories and their recent activity",
+  "role": "suggests",
+  "tags": "mcp",
+  "kind": "stdlib",
+  "source": "new",
+  "version": "0.0.1"
+ },
+ {
   "name": "sheet-drift",
   "kind": "stdlib",
   "section": "Trust and proof",
@@ -2002,6 +2026,18 @@
   "network": "none",
   "role": "suggests",
   "version": "0.0.1"
+ },
+ {
+  "name": "skill-picks",
+  "kind": "stdlib",
+  "section": "Finding things",
+  "line": "The best, current skills people have written for assistants, ranked on upkeep and source, with what each can touch, pinned to a version.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "api.github.com, to read public skill repositories and their recent activity",
+  "role": "suggests",
+  "version": "0.0.1",
+  "tags": "skills"
  },
  {
   "name": "socratic",
@@ -2102,6 +2138,18 @@
   "writes": "to",
   "network": "none",
   "role": "reads",
+  "version": "0.0.1"
+ },
+ {
+  "name": "still-kept",
+  "section": "Trust and proof",
+  "line": "Whether a repo or package is still looked after: last commit, who is left, deprecation notices, and how issues get answered.",
+  "writes": "nothing",
+  "network": "api.github.com, to read public repositories and their recent activity",
+  "role": "suggests",
+  "tags": "upkeep",
+  "kind": "stdlib",
+  "source": "new",
   "version": "0.0.1"
  },
  {
@@ -2392,6 +2440,18 @@
   "writes": "nothing",
   "network": "the forge, through the workflow's token, to post the thank-you",
   "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "which-one",
+  "section": "Finding things",
+  "line": "Two or more libraries or tools for the same job, side by side on upkeep, licence and fit, with the evidence printed.",
+  "writes": "nothing",
+  "network": "api.github.com, to read public repositories and their recent activity",
+  "role": "suggests",
+  "tags": "compare",
+  "kind": "stdlib",
+  "source": "new",
   "version": "0.0.1"
  },
  {

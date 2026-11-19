@@ -1,0 +1,1 @@
+`kept-clash`: the sealed answers other people sent you, read from the packages you kept and set side by side where two give a different date, time or amount for one thing, or define one word two ways; neither is picked, and nothing is written

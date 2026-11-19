@@ -756,6 +756,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "invoices": ("invoices.py", ["--box", "{box}", "--id", "INV-\\d+"]),
     "jetbrains": ("jetbrains.py", ["--box", "{box}"]),
     "job-hunt": ("job_hunt.py", ["--box", "{box}"]),
+    "kept-clash": ("kept_clash.py", ["{pile}/garden.md"]),
     "land": ("land.py", ["--of", "{pile}/sort.json", "--from", "{pile}", "--to", "{tmp}/landed", "--dry-run"]),
     "launcher": ("launcher.py", ["--box", "{box}"]),
     "lending": ("lending.py", ["--box", "{box}"]),

@@ -1,0 +1,29 @@
+{
+ "about": "Freeze 2 of demo/annex: scene.py with its add-on paths written whole (ROOT / 'adapters/stdlib/stack/stack.py') where freeze 1 (FROZEN.json, unchanged) built them part by part. Committed alone, after freeze 1's scored run and before the run it is scored on again. Held by test_annex.py; a change is a new freeze.",
+ "why": "test-impact reads a bare 'stack.py' string as every file by that name, so scene.py counted as naming demo/bernadette/stack.py, and a change to what_changed.py planned demo:annex and failed adapters/stdlib/test-impact/test_impact.py::test_the_steps_are_ordered_cheapest_first on this pull request's CI. The same paths as one string, as demo/johnson writes them, name only the add-on's own file. The rules, the checks and every other file are unchanged: the diff against freeze 1 is the four path constants (STACK, FIXITY, APPROVED, SHARE).",
+ "frozen": "2026-11-19",
+ "built_on": "4be64bb",
+ "known_when_frozen": "freeze 1's scored run: R1 to R8 all pass, on the code freeze 1 held. Nothing was changed in a rule or a check after seeing it.",
+ "pass_rules": {
+  "R1": "no sealed package holds a long line of any pile but its sender's",
+  "R2": "the rumour is in no package and not in the file an assistant is served",
+  "R3": "asked about another box's subject, a box answers nothing on record (exit 42) and serves nothing, while the box that holds it serves its own",
+  "R4": "the witness holds every real chain and names exactly the rewritten copy",
+  "R5": "a package edited on the way is refused as broken where it lands",
+  "R6": "nothing but the person's own `seal` wrote a seal: every seal row is the person's, and each box holds as many as its owner sealed",
+  "R7": "the corridor wrote no row on any chain, and the question asked after it holds no word of itself",
+  "R8": "no box alone finds the clash or the clocks: each box's own stack flags nothing"
+ },
+ "files": {
+  "scene.py": "3e2d688317a3286177675a23b66aa44dc89dbe5ba68945d14e7ec229a0559209"
+ },
+ "tools_at_freeze": {
+  "kernel.py": "b5cd7e931429a859035b02be8e70bd8c4c9356f90ccb23e9529f8186ce6da746",
+  "adapters/stdlib/share/share.py": "08134908e7e6ce83e6c173a5fbe109032385398ad0d820e7e1ee8ada6c28208b",
+  "adapters/stdlib/fixity/fixity.py": "d0330088d239d3e88a9e2c490acf02f90e081e951c45ed96f716031487f57e7b",
+  "adapters/stdlib/approved-only/approved_only.py": "3f4b4bc5ec73589893e50df7efd20dca8888fdda178b85641ff0d9b2174928b0",
+  "adapters/stdlib/stack/stack.py": "b00e0ccfd0c35354b3014794655bdc3a0b88164b289ed6aa2da4f3f810f8f6e1",
+  "adapters/stdlib/contradictions/contradictions.py": "7354c0464b9ee03ad2326fa0462a3d7b5c1517147815b469ad71e83fc90ff0b4",
+  "adapters/stdlib/gaps/gaps.py": "8fe92b5873a89135d5ac975284c76a52d78d8f5f524d186099f13b3d757bd0d3"
+ }
+}

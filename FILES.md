@@ -1112,6 +1112,10 @@ willow/
 │   │   │   ├── format_rot.py  files in formats that may stop opening, flagged while you can still convert them
 │   │   │   ├── test_format_rot.py
 │   │   │   └── README.md
+│   │   ├── kept-clash/
+│   │   │   ├── kept_clash.py sealed answers other people sent you, read side by side
+│   │   │   ├── test_kept_clash.py
+│   │   │   └── README.md     its card
 │   │   ├── restore-drill/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
@@ -2112,11 +2116,16 @@ willow/
 │   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
 │   │   ├── forge-and-pages.md Design note: the forge, and the pages a person approves on
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
+│   │   ├── my-installs.md    Design note: my-installs, what is already installed here
 │   │   ├── one-shape.md      proposal: one shape at every size: the pile apart from the record, an answer that says its source and kind, a gap kept
 │   │   ├── pieces.md         proposal: every pull request a piece of the pile: cite, draft, check, accept or 42
 │   │   ├── repo-index.md     proposal: the repo as one deterministic-snapshot box, indexed by a custom serve-style stack
 │   │   ├── serve.md          proposal: a sealed stack of piles served to a model, on markdown (the grove's serve, in willow)
-│   │   └── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
+│   │   ├── server-picks.md   Design note: server-picks, the best current MCP servers
+│   │   ├── skill-picks.md    Design note: skill-picks, the best current skills, found and judged
+│   │   ├── still-kept.md     Design note: still-kept, is this project still looked after
+│   │   ├── versions.md       proposal: one way to version everything, the law, amendments, add-ons and ideas
+│   │   └── which-one.md      Design note: which-one, two tools for the same job
 │   ├── agents/               AGENTS.md's longer how-tos, one page a job
 │   │   ├── add-ons.md        an add-on's ten steps, the guard, ideas and a deps floor
 │   │   ├── pull-requests.md  opening one, main moving under a branch, a new CI row
@@ -2134,6 +2143,16 @@ willow/
 
 ```
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
+│   ├── annex/                a skeleton: eight compartments that never touch, a rumour in one, a wall, a forged copy refused
+│   │   ├── README.md         the day, the eight rules, the dry run, the scored run and what it doesn't show
+│   │   ├── FROZEN.json       the pre-registration: file and tool hashes, the pass rules
+│   │   ├── FROZEN-2.json     freeze 2: scene.py's add-on paths written whole, and why
+│   │   ├── STORY.md          the story bible
+│   │   ├── annex_os.py       ANNEX-OS, a fictional terminal page over the scene's results
+│   │   ├── corridor.md       two people talk, off every record
+│   │   ├── make_life.py      the eight piles
+│   │   ├── scene.py          the first beats of integration day
+│   │   └── test_annex.py
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
 │   │   ├── CHARACTER.md
