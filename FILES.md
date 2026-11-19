@@ -2135,6 +2135,16 @@ willow/
 
 ```
 ├── demo/                     four made-up people, a case passed between five more, a real bug, a real policy change and programs taken apart, to try it on
+│   ├── annex/                a skeleton: eight compartments that never touch, a rumour in one, a wall, a forged copy refused
+│   │   ├── README.md         the day, the eight rules, the dry run, the scored run and what it doesn't show
+│   │   ├── FROZEN.json       the pre-registration: file and tool hashes, the pass rules
+│   │   ├── FROZEN-2.json     freeze 2: scene.py's add-on paths written whole, and why
+│   │   ├── STORY.md          the story bible
+│   │   ├── annex_os.py       ANNEX-OS, a fictional terminal page over the scene's results
+│   │   ├── corridor.md       two people talk, off every record
+│   │   ├── make_life.py      the eight piles
+│   │   ├── scene.py          the first beats of integration day
+│   │   └── test_annex.py
 │   ├── bernadette/           built blind, in her apps' raw formats, and run through the whole stack
 │   │   ├── make_life.py      her mail, calendars, chats, vault, office files, Kindle and PDFs, the same bytes every run
 │   │   ├── CHARACTER.md
