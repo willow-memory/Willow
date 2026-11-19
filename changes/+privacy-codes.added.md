@@ -1,0 +1,1 @@
+`privacy`: a code that opens something is withheld, the label kept: 3 to 10 digits after a gate, door, alarm, entry, access, lock, keypad or unlock code, a passcode, a PIN or a combination (`Gate code is [withheld: code]`); a bare `code`, as in `error code 404` or `zip code`, is left

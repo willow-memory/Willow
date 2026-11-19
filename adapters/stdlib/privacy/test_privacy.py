@@ -56,6 +56,14 @@ NOW = ["--now", "2026-10-23T00:00:00Z"]
         ("driver's licence: D1234567", "licence"),
         ("MRN 00123456", "medical"),
         ("claim number CL-2024-0091", "case"),
+        ("Tuesday at 8 works. Gate code is 4471.", "code"),
+        ("door code: 90210", "code"),
+        ("alarm code 1234#", "code"),
+        ("my PIN is 0000", "code"),
+        ("PIN number 482913", "code"),
+        ("bike lock combination 512", "code"),
+        ("the passcode 246810", "code"),
+        ("keypad code was 7788", "code"),
         ("ITIN 912-78-1234", "itin"),
         ("EIN 12-3456789", "ein"),
         ("tip 0x52908400098527886E0F7030069857D2E4169EE7", "wallet"),
@@ -96,6 +104,11 @@ def test_each_kind_is_withheld_and_counted(text, kind):
         "driver's licence expires soon",
         "medical record request sent",
         "case number unknown, claim no longer open",
+        "error code 404 and zip code 80202",  # a bare "code" opens nothing
+        "the gate code changed, ask Walt",  # a label with no number after it
+        "a combination of 300 parts",  # the number isn't the label's
+        "pin 12 to the board",  # too few digits for a code
+        "PIN-protected and spinning 4471",  # PIN inside a word; no label before
         "the DL folder and dl 5 files",
         "std::vector and a::b",  # C++, not a host
         "born in the spring",

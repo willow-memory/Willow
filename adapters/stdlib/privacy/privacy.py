@@ -123,6 +123,17 @@ LABELLED = [
         ),
     ),
     (
+        # a code that opens something: a gate, a door, an alarm, a phone's
+        # PIN, a lock's combination. A bare "code" (error code 404, zip
+        # code) is not one, and the number is digits alone
+        "code",
+        re.compile(
+            r"(?i)(?P<label>\b(?:(?:gate|door|alarm|entry|access|lock|keypad|unlock)\s+code"
+            r"|pass\s?code|PIN(?:\s+(?:number|code))?|combination)"
+            r"(?:\s+(?:is|was))?[\s:#.=]*)(?P<num>\d{3,10})\b"
+        ),
+    ),
+    (
         "case",
         re.compile(
             r"(?i)(?P<label>\b(?:case|claim)\s*(?:no\b\.?|number\b|#)[\s#:.]*)"

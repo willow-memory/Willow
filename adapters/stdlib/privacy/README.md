@@ -26,6 +26,7 @@ What a question prints, with personal data and keys withheld.
 | itin | a US taxpayer number, 9xx-7x-xxxx in its ranges |
 | ein | a US employer number, 12-3456789 |
 | birthdate, passport, licence, medical, case | a number after its label: DOB, passport no., driver's licence, MRN, case or claim no. The label stays, and the number holds a digit, so `passport renewal` and `claim no longer open` are left |
+| code | 3 to 10 digits after what they open: a gate, door, alarm, entry, access, lock, keypad or unlock code, a passcode, a PIN, a combination (`Gate code is 4471`). The label stays; a bare `code` (`error code 404`, `zip code`) is left |
 | ip | an address that names a machine (not 127.x or 0.0.0.0, and an IPv6 one of three groups or more) |
 | mac | a network card's address |
 | wallet | a Bitcoin or Ethereum address |
