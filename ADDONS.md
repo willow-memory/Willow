@@ -826,18 +826,21 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-de"></a>[**words-de**](adapters/stdlib/words-de/) \
   German common words, so questions aren't matched on "der" and "und". \
   *new* `no-install` `offline` `common` `german` · near: words-nl, words-pl, words-it
-
-#### What words it knows, w to w
-
 - <a id="words-es"></a>[**words-es**](adapters/stdlib/words-es/) \
   Spanish common words ("el", "y"). \
   *new* `no-install` `offline` `common` `spanish` · near: words-it, words-pt, words-cy
+
+#### What words it knows, w to w
+
 - <a id="words-fr"></a>[**words-fr**](adapters/stdlib/words-fr/) \
   French common words ("le", "et"). \
   *new* `no-install` `offline` `common` `french` · near: words-it, words-pl, words-pt
 - <a id="words-it"></a>[**words-it**](adapters/stdlib/words-it/) \
   Italian common words ("il", "e"). \
   *new* `no-install` `offline` `common` `italian` · near: words-pt, words-tlh, words-es
+- <a id="words-layers"></a>[**words-layers**](adapters/stdlib/words-layers/) \
+  One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes. \
+  *new* `no-install` `offline` `stack` `matter` · near: words-later, stack, stack-share
 - <a id="words-nl"></a>[**words-nl**](adapters/stdlib/words-nl/) \
   Dutch common words ("de", "en"). \
   *new* `no-install` `offline` `common` `dutch` · near: words-de, words-it, words-pl
