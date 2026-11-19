@@ -65,9 +65,12 @@ Each lives in a different box, and no box alone sees more than its own.
    said 14 days. `fixity` in Ruth's box shows the key was edited on Monday
    10-26, after his attempt. The box can show that and cannot say why.
 3. **Reg FD.** Gil's call notes give one analyst a shipments figure on Tuesday
-   10-27: the biggest customer's orders are "down by a third". The Form 8-K
-   (Item 2.02) filed with the earnings release says 28%. `contradictions`
-   puts the two figures side by side and picks neither.
+   10-27: the biggest customer's shipments are down 33 percent. The Form 8-K
+   (Item 2.02) filed with the earnings release says 28. Not a contradiction to
+   a tool that reads one: `contradictions` leaves two figures written on
+   different days alone, as a plan changed, and the scene says so. What the
+   records can say is when the figure first appears: `first-mention` finds it
+   in Investor Relations' box on 10-27 and in every other box on 11-05.
 4. **Who sold.** Corinne's trade log shows 11 employees sold stock between
    10-22 and 10-29. Nine of them are on Del's crew or the rolling mill's. The plant
    manager's own sale is Wednesday 10-28. No one box can say that a
@@ -147,6 +150,11 @@ Rules above are drafts; the frozen ones come after the piles exist.
   1024 by 768 screen, an old browser's plain HTML with no modern script, a
   slow cursor, a dot-matrix-ish receipt for what it prints. Nothing on it is
   newer than the machine.
+- **The SEC stack is the way in:** each person is a separate box, and the one
+  stack that reaches every box is sealed by Legal and passed on, in a layer of
+  its own, by Compliance, so it arrives with two signatures; each receiver checks
+  its pins, seals it themselves and runs it over their own box. The auditor
+  declines: an auditor runs no one's tools. It is demo/johnson's pattern.
 - **The piles are built:** `make_life.py` writes eight boxes (`trainee`,
   `compliance`, `legal`, `ir`, `floor`, `plan`, `steward`, `audit`) and copies
   only the filing and the press release of 2026-11-05, which are public, into

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -152,3 +153,72 @@ def test_the_rules_are_mirrored_into_every_box_only_when_asked(tmp_path, monkeyp
     ruled = made(tmp_path, monkeypatch, tmp_path / "rules-pile")
     got = [ruled / b / "rules/17-cfr-243.100.txt" for b in make_life.BOXES]
     assert all(p.read_text() == "A rule & its words\n" for p in got)
+
+
+# ── the scene ────────────────────────────────────────────────────────────────
+import subprocess  # noqa: E402
+
+import pytest  # noqa: E402
+
+
+@pytest.fixture(scope="module")
+def played(tmp_path_factory) -> dict:
+    tmp = tmp_path_factory.mktemp("blackout")
+    shutil.copy(HERE / "make_life.py", tmp / "make_life.py")
+    assert (
+        subprocess.run([sys.executable, tmp / "make_life.py"], cwd=tmp).returncode == 0
+    )
+    to = tmp / "scene"
+    got = subprocess.run([sys.executable, HERE / "scene.py", "run", "--life", tmp / "life",
+                          "--to", to], capture_output=True, text=True)  # fmt: skip
+    return {"got": got, "doc": json.loads((to / "scene.json").read_text()), "tmp": tmp}
+
+
+def test_the_scene_plays_as_told(played):
+    assert played["got"].returncode == 0, played["got"].stdout + played["got"].stderr
+    assert played["doc"]["wrong"] == []
+
+
+def test_the_stack_arrives_with_two_signatures_and_the_auditor_declines(played):
+    out = played["got"].stdout
+    for who in ("trainee", "ir", "floor", "plan", "steward", "audit"):
+        assert (
+            f"{who:10} receives it: 2 signatures, every pin the same code here" in out
+        )
+    seals = {b: v["seals"] for b, v in played["doc"]["boxes"].items()}
+    assert seals == {"trainee": 1, "compliance": 1, "legal": 1, "ir": 1, "floor": 1,
+                     "plan": 1, "steward": 1, "audit": 0}  # fmt: skip
+    assert played["doc"]["ran"]["audit"] == {"taken": False}
+    assert all(v["held"] for v in played["doc"]["boxes"].values())
+
+
+def test_fixity_names_the_edited_key_and_only_that(played):
+    ran = played["doc"]["ran"]
+    assert any(
+        "quiz-key" in ln and ln.startswith("edited")
+        for ln in ran["compliance"]["flagged"]
+    )
+    assert all(
+        r["flagged"] == [] for b, r in ran.items() if r["taken"] and b != "compliance"
+    )
+
+
+def test_the_figure_first_appears_in_ir_before_the_filing(played):
+    ran = played["doc"]["ran"]
+    assert ran["ir"]["first"] == "2026-10-27"
+    assert {ran[b]["first"] for b in ("trainee", "floor", "plan", "steward")} == {
+        "2026-11-05"
+    }
+
+
+def test_the_scene_edits_its_own_copy_and_never_the_repo(played):
+    edited = played["tmp"] / "scene/_pile/compliance/course/quiz-key.txt"
+    assert "4. 7 days." in edited.read_text()
+    assert "4. 14 days." in make_life.FILES["compliance/course/quiz-key.txt"]
+
+
+def test_the_scene_refuses_a_folder_that_is_there(played):
+    got = subprocess.run([sys.executable, HERE / "scene.py", "run", "--life",
+                          played["tmp"] / "life", "--to", played["tmp"] / "scene"],
+                         capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 2
