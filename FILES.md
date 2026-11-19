@@ -2161,6 +2161,24 @@ willow/
 │   │   ├── STRIP.md          what each need came to, and what each layer of the stack did
 │   │   ├── stack.py          her files through every reader, start, the finders, privacy, an MCP assistant, and the trust add-ons
 │   │   └── test_stack.py     holds the stack to the states STRIP.md scores
+│   ├── blackout/             a steelworks' insider-trading training, the SEC's rules pinned, a window that moved (a draft)
+│   │   ├── README.md         the day, the ten pass rules, the dry runs, the scored runs, and what failed and what it doesn't show
+│   │   ├── FROZEN.json       the pre-registration: file and tool hashes, the pass rules, what was read first
+│   │   ├── FROZEN-2.json     freeze 2: the rules study asked again with a words list, and why
+│   │   ├── STORY.md          the story bible
+│   │   ├── fetch.py          fetches the public rules once and checks them offline; the contact goes to sec.gov alone
+│   │   ├── make_life.py      the eight boxes' papers (and, with --rules, the public rules in every box)
+│   │   ├── scene.py          the SEC stack in every box, what each person seals, and what Audit alone can see
+│   │   ├── kiosk.py          the compliance kiosk, a fictional page on a 2013 PC (ES5, tables, a stuck clock)
+│   │   ├── rules_study.py    does the kernel serve the right rule to a worker's question: three pass rules over the pinned rules
+│   │   ├── questions/
+│   │   │   ├── workers.txt   twelve questions in a worker's words, each with the rule it should reach
+│   │   │   ├── offtopic.txt  six no rule answers
+│   │   │   ├── words.txt     a worker's words, then what the rules call them
+│   │   │   └── nonsense.txt  six that are nonsense
+│   │   ├── test_rules_study.py
+│   │   ├── sources.json      each rule's address and SHA-256, never its text
+│   │   └── test_blackout.py
 │   ├── corwin/
 │   │   ├── CHARACTER.md      Corwin Tamsett
 │   │   ├── fetch.py          the papers in Corwin's catalogue, fetched again and held to their hashes
@@ -2168,6 +2186,11 @@ willow/
 │   │   ├── PLANTED.md        PLANTED: answer key (testers: do not read until after scoring)
 │   │   ├── QUESTIONS.md      Questions Corwin might type
 │   │   └── STRIP.md          Corwin, blind: the strip-down
+```
+
+#### demo/, from craft-assembly/
+
+```
 │   ├── craft-assembly/       the Craft apps taken apart into pieces, rebuilt exactly, and five assembled into one
 │   │   ├── README.md         the claim, the threats, what is frozen, what was seen before each freeze, results
 │   │   ├── REPORT.md         the full report, written by report.py from the files here, every number counted
@@ -2189,11 +2212,6 @@ willow/
 │   │       ├── run-3.json    the third run's, from freeze 3: every rule held
 │   │       ├── record.jsonl  a copy of the record the verdicts are rows on, without its key
 │   │       └── checks.md     what the kernel, xref and claim-check say of the report
-```
-
-#### demo/, from five-repos/
-
-```
 │   ├── five-repos/           five repositories through the stacks: the stacks, the words list, the reports, two records without their keys
 │   │   ├── README.md         what was run, what held, what failed and became #211, and the rule: proposed, never sealed
 │   │   ├── exam.txt          the twelve questions the model was asked
@@ -2215,6 +2233,11 @@ willow/
 │   │   │   ├── 10-timeline.md
 │   │   │   ├── 11-ways-in.md
 │   │   │   └── 12-landed.md
+```
+
+#### demo/five-repos/, from results/
+
+```
 │   │   ├── results/
 │   │   │   ├── play-record/
 │   │   │   │   └── record.jsonl  five games as rows, without its key
@@ -2239,11 +2262,6 @@ willow/
 │   │       ├── proof.md
 │   │       ├── voice.md
 │   │       └── ways-in.md
-```
-
-#### demo/, from game-box/
-
-```
 │   ├── game-box/
 │   │   ├── author.py         a story written as markdown, made into a world game-master plays
 │   │   ├── binder/
@@ -2274,6 +2292,11 @@ willow/
 │   │   │   └── wasp-nest.md  The Wasp Nest
 │   │   ├── table/
 │   │   │   └── test_game_box.py
+```
+
+#### demo/game-box/, from worlds/
+
+```
 │   │   ├── worlds/
 │   │   │   ├── aetheris.json
 │   │   │   ├── clockwork-cellar.json
@@ -2296,11 +2319,6 @@ willow/
 │   │       ├── blind-reporters.txt  the reporters' lines, reworded three ways, blind
 │   │       ├── blind-claims.txt     the claims, reworded three ways, blind
 │   │       └── null.txt        thirty questions about the policy with nothing to do with ads
-```
-
-#### demo/, from hollis/
-
-```
 │   ├── hollis/               built blind, by an agent that never saw the code
 │   │   ├── make_life.py
 │   │   ├── CHARACTER.md

@@ -1,0 +1,13 @@
+# id | a worker's question, in a worker's words | the rule file it should reach | words the served passage must hold
+W1 | can I sell my shares if I know something the public doesn't | 17-cfr-240.10b5-1 | aware of the material nonpublic information
+W2 | does it matter if I had a plan to sell before I heard anything | 17-cfr-240.10b5-1 | Before becoming aware of the information
+W3 | can I change my selling plan after I hear bad news | 17-cfr-240.10b5-1 | altered or deviated from the contract, instruction, or plan
+W4 | how long do I have to wait after setting up a trading plan | 17-cfr-240.10b5-1 | cooling-off period
+W5 | can I tell my wife what I heard at work | 17-cfr-240.10b5-2 | spouse, parent, child, or sibling
+W6 | I promised to keep it quiet, does that count | 17-cfr-240.10b5-2 | agrees to maintain information in confidence
+W7 | can the company give an analyst numbers before it tells everyone | 17-cfr-243.100 | discloses any material nonpublic information
+W8 | if the company lets something slip by accident how fast must it tell everyone | 17-cfr-243.100 | Promptly, in the case of a non-intentional disclosure
+W9 | what does promptly mean | 17-cfr-243.101 | as soon as reasonably practicable
+W10 | does an employee talking to an analyst count as the company talking | 17-cfr-243.101 | regularly communicates
+W11 | is leaving out a fact that matters the same as lying | 17-cfr-240.10b-5 | omit to state a material fact
+W12 | if the company fails to tell the public is that fraud | 17-cfr-243.102 | No failure to make a public disclosure required solely by

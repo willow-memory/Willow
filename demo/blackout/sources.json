@@ -1,0 +1,83 @@
+{
+ "as_of_ecfr": "2026-11-01",
+ "failed": [],
+ "sources": [
+  {
+   "bytes": 1169,
+   "file": "17-cfr-240.10b-5.xml",
+   "folder": "ecfr",
+   "sha256": "ef1ad818389bcbd9db41668e918261a847035124dfc7744c07abd0e3b41fe900",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=240&section=240.10b-5"
+  },
+  {
+   "bytes": 12404,
+   "file": "17-cfr-240.10b5-1.xml",
+   "folder": "ecfr",
+   "sha256": "e1563f2cd05c8146badbee1fb066d914310f411ba61f4279e56c2dc52af5f572",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=240&section=240.10b5-1"
+  },
+  {
+   "bytes": 2567,
+   "file": "17-cfr-240.10b5-2.xml",
+   "folder": "ecfr",
+   "sha256": "bbe2877ce1203450c315ee346cd00c8147246bb15c2eaf0b8158fce33b03e75b",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=240&section=240.10b5-2"
+  },
+  {
+   "bytes": 4833,
+   "file": "17-cfr-243.100.xml",
+   "folder": "ecfr",
+   "sha256": "6639954f2b1664bb93b7112c5a1e4a489170df1c04271b794c803ccf704a0274",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=243&section=243.100"
+  },
+  {
+   "bytes": 4891,
+   "file": "17-cfr-243.101.xml",
+   "folder": "ecfr",
+   "sha256": "f44266f4c784b3dfafe1fb7133d7b98f7abe9b10f077d165b7a1fd58a247e3cf",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=243&section=243.101"
+  },
+  {
+   "bytes": 465,
+   "file": "17-cfr-243.102.xml",
+   "folder": "ecfr",
+   "sha256": "51e2f97bf29386d13560bfc0daba47e766e41cf9fc25a4509555e7b0e2705b27",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=243&section=243.102"
+  },
+  {
+   "bytes": 1234,
+   "file": "17-cfr-243.103.xml",
+   "folder": "ecfr",
+   "sha256": "89a52a12378ff996296e4332660651da930c049630c1b7d35daeed91dafb4093",
+   "url": "https://www.ecfr.gov/api/versioner/v1/full/2026-11-01/title-17.xml?part=243&section=243.103"
+  },
+  {
+   "bytes": 627922,
+   "file": "2022-27675-insider-trading-arrangements.htm",
+   "folder": "federalregister",
+   "sha256": "b76a22ebc48bb5924164339e86b201f08eb77540014b1472228fc19189da5ddb",
+   "url": "https://www.govinfo.gov/content/pkg/FR-2022-12-29/html/2022-27675.htm"
+  },
+  {
+   "bytes": 1075450,
+   "file": "form8-k.pdf",
+   "folder": "sec",
+   "sha256": "730ab1de5550870134639fff1ccad3385186c3a08eafd8bd387db44b8bac5d70",
+   "url": "https://www.sec.gov/files/form8-k.pdf"
+  },
+  {
+   "bytes": 59016,
+   "file": "33-7881-regulation-fd.htm",
+   "folder": "sec",
+   "sha256": "16cb84e3012943042a4d35a54013d93e5a73799a6901984c54110729c4485ba1",
+   "url": "https://www.sec.gov/rules/final/33-7881.htm"
+  },
+  {
+   "bytes": 2245915,
+   "file": "33-11138-rule-10b5-1.pdf",
+   "folder": "sec",
+   "sha256": "929b1c83551b22273be9db015af9a386e9b93c84c8b0caa251e5757375535fec",
+   "url": "https://www.sec.gov/files/rules/final/2022/33-11138.pdf"
+  }
+ ]
+}
