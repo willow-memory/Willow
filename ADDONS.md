@@ -1669,7 +1669,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any crash it, since a crashed hook lets the tool run. \
   *new* `no-install` `offline` `crash` `fails` `hooks` · near: hook-fail-closed, fuzz, hook-replay
 - <a id="hook-guard"></a>[**hook-guard**](adapters/stdlib/hook-guard/) \
-  A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back. \
+  A PreToolUse hook that blocks, by fixed rule, never judgment, a call that would read your key, seal with it, or write your record. \
   *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-impact, hook-leaks, hook-read-first
 
 #### What guards it, h to h
