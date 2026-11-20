@@ -249,3 +249,17 @@ def test_an_object_with_no_list_gh_or_the_api_would_send_is_still_not_a_result()
         b'{"items": []}',
     ):
         assert mod.convert(other) is None, other
+
+
+def test_a_merge_queues_run_is_said_as_the_pull_request_it_holds():
+    queued = (
+        b'[{"databaseId":9,"workflowName":"ci","status":"in_progress",'
+        b'"headBranch":"gh-readonly-queue/main/pr-382-6b0e27e69f28d214b0c82b1e5a54cf1c5273616d"},'
+        b'{"databaseId":8,"workflowName":"ci","conclusion":"success","headBranch":"gh-readonly-queue/release/1.x/pr-7-abcdef1"},'
+        b'{"databaseId":7,"workflowName":"ci","conclusion":"success","headBranch":"gh-readonly-queue/main/not-a-pr"}]'
+    )
+    assert mod.convert(queued).splitlines() == [
+        "run 9 (in_progress) ci in the merge queue for pull request #382, into main",
+        "run 8 (success) ci in the merge queue for pull request #7, into release/1.x",
+        "run 7 (success) ci on gh-readonly-queue/main/not-a-pr",
+    ]

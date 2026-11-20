@@ -33,7 +33,11 @@ for a machine with no gh: `user`, `created_at`, `head.ref`, `merged_at`,
 `draft`, a label by its name alone, a pull request in the issues list marked
 `pull_request`, and a run's `id` and `head_branch`. Each is read as gh's,
 where gh's own isn't there. A list the API wraps in an object (`issues`,
-`pull_requests`, `workflow_runs` or `items`) is read from inside it. gh only
+`pull_requests`, `workflow_runs` or `items`) is read from inside it.
+
+A run on the merge queue's branch (`gh-readonly-queue/main/pr-382-…`) is
+said as what it is: `in the merge queue for pull request #382, into main`,
+so "what is in the merge queue" finds it. gh only
 prints the fields it was asked for, so what is absent is left out, never
 invented. Other JSON is skipped and counted.
 

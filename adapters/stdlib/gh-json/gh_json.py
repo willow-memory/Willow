@@ -98,10 +98,25 @@ def item(i: dict) -> str:
     return "\n".join(lines)
 
 
+#: the branch GitHub's merge queue runs a pull request on, merged up to its base
+QUEUED = re.compile(r"gh-readonly-queue/(.+)/pr-(\d+)-[0-9a-f]{7,40}")
+
+
+def branch(name: str) -> str:
+    """Where a run ran, as a person says it: a merge queue's branch is the
+    pull request it holds and the base it goes into, not its machine name."""
+    m = QUEUED.fullmatch(name)
+    return (
+        f" in the merge queue for pull request #{m[2]}, into {m[1]}"
+        if m
+        else f" on {name}"
+    )
+
+
 def run(r: dict) -> str:
     what = text(r.get("workflowName")) or text(r.get("name"))
     result = text(r.get("conclusion")) or text(r.get("status")) or "unknown"
-    where = f" on {text(r['headBranch'])}" if text(r.get("headBranch")) else ""
+    where = branch(text(r["headBranch"])) if text(r.get("headBranch")) else ""
     line = f"run {r['databaseId']} ({result}) " + " ".join(
         x for x in (day(r.get("createdAt")), (what + where).strip()) if x
     )
