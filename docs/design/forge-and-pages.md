@@ -45,6 +45,16 @@ states (k+1)/(n+2) for k of n firsts taken, or none under one half; each
 proposal keeps the confidence it was shown, and `suggest.py scores` scores
 it with the Forge's calibration.
 
+*Since, 2026-11-20:* that confidence was shown beside the pick it was
+then made from, so it measured how often the person went with it as much
+as how often the search was right. Die-Namic found the same in its dice
+(a roll seeded by a public row can be foreseen, and a call steered by
+it); the answer here is a blind share. One close fork in five shows its
+cards in an order of their own with nothing recommended, and only those
+picks make and score the confidence. A matcher is now known by what it
+ranks, not by its bytes. A commitment made before the pick, the dice's
+cup, is willow's to build, and this would use it.
+
 ### 2. One alias file, three readers, three sets of rules (seen)
 
 `ui/search-words.txt` is read by:
