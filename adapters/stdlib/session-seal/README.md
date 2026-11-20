@@ -3,7 +3,7 @@ section: Trust and proof
 line: One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
 source: bot
 added: 2026-10-24
-version: 0.3.0
+version: 0.3.1
 looks-for: claude-code, index-cache
 writes: record
 network: none
