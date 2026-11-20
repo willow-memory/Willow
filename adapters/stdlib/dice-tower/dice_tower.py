@@ -121,7 +121,7 @@ def out(box: Path, rows: list[dict], diefile: Path, ts: str) -> int:
         mine = (r["n"] for r in rows if r["kind"] == DROP and r.get("commit") == commit(secret))  # fmt: skip
         n = (
             int(held["drop"]) if "drop" in held else next(mine, -1)
-        )  # a die file before 0.1.1 named its row
+        )  # a die file made before this named its row
     except (OSError, ValueError, KeyError, TypeError):
         return refuse(f"{diefile} isn't a die file")
     dropped = rows[n] if 0 <= n < len(rows) else None

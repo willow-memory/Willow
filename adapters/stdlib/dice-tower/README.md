@@ -46,7 +46,7 @@ roll is for. If the record won't take the row, the die file is taken away
 again: no die is ever on the record that nobody holds.
 
 **Out.** The die file's secret finds its drop (the row whose hash it is; a die
-file from 0.1.0 names its row), goes on the record in a `tower-out` row, and
+file made before this names its row), goes on the record in a `tower-out` row, and
 the dice are thrown from it, in play-dice5e's notation (`2d6`, `adv+5`,
 `4d6kh3`) and stream (sha256-stream/v1), seeded by the secret alone. So:
 

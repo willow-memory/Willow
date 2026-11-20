@@ -110,7 +110,7 @@ def test_a_die_file_that_names_its_row_still_comes_out(tmp_path):
     held = json.loads((tmp_path / "a.die").read_text())
     (tmp_path / "old.die").write_text(
         json.dumps({"drop": n, **held})
-    )  # as 0.1.0 wrote them
+    )  # as they were written before
     got = out(box, tmp_path / "old.die")
     assert got.returncode == 0, got.stderr
     assert rows(box)[-1]["drop"] == n
