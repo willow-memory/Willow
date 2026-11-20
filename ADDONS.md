@@ -2150,8 +2150,8 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. \
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
 - <a id="tower-math"></a>**tower-math** (idea) \
-  Guess while the die is in the tower (the sum, which is likelier), then the tray settles it beside the exact odds. \
-  Uses dice-tower, play-odds. *new* `no-install` `offline` `odds` `sum` · near: play-odds, secure-sum, odd-years
+  Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back. \
+  Uses dice-tower, play-odds, flashcards. *new* `no-install` `offline` `tower` `total` · near: email-ask, bot-venv, lesson-time
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
   Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades,
