@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import stat
 import subprocess
 import sys
@@ -62,15 +63,57 @@ def test_a_drop_puts_only_the_secrets_hash_on_the_record(tmp_path):
     held = json.loads((tmp_path / "a.die").read_text())
     assert row["kind"] == "tower-drop" and row["who"] == "dice-tower" and row["dice"] == "2d6" and row["for"] == "Mira climbs"  # fmt: skip
     assert row["commit"] == hashlib.sha256(held["secret"].encode()).hexdigest() == held["commit"]  # fmt: skip
-    assert (
-        held["drop"] == row["n"] and held["dice"] == "2d6" and len(held["secret"]) == 64
-    )
+    assert "drop" not in held and held["dice"] == "2d6" and len(held["secret"]) == 64
     assert held["secret"] not in (box / "record.jsonl").read_text()  # only the hash
     assert stat.S_IMODE((tmp_path / "a.die").stat().st_mode) == 0o600
     assert got.stdout == f"in the tower (row {row['n']}): 2d6, for Mira climbs, under {row['commit'][:12]}\n"  # fmt: skip
     plain = drop(box, tmp_path / "b.die", "1d4")
     assert plain.stdout == f"in the tower (row {rows(box)[-1]['n']}): 1d4, under {rows(box)[-1]['commit'][:12]}\n"  # fmt: skip
     assert "for" not in rows(box)[-1]
+
+
+def test_the_die_file_is_kept_and_only_yours_before_the_hash_goes_on(tmp_path, monkeypatch):  # fmt: skip
+    box, die, seen = make(tmp_path), tmp_path / "a.die", {}
+    append = tower.kernel.append
+
+    def watched(*args, **kw):  # the moment the hash goes on the record
+        seen["mode"] = stat.S_IMODE(die.stat().st_mode) if die.exists() else None
+        seen["kept"] = die.exists() and json.loads(die.read_text())["commit"] == kw["commit"]  # fmt: skip
+        return append(*args, **kw)
+
+    monkeypatch.setattr(tower.kernel, "append", watched)
+    was = os.umask(0)  # a umask that would leave a written file open to everyone
+    try:
+        assert tower.main(["--box", str(box), "drop", "--dice", "1d6", "--to", str(die), *NOW]) == 0  # fmt: skip
+    finally:
+        os.umask(was)
+    assert seen == {"mode": 0o600, "kept": True}
+
+
+def test_a_drop_the_record_wont_take_leaves_no_die_file(tmp_path, monkeypatch, capsys):
+    box = make(tmp_path)
+    before = rows(box)
+
+    def full(*_, **__):
+        raise OSError(28, "No space left on device")
+
+    monkeypatch.setattr(tower.kernel, "append", full)
+    assert tower.main(["--box", str(box), "drop", "--dice", "1d6", "--to", str(tmp_path / "a.die"), *NOW]) == 2  # fmt: skip
+    assert "the die wasn't dropped" in capsys.readouterr().err
+    assert not (tmp_path / "a.die").exists() and rows(box) == before
+
+
+def test_a_die_file_that_names_its_row_still_comes_out(tmp_path):
+    box = make(tmp_path)
+    drop(box, tmp_path / "a.die", "1d20")
+    n = rows(box)[-1]["n"]
+    held = json.loads((tmp_path / "a.die").read_text())
+    (tmp_path / "old.die").write_text(
+        json.dumps({"drop": n, **held})
+    )  # as 0.1.0 wrote them
+    got = out(box, tmp_path / "old.die")
+    assert got.returncode == 0, got.stderr
+    assert rows(box)[-1]["drop"] == n
 
 
 def test_out_throws_from_the_secret_and_puts_it_on_the_record(tmp_path):
@@ -202,7 +245,7 @@ def test_a_die_file_that_isnt_this_boxs_or_isnt_one_is_refused(tmp_path):
     cases = {
         "theirs.die": None,
         "garbled.die": "not json",
-        "short.die": json.dumps({"drop": held["drop"]}),
+        "short.die": json.dumps({"drop": 1}),
         "far.die": json.dumps({**held, "drop": 999}),
         "row0.die": json.dumps({**held, "drop": 0}),
         "swapped.die": json.dumps({**held, "secret": "cd" * 32}),

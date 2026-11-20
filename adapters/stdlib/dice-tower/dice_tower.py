@@ -40,6 +40,7 @@ from __future__ import annotations
 import hashlib
 import html
 import json
+import os
 import secrets
 import sys
 from pathlib import Path
@@ -88,9 +89,27 @@ def drop(box: Path, dice: str, to: Path, why: str, ts: str) -> int:
     if bad:
         return refuse(bad + (", so the record never holds the secret" if "outside" in bad else ""))  # fmt: skip
     secret = secrets.token_hex(32)
-    row = kernel.append(box, ts, DROP, who=WHO, dice=dice, commit=commit(secret), **({"for": why} if why else {}))  # fmt: skip
-    to.write_text(json.dumps({"drop": row["n"], "dice": dice, "commit": row["commit"], "secret": secret}) + "\n", encoding="utf-8")  # fmt: skip
-    to.chmod(0o600)
+    held = {"dice": dice, "commit": commit(secret), "secret": secret}
+    try:  # made new and readable only by you in one step: never over one, never open to others
+        fd = os.open(to, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError:
+        return refuse(f"{to} is already there; a die file is never written over")
+    except OSError as e:
+        return refuse(f"{to} can't be written: {e.strerror}")
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        try:  # the secret is kept, whole, before its hash goes on the record, or neither is
+            f.write(json.dumps(held) + "\n")
+            f.flush()
+            os.fsync(f.fileno())
+            row = kernel.append(box, ts, DROP, who=WHO, dice=dice, commit=held["commit"], **({"for": why} if why else {}))  # fmt: skip
+        except OSError as e:
+            to.unlink(missing_ok=True)
+            return refuse(
+                f"the die wasn't dropped, and {to} is gone again: {e.strerror or e}"
+            )
+        except BaseException:
+            to.unlink(missing_ok=True)
+            raise
     print(f"in the tower (row {row['n']}): {dice}{', for ' + why if why else ''}, under {row['commit'][:12]}")  # fmt: skip
     return kernel.ALIVE
 
@@ -98,7 +117,11 @@ def drop(box: Path, dice: str, to: Path, why: str, ts: str) -> int:
 def out(box: Path, rows: list[dict], diefile: Path, ts: str) -> int:
     try:
         held = json.loads(diefile.read_text(encoding="utf-8"))
-        n, secret = int(held["drop"]), str(held["secret"])
+        secret = str(held["secret"])
+        mine = (r["n"] for r in rows if r["kind"] == DROP and r.get("commit") == commit(secret))  # fmt: skip
+        n = (
+            int(held["drop"]) if "drop" in held else next(mine, -1)
+        )  # a die file before 0.1.1 named its row
     except (OSError, ValueError, KeyError, TypeError):
         return refuse(f"{diefile} isn't a die file")
     dropped = rows[n] if 0 <= n < len(rows) else None

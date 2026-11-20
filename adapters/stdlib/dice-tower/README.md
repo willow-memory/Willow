@@ -3,7 +3,7 @@ section: Play
 line: A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for.
 source: new
 added: 2026-11-20
-version: 0.1.0
+version: 0.1.1
 writes: record, to
 network: none
 role: tools
@@ -36,13 +36,17 @@ roll comes. Die-Namic found it at a game table: a game master saying yes or no
 to a ruling was also choosing the next roll. A tower is the other way. Under
 the drawing it's a commitment and its reveal, a cup.
 
-**Drop.** A fresh 256-bit secret is drawn. Its SHA-256 goes on the record in a
+**Drop.** A fresh 256-bit secret is drawn and kept first, whole, in the die
+file: made new in one step (never over one that's there, even one that
+appears a moment before), readable only by you from its first byte, and never
+inside the box: a folder that doesn't exist, a file that's there, or a path
+under the box is refused. Then its SHA-256 goes on the record in a
 `tower-drop` row through the kernel's own `append`, with the dice and what the
-roll is for; the secret goes to the die file, written new (never over one
-that's there), readable only by you, and never inside the box: a folder that
-doesn't exist, a file that's there, or a path under the box is refused.
+roll is for. If the record won't take the row, the die file is taken away
+again: no die is ever on the record that nobody holds.
 
-**Out.** The die file's secret goes on the record in a `tower-out` row, and
+**Out.** The die file's secret finds its drop (the row whose hash it is; a die
+file from 0.1.0 names its row), goes on the record in a `tower-out` row, and
 the dice are thrown from it, in play-dice5e's notation (`2d6`, `adv+5`,
 `4d6kh3`) and stream (sha256-stream/v1), seeded by the secret alone. So:
 
