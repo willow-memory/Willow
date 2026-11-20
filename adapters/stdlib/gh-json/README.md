@@ -1,9 +1,9 @@
 <!-- willow-addon
 section: Reading more kinds of files
-line: What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages.
+line: What gh prints with --json, or GitHub's API answers (issues, pull requests, runs), saved to a file and read as dated passages.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.2.0
 writes: to
 network: none
 role: reads
@@ -26,7 +26,14 @@ to a file and each item is written, oldest first, as a dated passage:
 
 An item with a `number` and a `title` is an issue, or a pull request when it has
 a `headRefName`, `mergedAt` or `isDraft`; a pull request with a merge time is
-"merged". A run has a `databaseId` and a workflow, conclusion or status. gh only
+"merged". A run has a `databaseId` and a workflow, conclusion or status.
+
+GitHub's REST API answers in its own names, and so does an MCP server over it,
+for a machine with no gh: `user`, `created_at`, `head.ref`, `merged_at`,
+`draft`, a label by its name alone, a pull request in the issues list marked
+`pull_request`, and a run's `id` and `head_branch`. Each is read as gh's,
+where gh's own isn't there. A list the API wraps in an object (`issues`,
+`pull_requests`, `workflow_runs` or `items`) is read from inside it. gh only
 prints the fields it was asked for, so what is absent is left out, never
 invented. Other JSON is skipped and counted.
 

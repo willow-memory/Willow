@@ -201,3 +201,51 @@ def test_a_bad_command_line_says_how_to_run_it():
     ):
         got = run(*argv)
         assert got.returncode == 2 and "gh_json.py" in got.stderr
+
+
+def test_the_rest_apis_shape_reads_as_gh_prints_it():
+    """GitHub's REST API, and an MCP server over it, name things their own
+    way and wrap a list in an object: read the same as gh's --json."""
+    issues = (
+        b'{"issues":[{"number":91,"title":"hook-guard: seal is allowed","state":"OPEN",'
+        b'"user":{"login":"ana"},"created_at":"2026-10-30T05:19:56Z","labels":["bug"],"comments":1}]}'
+    )
+    assert (
+        mod.convert(issues)
+        == "issue #91 (open) 2026-10-30 ana: hook-guard: seal is allowed [bug]\n"
+    )
+    prs = (
+        b'[{"number":380,"title":"main green","state":"closed","merged":true,'
+        b'"merged_at":"2026-11-20T02:23:07Z","draft":false,"head":{"ref":"ccr-x"},'
+        b'"user":{"login":"ben"},"created_at":"2026-11-19T21:38:28Z"},'
+        b'{"number":382,"title":"forge: blind","state":"open","draft":false,"head":{"ref":"forge-blind"},'
+        b'"user":{"login":"ben"},"created_at":"2026-11-20T05:57:02Z"},'
+        b'{"number":7,"title":"from the issues list","state":"open","pull_request":{"merged_at":null}}]'
+    )
+    assert mod.convert(prs) == (
+        "pull request #7 (open) from the issues list\n"
+        "pull request #380 (merged) 2026-11-19 ben: main green (branch ccr-x)\n"
+        "pull request #382 (open) 2026-11-20 ben: forge: blind (branch forge-blind)\n"
+    )
+    runs = (
+        b'{"total_count":2,"workflow_runs":[{"id":44690843012,"name":"ci","status":"in_progress",'
+        b'"conclusion":null,"head_branch":"main","created_at":"2026-11-20T07:01:00Z","display_title":"forge (#382)"}]}'
+    )
+    assert (
+        mod.convert(runs)
+        == "run 44690843012 (in_progress) 2026-11-20 ci on main: forge (#382)\n"
+    )
+
+
+def test_gh_s_own_names_win_over_the_rest_apis():
+    both = b'[{"number":1,"title":"t","createdAt":"2024-01-01","created_at":"2026-01-01","author":{"login":"gh"},"user":{"login":"rest"}}]'
+    assert mod.convert(both) == "issue #1 (unknown) 2024-01-01 gh: t\n"
+
+
+def test_an_object_with_no_list_gh_or_the_api_would_send_is_still_not_a_result():
+    for other in (
+        b'{"issues": 5}',
+        b'{"other": [{"number": 1, "title": "t"}]}',
+        b'{"items": []}',
+    ):
+        assert mod.convert(other) is None, other

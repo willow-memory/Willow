@@ -357,7 +357,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Your dotfiles as passages: which file sets what, for 'where did I set my editor?' \
   *new* `no-install` `offline` · near: org, json-paths, latex
 - <a id="gh-json"></a>[**gh-json**](adapters/stdlib/gh-json/) \
-  What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. \
+  What gh prints with --json, or GitHub's API answers (issues, pull requests, runs), saved to a file and read as dated passages. \
   *new* `no-install` `offline` `issues` `pull` · near: goodreads, jira, day-one
 - <a id="git-history"></a>[**git-history**](adapters/stdlib/git-history/) \
   Commit messages and diffs as a dated pile: "when did we change the retry limit?" \
