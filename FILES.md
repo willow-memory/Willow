@@ -1376,6 +1376,7 @@ willow/
 │   │   │   ├── test_hook_fail_closed.py
 │   │   │   └── README.md
 │   │   ├── hook-feedback/
+│   │   │   ├── corrections.txt what marks a prompt as a correction, and what never does: the base words list
 │   │   │   ├── hook_feedback.py your corrections to an assistant caught at each prompt and handed in through propose, to keep or drop
 │   │   │   ├── test_hook_feedback.py
 │   │   │   └── README.md     its card

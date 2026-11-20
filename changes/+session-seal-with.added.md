@@ -1,0 +1,1 @@
+`session-seal`: `--with FILE` puts what the person said to correct the assistant that session into its one bundle, in their words, so a session and its corrections are sealed once rather than a card each

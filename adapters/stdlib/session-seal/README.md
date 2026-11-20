@@ -36,7 +36,13 @@ session, the form without `check`, prints its own lines, not a report.
 **A session** is the record's rows since the last one was bundled, from
 row 0 the first time. Its bundle holds every row by number, kind and hash,
 and a count of what came of them (`bite: served`, `bite: empty`,
-`proposal: pass`). No words: the record keeps none, so the bundle can't.
+`proposal: pass`). No words: the record keeps none, so the bundle can't,
+but for one thing you hand it. `--with FILE`, a JSON list of what you said
+to correct the assistant this session (50 at most, each 2,000 characters at
+most), puts those in the bundle in your own words, and the claim says how
+many: so a session and its corrections are sealed once, together, rather
+than a card each. They are your words, read on the seal page before you
+seal; nothing of your folder goes in with them.
 
 **It can't approve anything.** The bundle goes in through the kernel's own
 verbs: a bite asks `session FROM to TO`, and the bundle is proposed as the
