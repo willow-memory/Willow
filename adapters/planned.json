@@ -1591,7 +1591,7 @@
   "source": "new",
   "writes": "nothing",
   "network": "none",
-  "role": "makes",
+  "role": "page",
   "uses": "digest, flashcards, reading-log",
   "version": "0.0.1"
  },
