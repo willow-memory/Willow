@@ -257,7 +257,7 @@ def test_a_sentence_that_names_no_card_gets_the_close_fork(box):
     assert all("close, not named: " in r["what"] for r in g["rows"][:-1])
     assert g["rows"][0]["what"].endswith(
         "; recommended, the search's first"
-        "; no confidence yet: 0 of 5 close picks sealed on this matcher"
+        "; no confidence yet: 0 of 5 blind close picks sealed on this matcher"
     ), "and says it has no confidence, and why"
     assert not any(
         "recommended, the search's first" in r["what"] for r in g["rows"][1:]
@@ -361,8 +361,11 @@ def test_a_close_proposal_keeps_what_was_shown(box):
         ]
     )
     assert data["offered"] == offered and data["recommended"] == offered[0]
-    assert data["rank"] == 2 and set(data["matcher"]) == {"similar", "words"}
-    assert all(len(v) == 64 for v in data["matcher"].values())
+    assert data["rank"] == 2 and set(data["matcher"]) == {"ranks"}
+    assert len(data["matcher"]["ranks"]) == 64
+    assert data["blind"] is False and "shown" not in data, (
+        "in view, as the search had it"
+    )
 
 
 def scored(box: Path) -> tuple[subprocess.CompletedProcess, dict]:
@@ -402,9 +405,13 @@ def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
     assert doc["groups"][2]["rows"] == [
         {
             "where": "now",
-            "what": "no confidence yet: 2 of 5 close picks sealed on this matcher",
-        }
-    ], "no confidence was said, so none is scored"
+            "what": "no confidence yet: 0 of 5 blind close picks sealed on this matcher",
+        },
+        {
+            "where": "in view",
+            "what": "its first taken 0 of 2 with the recommendation in view",
+        },
+    ], "both asked in view: neither counts toward a confidence, and none is scored"
     by_rank = {r["where"]: r["what"] for r in doc["groups"][0]["rows"]}
     assert by_rank["rank 1"].endswith(": 0 of 2") and by_rank["rank 2"].endswith(
         ": 1 of 2"
@@ -421,33 +428,37 @@ def test_scores_count_where_each_sealed_pick_fell_and_only_sealed_ones(box):
 # ── the close fork's confidence: from your sealed picks, and scored ──────────
 
 
-def picked(rank, *, matcher=None, kind="close", conf=None) -> dict:
+def picked(rank, *, matcher=None, kind="close", conf=None, blind=True) -> dict:
     """One sealed outcome as `outcomes` reads it, for `confidence` alone."""
-    return {"kind": kind, "rank": rank, "confidence": conf,
-            "matcher": matcher or {"similar": "s", "words": "w"}}  # fmt: skip
+    return {"kind": kind, "rank": rank, "confidence": conf, "blind": blind,
+            "matcher": matcher or {"ranks": "r"}}  # fmt: skip
 
 
-NOW = {"similar": "s", "words": "w"}
+NOW = {"ranks": "r"}
 
 
-def test_no_confidence_before_five_close_picks_are_sealed_on_this_matcher():
+def test_no_confidence_before_five_blind_close_picks_are_sealed_on_this_matcher():
     four = [picked(1)] * 4
     assert suggest.confidence(four, NOW) == (
         None,
-        "no confidence yet: 4 of 5 close picks sealed on this matcher",
+        "no confidence yet: 4 of 5 blind close picks sealed on this matcher",
     )
-    other = four + [picked(1, matcher={"similar": "s", "words": "older"})]
+    other = four + [picked(1, matcher={"ranks": "older"})]
     assert suggest.confidence(other, NOW)[0] is None, (
         "another matcher's pick counts not"
     )
     worded = four + [picked(1, kind="word")]
     assert suggest.confidence(worded, NOW)[0] is None, "a word's fork counts not"
+    in_view = four + [picked(1, blind=False)] * 10
+    assert suggest.confidence(in_view, NOW)[0] is None, (
+        "a pick made with the recommendation in view counts not"
+    )
 
 
 def test_the_confidence_is_k_plus_one_over_n_plus_two_never_a_certainty():
     assert suggest.confidence([picked(1)] * 5, NOW) == (
         0.86,
-        "confidence 0.86: its first taken 5 of 5 on this matcher",
+        "confidence 0.86: its first taken 5 of 5 blind on this matcher",
     )
     four_of_five = [picked(1)] * 4 + [picked(None)]
     assert suggest.confidence(four_of_five, NOW)[0] == 0.71, "none is a miss"
@@ -460,61 +471,148 @@ def test_under_half_says_no_confidence_and_why():
     two_of_five = [picked(1)] * 2 + [picked(2)] * 2 + [picked(None)]
     assert suggest.confidence(two_of_five, NOW) == (
         None,
-        "no confidence: its first taken 2 of 5 on this matcher, under half",
+        "no confidence: its first taken 2 of 5 blind on this matcher, under half",
     )
 
 
-#: five wants no name or alias line reaches, each its own close fork
+# ── blind forks: the pick that measures the search ──────────────────────────
+
+#: wants no name or alias line reaches whose close forks are blind; COUNT's,
+#: and the other sentences above, are asked in view
 WANTS = [
-    "count how often each suggestion was sealed",
-    "count how often each suggestion was declined",
-    "count how often each suggestion was taken",
-    "count how often each suggestion was refused",
     "count how often each suggestion was kept",
+    "count how often each suggestion was chosen",
+    "count how often each suggestion was skipped",
+    "count how often each suggestion was used",
+    "count how often each proposal was approved",
 ]
+BLIND = "count how often each proposal was accepted"
+
+
+def test_one_close_fork_in_five_is_blind_by_its_words_and_always_the_same():
+    assert all(suggest.blind(w) for w in WANTS + [BLIND])
+    assert not any(suggest.blind(s) for s in (COUNT, MODEL, EMAIL))
+    many = [f"want number {i}" for i in range(2000)]
+    assert 300 < sum(map(suggest.blind, many)) < 500, "about one in five"
+    names = ["a", "b", "c"]
+    assert sorted(suggest.shuffled(BLIND, names)) == names, "the same cards"
+    assert suggest.shuffled(BLIND, names) == suggest.shuffled(BLIND, names[::-1]), (
+        "an order of its own, whatever order the search gave"
+    )
+
+
+def searchs_order(sentence: str, shown: list[str]) -> list[str]:
+    """The cards of a fork in the search's own order, which a blind one hides."""
+    return [f["name"] for f in suggest.searched(sentence) if f["name"] in shown]
+
+
+def plan_of(box: Path, sentence: str) -> dict:
+    return json.loads(run("suggest", sentence, "--box", str(box), "--plan").stdout)
+
+
+def data_of(box: Path, took: dict) -> tuple[dict, dict]:
+    """A close fork's proposal, as {path: subject} for seal_all, and its data."""
+    (path,) = [p for p in took if p != "forge/stack.md"]
+    prop = json.loads((box / "proposals" / f"{took[path][9:]}.json").read_text())
+    return {path: took[path]}, json.loads(prop["data"])
 
 
 def first_sealed(box: Path, sentence: str) -> None:
-    """Take the search's first for a sentence's close fork, and seal it."""
-    shown = json.loads(run("suggest", sentence, "--box", str(box), "--plan").stdout)
-    first = shown["forks"]["close"][0]["name"]
-    took = proposed(box, f"close={first}", sentence=sentence)
-    seal_all(box, {p: s for p, s in took.items() if p != "forge/stack.md"})
+    """Take the search's first for a blind close fork, and seal it."""
+    shown = [o["name"] for o in plan_of(box, sentence)["forks"]["close"]]
+    first = searchs_order(sentence, shown)[0]
+    waiting, data = data_of(box, proposed(box, f"close={first}", sentence=sentence))
+    assert data["blind"] is True and data["rank"] == 1 and data["chose"] == first
+    seal_all(box, waiting)
 
 
-def test_five_sealed_firsts_give_the_next_close_fork_a_confidence_that_is_scored(box):
+def test_a_blind_fork_says_so_recommends_nothing_and_hides_the_searchs_order(box):
+    plan_shape = pytest.importorskip("forge.plan_shape")
+    text, doc = suggested(box, BLIND)
+    assert text.returncode == 42
+    (g,) = doc["groups"]
+    assert g["name"].startswith(f"fork “close”, {suggest.BLIND_SAID}: nothing named")
+    assert not any("recommended" in r["what"] or "confidence" in r["what"]
+                   for r in g["rows"]), "nothing in front of you to follow"  # fmt: skip
+    d = plan_of(box, BLIND)
+    assert "hidden" not in d, "--plan prints all but what is kept from you"
+    assert d["close"] == {"blind": True, "confidence": None, "said": suggest.BLIND_SAID}
+    (fork,) = [e for e in plan_shape.validate(d["plan"]).entries
+               if isinstance(e, plan_shape.Fork)]  # fmt: skip
+    assert fork.recommended is None and fork.confidence is None
+    shown = [o["name"] for o in d["forks"]["close"]]
+    assert shown[-1] == "none" and shown[:-1] == suggest.shuffled(BLIND, shown[:-1])
+    order = searchs_order(BLIND, shown)
+    _, data = data_of(box, proposed(box, f"close={shown[0]}", sentence=BLIND))
+    assert data["blind"] is True and data["shown"] == shown[:-1]
+    assert data["offered"] == order and data["recommended"] == order[0]
+    assert data["rank"] == order.index(shown[0]) + 1, (
+        "where it fell in the search's order"
+    )
+
+
+def test_five_sealed_blind_firsts_give_a_confidence_scored_on_blind_picks_alone(box):
     plan_shape = pytest.importorskip("forge.plan_shape")
     pytest.importorskip("forge.calibration")
     for want in WANTS:
         first_sealed(box, want)
-    d = json.loads(run("suggest", COUNT, "--box", str(box), "--plan").stdout)
+    # asked in view, the next close fork says it, from the blind picks
+    d = plan_of(box, COUNT)
     (fork,) = [e for e in plan_shape.validate(d["plan"]).entries
                if isinstance(e, plan_shape.Fork)]  # fmt: skip
     assert fork.confidence == 0.86 and fork.recommended == fork.options[0].label
     assert d["close"] == {
+        "blind": False,
         "confidence": 0.86,
-        "said": "confidence 0.86: its first taken 5 of 5 on this matcher",
+        "said": "confidence 0.86: its first taken 5 of 5 blind on this matcher",
     }
     text, doc = suggested(box, COUNT)
     assert doc["groups"][0]["rows"][0]["what"].endswith(
-        "; recommended, the search's first; confidence 0.86: its first taken 5 of 5 on this matcher"
+        "; recommended, the search's first; confidence 0.86: its first taken 5 of 5 blind on this matcher"
     )
-    second = d["forks"]["close"][1]["name"]
-    took = proposed(box, f"close={second}", sentence=COUNT)
-    (path,) = [p for p in took if p != "forge/stack.md"]
-    data = json.loads(
-        json.loads((box / "proposals" / f"{took[path][9:]}.json").read_text())["data"]
+    # you go with it, in view: kept, and neither counted nor scored
+    waiting, data = data_of(
+        box, proposed(box, f"close={fork.recommended}", sentence=COUNT)
     )
-    assert data["confidence"] == 0.86, "the proposal keeps the confidence it was shown"
-    seal_all(box, {path: took[path]})
+    assert data["confidence"] == 0.86 and data["blind"] is False and data["rank"] == 1
+    seal_all(box, waiting)
+    # blind, the 0.86 is kept unsaid, and you take the search's second
+    shown = [o["name"] for o in plan_of(box, BLIND)["forks"]["close"]]
+    second = searchs_order(BLIND, shown)[1]
+    waiting, data = data_of(box, proposed(box, f"close={second}", sentence=BLIND))
+    assert data["confidence"] == 0.86 and data["blind"] is True and data["rank"] == 2
+    seal_all(box, waiting)
     text, doc = scored(box)
     trust = {r["where"]: r["what"] for r in doc["groups"][2]["rows"]}
     assert doc["groups"][2]["name"] == "close: its confidence"
     assert trust == {
-        "now": "confidence 0.75: its first taken 5 of 6 on this matcher",
-        # one said (0.86), and missed: (0.86 - 0)^2 = 0.7396
+        "now": "confidence 0.75: its first taken 5 of 6 blind on this matcher",
+        "blind": "its first taken 5 of 6 blind",
+        "in view": "its first taken 1 of 1 with the recommendation in view",
+        # one said blind (0.86), and missed: (0.86 - 0)^2 = 0.7396
         "scored": "brier 0.740 over 1 said; mean said 0.86, its first taken 0.00",
     }
+
+
+def test_the_matcher_is_known_by_what_it_ranks_not_by_its_bytes(monkeypatch):
+    def search(names: list[str]):
+        class Want:
+            def find(self, sentence, top):
+                return {"found": [{"name": n, "why": "x"} for n in names[:top]]}
+
+        return lambda: Want
+
+    monkeypatch.setattr(suggest, "wanting", search(["a", "b", "c"]))
+    first = suggest.matcher()
+    assert set(first) == {"ranks"} and len(first["ranks"]) == 64
+    monkeypatch.setattr(suggest, "wanting", search(["a", "b", "c"]))
+    assert suggest.matcher() == first, (
+        "a new search that ranks the same keeps the count"
+    )
+    monkeypatch.setattr(suggest, "wanting", search(["b", "a", "c"]))
+    assert suggest.matcher() != first, "one that moves a card starts a count of its own"
+    monkeypatch.setattr(suggest, "wanting", lambda: None)
+    assert suggest.matcher() == {"ranks": "absent"}
 
 
 def test_a_words_fork_offers_none_and_keeps_what_was_shown(box):
