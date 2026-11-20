@@ -1,0 +1,1 @@
+`demo/game-box`: the end-of-night test reads the step's page by the name the stack gives it, `04-all-passages.txt`: it read `04-all.txt`, which was never written, so the test failed wherever tesseract is installed and tonight's scanned page is read; CI has no tesseract and never ran that line
