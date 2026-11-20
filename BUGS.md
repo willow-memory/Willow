@@ -14,3 +14,4 @@ one takes, is in [CONTRIBUTING.md](CONTRIBUTING.md).
 | #112 | ligatures come through as glyph names, so /f_inancing is never found as financing | `adapters/deps/pdf/test_pdf.py::test_a_ligature_is_written_as_its_letters_not_its_glyph_name` |
 | #284 | html_text splits a word at an inline tag, so re<span>s</span>t reads as re s t | `test_kernel.py::test_an_inline_tag_inside_a_word_leaves_the_word_whole` |
 | #285 | stack adds --json to every step of a report add-on, so predict ask refuses inside a stack | `adapters/stdlib/stack/test_stack.py::test_a_report_add_ons_step_that_prints_no_report_runs_as_written` |
+| #383 | an add-on that reads one folder crashes with a traceback on a box of sources (--from), where kernel.folder refuses it | `adapters/stdlib/ci/test_contract.py::test_an_add_on_known_to_crash_on_sources_refuses_it_or_reads_it` |
