@@ -2297,6 +2297,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "tower-math",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Guess while the die is in the tower (the sum, which is likelier), then the tray settles it beside the exact odds.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "uses": "dice-tower, play-odds",
+  "version": "0.0.1"
+ },
+ {
   "name": "transcripts",
   "kind": "deps",
   "section": "Reading more kinds of files",

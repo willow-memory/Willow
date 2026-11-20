@@ -2102,12 +2102,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-fight5e"></a>**play-fight5e** (idea) \
   Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
   *new* `no-install` `offline` `rolls` `play` · near: play-dice5e, play-dice, play-tarot
-
-#### Tools you run yourself: ideas, not built yet, p to w
-
 - <a id="play-hanoi"></a>**play-hanoi** (idea) \
   Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
   *new* `no-install` `offline` `play` `move` · near: play-reversi, tic-tac-toe, play-dice
+
+#### Tools you run yourself: ideas, not built yet, p to w
+
 - <a id="play-lunatic"></a>**play-lunatic** (idea) \
   The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. \
   Needs Skyfield; MIT. *new* `needs-install` `offline` `play` `moon` · near: play-hearts, play-dice5e, typos
@@ -2149,6 +2149,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="todays-place"></a>**todays-place** (idea) \
   One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. \
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
+- <a id="tower-math"></a>**tower-math** (idea) \
+  Guess while the die is in the tower (the sum, which is likelier), then the tray settles it beside the exact odds. \
+  Uses dice-tower, play-odds. *new* `no-install` `offline` `odds` `sum` · near: play-odds, secure-sum, odd-years
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
   Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades,
