@@ -271,6 +271,23 @@ def test_the_search_words_list_is_one_the_kernel_reads():
     assert alias["remind"] and len(alias) >= 62
 
 
+def test_the_words_steps_example_is_one_the_kernel_reads():
+    """The words step showed `car test = MOT, inspection` as its example: two
+    words before the =, which the page's own check and the kernel refuse, so
+    a person copying it was told it was wrong. Its example is held to both."""
+    import re
+
+    import kernel
+
+    page = (canvas.HERE / "page.html").read_text(encoding="utf-8")
+    (shown,) = re.findall(r"class:'words',placeholder:'([^']*)'", page)
+    (rule,) = re.findall(r"const WORDLINE=/(.+?)/;", page)
+    lines = shown.split("\\n")
+    assert len(lines) >= 2 and all(re.fullmatch(rule, ln) for ln in lines), lines
+    alias, why = kernel.parse_words("\n".join(lines) + "\n")
+    assert why is None and len(alias) == len(lines), why
+
+
 def test_only_a_sealed_pick_is_put_together_and_the_seal_is_the_kernels(site, tmp_path):
     cv, call = site
     folder = a_folder(tmp_path)

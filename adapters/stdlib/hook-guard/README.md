@@ -3,7 +3,7 @@ section: Assistants
 line: A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back.
 source: box
 added: 2026-10-29
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: guards
@@ -37,7 +37,7 @@ refused: rule key: this command names the key file; the key is the person's.
 | Rule | It refuses | It leaves alone |
 |---|---|---|
 | `key` | a Read, Grep or Glob whose path is the key; a command with the key's path in it, or a word that resolves to it | every other file; the key's folder; the record |
-| `box-write` | a Write, Edit, MultiEdit or notebook edit of a file in the box; a command that redirects into it, or runs rm, mv, cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i on it (for mv, cp, ln, install the place it puts something; for mv also what it moves, since a file moved out of the box changes it) | reading the box, copying out of it, `kernel.py` run on it, a box's sibling folder |
+| `box-write` | a Write, Edit, MultiEdit or notebook edit of a file in the box; a command that redirects into it, or runs rm, mv, cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i on it (for mv, cp, ln, install the place it puts something; for mv also what it moves, since a file moved out of the box changes it); `find` from it with `-delete`, or `-exec` of one of those; `git -C` or `--work-tree` on it with a command that changes files (`clean`, `checkout`, `reset`, `restore` and the like); `tar` extracting, or `unzip`, into it (its `-C` or `-d`, else the folder the command runs in) | reading the box, copying out of it, `kernel.py` run on it, a box's sibling folder, `find`, `git status` or `git log` on it, `tar -c` or `-t` from it, `unzip -l` |
 | `beside-write` | with `--also DIR`: the same as `box-write`, for that folder; the folder need not exist yet | reading it, copying out of it, a folder whose name only starts with the same letters |
 
 `--also DIR` may be given more than once. It is for a program that keeps its

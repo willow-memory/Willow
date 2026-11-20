@@ -137,3 +137,58 @@ def test_a_record_that_doesnt_verify_is_refused(tmp_path):
         data=prompt("No, that is not right."),
     )
     assert got.returncode == 2 and "doesn't verify" in got.stderr
+
+
+def said(text: str) -> str:
+    return json.dumps({"hook_event_name": "UserPromptSubmit", "prompt": text})
+
+
+def test_the_words_list_says_what_is_a_correction_and_what_never_is():
+    """Seen driving a provider's hooks: "No thanks, that's fine" and "no
+    worries" were handed in as corrections, and "nope, not that" wasn't."""
+    caught = ("no, the other file", "wrong again", "nope, not that", "I said tabs",
+              "ok but I said tabs", "not what I asked", "That’s not what I meant")  # fmt: skip
+    left = ("No thanks, that's fine", "no worries, carry on", "no problem", "No need",
+            "no rush", "now the tests", "nobody uses it", "is there no test?", "said so")  # fmt: skip
+    for text in caught:
+        assert run("match", data=said(text)).returncode == 42, text
+    for text in left:
+        assert run("match", data=said(text)).returncode == 0, text
+    other = json.dumps({"hook_event_name": "Stop", "prompt": "no"})
+    assert run("match", data=other).returncode == 0  # only a prompt
+    assert run("match", data="not json").returncode == 2
+
+
+def test_match_writes_nothing_and_run_still_hands_one_in(tmp_path):
+    b = make(tmp_path)
+    before = (b / "record.jsonl").read_text()
+    assert (
+        run("match", "--box", str(b), data=said("no, the other one")).returncode == 42
+    )
+    assert (b / "record.jsonl").read_text() == before  # match proposes nothing
+    assert run("run", "--box", str(b), *NOW, data=said("No thanks")).returncode == 0
+    assert (b / "record.jsonl").read_text() == before  # polite: nothing handed in
+    assert (
+        run("run", "--box", str(b), *NOW, data=said("nope, the other one")).returncode
+        == 0
+    )
+    assert "hook-feedback" in (b / "record.jsonl").read_text()
+
+
+def test_a_words_list_of_your_own_replaces_the_base_one(tmp_path):
+    mine = tmp_path / "mine.txt"
+    mine.write_text("# mine\n+ actually\n- no\n")
+    assert (
+        run("match", "--words", str(mine), data=said("actually, tabs")).returncode == 42
+    )
+    assert (
+        run("match", "--words", str(mine), data=said("no, the other")).returncode == 0
+    )
+    bad = tmp_path / "bad.txt"
+    bad.write_text("actually\n")
+    got = run("match", "--words", str(bad), data=said("actually"))
+    assert got.returncode == 2 and "isn't a words list" in got.stderr
+    assert (
+        run("match", "--words", str(tmp_path / "gone.txt"), data=said("no")).returncode
+        == 2
+    )

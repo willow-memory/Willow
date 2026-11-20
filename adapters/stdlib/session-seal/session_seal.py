@@ -1,6 +1,6 @@
 """session_seal.py: one seal at the end of a session, over all of it. Python 3.9+.
 
-    python adapters/stdlib/session-seal/session_seal.py --box DIR [--index INDEX] [--now TS] [--json]
+    python adapters/stdlib/session-seal/session_seal.py --box DIR [--index INDEX] [--with FILE] [--now TS] [--json]
     python adapters/stdlib/session-seal/session_seal.py --box DIR check [--json]
 
 A session is the record's rows since the last one was bundled (from row 0,
@@ -116,7 +116,29 @@ def bitten(box: Path, ask: str, ts: str, index: Path | None) -> tuple[int, str]:
     return quiet(kernel.bite, box, ask, ts)
 
 
-def close(box: Path, ts: str, as_json: bool = False, index: Path | None = None) -> int:
+#: what --with may carry: the person's corrections in the session, in their words
+WITH_MOST, SAID_MOST = 50, 2_000
+
+
+def corrections(path: Path) -> list[str] | None:
+    """--with FILE: a JSON list of what the person said to correct the
+    assistant this session, each in their own words; None when it isn't one,
+    or holds more than a seal is read for."""
+    try:
+        got = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(got, list) or len(got) > WITH_MOST:
+        return None
+    if not all(isinstance(t, str) and t.strip() and len(t) <= SAID_MOST for t in got):
+        return None
+    return [t.strip() for t in got]
+
+
+def close(
+    box: Path, ts: str, as_json: bool = False, index: Path | None = None,
+    corrected: list[str] | None = None,
+) -> int:  # fmt: skip
     rows, _ = kernel.read(box / "record.jsonl")
     first = start(rows)
     if first >= len(rows):
@@ -126,6 +148,8 @@ def close(box: Path, ts: str, as_json: bool = False, index: Path | None = None) 
             print("Nothing since the last session; nothing to seal.")
         return kernel.ALIVE
     b = bundle(rows, first)
+    if corrected:  # the person's corrections, sealed with the session, once
+        b["corrections"] = corrected
     ask = f"session {b['from']} to {b['to']}"
     code, said = bitten(box, ask, ts, index)
     if code == kernel.REFUSED:
@@ -136,7 +160,12 @@ def close(box: Path, ts: str, as_json: bool = False, index: Path | None = None) 
         "path": f"sessions/{b['from']}-{b['to']}.json",
         "data": kernel.canon(b),
         "cites": [],
-        "claim": f"yes, these were my actions: rows {b['from']} to {b['to']}",
+        "claim": f"yes, these were my actions: rows {b['from']} to {b['to']}"
+        + (
+            f", and {len(corrected)} correction{'s' * (len(corrected) != 1)} of yours"
+            if corrected
+            else ""
+        ),
     }
     code, said = quiet(kernel.propose, box, [json.dumps(prop)], ts)
     subj = kernel.subject_of(prop)
@@ -253,7 +282,7 @@ def main(argv: list[str]) -> int:
     args: list[str] = []
     it = iter(argv)
     for a in it:
-        if a in ("--box", "--now", "--index"):
+        if a in ("--box", "--now", "--index", "--with"):
             opts[a] = next(it, "")
         elif a == "--json":
             opts[a] = "yes"
@@ -263,6 +292,8 @@ def main(argv: list[str]) -> int:
         not opts.get("--box")
         or args not in ([], ["check"])
         or opts.get("--index") == ""
+        or opts.get("--with") == ""
+        or ("--with" in opts and args)
     ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
@@ -279,7 +310,17 @@ def main(argv: list[str]) -> int:
         say(doc, "--json" in opts)
         return code
     index = Path(opts["--index"]) if "--index" in opts else None
-    return close(box, opts.get("--now") or kernel.now(), "--json" in opts, index)
+    corrected = None
+    if "--with" in opts:
+        corrected = corrections(Path(opts["--with"]))
+        if corrected is None:
+            print(f"refused: {opts['--with']} isn't a list of what you said, "
+                  f"{WITH_MOST} at most, each {SAID_MOST} characters at most",
+                  file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
+    return close(
+        box, opts.get("--now") or kernel.now(), "--json" in opts, index, corrected
+    )
 
 
 if __name__ == "__main__":

@@ -183,6 +183,40 @@ def test_a_command_that_changes_the_box_is_refused_and_one_that_reads_it_is_not(
         assert got.returncode == 0 and got.stderr == "", (c, got.stderr)
 
 
+def test_a_command_that_runs_one_on_the_box_or_unpacks_into_it_is_refused(tmp_path):
+    """Seen driving a provider's guard door: find -delete, find -exec rm,
+    git -C BOX clean, tar -C BOX and unzip -d BOX each name the box in
+    plain sight and changed it. What only reads it is let through."""
+    b, _ = box(tmp_path)
+    inside = str(b)
+    refused = (
+        (f"find {b} -name '*.jsonl' -delete", ""), (f"find {b} -type f -exec rm {{}} +", ""),
+        (f"find {b} -execdir shred -u {{}} \\;", ""), ("find . -delete", inside),
+        (f"git -C {b} clean -fdx", ""), (f"git --work-tree={b} checkout -- .", ""),
+        (f"git -c a=b -C {b} reset --hard", ""), (f"tar -xf /tmp/x.tar -C {b}", ""),
+        (f"tar xzf /tmp/x.tgz --directory={b}", ""), ("tar -xf /tmp/x.tar", inside),
+        (f"unzip -o /tmp/x.zip -d {b}", ""), ("unzip /tmp/x.zip", inside),
+    )  # fmt: skip
+    for c, cwd in refused:
+        sent = json.dumps(
+            {"tool_name": "Bash", "tool_input": {"command": c}, "cwd": cwd}
+        )
+        got = run("run", "--box", str(b), stdin=sent)
+        assert got.returncode == 2 and "rule box-write" in got.stderr, c
+    allowed = (
+        (f"find {b} -name '*.jsonl'", ""), (f"find {b} -exec grep sun {{}} +", ""),
+        ("find /tmp -delete", ""), (f"git -C {b} status", ""), (f"git -C {b} log", ""),
+        (f"tar -cf /tmp/out.tar -C {b} .", ""), (f"tar -tf /tmp/x.tar -C {b}", ""),
+        ("unzip /tmp/x.zip -d /tmp/out", ""), ("unzip -l /tmp/x.zip", inside),
+    )  # fmt: skip
+    for c, cwd in allowed:
+        sent = json.dumps(
+            {"tool_name": "Bash", "tool_input": {"command": c}, "cwd": cwd}
+        )
+        got = run("run", "--box", str(b), stdin=sent)
+        assert got.returncode == 0 and got.stderr == "", (c, got.stderr)
+
+
 def test_what_it_cannot_tell_it_allows_and_other_tools_pass(tmp_path):
     b, _ = box(tmp_path)
     for raw in (

@@ -3,7 +3,7 @@ section: For maintainers
 line: Breaks each add-on's code on purpose and checks its tests notice.
 source: new
 added: 2026-10-23
-version: 0.1.7
+version: 0.1.8
 writes: nothing
 network: none
 role: tools

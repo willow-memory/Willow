@@ -15,7 +15,10 @@ its rules, each named when it refuses (exit 2, the reason on standard error):
                the kernel: a Write, Edit or MultiEdit of a file in it, a
                notebook edit, or a command that redirects into it or runs rm, mv,
                cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i
-               on it. Reading the box is fine; `kernel.py` is how it is written.
+               on it; find from it with -delete or -exec of one of those; git -C
+               on it with a command that changes files; tar extracting, or
+               unzip, into it. Reading the box is fine; `kernel.py` is how it is
+               written.
 
     beside-write  with --also DIR (repeatable): the same as box-write, for a
                folder kept beside the box that only its own program writes in.
@@ -71,6 +74,11 @@ CHANGES_ALL = {
 }
 #: commands whose last argument is where they put something
 CHANGES_LAST = {"mv", "cp", "ln", "install", "rsync"}
+#: find's actions that run a command on each file found
+FIND_RUNS = {"-exec", "-execdir", "-ok", "-okdir"}
+#: git's commands that change the files of the tree they work on
+GIT_CHANGES = {"clean", "checkout", "restore", "reset", "rm", "mv", "apply", "am",
+               "pull", "merge", "rebase", "switch", "stash"}  # fmt: skip
 SEPARATORS = {";", "&&", "||", "|", "&", "|&"}
 REDIRECTS = {">", ">>", ">|", "1>", "2>", "&>", "1>>", "2>>", "&>>"}
 
@@ -115,6 +123,90 @@ def names_key(command: str, key: Path, cwd: str) -> bool:
     return any(_same(w, key, cwd) for cmd in words(command) for w in cmd)
 
 
+def changes(cmd: list[str], box: Path, cwd: str) -> bool:
+    """Whether one command, as words, names a file in `box` that it changes:
+    by its last argument or every argument, as the CHANGES lists say."""
+    head = Path(cmd[0]).name
+    args = [a for a in cmd[1:] if not a.startswith("-")]
+    if head in CHANGES_ALL and any(inside(a, box, cwd) for a in args):
+        return True
+    return head in CHANGES_LAST and bool(args) and inside(args[-1], box, cwd)
+
+
+def finds_and_changes(cmd: list[str], box: Path, cwd: str) -> bool:
+    """find with a root in `box` (the words before its first test) that
+    deletes what it finds, or runs on it a command that changes files."""
+    roots = []
+    for w in cmd[1:]:
+        if w.startswith(("-", "(", "!")):
+            break
+        roots.append(w)
+    if not any(inside(r, box, cwd) for r in roots or ["."]):
+        return False
+    if "-delete" in cmd:
+        return True
+    for i, w in enumerate(cmd):
+        if w in FIND_RUNS and i + 1 < len(cmd):
+            run = Path(cmd[i + 1]).name
+            if run in CHANGES_ALL | CHANGES_LAST | {"sed", "dd"}:
+                return True
+    return False
+
+
+def option(cmd: list[str], short: str = "", long: str = "") -> str | None:
+    """The value given an option, as `-C DIR`, `-CDIR`, `--long DIR` or
+    `--long=DIR`; None when it isn't given."""
+    for i, w in enumerate(cmd):
+        if w and w in (short, long):
+            return cmd[i + 1] if i + 1 < len(cmd) else None
+        if long and w.startswith(long + "="):
+            return w[len(long) + 1 :]
+        if (
+            short
+            and w.startswith(short)
+            and len(w) > len(short)
+            and not w.startswith("--")
+        ):
+            return w[len(short) :]
+    return None
+
+
+def unpacks_into(cmd: list[str], box: Path, cwd: str) -> bool:
+    """tar extracting, or unzip, into `box`: the folder its option names
+    (tar's -C or --directory, unzip's -d), else the folder it runs in."""
+    head = Path(cmd[0]).name
+    if head == "tar":
+        flags = [w for w in cmd[1:2] if not w.startswith("-")] + [
+            w for w in cmd[1:] if w.startswith("-") and not w.startswith("--")
+        ]
+        if not ("--extract" in cmd or "--get" in cmd or any("x" in f for f in flags)):
+            return False
+        to = option(cmd, "-C", "--directory")
+    elif head == "unzip":
+        if any(w in ("-l", "-t", "-v", "-Z", "-p") for w in cmd[1:]):
+            return False  # it lists, tests or prints: nothing is written
+        to = option(cmd, "-d")
+    else:
+        return False
+    return inside(to if to is not None else ".", box, cwd)
+
+
+def git_changes(cmd: list[str], box: Path, cwd: str) -> bool:
+    """git working on a tree in `box` (-C DIR or --work-tree=DIR) with a
+    command that changes its files."""
+    tree = option(cmd, "-C") or option(cmd, long="--work-tree")
+    if tree is None or not inside(tree, box, cwd):
+        return False
+    rest = cmd[1:]
+    while rest and rest[0].startswith("-"):  # git's own options, and -C's value
+        rest = (
+            rest[2:]
+            if rest[0] in ("-C", "-c", "--work-tree", "--git-dir")
+            else rest[1:]
+        )
+    return bool(rest) and rest[0] in GIT_CHANGES
+
+
 def writes_box(command: str, box: Path, cwd: str) -> bool:
     """Whether the command would change something in the folder `box`."""
     for cmd in words(command):
@@ -132,9 +224,13 @@ def writes_box(command: str, box: Path, cwd: str) -> bool:
                     return True
         head = Path(cmd[0]).name
         args = [a for a in cmd[1:] if not a.startswith("-")]
-        if head in CHANGES_ALL and any(inside(a, box, cwd) for a in args):
+        if changes(cmd, box, cwd):
             return True
-        if head in CHANGES_LAST and args and inside(args[-1], box, cwd):
+        if head == "find" and finds_and_changes(cmd, box, cwd):
+            return True
+        if head == "git" and git_changes(cmd, box, cwd):
+            return True
+        if unpacks_into(cmd, box, cwd):
             return True
         if head == "mv" and any(inside(a, box, cwd) for a in args[:-1]):
             return True  # a file moved out of the folder changes it too

@@ -286,3 +286,35 @@ def test_with_a_current_index_the_session_is_closed_without_reading_the_folder(
     assert reads
     capsys.readouterr()
     assert ss.main(["--box", str(box), "--index", ""]) == 2
+
+
+def test_with_the_persons_corrections_they_are_sealed_once_with_the_session(tmp_path):
+    """--with: what the person said to correct the assistant this session, in
+    their words, in the one bundle, so a session and its corrections are
+    sealed at once rather than a card each. The bundle's rows are as ever,
+    and nothing else of the folder is in it."""
+    box = make(tmp_path)
+    kernel("bite", "--box", str(box), "tomatoes sun", *NOW)
+    said = tmp_path / "said.json"
+    said.write_text(json.dumps(["no, the other bed", "I said beans, not peas"]))
+    got = run("--box", str(box), "--with", str(said), *NOW)
+    assert got.returncode == 42, got.stderr
+    prop = json.loads(
+        (box / "proposals" / f"{waiting_subject(box)[9:]}.json").read_text()
+    )
+    b = json.loads(prop["data"])
+    assert b["corrections"] == ["no, the other bed", "I said beans, not peas"]
+    assert prop["claim"].endswith(", and 2 corrections of yours")
+    for w in ("tomatoes", "sun", "water", "garden"):  # still nothing of the folder
+        assert w not in prop["data"].lower()
+    assert run("--box", str(box), "check").returncode == 42  # waiting, not broken
+    for bad in (["no"] * 51, ["x" * 2001], [""], "no", {"a": 1}, [7]):
+        said.write_text(json.dumps(bad))
+        got = run("--box", str(box), "--with", str(said), *NOW)
+        assert got.returncode == 2 and "isn't a list of what you said" in got.stderr, (
+            bad
+        )
+    assert (
+        run("--box", str(box), "--with", str(tmp_path / "gone.json"), *NOW).returncode
+        == 2
+    )

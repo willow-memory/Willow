@@ -1,0 +1,22 @@
+# hook-feedback's words: what marks a prompt as a correction to the assistant.
+# Copy it beside your record and edit it; point --words at your copy.
+#
+#   + PHRASE   a correction when the prompt starts with it
+#   ~ PHRASE   a correction wherever it is in the prompt
+#   - PHRASE   never a correction when the prompt starts with it (read first)
+#
+# A phrase ends at a word's end: "no" is not "now" or "nobody". Case and
+# curly apostrophes don't matter.
++ no
++ wrong
++ nope
++ not what i asked
++ that's not what i
+~ i said
+- no thanks
+- no thank you
+- no worries
+- no problem
+- no rush
+- no hurry
+- no need
