@@ -534,6 +534,12 @@ def test_a_blind_fork_says_so_recommends_nothing_and_hides_the_searchs_order(box
     assert g["name"].startswith(f"fork “close”, {suggest.BLIND_SAID}: nothing named")
     assert not any("recommended" in r["what"] or "confidence" in r["what"]
                    for r in g["rows"]), "nothing in front of you to follow"  # fmt: skip
+    cards = g["rows"][:-1]
+    assert all(r["what"].endswith(f"; {suggest.BLIND_ROW}") for r in cards), (
+        "every card says the same of itself: the search's reasons would say its order"
+    )
+    assert not any("close, not named" in r["what"] or "usually means" in r["what"]
+                   or "named, but not close" in r["what"] for r in cards)  # fmt: skip
     d = plan_of(box, BLIND)
     assert "hidden" not in d, "--plan prints all but what is kept from you"
     assert d["close"] == {"blind": True, "confidence": None, "said": suggest.BLIND_SAID}
@@ -545,7 +551,10 @@ def test_a_blind_fork_says_so_recommends_nothing_and_hides_the_searchs_order(box
     order = searchs_order(BLIND, shown)
     _, data = data_of(box, proposed(box, f"close={shown[0]}", sentence=BLIND))
     assert data["blind"] is True and data["shown"] == shown[:-1]
-    assert data["offered"] == order and data["recommended"] == order[0]
+    assert data["offered"] == order and data["search_first"] == order[0]
+    assert data["recommended"] is None, (
+        "nothing was recommended, and the record says so"
+    )
     assert data["rank"] == order.index(shown[0]) + 1, (
         "where it fell in the search's order"
     )
