@@ -3,7 +3,7 @@ section: Play
 line: A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for.
 source: new
 added: 2026-11-20
-version: 0.1.1
+version: 0.1.0
 writes: record, to
 network: none
 role: tools
