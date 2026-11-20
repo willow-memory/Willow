@@ -1036,8 +1036,8 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A lab notebook's dated entries, by sample and experiment: what was done to what, and when. \
   *new* `no-install` `offline` `entry` `sampling` · near: joplin, mcp-sampling, journiv
 - <a id="practice"></a>**practice** (idea) \
-  One page a child can read of what they're practising: sums missed, cards due, the reading log, and how it's going. \
-  Uses digest, flashcards, reading-log. *new* `no-install` `offline` `log` `child` · near: reading-log, emergency-card, repo-digest
+  One page a child can read of what they're practising: sums missed, cards due, the reading log, what's next. About the work, never the child. \
+  Uses digest, flashcards, reading-log. *new* `no-install` `offline` `log` `child` · near: reading-log, emergency-card, digest
 - <a id="rubric"></a>**rubric** (idea) \
   Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for. \
   *new* `no-install` `offline` `marks` `citing` · near: model-exam, gradebook, symptoms
@@ -2153,7 +2153,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. \
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
 - <a id="tower-math"></a>**tower-math** (idea) \
-  Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back. \
+  Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back, not a tally of you. \
   Uses dice-tower, play-odds, flashcards, forecasts. *new* `no-install` `offline` `tower` `total` · near: email-ask, bot-venv, lesson-time
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
