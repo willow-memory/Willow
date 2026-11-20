@@ -1584,6 +1584,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "practice",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "One page a child can read of what they're practising: sums missed, cards due, the reading log, and how it's going.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "makes",
+  "uses": "digest, flashcards, reading-log",
+  "version": "0.0.1"
+ },
+ {
   "name": "promises",
   "kind": "stdlib",
   "section": "Finding things",

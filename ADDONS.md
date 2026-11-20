@@ -1058,6 +1058,12 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Uses clauses, snapshot. Goes online: the page you name, fetched each time you run it. *new* `no-install` `online` `snapshot` `copy` `policies` · near:
   snapshot, clauses, wayback
 
+#### What it makes for elsewhere: ideas, not built yet
+
+- <a id="practice"></a>**practice** (idea) \
+  One page a child can read of what they're practising: sums missed, cards due, the reading log, and how it's going. \
+  Uses digest, flashcards, reading-log. *new* `no-install` `offline` `log` `child` · near: reading-log, emergency-card, repo-digest
+
 ### Tools you run yourself
 
 - <a id="boxes-here"></a>[**boxes-here**](adapters/stdlib/boxes-here/) \
