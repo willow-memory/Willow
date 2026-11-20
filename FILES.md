@@ -1620,14 +1620,14 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
-│   │   ├── cup/
-│   │   │   ├── cup.py        Dice shaken into a cup: only a hash on the record until it's lifted, so no roll can be foreseen, steered or shopped for, and every lift is checked
-│   │   │   ├── test_cup.py
-│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
 │   │   │   └── README.md
+│   │   ├── dice-tower/
+│   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
+│   │   │   ├── test_dice_tower.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
