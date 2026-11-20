@@ -2000,6 +2000,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 ### Tools you run yourself
 
+- <a id="cup"></a>[**cup**](adapters/stdlib/cup/) \
+  Dice shaken into a cup: only a hash on the record until it's lifted, so no roll is foreseen, steered or shopped for. \
+  Uses play-dice, play-dice5e. *new* `no-install` `offline` `dice` `roll` · near: play-dice, play-liars-dice, game-master
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: play-quiz, random-passage, stack-row

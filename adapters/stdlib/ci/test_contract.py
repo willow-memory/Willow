@@ -695,6 +695,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "contradictions": ("contradictions.py", ["--box", "{box}"]),
     "copilot": ("copilot.py", ["--box", "{box}"]),
     "copy-in": ("copy_in.py", ["--from", "{pile}", "--to", "{tmp}/copied-in"]),
+    "cup": ("cup.py", ["--box", "{box}", "check"]),
     "cursor": ("cursor.py", ["--box", "{box}"]),
     "daily-word": ("daily_word.py", ["--box", "{box}", "today", *NOW]),
     "debts": ("debts.py", ["--box", "{box}"]),

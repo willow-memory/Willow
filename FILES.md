@@ -1620,6 +1620,10 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
+│   │   ├── cup/
+│   │   │   ├── cup.py        Dice shaken into a cup: only a hash on the record until it's lifted, so no roll can be foreseen, steered or shopped for, and every lift is checked
+│   │   │   ├── test_cup.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1668,15 +1672,15 @@ willow/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-liars-dice/
+
+```
 │   │   ├── play-liars-dice/
 │   │   │   ├── play_liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
 │   │   │   ├── test_play_liars_dice.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-life/
-
-```
 │   │   ├── play-life/
 │   │   │   ├── play_life.py  Conway's Game of Life, played on the record
 │   │   │   ├── test_play_life.py
