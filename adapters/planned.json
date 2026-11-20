@@ -2513,17 +2513,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "words-later",
-  "kind": "stdlib",
-  "section": "Your own words",
-  "line": "A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made.",
-  "source": "new",
-  "writes": "to",
-  "network": "none",
-  "role": "words",
-  "version": "0.0.1"
- },
- {
   "name": "words-zh",
   "kind": "stdlib",
   "section": "Your own words",

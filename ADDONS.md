@@ -838,6 +838,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-it"></a>[**words-it**](adapters/stdlib/words-it/) \
   Italian common words ("il", "e"). \
   *new* `no-install` `offline` `common` `italian` · near: words-pt, words-tlh, words-es
+- <a id="words-later"></a>[**words-later**](adapters/stdlib/words-later/) \
+  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
+  *new* `no-install` `offline` · near: ask-later, starter-words, record-sync
 - <a id="words-layers"></a>[**words-layers**](adapters/stdlib/words-layers/) \
   One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes. \
   *new* `no-install` `offline` `stack` `matter` · near: words-later, stack, stack-share
@@ -880,9 +883,6 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="words-ja"></a>**words-ja** (idea) \
   Japanese, which has no spaces: a small segmenter of its own and a common-words list. \
   *new* `no-install` `offline` `common` `segmenter` · near: words-zh, words-hi, words-it
-- <a id="words-later"></a>**words-later** (idea) \
-  A box made again with a words list it lacked, its record kept as it was, since a box takes its words only when it is made. \
-  *new* `no-install` `offline` · near: ask-later, starter-words, record-sync
 - <a id="words-zh"></a>**words-zh** (idea) \
   Chinese, which has no spaces: words found by a small segmenter of its own, and a common-words list. \
   *new* `no-install` `offline` `common` `segmenter` · near: words-ja, words-hi, copies
