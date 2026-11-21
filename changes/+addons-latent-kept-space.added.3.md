@@ -1,0 +1,1 @@
+`words-layers`: one words list made from a master and the layers a box needs, each an ordinary words list, written in order under a line naming its file and hash; a word more than one layer gives is listed, written only when a layer changed, and never over a list it didn't make

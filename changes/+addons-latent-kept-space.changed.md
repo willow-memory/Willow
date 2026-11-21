@@ -1,0 +1,1 @@
+`latent` 0.2.0: `--to SPACE` keeps the built space in one file, keyed on the passages ranked, the kernel and the dimensions kept, and reads it while those are the same, so a stack run over a big index builds it once (143 s of a 150 s run, on 6,595 passages); a file that is no kept space is refused and left as it was

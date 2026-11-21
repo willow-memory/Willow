@@ -1,0 +1,1 @@
+`hook-ask-first`: a PreToolUse hook that refuses an assistant's read by hand of a file a box holds (a Read, a Grep with a path, a command that prints it) until that box was asked this session; the refusal names the box, the step and its card's line, and how to ask. It fails open
