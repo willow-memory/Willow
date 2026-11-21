@@ -700,6 +700,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "debts": ("debts.py", ["--box", "{box}"]),
     "decisions": ("decisions.py", ["ask", "--box", "{box}", "tomatoes"]),
     "deep-links": ("deep_links.py", ["--box", "{box}"]),
+    "dice-tower": ("dice_tower.py", ["--box", "{box}", "check"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),

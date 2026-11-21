@@ -1035,6 +1035,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="lab-notebook"></a>**lab-notebook** (idea) \
   A lab notebook's dated entries, by sample and experiment: what was done to what, and when. \
   *new* `no-install` `offline` `entry` `sampling` · near: joplin, mcp-sampling, journiv
+- <a id="practice"></a>**practice** (idea) \
+  One page a child can read of what they're practising: sums missed, cards due, the reading log, what's next. About the work, never the child. \
+  Uses digest, flashcards, reading-log. *new* `no-install` `offline` `log` `child` · near: reading-log, emergency-card, digest
 - <a id="rubric"></a>**rubric** (idea) \
   Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for. \
   *new* `no-install` `offline` `marks` `citing` · near: model-exam, gradebook, symptoms
@@ -2003,6 +2006,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: play-quiz, random-passage, stack-row
+- <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
+  A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
+  Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, game-master
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses play-dice, play-odds. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-odds, play-checkers
@@ -2099,12 +2105,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-fight5e"></a>**play-fight5e** (idea) \
   Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
   *new* `no-install` `offline` `rolls` `play` · near: play-dice5e, play-dice, play-tarot
-
-#### Tools you run yourself: ideas, not built yet, p to w
-
 - <a id="play-hanoi"></a>**play-hanoi** (idea) \
   Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
   *new* `no-install` `offline` `play` `move` · near: play-reversi, tic-tac-toe, play-dice
+
+#### Tools you run yourself: ideas, not built yet, p to w
+
 - <a id="play-lunatic"></a>**play-lunatic** (idea) \
   The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. \
   Needs Skyfield; MIT. *new* `needs-install` `offline` `play` `moon` · near: play-hearts, play-dice5e, typos
@@ -2146,6 +2152,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="todays-place"></a>**todays-place** (idea) \
   One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. \
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
+- <a id="tower-math"></a>**tower-math** (idea) \
+  Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back, not a tally of you. \
+  Uses dice-tower, play-odds, flashcards, forecasts. *new* `no-install` `offline` `tower` `total` · near: email-ask, bot-venv, lesson-time
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
   Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades,

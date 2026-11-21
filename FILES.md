@@ -1624,6 +1624,10 @@ willow/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
 │   │   │   └── README.md
+│   │   ├── dice-tower/
+│   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
+│   │   │   ├── test_dice_tower.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
@@ -1668,15 +1672,15 @@ willow/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-liars-dice/
+
+```
 │   │   ├── play-liars-dice/
 │   │   │   ├── play_liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
 │   │   │   ├── test_play_liars_dice.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-life/
-
-```
 │   │   ├── play-life/
 │   │   │   ├── play_life.py  Conway's Game of Life, played on the record
 │   │   │   ├── test_play_life.py
