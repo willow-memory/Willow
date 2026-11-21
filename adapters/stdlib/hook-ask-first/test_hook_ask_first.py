@@ -13,6 +13,9 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 HOOK = HERE / "hook_ask_first.py"
 KERNEL = ROOT / "kernel.py"
+#: the readers the project's stack names: their card's own line is said when
+#: they're beside this add-on, and the step alone when they aren't
+BESIDE = {n: (HERE.parent / n / "README.md").is_file() for n in ("markdown", "copy-in")}
 
 
 def project(tmp: Path) -> dict:
@@ -78,8 +81,9 @@ def test_a_held_file_read_by_hand_is_refused_and_says_who_holds_it(tmp_path):
     assert got.returncode == 2 and got.stdout == ""
     assert f"blocked: ask first  {doc}" in got.stderr
     assert f"the box at {w['box']} holds it" in got.stderr
+    said = "the markdown step of stack.md reads it into the pile"
     assert (
-        "the markdown step of stack.md reads it into the pile (markdown: Any Markdown"
+        said + (" (markdown: Any Markdown" if BESIDE["markdown"] else "\n")
         in got.stderr
     )
     assert f'python {KERNEL} bite --box {w["box"]} "your question"' in got.stderr
@@ -130,7 +134,8 @@ def test_what_is_held_comes_from_the_stack_and_a_copy_in_is_followed(tmp_path):
         if held.is_file():
             assert hook(w["boxes"], read(held, session=held.name)).returncode == 2, held
     got = hook(w["boxes"], read(p / "incoming" / "table.csv", session="t"))
-    assert "the copy-in step of stack.md reads it into the pile (copy-in:" in got.stderr
+    said = "the copy-in step of stack.md reads it into the pile"
+    assert said + (" (copy-in:" if BESIDE["copy-in"] else "\n") in got.stderr
     # nobody's: a file no step reads, the stack file itself, a file not there
     for free in (
         p / "elsewhere" / "free.txt",
