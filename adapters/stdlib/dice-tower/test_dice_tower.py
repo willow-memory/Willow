@@ -51,6 +51,13 @@ def drop(
     return run("--box", str(box), "drop", "--dice", dice, "--to", str(to), *more, *NOW)
 
 
+def in_process(monkeypatch, *argv: str) -> int:
+    """main() called here, with argv where the guard reads it (sys.argv), so
+    a write to --to is judged as one."""
+    monkeypatch.setattr(sys, "argv", [str(SCRIPT), *argv])
+    return tower.main(list(argv))
+
+
 def out(box: Path, diefile: Path) -> subprocess.CompletedProcess:
     return run("--box", str(box), "out", "--die", str(diefile), *NOW)
 
@@ -84,7 +91,7 @@ def test_the_die_file_is_kept_and_only_yours_before_the_hash_goes_on(tmp_path, m
     monkeypatch.setattr(tower.kernel, "append", watched)
     was = os.umask(0)  # a umask that would leave a written file open to everyone
     try:
-        assert tower.main(["--box", str(box), "drop", "--dice", "1d6", "--to", str(die), *NOW]) == 0  # fmt: skip
+        assert in_process(monkeypatch, "--box", str(box), "drop", "--dice", "1d6", "--to", str(die), *NOW) == 0  # fmt: skip
     finally:
         os.umask(was)
     assert seen == {"mode": 0o600, "kept": True}
@@ -98,7 +105,7 @@ def test_a_drop_the_record_wont_take_leaves_no_die_file(tmp_path, monkeypatch, c
         raise OSError(28, "No space left on device")
 
     monkeypatch.setattr(tower.kernel, "append", full)
-    assert tower.main(["--box", str(box), "drop", "--dice", "1d6", "--to", str(tmp_path / "a.die"), *NOW]) == 2  # fmt: skip
+    assert in_process(monkeypatch, "--box", str(box), "drop", "--dice", "1d6", "--to", str(tmp_path / "a.die"), *NOW) == 2  # fmt: skip
     assert "the die wasn't dropped" in capsys.readouterr().err
     assert not (tmp_path / "a.die").exists() and rows(box) == before
 
