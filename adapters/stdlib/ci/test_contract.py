@@ -924,7 +924,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "who-said": ("who_said.py", ["--box", "{box}"]),
     "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
-    "words-layers": ("words_layers.py", ["make", "--from", "adapters/stdlib/words-layers/example-master.txt", "--to", "{tmp}/words.txt"]),
+    "word-layers": ("word_layers.py", ["make", "--from", "adapters/stdlib/word-layers/example-master.txt", "--to", "{tmp}/words.txt"]),
     "world-ids": ("world_ids.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     # every language pack, from its folder: a new one is run here without a line of its own

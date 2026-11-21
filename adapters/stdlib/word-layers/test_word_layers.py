@@ -1,4 +1,4 @@
-"""words-layers: one list made from several, in order, remade only when one
+"""word-layers: one list made from several, in order, remade only when one
 changed; someone's own list is never written over."""
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-TOOL = HERE / "words_layers.py"
+TOOL = HERE / "word_layers.py"
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(HERE))
 
@@ -40,7 +40,7 @@ def test_make_writes_the_layers_in_order_and_the_kernel_reads_it(tmp_path):
     )
     text = made.read_text()
     assert text.startswith(
-        "# made by words-layers: edit the layers below, never this file.\n"
+        "# made by word-layers: edit the layers below, never this file.\n"
     )
     assert text.index("licence = license") < text.index("step = instruction")
     assert f"# layer {master.resolve()} sha256 " in text
@@ -109,7 +109,7 @@ def test_someones_own_list_is_never_written_over(tmp_path):
         got = run(verb, "--from", master, "--to", made)
         assert got.returncode == 2 and got.stdout == ""
         assert (
-            "is there and was not made by words-layers; it is left as it is"
+            "is there and was not made by word-layers; it is left as it is"
             in got.stderr
         )
     assert made.read_text() == "# my own list\nmum = margaret\n"
@@ -149,15 +149,15 @@ def test_a_bad_command_line_is_refused(tmp_path):
                  ["make", master, "--to", made]):  # fmt: skip
         got = run(*argv)
         assert (
-            got.returncode == 2 and "words_layers.py make --from LIST" in got.stderr
+            got.returncode == 2 and "word_layers.py make --from LIST" in got.stderr
         ), argv
     assert not made.exists()
 
 
 def test_layers_in_reads_only_its_own_lines():
-    import words_layers
+    import word_layers
 
-    text = ("# made by words-layers: edit the layers below, never this file.\n\n"
+    text = ("# made by word-layers: edit the layers below, never this file.\n\n"
             "# layer /a/master.txt sha256 abc\nx = y\n# layer of paint\n# layer /b sha256\n")  # fmt: skip
-    assert words_layers.layers_in(text) == {"/a/master.txt": "abc"}
-    assert words_layers.layers_in("") == {}
+    assert word_layers.layers_in(text) == {"/a/master.txt": "abc"}
+    assert word_layers.layers_in("") == {}

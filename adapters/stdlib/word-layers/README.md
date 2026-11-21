@@ -8,13 +8,13 @@ writes: to
 network: none
 role: words
 -->
-# words-layers
+# word-layers
 
 A box's words list made from a master list and the layers that box needs.
 
 ```
-python adapters/stdlib/words-layers/words_layers.py make --from LIST [--from LIST ...] --to MADE
-python adapters/stdlib/words-layers/words_layers.py check --from LIST [--from LIST ...] --to MADE
+python adapters/stdlib/word-layers/word_layers.py make --from LIST [--from LIST ...] --to MADE
+python adapters/stdlib/word-layers/word_layers.py check --from LIST [--from LIST ...] --to MADE
 ```
 
 **Why layers.** A box takes one words list, named when the box is made. One

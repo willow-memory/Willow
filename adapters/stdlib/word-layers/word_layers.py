@@ -1,8 +1,8 @@
-"""words_layers.py: one words list made from several, so a box's list is a
+"""word_layers.py: one words list made from several, so a box's list is a
 master list and the layers that box needs. Python 3.9+.
 
-    python adapters/stdlib/words-layers/words_layers.py make --from LIST [--from LIST ...] --to MADE
-    python adapters/stdlib/words-layers/words_layers.py check --from LIST [--from LIST ...] --to MADE
+    python adapters/stdlib/word-layers/word_layers.py make --from LIST [--from LIST ...] --to MADE
+    python adapters/stdlib/word-layers/word_layers.py check --from LIST [--from LIST ...] --to MADE
 
 A box takes one words list, named when the box is made. One list for
 everything goes wrong quickly: "step" is an instruction in one pile and a
@@ -48,7 +48,7 @@ import kernel  # noqa: E402
 
 #: The first line of a made list. A file that doesn't open with it is not
 #: one of these, and is never written over.
-MARK = "# made by words-layers: edit the layers below, never this file."
+MARK = "# made by word-layers: edit the layers below, never this file."
 
 
 def layer(path: Path) -> tuple[str, dict]:
@@ -124,7 +124,7 @@ def main(argv: list[str]) -> int:
         except (OSError, ValueError):
             old = ""
         if not old.startswith(MARK):
-            print(f"refused: {to} is there and was not made by words-layers; "
+            print(f"refused: {to} is there and was not made by word-layers; "
                   "it is left as it is", file=sys.stderr)  # fmt: skip
             return kernel.REFUSED
     was, now = layers_in(old or ""), layers_in(whole)
@@ -135,7 +135,7 @@ def main(argv: list[str]) -> int:
     elif argv[0] == "check":
         state = "stale" if old is not None else "not made yet"
     else:
-        fd, tmp = tempfile.mkstemp(dir=to.parent, prefix=".words-layers-")
+        fd, tmp = tempfile.mkstemp(dir=to.parent, prefix=".word-layers-")
         try:
             with os.fdopen(fd, "w", encoding="utf-8") as f:
                 f.write(whole)
