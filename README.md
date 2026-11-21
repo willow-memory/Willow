@@ -194,6 +194,7 @@ python kernel.py seal    --box DIR proposal:<sha256>
 python kernel.py decline --box DIR proposal:<sha256>
 python kernel.py verify  --box DIR
 python kernel.py out     --box DIR
+python kernel.py words   --box DIR --words FILE
 python kernel.py test
 ```
 
@@ -206,6 +207,7 @@ python kernel.py test
 | `decline` | turns one down, with your key: it isn't offered again |
 | `verify` | checks every line of the log, every approval and every No |
 | `out` | lists what is waiting for your approval |
+| `words` | gives the record a words list after it was made, or another one: read from the next question on, and a line on the log says so by its hash |
 | `test` | runs the whole cycle in a temporary folder and checks twelve properties |
 
 The commands that write to the log also take `--now TIMESTAMP`, to fix the
@@ -320,7 +322,7 @@ The top of it. [FILES.md](FILES.md) lists every file and what it is, and
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,440 lines)
+├── kernel.py                 the whole program (about 1,490 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails

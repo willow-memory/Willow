@@ -3,10 +3,10 @@ section: Finding things
 line: Finds code by meaning, not just matching words, using scan's index: a question reaches code that says the same thing another way.
 source: new
 added: 2026-10-24
-version: 0.1.1
+version: 0.2.0
 needs: numpy; BSD-3-Clause
 floor: numpy 2.1.0; the 2020 rule names 1.19, which has no wheel for Python 3.13 (the version the deps CI job runs), and 2.1.0 is the first that does
-writes: nothing
+writes: to
 network: none
 role: tools
 uses: batch-ask
@@ -17,7 +17,7 @@ Rank a [batch-ask](../../stdlib/batch-ask/) index's passages by meaning instead 
 words.
 
     python adapters/deps/latent/latent.py rank --index INDEX \
-        [--changed-from INDEX] [--only FILE] [--top N] \
+        [--changed-from INDEX] [--only FILE] [--top N] [--to SPACE] \
         ("your question" | --questions FILE)
 
 The kernel, and scan's BM25, match words: ask "memory exhausted" and they
@@ -37,6 +37,29 @@ scan's, each passage with its rank, file and line.
 FILE, in scan's format (one a line, or `name<TAB>question`; `#` starts a
 comment), and builds the space once for them all. A line each, with its
 `question` name. Ten questions cost one build, not ten.
+
+**Built once, kept.** `--to SPACE` keeps the built space in the file SPACE.
+The next run that ranks the very same passages reads it from there and
+builds nothing, so a folder that hasn't changed is asked in the time a
+question takes, as [index-cache](../../stdlib/index-cache/) does for scan's
+own index. Standard error says which happened:
+
+    latent: built the space of 6595 passages and kept it in kit.space
+    latent: the space kept in kit.space is of these 6595 passages; not built again
+
+A space is kept for one set of passages: the index's, less what
+`--changed-from` and `--only` leave out, read into words by this
+`kernel.py`. A passage added, edited or gone, another `--only`, or another
+kernel, is another set: it builds again and replaces what was kept, since
+one changed passage moves every term's weight. So one SPACE per question
+you keep asking; two stacks sharing one would each build over the other.
+It is written whole or not at all, through a scratch file beside it. A
+SPACE that is there and is not one latent kept is refused and left as it
+was, and so is one whose folder is not there. An index too small to have a
+space (fewer than two passages or terms) keeps nothing.
+
+On the kit of a competition (6,595 passages, an 8-core, 15 GiB machine) the
+build took 143 s of a 150 s stack run.
 
 **After a word search.** `--only FILE` ranks only the passages FILE names,
 so another add-on picks a few hundred and latent orders them by meaning.
@@ -71,8 +94,9 @@ terms), and ranks by cosine to the question in that reduced space. The same
 index and question give the same order every run.
 
 **How big:** the matrix is dense, passages × terms × 8 bytes, and it is
-built for every run (once for all of `--questions`), so a big index costs
-minutes and gigabytes each time. latent refuses (exit 2), before allocating anything, an index whose
+built for every run that has no kept space to read (once for all of
+`--questions`), so a big index costs minutes and gigabytes each time it is
+built. latent refuses (exit 2), before allocating anything, an index whose
 matrix would pass **512 MiB**, saying how many passages and terms it holds
 and the memory it would need. On a 4-core, 15 GiB machine, over a scan index
 of willow's own repo, the build took (each question after it took well under a second):
@@ -100,8 +124,10 @@ changed with `--changed-from`, or only what a word search found with
 
 **Exit codes:** 0 something ranked; 42 nothing shared a sense, or the index
 held too little; 2 refused (a bad command line, not an index, numpy
-missing, an `--only` FILE that names no passage of the index, or a matrix
-past 512 MiB — never a quiet skip). With `--questions`, 0 when any
+missing, an `--only` FILE that names no passage of the index, a matrix
+past 512 MiB, or a `--to` that is not a kept space or has no folder — never
+a quiet skip). With `--questions`, 0 when any
 question ranked something.
 
-**Never:** writes anything, reads a folder, reads the key, or goes online.
+**Never:** writes anything but SPACE (and, while writing it, a scratch file
+beside it), reads a folder, reads the key, or goes online.

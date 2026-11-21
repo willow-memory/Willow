@@ -239,6 +239,24 @@ def test_the_words_list_changed_since_the_last_question_needs_you(tmp_path):
     )
 
 
+def test_a_words_list_the_box_was_given_since_the_last_question_is_as_last_named(
+    tmp_path,
+):
+    """`kernel.py words` puts a row on the record when the person gives the
+    box a new list: that is the list the record last named, not a change
+    behind its back, so nothing needs them."""
+    b = box(tmp_path, words="sun = sunshine\n")
+    k("bite", "--box", str(b), *NOW, "how much sun do tomatoes want")
+    k("out", "--box", str(b), *NOW)
+    later = tmp_path / "later.txt"
+    later.write_text("sun = sunlight\n")
+    later.chmod(0o600)
+    assert k("words", "--box", str(b), *NOW, "--words", str(later)).returncode == 0
+    out = run("--box", str(b), *NOW)
+    assert "words list as last used" in out.stdout, out.stdout
+    assert "changed since the last question" not in out.stdout
+
+
 def test_a_words_list_that_does_not_read_needs_you(tmp_path):
     b = box(tmp_path, words="sun = sunshine\n")
     (tmp_path / "w.txt").write_text("not a list line\n")

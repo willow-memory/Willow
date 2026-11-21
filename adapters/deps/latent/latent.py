@@ -1,7 +1,7 @@
 """latent.py: rank a scan index's passages by meaning, not just words.
 
     python adapters/deps/latent/latent.py rank --index INDEX
-        [--changed-from INDEX] [--only FILE] [--top N]
+        [--changed-from INDEX] [--only FILE] [--top N] [--to SPACE]
         ("your question" | --questions FILE)
 
 The kernel, and scan's BM25, match words: a question that says "memory
@@ -27,6 +27,13 @@ passage with its rank, file and line:
 `name<TAB>question`) and builds the space once for them all, one JSON line
 each with its `question` name.
 
+`--to SPACE` keeps the built space in the file SPACE, and the next run that
+ranks the very same passages reads it there instead of building it again. It
+is the build that takes the minutes, so a folder that hasn't changed is asked
+in the time a question takes. A space is kept for one set of passages: the
+index's, less what `--changed-from` and `--only` leave out. Any other set
+builds again and replaces it. Standard error says which happened.
+
 It is not the kernel's answer: ranked by meaning, it serves passages a `bite`
 would not, so nothing it prints can be cited into an approval. On willow's
 own PHP2Shell demo it placed the fix's code in the top three more often than
@@ -37,14 +44,18 @@ Needs numpy. Exit codes, the kernel's: 0 something ranked (for one question
 of FILE, at least), 42 nothing did (no shared sense, or the index held
 nothing), 2 refused (a bad command line, not an index, numpy missing, an
 `--only` FILE that names no passage of the index, or an index past LIMIT's
-matrix: it says the passage count and the memory it would need).
+matrix: it says the passage count and the memory it would need; or a `--to`
+that is there and is not a space latent kept, or whose folder is not there).
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
+import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -105,6 +116,14 @@ def resolve(ix: "scan.Index", ids: list[str]) -> tuple[set, int]:
     return got, missed
 
 
+def chosen(ix: "scan.Index", lacked: set | None, only: set | None) -> list[int]:
+    """Which of the index's passages are ranked: those `lacked` doesn't hold,
+    and only those in `only`, if given."""
+    return [i for i, c in enumerate(ix.pile)
+            if (lacked is None or c["id"] not in lacked)
+            and (only is None or c["id"] in only)]  # fmt: skip
+
+
 def space(ix: "scan.Index", lacked: set | None, only: set | None = None):
     """The LSA space of the index's passages (those `lacked` doesn't hold, and
     only those in `only`, if given): the kept passages, each term's column,
@@ -112,9 +131,7 @@ def space(ix: "scan.Index", lacked: set | None, only: set | None = None):
     space."""
     import numpy as np
 
-    idxs = [i for i, c in enumerate(ix.pile)
-            if (lacked is None or c["id"] not in lacked)
-            and (only is None or c["id"] in only)]  # fmt: skip
+    idxs = chosen(ix, lacked, only)
     toks = [kernel.words(ix.pile[i]["text"]) for i in idxs]
     df: dict[str, int] = {}
     for t in toks:
@@ -142,6 +159,78 @@ def space(ix: "scan.Index", lacked: set | None, only: set | None = None):
     k = max(2, min(COMPONENTS, n - 1, m - 1))
     _, s, vt = np.linalg.svd(tfidf, full_matrices=False)
     return idxs, col, idf, vt[:k], tfidf @ vt[:k].T
+
+
+#: What a kept space is called inside its file. A space kept under another
+#: name was laid out another way, and is built again.
+FORMAT = "latent-space-1"
+
+
+def key_of(ix: "scan.Index", idxs: list[int]) -> str:
+    """What a space was built from, as one hash: these passages in this
+    order (a passage's id is the hash of its words), read into words by this
+    kernel.py, and kept to this many dimensions. The same key, the same space."""
+    h = hashlib.sha256(f"{FORMAT} {COMPONENTS}\n".encode())
+    h.update(hashlib.sha256(Path(kernel.__file__).read_bytes()).digest())
+    for i in idxs:
+        h.update(ix.pile[i]["id"].encode())
+    return h.hexdigest()
+
+
+def load(to: Path, key: str):
+    """The space kept in `to`, when it was built from `key`; None when it was
+    built from something else. A file that isn't a kept space is a ValueError:
+    it is someone's file, and is never written over."""
+    import numpy as np
+
+    try:
+        with np.load(to, allow_pickle=False) as z:
+            if str(z["format"]) != FORMAT:
+                return None
+            if str(z["key"]) != key:
+                return None
+            terms = z["terms"].tolist()
+            return (z["idxs"].tolist(), {w: j for j, w in enumerate(terms)},
+                    z["idf"], z["vt"], z["docz"])  # fmt: skip
+    except Exception as e:  # numpy raises several kinds for a file that isn't its own
+        raise ValueError(f"{to} is there and is not a space latent kept") from e
+
+
+def save(to: Path, key: str, sp: tuple) -> None:
+    """Keep the space in `to`, whole or not at all: written beside it first."""
+    import numpy as np
+
+    idxs, col, idf, vt, docz = sp
+    fd, tmp = tempfile.mkstemp(dir=to.parent, prefix=".latent-")
+    try:
+        with os.fdopen(fd, "wb") as f:
+            np.savez(f, format=np.array(FORMAT), key=np.array(key),
+                     idxs=np.array(idxs, dtype=np.int64),
+                     terms=np.array(sorted(col, key=col.get)),
+                     idf=idf, vt=vt, docz=docz)  # fmt: skip
+        os.replace(tmp, to)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
+
+
+def kept(ix: "scan.Index", lacked: set | None, only: set | None, to: Path | None):
+    """The space, and what was done about `to`: read from it ("kept"), built
+    and written to it ("built"), or nothing (no `to`, or too few passages to
+    have a space worth keeping)."""
+    if to is None:
+        return space(ix, lacked, only), ""
+    if to.is_dir() or not to.parent.is_dir():
+        raise ValueError(f"--to {to}: a file, in a folder that is there")
+    key = key_of(ix, chosen(ix, lacked, only))
+    sp = load(to, key) if to.exists() else None
+    if sp is not None:
+        return sp, "kept"
+    sp = space(ix, lacked, only)
+    if sp[3] is None:
+        return sp, ""
+    save(to, key, sp)
+    return sp, "built"
 
 
 def rank(
@@ -197,7 +286,7 @@ def main(argv: list[str]) -> int:
         return usage()
     opts, args, it = {}, [], iter(argv[1:])
     for a in it:
-        if a in ("--index", "--changed-from", "--top", "--questions", "--only"):
+        if a in ("--index", "--changed-from", "--top", "--questions", "--only", "--to"):
             opts[a] = next(it, "")
             if not opts[a]:
                 return usage()
@@ -236,7 +325,14 @@ def main(argv: list[str]) -> int:
             qs = scan.questions(Path(opts["--questions"]).read_text(encoding="utf-8"))
         else:
             qs = [("", args[0])]
-        sp = space(ix, lacked, only)
+        to = Path(opts["--to"]) if "--to" in opts else None
+        sp, did = kept(ix, lacked, only, to)
+        if did == "kept":
+            print(f"latent: the space kept in {to} is of these {len(sp[0])} passages; "
+                  "not built again", file=sys.stderr)  # fmt: skip
+        elif did == "built":
+            print(f"latent: built the space of {len(sp[0])} passages and kept it in {to}",
+                  file=sys.stderr)  # fmt: skip
     except (OSError, ValueError) as e:
         print(f"refused: {e}", file=sys.stderr)
         return kernel.REFUSED

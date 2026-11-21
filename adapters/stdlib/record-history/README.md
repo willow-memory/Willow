@@ -3,7 +3,7 @@ section: Trust and proof
 line: Your record in plain sentences: what was asked when, what found nothing, what you approved; places and counts, never the words.
 source: new
 added: 2026-10-24
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: page
@@ -27,6 +27,8 @@ The record keeps no words, so neither does this:
 - A question is known by its fingerprint, which is how it can say "again".
 - An answer is known by the places it came from (`dentist.txt:1`).
 - An approval is named by the file it writes, never by its text.
+- A words list given to the record (`kernel.py words`) is said as given,
+  or as another, never by its words.
 
 A row of a kind it doesn't know is named, not guessed: "A verdict row,
 written by ci."

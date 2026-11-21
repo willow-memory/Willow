@@ -294,7 +294,7 @@ def session(impl, root: Path) -> dict:
 
     def step(*args: str) -> int:
         code, out = run(impl, *args)
-        if args[0] == "init":  # the boot row's hash: its own version is in it
+        if args[0] in ("init", "words"):  # a row's hash: its own version is in it
             out = re.sub(r"row (\d+) [0-9a-f]{16}", r"row \1 <hash>", out)
         try:
             body = json.loads(out)
@@ -384,6 +384,7 @@ def session(impl, root: Path) -> dict:
     step("out", *b)  # one waiting
     step("verify", *b)
     sources(root, step)
+    relisted(root, step)
     return {"shown": shown, "box": box, "key": key}
 
 
@@ -423,6 +424,52 @@ def sources(root: Path, step) -> None:
     step("init", *alone, "--from", f"law={law}", "--key", str(key))
     step("bite", *alone, "when is the shed painted")
     step("bite", *alone, "--from", f"x={law}", "when is the shed painted")
+
+
+def relisted(root: Path, step) -> None:
+    """A box given its words list after it was made (`words`): the same
+    refusals as init's, a row by hash (never a word), the list it replaced
+    as the record last read it, an edit in place named again, a list moved
+    away, and a record that doesn't verify left as it was."""
+    pile, key = root / "pile", root / "keys" / "me.key"
+    later = ["--box", str(root / "later"), "--now", TS]
+    step("init", *later, "--pile", str(pile), "--key", str(key))
+    # no list yet: sun is not sunlight
+    step("bite", *later, "how much sunlight do tomatoes want")
+    first, second = key.parent / "first.txt", key.parent / "second.txt"
+    for text, mode, where in (
+        ("sunlight = sun\n", 0o600, root / "later" / "words.txt"),  # inside the box
+        ("sunlight = sun\n", 0o644, first),  # readable by others
+        ("sunlight sun\n", 0o600, first),  # not a list line
+    ):
+        where.write_text(text)
+        where.chmod(mode)
+        step("words", *later, "--words", str(where))
+    (root / "later" / "words.txt").unlink()
+    step("words", *later, "--words", str(key.parent / "none.txt"))  # not there
+    first.write_text("# later\nsunlight = sun\n")
+    step("words", *later)  # no list named
+    step("words", *later, "--words", str(first), "stray")
+    step("words", *later, "--words", str(first))  # given one: a row, no list before
+    step("words", *later, "--words", str(first))  # the same, unedited: no row
+    step("bite", *later, "how much sunlight do tomatoes want")  # read through it
+    # edited in place
+    first.write_text("# later\nsunlight = sun, light\ncold = frost\n")
+    step("words", *later, "--words", str(first))  # the same file, new bytes: a row
+    step("bite", *later, "when does the cold come")
+    second.write_text("cold = frost\n")
+    second.chmod(0o600)
+    first.rename(key.parent / "moved.txt")  # the list it reads, gone
+    step("bite", *later, "when does the cold come")  # refused
+    step("words", *later, "--words", str(second))  # was: the list the record last read
+    step("bite", *later, "when does the cold come")
+    step("verify", *later)
+    record = root / "later" / "record.jsonl"
+    kept = record.read_text()
+    record.write_text(kept.replace('"boot"', '"b00t"', 1))
+    step("words", *later, "--words", str(key.parent / "moved.txt"))  # doesn't verify
+    record.write_text(kept)
+    step("verify", *later)
 
 
 def rehash(path: Path, rows: list[dict]) -> None:
@@ -575,7 +622,7 @@ def sessions(ports: list, work: Path) -> int:
             "attacks": forge_and_edit(impl, got["box"]),
             "sources": [
                 (rows_without_self(root / b), files_of(root / b))
-                for b in ("two", "alone")
+                for b in ("two", "alone", "later")
             ],
         }
     py = sides["kernel.py"]

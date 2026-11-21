@@ -817,6 +817,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="synonyms"></a>[**synonyms**](adapters/stdlib/synonyms/) \
   Words-list lines for a word no file holds: the dictionary's other words that your files do hold. \
   Reaches this machine only. *new* `no-install` `this-machine` · near: abbreviations, accents, decisions
+- <a id="word-layers"></a>[**word-layers**](adapters/stdlib/word-layers/) \
+  One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes. \
+  *new* `no-install` `offline` `stack` `several` · near: words-later, stack, stack-share
 - <a id="words-ar"></a>[**words-ar**](adapters/stdlib/words-ar/) \
   Arabic common words ("في", "من", "على"). \
   *new* `no-install` `offline` `common` `arabic` · near: words-it, words-pl, words-pt
@@ -1651,6 +1654,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="approved-only"></a>[**approved-only**](adapters/stdlib/approved-only/) \
   The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. \
   *bot* `no-install` `offline` · near: stack, decisions, folder-card
+- <a id="hook-ask-first"></a>[**hook-ask-first**](adapters/stdlib/hook-ask-first/) \
+  A PreToolUse hook that refuses reading by hand a file one of your boxes holds, until that box has been asked this session. \
+  Uses hook-shell, stack. *new* `no-install` `offline` `pretooluse` `refuses` `hooks` · near: hook-read-first, hook-leaks, hook-cite
 - <a id="hook-compact"></a>[**hook-compact**](adapters/stdlib/hook-compact/) \
   A PreCompact hook that prints what the record holds open (seals waiting, questions unanswered), so it survives the assistant's summary. \
   Uses digest. Hands on the waiting suggestions' text and reasons, to the assistant's model before it summarises. *box* `no-install` `to-a-model` `waiting`

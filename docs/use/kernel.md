@@ -14,7 +14,8 @@ $ python kernel.py verify --box my-record
 **Your own words.** A words list reads your word as the words your files
 use, one line a word (`owes = invoice, outstanding`), kept like the key:
 readable only by you, outside the record folder. Name it at `init` with
-`--words FILE`; the tour's [Teach it her words](../tour.md#4-teach-it-her-words)
+`--words FILE`, or give a record one later with `kernel.py words --box DIR
+--words FILE` (a row says the list changed, by its hash); the tour's [Teach it her words](../tour.md#4-teach-it-her-words)
 shows one at work.
 
 **Suggestions from a model or a script.** A suggestion is one JSON line,
