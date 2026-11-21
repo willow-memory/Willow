@@ -691,6 +691,39 @@ def test_the_list_a_words_row_replaced_is_the_one_the_record_last_read(tmp_path)
     assert cli("verify", "--box", str(box)).returncode == 0
 
 
+def test_a_words_list_edited_in_place_is_put_on_the_record_when_named_again(tmp_path):
+    """Most lists are edited, not replaced. Named again after an edit, the
+    same file is a new list to the record: a row says so by its hash, the
+    settings stay as they are, and named again unedited it is no row."""
+    pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
+    pile.mkdir()
+    (pile / "log.txt").write_text("next: Oct 2027\n")
+    mine.mkdir(mode=0o700)
+    wl = mine / "words.txt"
+    wl.write_text("due = next\n")
+    wl.chmod(0o600)
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    assert cli("init", *b, "--pile", str(pile), "--key", str(mine / "k.hex"),
+               "--words", str(wl)).returncode == 0  # fmt: skip
+    assert cli("bite", *b, "what is due").returncode == 0
+    read_first = k.hashlib.sha256(wl.read_bytes()).hexdigest()
+    settings = (box / "kernel.json").read_text()
+    wl.write_text("due = next\nowed = unpaid\n")
+    got = cli("words", *b, "--words", str(wl))
+    assert (
+        got.returncode == 0
+        and "as it is now, edited since it was last read (2 words)" in got.stdout
+    )
+    row = json.loads((box / "record.jsonl").read_text().splitlines()[-1])
+    assert row["kind"] == "words" and row["was_sha256"] == read_first
+    assert row["words_sha256"] == k.hashlib.sha256(wl.read_bytes()).hexdigest()
+    assert (box / "kernel.json").read_text() == settings
+    rows = len((box / "record.jsonl").read_text().splitlines())
+    again = cli("words", *b, "--words", str(wl))
+    assert again.returncode == 0 and "already reads" in again.stdout
+    assert len((box / "record.jsonl").read_text().splitlines()) == rows
+
+
 def test_a_words_list_the_kernel_would_not_take_changes_nothing(tmp_path):
     pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
     pile.mkdir()

@@ -1,1 +1,1 @@
-`box-health` 0.1.3 takes the words list the record last named, a question's or the one `kernel.py words` gave the box, so a list the person gave it since the last question no longer needs them
+`kernel.py words` puts a list edited in place on the record when it is named again; `record-history` 0.1.1 says a words row as the person gave the list; `box-health` 0.1.3 takes the words list the record last named, a question's or the one `kernel.py words` gave the box, so a list the person gave it since the last question no longer needs them

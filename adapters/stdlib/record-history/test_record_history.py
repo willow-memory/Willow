@@ -178,6 +178,17 @@ def test_a_row_of_another_kind_is_named_not_guessed(tmp_path):
     )
 
 
+def test_a_words_list_given_to_the_record_is_said_as_the_person_did_it():
+    rows = [{"kind": "words", "who": "kernel", "words_sha256": "ab", "was_sha256": "",
+             "ts": "2026-01-01T00:00:00Z"},
+            {"kind": "words", "who": "kernel", "words_sha256": "cd", "was_sha256": "ab",
+             "ts": "2026-01-02T00:00:00Z"}]  # fmt: skip
+    assert [s for _, s in hs.sentences(Path("."), rows)] == [
+        "You gave your record a words list.",
+        "You gave your record another words list.",
+    ]
+
+
 def test_echo_only_and_ordinals():
     rows = [
         {

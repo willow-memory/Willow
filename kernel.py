@@ -379,23 +379,28 @@ def relist(box: Path, wl: Path, ts: str) -> int:
         return REFUSED
     cfg = config(box)
     was = cfg.get("words")
-    if was == str(wl.resolve()):
-        print(f"ready: this box already reads {was}")
-        return ALIVE
     # the list it replaced is the one the record last read through, not the
     # file as it is now: that file may have moved, or changed since
     named = [r["words_sha256"] for r in rows if r.get("words_sha256")]
+    same = was == str(wl.resolve())
+    if same and (not named or named[-1] == sha):
+        print(f"ready: this box already reads {was}")
+        return ALIVE
     before = named[-1] if named else read_words(Path(was), box)[1] if was else ""
     # the row first: a box that names a list its record never heard of would
-    # be the kernel's own settings saying more than the record does
+    # be the kernel's own settings saying more than the record does. The same
+    # file edited since the record last read it is a new list too, and the
+    # row says so; its settings already name it.
     row = append(box, ts, "words", words_sha256=sha, was_sha256=before)
-    cfg["words"] = str(wl.resolve())
-    new = box / "kernel.json.new"
-    new.write_text(json.dumps(cfg, sort_keys=True) + "\n")
-    os.replace(new, box / "kernel.json")
+    if not same:
+        cfg["words"] = str(wl.resolve())
+        new = box / "kernel.json.new"
+        new.write_text(json.dumps(cfg, sort_keys=True) + "\n")
+        os.replace(new, box / "kernel.json")
     print(
-        f"ready: this box reads {wl} from now on ({len(alias)} words), "
-        f"row {row['n']} {row['hash'][:16]}"
+        f"ready: this box reads {wl} "
+        + ("as it is now, edited since it was last read" if same else "from now on")
+        + f" ({len(alias)} words), row {row['n']} {row['hash'][:16]}"
     )
     return ALIVE
 
