@@ -840,7 +840,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *new* `no-install` `offline` `common` `italian` · near: words-pt, words-tlh, words-es
 - <a id="words-layers"></a>[**words-layers**](adapters/stdlib/words-layers/) \
   One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes. \
-  *new* `no-install` `offline` `stack` `matter` · near: words-later, stack, stack-share
+  *new* `no-install` `offline` `stack` `several` · near: words-later, stack, stack-share
 - <a id="words-nl"></a>[**words-nl**](adapters/stdlib/words-nl/) \
   Dutch common words ("de", "en"). \
   *new* `no-install` `offline` `common` `dutch` · near: words-de, words-it, words-pl
