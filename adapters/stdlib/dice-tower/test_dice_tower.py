@@ -192,7 +192,8 @@ def test_check_finds_a_die_out_that_doesnt_hold(tmp_path):
         assert held == 0 and inside == [] and said == f"row {rs[-1]['n']}: {why}"
 
     fails({"total": good[-1]["total"] + 1}, "its faces aren't what the dropped secret gives")  # fmt: skip
-    fails({"faces": [[1, 1]]}, "its faces aren't what the dropped secret gives")
+    other = [[f % 6 + 1 for f in g] for g in good[-1]["faces"]]  # every face moved, so never the real ones  # fmt: skip
+    fails({"faces": other}, "its faces aren't what the dropped secret gives")
     fails({"kept": [[0]]}, "its faces aren't what the dropped secret gives")
     fails({"dice": "2d8"}, "its faces aren't what the dropped secret gives")
     fails({"secret": "ab" * 32}, f"its secret isn't the one dropped in at row {n}")
