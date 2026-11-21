@@ -98,10 +98,25 @@ def item(i: dict) -> str:
     return "\n".join(lines)
 
 
+#: the branch GitHub's merge queue runs a pull request on, merged up to its base
+QUEUED = re.compile(r"gh-readonly-queue/(.+)/pr-(\d+)-[0-9a-f]{7,40}")
+
+
+def branch(name: str) -> str:
+    """Where a run ran, as a person says it: a merge queue's branch is the
+    pull request it holds and the base it goes into, not its machine name."""
+    m = QUEUED.fullmatch(name)
+    return (
+        f" in the merge queue for pull request #{m[2]}, into {m[1]}"
+        if m
+        else f" on {name}"
+    )
+
+
 def run(r: dict) -> str:
     what = text(r.get("workflowName")) or text(r.get("name"))
     result = text(r.get("conclusion")) or text(r.get("status")) or "unknown"
-    where = f" on {text(r['headBranch'])}" if text(r.get("headBranch")) else ""
+    where = branch(text(r["headBranch"])) if text(r.get("headBranch")) else ""
     line = f"run {r['databaseId']} ({result}) " + " ".join(
         x for x in (day(r.get("createdAt")), (what + where).strip()) if x
     )
@@ -111,14 +126,59 @@ def run(r: dict) -> str:
     )
 
 
+#: where GitHub's REST API (and an MCP server over it) puts a list in its answer
+WRAPPED = ("issues", "pull_requests", "workflow_runs", "items")
+
+
+def gh_shape(i: dict) -> dict:
+    """An item as gh prints it: GitHub's REST names (user, created_at,
+    head.ref, merged_at, draft, a label by its name alone, a run's id and
+    head_branch) put under gh's, when gh's own is absent. gh's are kept."""
+    out = dict(i)
+
+    def put(name: str, value: object) -> None:
+        if name not in out and value is not None:
+            out[name] = value
+
+    put("author", i.get("user") if isinstance(i.get("user"), dict) else None)
+    put("createdAt", i.get("created_at"))
+    head, pr = i.get("head"), i.get("pull_request")
+    if isinstance(head, dict) and isinstance(head.get("ref"), str):
+        put("headRefName", head["ref"])
+    put(
+        "mergedAt",
+        i.get("merged_at") or (pr.get("merged_at") if isinstance(pr, dict) else None),
+    )
+    if isinstance(i.get("draft"), bool):
+        put("isDraft", i["draft"])
+    if isinstance(pr, dict):  # the issues list marks a pull request this way
+        put("isDraft", bool(i.get("draft")))
+    if isinstance(i.get("labels"), list):
+        out["labels"] = [
+            {"name": lab} if isinstance(lab, str) else lab for lab in i["labels"]
+        ]
+    if (
+        "number" not in i
+        and isinstance(i.get("id"), int)
+        and isinstance(i.get("head_branch"), str)
+    ):
+        put("databaseId", i["id"])  # a workflow run
+        put("headBranch", i["head_branch"])
+        put("displayTitle", i.get("display_title"))
+    return out
+
+
 def convert(data: bytes) -> str | None:
     doc = json.loads(data.decode("utf-8-sig"))
+    if isinstance(doc, dict):  # the REST API's answer: the list under its name
+        doc = next((doc[k] for k in WRAPPED if isinstance(doc.get(k), list)), None)
     if not isinstance(doc, list):
         return None
     rows = []
     for i in doc:
         if not isinstance(i, dict):
             continue
+        i = gh_shape(i)
         if (
             "number" in i
             and isinstance(i.get("title"), str)

@@ -247,6 +247,7 @@ def test_rules_are_listed_and_a_bad_command_line_is_refused(tmp_path):
         "key        the call names the box's key file",
         "box-write  the call would change a file inside the box other than through kernel.py",
         "beside-write with --also DIR, the call would change a file inside that folder kept beside the box",
+        "seal       the call runs a kernel's seal or decline, which read the key themselves",
     ]
     for argv in (
         [],
@@ -281,17 +282,47 @@ def test_a_search_of_the_folder_holding_the_key_is_refused(tmp_path):
         assert hg.judge(raw, b, key)[0] == 2
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #91: a command that runs kernel.py seal is allowed, and seal reads the key",
-)
 def test_a_command_that_seals_is_refused(tmp_path):
+    """Bug #91: seal and decline read the key themselves, so a command that
+    runs them names no key and writes nothing by hand, and was let through."""
     b, key = box(tmp_path)
     for verb in ("seal", "decline"):
         raw = call(
             "Bash", command=f"python {KERNEL} {verb} --box {b} proposal:{'0' * 64}"
         )
-        assert hg.judge(raw, b, key)[0] == 2
+        code, why = hg.judge(raw, b, key)
+        assert code == 2 and "rule seal" in why
+
+
+def test_a_seal_is_refused_by_any_kernel_on_any_box_in_any_shape(tmp_path):
+    b, key = box(tmp_path)
+    other = tmp_path / "another-box"
+    subj = f"proposal:{'0' * 64}"
+    for command in (
+        f"cd /x && python3 kernel.py seal --box {other} {subj}",
+        f"echo hi; python {KERNEL} decline --box {b} {subj} --now 2026-01-01",
+        f"node ports/ts/kernel.js seal --box {b} {subj}",
+        f"java -cp ports/java Kernel seal --box {b} {subj}",
+        f"dotnet ports/csharp/bin/Kernel.dll decline --box {b} {subj}",
+        f"./ports/go/kernel seal --box {b} {subj}",
+        f"go run ports/go/kernel.go seal --box {b} {subj}",
+    ):
+        code, why = hg.judge(call("Bash", command=command), b, key)
+        assert (code, "rule seal" in why) == (2, True), command
+
+
+def test_the_kernels_other_commands_and_the_word_seal_alone_are_allowed(tmp_path):
+    b, key = box(tmp_path)
+    for command in (
+        f"python {KERNEL} bite --box {b} 'when do I seal the jars'",
+        f"python {KERNEL} propose --box {b} --file s.jsonl",
+        f"python {KERNEL} verify --box {b}",
+        f"python {KERNEL} out --box {b}",
+        "grep -rn seal docs/",
+        "git log --grep decline",
+        f"python {KERNEL} bite --box {b} seal | grep decline",
+    ):
+        assert hg.judge(call("Bash", command=command), b, key) == (0, ""), command
 
 
 def beside(tmp_path: Path) -> tuple[Path, Path, Path]:

@@ -1,9 +1,9 @@
 <!-- willow-addon
 section: Assistants
-line: A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back.
+line: A PreToolUse hook that blocks, by fixed rule, never judgment, a call that would read your key, seal with it, or write your record.
 source: box
 added: 2026-10-29
-version: 0.1.2
+version: 0.2.0
 writes: nothing
 network: none
 role: guards
@@ -12,7 +12,7 @@ tags: hooks
 # hook-guard
 
 Keeps an assistant out of the two places a box is the person's alone: its key,
-and its record.
+and its record; and off the one act that is the person's alone, the seal.
 
 ```
 python adapters/stdlib/hook-guard/hook_guard.py run --box DIR [--also DIR]...
@@ -21,6 +21,7 @@ python adapters/stdlib/hook-guard/hook_guard.py rules
 key        the call names the box's key file
 box-write  the call would change a file inside the box other than through kernel.py
 beside-write  with --also DIR, the call would change a file inside that folder
+seal       the call runs a kernel's seal or decline, which read the key themselves
 ```
 
 `run` is a PreToolUse hook. It reads what the assistant is about to do (the
@@ -32,6 +33,7 @@ names the rule:
 refused: rule box-write: this Write is inside the box; only kernel.py writes there.
 refused: rule beside-write: this Write is inside a folder kept beside the box; only the runtime writes there.
 refused: rule key: this command names the key file; the key is the person's.
+refused: rule seal: this command runs the kernel's seal or decline; a seal is the person's, never an assistant's.
 ```
 
 | Rule | It refuses | It leaves alone |
@@ -39,6 +41,16 @@ refused: rule key: this command names the key file; the key is the person's.
 | `key` | a Read, Grep or Glob whose path is the key; a command with the key's path in it, or a word that resolves to it | every other file; the key's folder; the record |
 | `box-write` | a Write, Edit, MultiEdit or notebook edit of a file in the box; a command that redirects into it, or runs rm, mv, cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i on it (for mv, cp, ln, install the place it puts something; for mv also what it moves, since a file moved out of the box changes it); `find` from it with `-delete`, or `-exec` of one of those; `git -C` or `--work-tree` on it with a command that changes files (`clean`, `checkout`, `reset`, `restore` and the like); `tar` extracting, or `unzip`, into it (its `-C` or `-d`, else the folder the command runs in) | reading the box, copying out of it, `kernel.py` run on it, a box's sibling folder, `find`, `git status` or `git log` on it, `tar -c` or `-t` from it, `unzip -l` |
 | `beside-write` | with `--also DIR`: the same as `box-write`, for that folder; the folder need not exist yet | reading it, copying out of it, a folder whose name only starts with the same letters |
+| `seal` | a command that runs a kernel with `seal` or `decline` as its verb: `kernel.py`, or a port's (TypeScript's, Java's, C#'s, Go's and Rust's, built or run from source), by the file's name wherever it is, on any box | every other kernel command (`bite`, `propose`, `verify`, `out`); "seal" or "decline" as any other word, a question's included |
+
+`seal` is there because `seal` and `decline` read the key themselves, from the
+box's config: a command that runs them names no key and changes nothing by
+hand, so `key` and `box-write` both let it by, and it writes the person's yes
+or no (#91). It is a test of words like the rest. A seal from a script the
+assistant writes, or from code that imports the kernel, gets through. The one
+guarantee no hook can give itself is the machine's: **keep the key where the
+account the assistant runs as can't read it**, and a seal it reaches for
+fails at the kernel.
 
 `--also DIR` may be given more than once. It is for a program that keeps its
 own files beside the box and writes them itself: the assistant's tool calls are

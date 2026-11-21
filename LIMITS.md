@@ -27,6 +27,13 @@ where it falls short today, and a fix is welcome.
 
 ## Where it falls short
 
+- **A hook can't keep an assistant from your key; only the machine can.**
+  hook-guard refuses a tool call that names the key, writes the box, or runs
+  the kernel's `seal` or `decline`, but it judges words: code an assistant
+  writes to get round it gets through. Where the key is readable by the
+  account the assistant runs as, that code can seal. Keep the key where that
+  account can't read it.
+
 - **It matches words, not meanings.** Ask "who owes me money" when your
   files say "invoice outstanding" and it finds nothing until a words list
   connects them.

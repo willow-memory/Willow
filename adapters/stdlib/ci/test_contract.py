@@ -999,6 +999,79 @@ def test_a_bad_command_line_is_refused_and_says_how_to_run_it(name, tmp_path):
     )
 
 
+#: the add-ons a person runs on a box whose code reads one folder through
+#: kernel.folder, which refuses a box of sources (VI.9) with a ValueError
+ON_ONE_FOLDER = sorted(
+    n for n, (script, argv) in COMMANDS.items()
+    if "{box}" in argv and (STDLIB / n / script).is_file()
+    and "kernel.folder(" in (STDLIB / n / script).read_text(encoding="utf-8")
+)  # fmt: skip
+#: bug #383: each of these lets kernel.folder's refusal out as a traceback
+CRASH_ON_SOURCES = frozenset({
+    "a11y-check", "advisories", "agents-md-check", "backup", "box-health",
+    "codeowners", "coming-up", "connect", "deep-links", "digest", "fixity",
+    "folder-card", "hook-impact", "install-scripts", "instruction-files",
+    "invoices", "launcher", "licenses", "make-it-so", "nicknames", "outdated",
+    "package-contents", "pieces", "pii-audit", "pile-sweep", "profile",
+    "ref-check", "risky-code", "ro-crate", "secrets-audit", "stale-answers",
+    "timeline", "tip-pin", "typosquat", "unpinned", "what-changed", "world-ids",
+})  # fmt: skip
+
+
+def on_sources(name: str, tmp_path: Path) -> subprocess.CompletedProcess:
+    """An add-on's own command, run on a box that reads two places where
+    they are kept (init --from), with no pile folder of its own."""
+    script_name, argv = COMMANDS[name]
+    files = READERS.get(name, ("", {"garden.md": b"Tomatoes want sun.\n"}))[1]
+    places = {"a": tmp_path / "a", "b": tmp_path / "b"}
+    for at in places.values():
+        at.mkdir()
+    for rel, data in {**files, **PILE_EXTRA.get(name, {})}.items():
+        (places["a"] / rel).parent.mkdir(parents=True, exist_ok=True)
+        (places["a"] / rel).write_bytes(data)
+    (places["b"] / "notes.md").write_text("The tomatoes in bed 2 want more sun.\n")
+    box = tmp_path / "box"
+    subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(box),
+                    *(x for n, at in places.items() for x in ("--from", f"{n}={at}")),
+                    "--key", str(tmp_path / "key"), *NOW], check=True,
+                   capture_output=True)  # fmt: skip
+    fill = {"box": str(box), "pile": str(places["a"]), "tmp": str(tmp_path)}
+    return run(STDLIB / name / script_name, *(a.format(**fill) for a in argv))
+
+
+def test_every_add_on_known_to_crash_on_sources_reads_one_folder():
+    """A name on bug #383's list is one this test file checks: an add-on
+    that stops calling kernel.folder leaves the list with its fix."""
+    assert CRASH_ON_SOURCES <= set(ON_ONE_FOLDER)
+
+
+@pytest.mark.parametrize(
+    "name", only(n for n in ON_ONE_FOLDER if n not in CRASH_ON_SOURCES)
+)
+def test_an_add_on_that_reads_one_folder_refuses_a_box_of_sources_or_reads_it(
+    name, tmp_path
+):
+    """VI.9: a box may read its files where they are kept. An add-on that
+    walks one folder refuses such a box in the kernel's own words (2), or
+    reads every place; it never lets the kernel's ValueError out."""
+    got = on_sources(name, tmp_path)
+    assert "Traceback" not in got.stderr and got.returncode in (0, 2, 42), got.stderr[
+        -400:
+    ]
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="bug #383: an add-on that reads one folder crashes with a traceback on a box of sources (--from), where kernel.folder refuses it",
+)
+@pytest.mark.parametrize("name", only(CRASH_ON_SOURCES))
+def test_an_add_on_known_to_crash_on_sources_refuses_it_or_reads_it(name, tmp_path):
+    got = on_sources(name, tmp_path)
+    assert "Traceback" not in got.stderr and got.returncode in (0, 2, 42), got.stderr[
+        -400:
+    ]
+
+
 _spec = importlib.util.spec_from_file_location(
     "mirrors_for_contract", STDLIB / "ci" / "mirrors.py"
 )
