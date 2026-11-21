@@ -9,7 +9,9 @@ JSON Claude Code, Gemini CLI and Cursor send on standard input) and holds it to
 its rules, each named when it refuses (exit 2, the reason on standard error):
 
     key        the call names the box's key file: a Read of it, a command that
-               has its path in it. The key is the person's; no assistant opens
+               has its path in it, a glob the shell expands to it, a recursive
+               read (grep -r, rg, cp -r, tar) of its folder or one above it, or
+               a Grep or recursive Glob there. The key is the person's; no assistant opens
                it, whatever for.
     box-write  the call would change something inside the box other than through
                the kernel: a Write, Edit or MultiEdit of a file in it, a
@@ -129,11 +131,73 @@ def words(command: str) -> list[list[str]]:
     return [c for c in out if c]
 
 
+#: programs that read a folder's files all the way down when asked to (their
+#: recursive flag), and the two that do it whatever they're asked: rg, ag
+RECURSIVE = {"grep": {"-r", "-R", "--recursive", "-d"}, "egrep": {"-r", "-R"},
+             "fgrep": {"-r", "-R"}, "cp": {"-r", "-R", "-a", "--recursive", "--archive"},
+             "rsync": {"-r", "-a", "--recursive", "--archive"},
+             "scp": {"-r"}, "zip": {"-r", "--recurse-paths"}}  # fmt: skip
+ALWAYS_RECURSIVE = {"rg", "ag", "ack", "tar", "7z"}
+
+
 def names_key(command: str, key: Path, cwd: str) -> bool:
-    """Whether the command has the key's path in it, or a word that is it."""
+    """Whether the command has the key's path in it, a word that is it, a glob
+    the shell would expand to it, or a recursive read of the folder that holds
+    it or one above it (for a reader given no folder, the one it runs in)."""
     if str(key) in command:
         return True
-    return any(_same(w, key, cwd) for cmd in words(command) for w in cmd)
+    for cmd in words(command):
+        if any(_same(w, key, cwd) or _globs_to(w, key, cwd) for w in cmd):
+            return True
+        if _reads_down_to(cmd, key, cwd):
+            return True
+    return False
+
+
+def _globs_to(word: str, key: Path, cwd: str) -> bool:
+    """Whether a word the shell expands as a glob (*, ? or [) could expand to
+    the key: matched a path segment at a time, as the shell matches it, so
+    `secret/*` reaches secret/key and `*` beside it does not."""
+    if not any(c in word for c in "*?["):
+        return False
+    pattern = Path(cwd or ".").joinpath(Path(word).expanduser())
+    want = [p for p in pattern.parts]
+    for target in {key, key.resolve()}:
+        have = list(target.parts)
+        if len(have) == len(want) and all(
+            fnmatch.fnmatchcase(h, w) for h, w in zip(have, want)
+        ):
+            return True
+    return False
+
+
+def _reads_down_to(cmd: list[str], key: Path, cwd: str) -> bool:
+    """Whether one command reads every file below a folder that holds the key:
+    a recursive grep, cp, rsync, scp or zip, or rg, tar and the like, given
+    the key's folder or one above it, or no folder while it runs in one."""
+    if not cmd:
+        return False
+    name = Path(cmd[0]).name
+    flags = {w for w in cmd[1:] if w.startswith("-")}
+    short = {
+        f"-{c}"
+        for w in flags
+        if w.startswith("-") and not w.startswith("--")
+        for c in w[1:]
+    }
+    asked = name in ALWAYS_RECURSIVE or bool(
+        RECURSIVE.get(name, set()) & (flags | short)
+    )
+    if not asked:
+        return False
+    paths = [w for w in cmd[1:] if not w.startswith("-")]
+    if name in ("grep", "egrep", "fgrep", "rg", "ag", "ack") and paths:
+        paths = paths[1:]  # the first is what they search for
+    for w in paths or ["."]:
+        at = resolved(w, cwd)
+        if at is not None and (at == key.parent or at in key.parents):
+            return True
+    return False
 
 
 def changes(cmd: list[str], box: Path, cwd: str) -> bool:

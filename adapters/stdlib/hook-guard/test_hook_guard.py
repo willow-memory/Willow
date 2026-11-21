@@ -298,6 +298,51 @@ def test_a_search_that_would_reach_the_key_in_any_shape_is_refused(tmp_path):
     assert hg.judge(at_root, b, key)[0] == 2
 
 
+def test_a_command_that_reaches_the_key_by_a_glob_or_a_recursive_read_is_refused(
+    tmp_path,
+):
+    """Seen 2026-11-21: the shell's own ways to the key named no key's path,
+    so rule key let them by: a glob it expands to the key, and a recursive
+    read of the folder that holds it."""
+    b, key = box(tmp_path)
+    for command in (
+        f"cat {key.parent}/*",
+        "cat secret/*",
+        "base64 secret/k?y",
+        "head -c 64 secret/[k]ey",
+        f"grep -r . {key.parent}",
+        "grep -rn token .",  # no folder: the one it runs in, above the key
+        f"rg password {tmp_path}",
+        "rg password",
+        f"tar czf /tmp/out.tgz {key.parent}",
+        f"cp -r {key.parent} /tmp/copy",
+        f"zip -r /tmp/k.zip {tmp_path}",
+        f"rsync -a {tmp_path}/ /tmp/mirror",
+    ):
+        sent = json.dumps({"tool_name": "Bash", "tool_input": {"command": command},
+                           "cwd": str(tmp_path)})  # fmt: skip
+        code, why = hg.judge(sent, b, key)
+        assert code == 2 and "rule key" in why, command
+
+
+def test_a_glob_or_a_recursive_read_that_cant_reach_the_key_is_let_by(tmp_path):
+    b, key = box(tmp_path)
+    for command in (
+        "cat *",  # the shell's * doesn't go into secret/
+        "cat pile/*",
+        f"ls -R {key.parent}",  # names, not what is in them
+        "grep -rn token pile",
+        f"rg password {tmp_path / 'pile'}",
+        "grep token secret",  # not recursive: secret is a folder, grep reads none of it
+        "tar xzf /tmp/in.tgz",
+        f"du -sh {tmp_path}",
+        "cp -r pile /tmp/copy",
+    ):
+        sent = json.dumps({"tool_name": "Bash", "tool_input": {"command": command},
+                           "cwd": str(tmp_path)})  # fmt: skip
+        assert hg.judge(sent, b, key) == (0, ""), command
+
+
 def test_a_search_that_leaves_the_key_out_is_let_by(tmp_path):
     b, key = box(tmp_path)
     elsewhere = tmp_path / "pile"
