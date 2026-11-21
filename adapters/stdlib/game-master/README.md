@@ -3,11 +3,11 @@ section: Play
 line: A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed.
 source: bot
 added: 2026-11-01
-version: 0.2.2
+version: 0.2.3
 writes: record
 network: none
 role: tools
-uses: play-dice, play-odds
+uses: dice-tower, play-dice, play-odds
 -->
 # game-master
 
@@ -28,7 +28,15 @@ row, seeded by the record's tip, so nobody picks the faces), plus the acting
 character's stat, read as **strong** (10 or more), **weak** (7 to 9) or
 **miss** (6 or less). A `table-beat` row names the roll just before it, and
 the beat's own line for that band is printed. `status` shows, for each stat,
-the exact chance of each band, as odds counts them.
+the exact chance of each band, as odds counts them. A table that throws real
+dice says them instead: `act STAT --said 4,6` keeps the faces as said
+(dice's `said`, a `roll` row with no seed, marked "as said"); its honesty is
+the table watching, and the record says which rolls those were. Or the
+roll can be one no row could steer: drop a `2d6` in
+[dice-tower](../dice-tower/) when the moment is posed, and `act STAT --tower
+DIEFILE` brings it out as the roll (a `tower-out` row), so nothing written
+between (an offer, a call answered) changes it, and nobody reading the record
+knows it first.
 
 **A decision beat** is a ruling. `ask` hands the beat's fact in as a proposal
 through the kernel's own `bite` and `propose`, and stops: the beat is waiting
@@ -95,7 +103,8 @@ where. The game records the world's SHA-256 when it opens, and refuses the
 file if it has changed since.
 
 `check` needs no world file: it throws every roll again from its seed
-(dice's check), then finds every `table-beat` that doesn't straight follow
+(dice's check; a said roll is held to its dice, its faces and its total;
+every die out of the tower to its drop, by dice-tower's check), then finds every `table-beat` that doesn't straight follow
 the 2d6 it names, doesn't add up, or reports a ruling that no seal or
 decline of yours stands behind. Given `--world` it also checks the order
 of beats, whose turn it was, the stat and the line against the world.

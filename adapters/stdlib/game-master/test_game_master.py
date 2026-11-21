@@ -1132,3 +1132,75 @@ def test_a_sealed_when_that_isnt_one_is_refused(sealed, says):
     w["scenes"][0]["beats"][0]["when"]["sealed"] = sealed
     with pytest.raises(gm.WorldError, match=says):
         gm.validate(w)
+
+
+def test_an_action_with_real_dice_is_read_from_the_faces_said(t):
+    t.run("open")
+    got = t.run("act", "Grit", "--said", "4,5")
+    assert got.returncode == 0, got.stderr
+    roll, beat = t.rows()[-2:]
+    assert roll["kind"] == "roll" and roll["generator"] == "said" and "seed" not in roll
+    assert beat["roll_row"] == roll["n"] and beat["roll"] == 9 and beat["total"] == 12
+    assert beat["band"] == "strong" and "2d6: 4 + 5 = 9, as said, +3 Grit = 12: strong" in got.stdout  # fmt: skip
+    assert t.run("check", world=False).returncode == 0  # held as said
+
+
+def test_real_dice_that_arent_two_d6_are_refused_and_nothing_written(t):
+    t.run("open")
+    before = t.raw()
+    for faces in ("7,1", "4", "4,5,6"):
+        got = t.run("act", "Grit", "--said", faces)
+        assert got.returncode == 2 and "dice refused the roll" in got.stderr, faces
+    assert t.raw() == before
+
+
+TOWER = HERE.parent / "dice-tower" / "dice_tower.py"
+
+
+def drop(t, dice: str = "2d6", name: str = "a.die") -> Path:
+    die = t.box.parent / name
+    got = subprocess.run([sys.executable, str(TOWER), "--box", str(t.box), "drop", "--dice", dice, "--to", str(die), "--for", "Ana climbs", *NOW], capture_output=True, text=True)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    return die
+
+
+def test_an_action_out_of_the_tower_is_the_die_dropped_when_the_moment_was_posed(t):
+    t.run("open")
+    die = drop(t)
+    t.run(
+        "offer", "ana", "Ana has a rope"
+    )  # a row written between: the faces don't move
+    got = t.run("act", "Grit", "--tower", str(die))
+    assert got.returncode == 0, got.stderr
+    out, beat = t.rows()[-2:]
+    assert out["kind"] == "tower-out" and beat["roll_row"] == out["n"] and beat["roll"] == out["total"]  # fmt: skip
+    assert ", out of the tower, +3 Grit = " in got.stdout
+    assert t.run("check", world=False).returncode == 0
+
+
+def test_a_die_that_isnt_two_d6_or_is_out_already_is_refused_and_nothing_written(t):
+    t.run("open")
+    d20 = drop(t, "1d20", "b.die")
+    before = t.raw()
+    got = t.run("act", "Grit", "--tower", str(d20))
+    assert got.returncode == 2 and "isn't a 2d6 die in the tower" in got.stderr and t.raw() == before  # fmt: skip
+    die = drop(t)
+    assert t.run("act", "Grit", "--tower", str(die)).returncode == 0
+    t.run("act", "Wit", "--tower", str(die))  # the same die again
+    assert [r["kind"] for r in t.rows()].count("tower-out") == 1
+    assert t.run("act", "Grit", "--said", "3,4", "--tower", str(die)).returncode == 2
+
+
+def test_check_finds_a_tower_roll_changed_after_it_came_out(t):
+    t.run("open")
+    die = drop(t)
+    t.run("act", "Grit", "--tower", str(die))
+    rows = t.rows()
+    out = next(r for r in rows if r["kind"] == "tower-out")
+    (t.box / "record.jsonl").write_text(
+        "".join(json.dumps(r) + "\n" for r in rows[: out["n"]])
+    )  # cut it back
+    t.forge("tower-out", drop=out["drop"], secret="ab" * 32, dice="2d6", faces=out["faces"], kept=out.get("kept"), add=0, total=out["total"], generator=out.get("generator"))  # fmt: skip
+    t.forge(**{k: v for k, v in rows[out["n"] + 1].items() if k not in ("n", "ts", "prev", "hash", "kind", "who", "family", "where", "standing", "version")})  # fmt: skip
+    got = t.run("check", world=False)
+    assert got.returncode == 2 and "isn't the one dropped in" in got.stderr
