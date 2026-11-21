@@ -371,7 +371,8 @@ def relist(box: Path, wl: Path, ts: str) -> int:
     if why is not None:
         print(f"refused: {why}", file=sys.stderr)
         return REFUSED
-    if read(box / "record.jsonl")[1]:
+    rows, breaks = read(box / "record.jsonl")
+    if breaks:
         print(
             "refused: the record doesn't verify; nothing was changed", file=sys.stderr
         )
@@ -381,7 +382,10 @@ def relist(box: Path, wl: Path, ts: str) -> int:
     if was == str(wl.resolve()):
         print(f"ready: this box already reads {was}")
         return ALIVE
-    before = read_words(Path(was), box)[1] if was else ""
+    # the list it replaced is the one the record last read through, not the
+    # file as it is now: that file may have moved, or changed since
+    named = [r["words_sha256"] for r in rows if r.get("words_sha256")]
+    before = named[-1] if named else read_words(Path(was), box)[1] if was else ""
     # the row first: a box that names a list its record never heard of would
     # be the kernel's own settings saying more than the record does
     row = append(box, ts, "words", words_sha256=sha, was_sha256=before)

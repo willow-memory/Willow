@@ -206,14 +206,17 @@ def health(box: Path, today: date) -> tuple[str, list[str], list[str]]:
         )
     else:
         fine.append("every file readable")
-    last_bite = next(
-        (r for r in reversed(rows) if r["kind"] == "bite" and "words_sha256" in r), None
-    )
+    # the list the record last named: a question asked through it, or the
+    # kernel's own row when the person gave the box a new one (`words`)
+    last_named = next(
+        (r for r in reversed(rows) if r["kind"] in ("bite", "words") and "words_sha256" in r),
+        None,
+    )  # fmt: skip
     if "words" in cfg:
         _, sha, why = kernel.read_words(Path(cfg["words"]), box)
         if why is not None:
             needs.append(f"the words list can't be read ({why})")
-        elif last_bite and last_bite["words_sha256"] != sha:
+        elif last_named and last_named["words_sha256"] != sha:
             needs.append("the words list changed since the last question")
         else:
             fine.append("words list as last used")

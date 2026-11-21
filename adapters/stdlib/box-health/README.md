@@ -3,7 +3,7 @@ section: Trust and proof
 line: Is your willow all right? One line: files it can't read, readers out of date, and when its record was last checked.
 source: new
 added: 2026-10-29
-version: 0.1.2
+version: 0.1.3
 writes: nothing
 network: none
 role: page
@@ -40,7 +40,7 @@ What it looks at, in this order:
 | the chain | whether every row's hash holds; a break is said first and alone, since nothing after it can be trusted |
 | approvals | how many hold under your key, how many suggestions wait, and any approval that fails its proof or whose proposal file is no longer the bytes you approved |
 | files it can't read | the files in your folder the bite skips (binary, too large, not UTF-8 text), counted by extension, with the add-on that reads that kind of file when this repository has one, and how many of them are over the kernel's 1 MB |
-| the words list | whether it is still the one the last question used, and that it reads at all |
+| the words list | whether it is still the one the record last named (the last question's, or the one the box was given with `kernel.py words`), and that it reads at all |
 | `out` | when the record last had an out row, the kernel's look at what waits on you, and how long ago |
 
 Hidden files and folders are not counted: the bite doesn't read them either.

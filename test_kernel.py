@@ -657,6 +657,40 @@ def test_a_box_takes_a_words_list_after_it_was_made_and_the_record_says_so(tmp_p
     assert not (box / "kernel.json.new").exists()
 
 
+def test_the_list_a_words_row_replaced_is_the_one_the_record_last_read(tmp_path):
+    """The row names the list the box last asked through, by its hash on the
+    record: not the old file as it is now, which may have moved away (every
+    ask refused, and `words` the way out) or been edited since."""
+    pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
+    pile.mkdir()
+    (pile / "log.txt").write_text("next: Oct 2027\n")
+    mine.mkdir(mode=0o700)
+    first, second, third = mine / "first.txt", mine / "second.txt", mine / "third.txt"
+    for wl, text in ((first, "due = next\n"), (second, "owed = unpaid\n"), (third, "due = next\nowed = unpaid\n")):  # fmt: skip
+        wl.write_text(text)
+        wl.chmod(0o600)
+    b = ["--box", str(box), "--now", "2026-10-22T00:00:00Z"]
+    assert cli("init", *b, "--pile", str(pile), "--key", str(mine / "k.hex"),
+               "--words", str(first)).returncode == 0  # fmt: skip
+    assert cli("bite", *b, "what is due").returncode == 0
+    read_through = k.hashlib.sha256(first.read_bytes()).hexdigest()
+    first.rename(mine / "moved.txt")  # the list it was made with, gone
+    assert cli("bite", *b, "what is due").returncode == 2
+    assert cli("words", *b, "--words", str(second)).returncode == 0
+    row = json.loads((box / "record.jsonl").read_text().splitlines()[-1])
+    assert row["kind"] == "words" and row["was_sha256"] == read_through
+    # the list now read is edited before the next one replaces it: the row
+    # names the one the record last read (the words row's own), not the edit
+    named = row["words_sha256"]
+    second.write_text("owed = unpaid, overdue\n")
+    assert cli("words", *b, "--words", str(third)).returncode == 0
+    row = json.loads((box / "record.jsonl").read_text().splitlines()[-1])
+    assert (
+        row["was_sha256"] == named != k.hashlib.sha256(second.read_bytes()).hexdigest()
+    )
+    assert cli("verify", "--box", str(box)).returncode == 0
+
+
 def test_a_words_list_the_kernel_would_not_take_changes_nothing(tmp_path):
     pile, box, mine = tmp_path / "pile", tmp_path / "box", tmp_path / "mine"
     pile.mkdir()
