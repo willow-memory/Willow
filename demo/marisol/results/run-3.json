@@ -1,0 +1,491 @@
+{
+ "life": {
+  "strand": "life",
+  "nonsense": false,
+  "asked": [
+   {
+    "id": "L1",
+    "kind": "claim",
+    "asked": "Outages closed the school for 9 class days in 2022-23",
+    "exit": 42,
+    "served": [
+     {
+      "where": "log/outages.txt:63",
+      "text": "2022-03-21 Sin luz 9 horas: sin explicación; llamé al número de averías y no contestaron. Funcionó la batería del laboratorio."
+     },
+     {
+      "where": "web-pages/wikipedia-prepa.html.txt:288",
+      "text": "In September 2021 demand for electricity exceeded supply after mechanical and maintenance problems affected various power plants, resulting in four days of consecutive rolling blackouts. [ 20 ] [ 21 ] Central Aguirre and Palo Seco faced problems with the removal of seaweed due to lack of replacement filters that are used to prevent the accumulation of seaweed. [ 22 ] The power outages caused classes to be canceled at the Pontifical Catholic University of Puerto Rico and instigated a student prot"
+     },
+     {
+      "where": "calendar/calendar/escuela-2022-23.ics.txt:1",
+      "text": "2022-08-15  Inicio de clases\nwhere: Escuela Superior La Ceiba, Ponce\nnotes: Primer día del año escolar 2022-2023."
+     }
+    ],
+    "stdout": "some parts   log/outages.txt:63   outages, 9, 2022   lacks closed, school, class, days, 23\nsome parts   web-pages/wikipedia-prepa.html.txt:288   outages, class, days   lacks closed, school, 9, 2022, 23\nsome parts   calendar/calendar/escuela-2022-23.ics.txt:1   2022, 23   lacks outages, closed, school, 9, class, days\n"
+   },
+   {
+    "id": "L2",
+    "kind": "words-es",
+    "asked": "¿Cuántos días cerró la escuela por apagón en 2022-2023?",
+    "exit": 0,
+    "served": [
+     {
+      "where": "calendar/calendar/escuela-2022-23.ics.txt:33",
+      "text": "2023-04-24  Cierre por apagón: no hay clases\nwhere: Escuela Superior La Ceiba, Ponce\nnotes: Aviso del distrito: la escuela cierra por falta de servicio eléctrico."
+     },
+     {
+      "where": "calendar/calendar/escuela-2022-23.ics.txt:29",
+      "text": "2023-03-27  Cierre por apagón: no hay clases\nwhere: Escuela Superior La Ceiba, Ponce\nnotes: Aviso del distrito: la escuela cierra por falta de servicio eléctrico."
+     },
+     {
+      "where": "calendar/calendar/escuela-2022-23.ics.txt:25",
+      "text": "2023-02-06  Cierre por apagón: no hay clases\nwhere: Escuela Superior La Ceiba, Ponce\nnotes: Aviso del distrito: la escuela cierra por falta de servicio eléctrico."
+     }
+    ],
+    "stdout": "{\"state\": \"populated\", \"bite_key\": \"b593210ee78d8b068038f33c00c21b4a28e083fbec57eb4a250d893d5c3aeebc\", \"served\": [{\"id\": \"22401ee193d19efcde18ab98d5b95b9b56009bd8788b753a251f8dd4d841ce46\", \"where\": \"calendar/calendar/escuela-2022-23.ics.txt:33\", \"echo\": false, \"text\": \"2023-04-24  Cierre por apagón: no hay clases\\nwhere: Escuela Superior La Ceiba, Ponce\\nnotes: Aviso del distrito: la escuela cierra por falta de servicio eléctrico.\"}, {\"id\": \"385931b9f96d4004f776e961fba119f2f3a5bebc44f2b5268fd6004f31ea63b8\", \"where\": \"calendar/calendar/escuela-2022-23.ics.txt:29\", \"echo\": false, \"text\": \"2023-03-27  Cierre por apagón: no hay clases\\nwhere: Escuela Superior La Ceiba, Ponce\\nnotes: Aviso del distrito: la escuela cierra por falta de servicio eléctrico.\"}, {\"id\": \"b62c1294c8fbb161919570e14e35bbf2611d368d5c5526fffd45439debf2a09c\", \"where\": \"calendar/calendar/escuela-2022-23.ics.txt:25\", \"echo\": false, \"text\": \"2023-02-06  Cierre por apagón: no hay clases\\nwhere: Escuela Superior La Ceiba, Ponce\\nnotes: Aviso del distrito: la escuela cierra por falta de servicio eléctrico.\"}]}\n"
+   },
+   {
+    "id": "L3",
+    "kind": "count",
+    "asked": null,
+    "exit": 0,
+    "served": [],
+    "holding": [
+     "calendar/calendar/escuela-2022-23.ics.txt:13",
+     "calendar/calendar/escuela-2022-23.ics.txt:17",
+     "calendar/calendar/escuela-2022-23.ics.txt:25",
+     "calendar/calendar/escuela-2022-23.ics.txt:29",
+     "calendar/calendar/escuela-2022-23.ics.txt:33",
+     "calendar/calendar/escuela-2022-23.ics.txt:5",
+     "calendar/calendar/escuela-2022-23.ics.txt:9"
+    ],
+    "stdout": "7 passages hold 'Cierre por apagón'\n"
+   },
+   {
+    "id": "L4",
+    "kind": "words-es",
+    "asked": "¿Cuándo llegaron los $6,000 de Tomás?",
+    "exit": 0,
+    "served": [
+     {
+      "where": "sms/phone/sms-backup.xml.txt:6",
+      "text": "2018-02-12 13:30  me: Ya llegaron los $6,000. Gracias, hermano. El banco de baterías se instala el martes.\n2018-02-12 13:41  Tomás Beltrán: Qué bueno. Mándame foto cuando esté puesto."
+     },
+     {
+      "where": "mail/mail/2018-02-09-tomas.eml.txt:10",
+      "text": "Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando llegue."
+     }
+    ],
+    "stdout": "{\"state\": \"populated\", \"bite_key\": \"c90ba213dc8c03bfe7b3f8be2c4b2582be65b02ed82628c7d44b932a369b01b1\", \"served\": [{\"id\": \"fb56f78d2ab2af30589a1395c3562a8c3c81fb1c82159a60a1a227c9f25df55e\", \"where\": \"sms/phone/sms-backup.xml.txt:6\", \"echo\": false, \"text\": \"2018-02-12 13:30  me: Ya llegaron los $6,000. Gracias, hermano. El banco de baterías se instala el martes.\\n2018-02-12 13:41  Tomás Beltrán: Qué bueno. Mándame foto cuando esté puesto.\"}, {\"id\": \"c458192a6ad99172373e7c88cbd0e2bb5ec099b59dd02bbb96f5238c247a4ea5\", \"where\": \"mail/mail/2018-02-09-tomas.eml.txt:10\", \"echo\": false, \"text\": \"Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando llegue.\"}]}\n"
+   },
+   {
+    "id": "L5",
+    "kind": "claim",
+    "asked": "Tomás's $6,000 for the battery bank arrived in February 2018",
+    "exit": 42,
+    "served": [
+     {
+      "where": "sms/phone/sms-backup.xml.txt:6",
+      "text": "2018-02-12 13:30  me: Ya llegaron los $6,000. Gracias, hermano. El banco de baterías se instala el martes.\n2018-02-12 13:41  Tomás Beltrán: Qué bueno. Mándame foto cuando esté puesto."
+     },
+     {
+      "where": "mail/mail/2018-02-09-tomas.eml.txt:10",
+      "text": "Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando llegue."
+     },
+     {
+      "where": "csv-rows/receipts/outage-costs.csv.txt:43",
+      "text": "[22] 2018-03-14; Banco de baterías, 4 de 12 V ciclo profundo; Energía Hogar PR; $6,240.00; baterías"
+     }
+    ],
+    "stdout": "some parts   sms/phone/sms-backup.xml.txt:6   tomás, 6, 000, 2018   lacks battery, bank, arrived, february\nsome parts   mail/mail/2018-02-09-tomas.eml.txt:10   6, 000, 2018   lacks tomás, battery, bank, arrived, february\nsome parts   csv-rows/receipts/outage-costs.csv.txt:43   6, 2018   lacks tomás, 000, battery, bank, arrived, february\nno file has  arrived\n"
+   },
+   {
+    "id": "L6",
+    "kind": "amounts",
+    "asked": null,
+    "exit": 0,
+    "served": [],
+    "stdout": "1941-05-02  $238 million         web-pages/wikipedia-prepa.html.txt:286            As a result of the 2019–20 Puerto Rico earthquakes the Costa Sur Power Plant in Guayanilla was knocked out of service. A  (date from line 234)\n1941-05-02  $300 million         web-pages/wikipedia-prepa.html.txt:298            The initial $300 million contract for power restoration was given to Whitefish Energy , a Montana company which had only  (date from line 234)\n1941-05-02  $3.8B                web-pages/wikipedia-prepa.html.txt:310            With June 1 the official start of the 2018 hurricane season, an estimated 11,000+ customers remained without power, poss  (date from line 234)\n1941-05-02  $500M                web-pages/wikipedia-prepa.html.txt:310            With June 1 the official start of the 2018 hurricane season, an estimated 11,000+ customers remained without power, poss  (date from line 234)\n1941-05-02  $251 million         web-pages/wikipedia-prepa.html.txt:344            Over the years the budget for maintenance, which includes such activities as clearing trees near power lines, has dimini  (date from line 234)\n1941-05-02  $202 million         web-pages/wikipedia-prepa.html.txt:344            Over the years the budget for maintenance, which includes such activities as clearing trees near power lines, has dimini  (date from line 234)\n1941-05-02  $1.5 billion         web-pages/wikipedia-prepa.html.txt:352            Controversial $1.5 billion fossil fuels project  (date from line 234)\n1941-05-02  $191.4 million       web-pages/wikipedia-prepa.html.txt:362            An audit in 2020 from Puerto Rico's Office of the Comptroller examined PREPA capital improvement projects from 2010-2018  (date from line 234)\n1941-05-02  $69.2 million        web-pages/wikipedia-prepa.html.txt:362            An audit in 2020 from Puerto Rico's Office of the Comptroller examined PREPA capital improvement projects from 2010-2018  (date from line 234)\n1941-05-02  $31.9 million        web-pages/wikipedia-prepa.html.txt:362            An audit in 2020 from Puerto Rico's Office of the Comptroller examined PREPA capital improvement projects from 2010-2018  (date from line 234)\n1941-05-02  $62.8 million        web-pages/wikipedia-prepa.html.txt:366            For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $342,500             web-pages/wikipedia-prepa.html.txt:366            For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $3.2 million         web-pages/wikipedia-prepa.html.txt:366            For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $6.7 million         web-pages/wikipedia-prepa.html.txt:366            For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $700 million         web-pages/wikipedia-prepa.html.txt:372            A financial dispute involving PREPA has led to operational challenges for LUMA Energy and Genera PR. PREPA has reportedl  (date from line 234)\n1941-05-02  $190 million         web-pages/wikipedia-prepa.html.txt:372            A financial dispute involving PREPA has led to operational challenges for LUMA Energy and Genera PR. PREPA has reportedl  (date from line 234)\n1941-05-02  $350 million         web-pages/wikipedia-prepa.html.txt:372            A financial dispute involving PREPA has led to operational challenges for LUMA Energy and Genera PR. PREPA has reportedl  (date from line 234)\n1941-05-02  $500 million         web-pages/wikipedia-prepa.html.txt:390            To address a generation shortfall and recurring rolling blackouts, PREPA awarded an emergency power contract, valued bet  (date from line 234)\n1941-05-02  $1 billion           web-pages/wikipedia-prepa.html.txt:390            To address a generation shortfall and recurring rolling blackouts, PREPA awarded an emergency power contract, valued bet  (date from line 234)\n1941-05-02  US$10.1 billion      web-pages/wikipedia-prepa.html.txt:688            As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $6 billion           web-pages/wikipedia-prepa.html.txt:688            As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $354 million         web-pages/wikipedia-prepa.html.txt:688            As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $4.8 billion         web-pages/wikipedia-prepa.html.txt:688            As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $2.6 billion         web-pages/wikipedia-prepa.html.txt:688            As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $100 million         web-pages/wikipedia-prepa.html.txt:690            On May 23, 2014, Citigroup severely curtailed PREPA's line of credit for fuel purchase, forcing PREPA to run out of cash  (date from line 234)\n1941-05-02  $290 million         web-pages/wikipedia-prepa.html.txt:690            On May 23, 2014, Citigroup severely curtailed PREPA's line of credit for fuel purchase, forcing PREPA to run out of cash  (date from line 234)\n1941-05-02  $9 billion           web-pages/wikipedia-prepa.html.txt:696            As of 2021 the payment of PREPA's debt remains in an indefinite \"limbo\" due to a lack of agreement between the governmen  (date from line 234)\n1941-05-02  $192 million         web-pages/wikipedia-prepa.html.txt:698            Investigations by the office of the Comptroller revealed from 2010 to 2018 the AEE had mismanaged $192 million on projec  (date from line 234)\n1941-05-02  $12                  web-pages/wikipedia-prepa.html.txt:700            In March 2021 the AEE announced increase in electric bills for the next three months equivalent to an average of $12 mor  (date from line 234)\n1941-05-02  $128 million         web-pages/wikipedia-prepa.html.txt:700            In March 2021 the AEE announced increase in electric bills for the next three months equivalent to an average of $12 mor  (date from line 234)\n1941-05-02  $9 billion           web-pages/wikipedia-prepa.html.txt:702            PREPA has accumulated over $9 billion in debt. In the agency’s ongoing bankruptcy proceedings, a federal oversight board  (date from line 234)\n1941-05-02  $8.5 billion         web-pages/wikipedia-prepa.html.txt:702            PREPA has accumulated over $9 billion in debt. In the agency’s ongoing bankruptcy proceedings, a federal oversight board  (date from line 234)\n1941-05-02  $575 million         web-pages/wikipedia-prepa.html.txt:704            In April 2025, the Puerto Rico Oversight Board announced that bondholders of the Puerto Rico Electric Power Authority ha  (date from line 234)\n1941-05-02  $10 billion          web-pages/wikipedia-prepa.html.txt:706            In 2025, PREPA announced a new debt restructuring plan that reduces its debt from $10 billion to approximately $2.6 bill  (date from line 234)\n1941-05-02  $2.6 billion         web-pages/wikipedia-prepa.html.txt:706            In 2025, PREPA announced a new debt restructuring plan that reduces its debt from $10 billion to approximately $2.6 bill  (date from line 234)\n1941-05-02  $3.7 billion         web-pages/wikipedia-prepa.html.txt:744            ↑ \"PREPA bondholders at odds over $3.7 billion expense claim litigation\" . The San Juan Daily Star . October 24, 2025 .   (date from line 234)\n1941-05-02  $500M                web-pages/wikipedia-prepa.html.txt:796            ↑ Lievonen, John. \"MasTec snags $500M contract with utility in Puerto Rico\" . Biz Journals . Retrieved June 14, 2018 .  (date from line 234)\n1941-05-02  $500M                web-pages/wikipedia-prepa.html.txt:798            ↑ Walton, Robert. \"Puerto Rico's utility signs $500M recovery contract with MasTec\" . Utility Dive . Archived from the o  (date from line 234)\n1941-05-02  $1.5 Billion         web-pages/wikipedia-prepa.html.txt:830            ↑ \"No Oversight of $1.5 Billion Electric Project Raises Alarm over Privatization of Puerto Rico's Power\" . Democracy Now  (date from line 234)\n2014-10-19  $1                   web-pages/wikipedia-prepa.html.txt:900            ↑ \"Subsidios por $1 millón al día\" . El Nuevo Dia . Archived from the original on May 31, 2014 . Retrieved May 31, 2014   (date from line 878)\n2014-10-19  $192                 web-pages/wikipedia-prepa.html.txt:920            ↑ \"Auditoría del Contralor revela desembolso de $192 millones en proyectos \"sin utilidad\" en la AEE\" . Primera Hora (in   (date from line 878)\n2014-10-19  $128                 web-pages/wikipedia-prepa.html.txt:924            ↑ \"La AEE ha desembolsado $128 millones a LUMA Energy hasta abril de 2021\" . El Nuevo Día (in Spanish). August 19, 2021   (date from line 878)\n2016-09-19  $88M                 web-pages/wikipedia-prepa.html.txt:872            ↑ Kantrow, Michelle (March 12, 2013). \"Punta Lima wind farm sold to Sovereign Bank for $88M\" . News Is My Business . Arc  (date from line 870)\n2017-10-04  $282.51              csv-rows/receipts/outage-costs.csv.txt:7          [4] 2017-10-04; Diésel para el generador; Gasolinera El Mirador; $282.51; combustible\n2017-10-04  $202.13              csv-rows/receipts/outage-costs.csv.txt:9          [5] 2017-10-04; Diésel para el generador; Combustibles del Sur; $202.13; combustible\n2017-10-10  $329.16              csv-rows/receipts/outage-costs.csv.txt:11         [6] 2017-10-10; Diésel para el generador; Estación Las Palmas; $329.16; combustible\n2017-10-14  $275.16              csv-rows/receipts/outage-costs.csv.txt:13         [7] 2017-10-14; Diésel para el generador; Combustibles del Sur; $275.16; combustible\n2017-10-15  $297.82              csv-rows/receipts/outage-costs.csv.txt:15         [8] 2017-10-15; Diésel para el generador; Estación Las Palmas; $297.82; combustible\n2017-10-22  $287.54              csv-rows/receipts/outage-costs.csv.txt:17         [9] 2017-10-22; Diésel para el generador; Estación Las Palmas; $287.54; combustible\n2017-10-22  $331.79              csv-rows/receipts/outage-costs.csv.txt:19         [10] 2017-10-22; Diésel para el generador; Combustibles del Sur; $331.79; combustible\n2017-11-07  $323.13              csv-rows/receipts/outage-costs.csv.txt:21         [11] 2017-11-07; Diésel para el generador; Gasolinera El Mirador; $323.13; combustible\n2017-11-08  $257.36              csv-rows/receipts/outage-costs.csv.txt:23         [12] 2017-11-08; Diésel para el generador; Combustibles del Sur; $257.36; combustible\n2017-11-09  $250.46              csv-rows/receipts/outage-costs.csv.txt:25         [13] 2017-11-09; Diésel para el generador; Gasolinera El Mirador; $250.46; combustible\n2017-11-20  $248.25              csv-rows/receipts/outage-costs.csv.txt:27         [14] 2017-11-20; Diésel para el generador; Gasolinera El Mirador; $248.25; combustible\n2017-11-25  $261.57              csv-rows/receipts/outage-costs.csv.txt:29         [15] 2017-11-25; Diésel para el generador; Gasolinera El Mirador; $261.57; combustible\n2017-11-25  $232.47              csv-rows/receipts/outage-costs.csv.txt:31         [16] 2017-11-25; Diésel para el generador; Combustibles del Sur; $232.47; combustible\n2017-11-25  $200.93              csv-rows/receipts/outage-costs.csv.txt:33         [17] 2017-11-25; Diésel para el generador; Estación Las Palmas; $200.93; combustible\n2017-12-05  $211.19              csv-rows/receipts/outage-costs.csv.txt:35         [18] 2017-12-05; Diésel para el generador; Combustibles del Sur; $211.19; combustible\n2017-12-10  $275.90              csv-rows/receipts/outage-costs.csv.txt:37         [19] 2017-12-10; Diésel para el generador; Gasolinera El Mirador; $275.90; combustible\n2018-01-16  $355.61              csv-rows/receipts/outage-costs.csv.txt:39         [20] 2018-01-16; Diésel para el generador; Combustibles del Sur; $355.61; combustible\n2018-01-17  $199.40              csv-rows/receipts/outage-costs.csv.txt:41         [21] 2018-01-17; Diésel para el generador; Gasolinera El Mirador; $199.40; combustible\n2018-02-09  $6,000               mail/mail/2018-02-09-tomas.eml.txt:10             Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando ll  (date from line 3)\n2018-02-12  $6,000               sms/phone/sms-backup.xml.txt:6                    2018-02-12 13:30  me: Ya llegaron los $6,000. Gracias, hermano. El banco de baterías se instala el martes.\n2018-03-14  $6,240.00            csv-rows/receipts/outage-costs.csv.txt:43         [22] 2018-03-14; Banco de baterías, 4 de 12 V ciclo profundo; Energía Hogar PR; $6,240.00; baterías\n2018-03-14  $1,385.00            csv-rows/receipts/outage-costs.csv.txt:45         [23] 2018-03-14; Inversor 3000 W; Energía Hogar PR; $1,385.00; baterías\n2018-03-20  $412.75              csv-rows/receipts/outage-costs.csv.txt:47         [24] 2018-03-20; Cables, interruptores y soportes; Ferretería Central; $412.75; baterías\n2018-06-02  $1,120.00            csv-rows/receipts/outage-costs.csv.txt:49         [25] 2018-06-02; Computadoras reacondicionadas, 4; Reciclaje Digital Ponce; $1,120.00; equipos\n2019-08-15  $236.03              csv-rows/receipts/outage-costs.csv.txt:51         [26] 2019-08-15; Diésel para el generador; Gasolinera El Mirador; $236.03; combustible\n2021-06-03  $199.89              csv-rows/receipts/outage-costs.csv.txt:53         [27] 2021-06-03; Diésel para el generador; Combustibles del Sur; $199.89; combustible\n2022-09-18  $226.64              csv-rows/receipts/outage-costs.csv.txt:55         [28] 2022-09-18; Diésel para el generador; Combustibles del Sur; $226.64; combustible\n2024-01-11  $230.81              csv-rows/receipts/outage-costs.csv.txt:57         [29] 2024-01-11; Diésel para el generador; Combustibles del Sur; $230.81; combustible\n2025-04-30  $999,903.00          json-paths/nsf-award-2305699.json.txt:62          fundsObligated[0]: FY 2023 = $999,903.00  (date from line 59)\nundated     $289.00              office/budget/presupuesto-laboratorio.xlsx.txt:4  Chromebooks para el laboratorio | 12 | $289.00 | $3,468.00\nundated     $3,468.00            office/budget/presupuesto-laboratorio.xlsx.txt:4  Chromebooks para el laboratorio | 12 | $289.00 | $3,468.00\nundated     $185.00              office/budget/presupuesto-laboratorio.xlsx.txt:5  Router y punto de acceso | 1 | $185.00 | $185.00\nundated     $185.00              office/budget/presupuesto-laboratorio.xlsx.txt:5  Router y punto de acceso | 1 | $185.00 | $185.00\nundated     $64.50               office/budget/presupuesto-laboratorio.xlsx.txt:6  Kits de robótica | 6 | $64.50 | $387.00\nundated     $387.00              office/budget/presupuesto-laboratorio.xlsx.txt:6  Kits de robótica | 6 | $64.50 | $387.00\nundated     $4,040.00            office/budget/presupuesto-laboratorio.xlsx.txt:7  Total del presupuesto |  |  | $4,040.00\nundated     $2,703,933 thousand  web-pages/crs-rs20695.html.txt:502                using the credit employed 113,444 workers and paid $2,703,933 thousand in employee\nundated     $3,561,800 thousand  web-pages/crs-rs20695.html.txt:510                manufacturing of $3,561,800 thousand. (Puerto Rico Planning Board. Economic Report of the\nundated     $9 billion           web-pages/nbc-luma-2021.html.txt:255              Officials are betting the private operator can do better than the island’s Electric Power Authority, which has struggled\nundated     $3.85 billion        web-pages/nbc-luma-2021.html.txt:351              Puerto Rico’s power generation units average 45 years old, twice those of the U.S. mainland, and a fiscal plan approved \nundated     $72 billion          web-pages/nber-w23681.html.txt:259                Puerto Rico, the Commonwealth Island and unincorporated territory of the United States, was placed under a fiscal Oversi\nundated     $1.5 billion         web-pages/wikipedia-prepa.html.txt:98             Controversial $1.5 billion fossil fuels project\n85 sums: 72 dated, 13 undated\n"
+   },
+   {
+    "id": "L7",
+    "kind": "claim",
+    "asked": "We need 30 laptops at $600 each",
+    "exit": 42,
+    "served": [
+     {
+      "where": "json-paths/nsf-award-2305699.json.txt:16",
+      "text": "[0]\nabstractText: The award leverages the interactivity of all components of an ecosystem (e.g., policy, capital, R&D, markets, services, and social responsibility) to achieve sustained growth. The biopharma ecosystem needs to be transformed into more"
+     },
+     {
+      "where": "json-paths/nsf-award-2305699.json.txt:56",
+      "text": "[0]\ndivAbbr: ITE\nestimatedTotalAmt: 999903\nexpDate: 04/30/2025\nfundAgencyCode: 4900\nfundProgramName: NSF Engines - Type 1\nfundsObligated[0]: FY 2023 = $999,903.00\nfundsObligatedAmt: 999903\nhistAwd: false\nid: 2305699\ninitAmendmentDate: 05/09/2023\nlatestAmendmentDate: 09/11/2023"
+     },
+     {
+      "where": "json-paths/nsf-award-2305699.json.txt:104",
+      "text": "[0]\nprojectOutComesReport: <div class=\"porColContainerWBG\">\nprojectOutComesReport: <div class=\"porContentCol\"><p>A major challenge currently facing the U.S. is the supply chain ecosystem needed to deliver essential medicines and new products to address seasonal and unforeseen health crises &ndash; rapidly and cost"
+     }
+    ],
+    "stdout": "some parts   json-paths/nsf-award-2305699.json.txt:16   need   lacks 30, laptops, 600, each\nsome parts   json-paths/nsf-award-2305699.json.txt:56   30   lacks need, laptops, 600, each\nsome parts   json-paths/nsf-award-2305699.json.txt:104   need   lacks 30, laptops, 600, each\nno file has  laptops, 600\n"
+   },
+   {
+    "id": "L8",
+    "kind": "claim",
+    "asked": "The lab's battery bank runs the lab through a full school day",
+    "exit": 42,
+    "served": [
+     {
+      "where": "home-sensors/sensors/history.json.txt:1",
+      "text": "date,Lab battery bank charge (%),Lab backup runtime (h)\n2026-09-01,97,0\n2026-09-02,97,0\n2026-09-03,63.7,4.5\n2026-09-04,97,0\n2026-09-05,97,0\n2026-09-06,97,0\n2026-09-07,97,0\n2026-09-08,97,0\n2026-09-09,63.7,4\n2026-09-10,63.7,5\n2026-09-11,97,0\n2026-09-12,97,0\n2026-09-13,97,0\n2026-09-14,97,0"
+     },
+     {
+      "where": "lessons/02-robots-and-power-cuts.md:14",
+      "text": "Teams add a capacitor and a battery to a test cart and cut the supply mid-run. Each team records what the cart remembers and what it forgets."
+     },
+     {
+      "where": "web-pages/wikipedia-prepa.html.txt:298",
+      "text": "The initial $300 million contract for power restoration was given to Whitefish Energy , a Montana company which had only two employees on the day the hurricane struck. [ 27 ] The award was controversial on those and other grounds, and was cancelled on October 29. By December 2017, the Army Corps of Engineers had other contractors in place, along with crews brought in through mutual aid agreements with utilities such as Con Edison . [ 28 ]"
+     }
+    ],
+    "stdout": "some parts   home-sensors/sensors/history.json.txt:1   lab, battery, bank   lacks runs, through, full, school, day\nsome parts   lessons/02-robots-and-power-cuts.md:14   battery, runs   lacks lab, bank, through, full, school, day\nsome parts   web-pages/wikipedia-prepa.html.txt:298   through, day   lacks lab, battery, bank, runs, full, school\n"
+   }
+  ],
+  "rules": {
+   "served": {
+    "ok": true,
+    "why": []
+   },
+   "gap": {
+    "ok": true,
+    "why": []
+   },
+   "count": {
+    "ok": true,
+    "why": []
+   },
+   "budget": {
+    "ok": true,
+    "why": []
+   },
+   "unsealed": {
+    "ok": true,
+    "why": []
+   },
+   "verify": {
+    "ok": true,
+    "why": []
+   }
+  }
+ },
+ "claims": {
+  "strand": "claims",
+  "nonsense": false,
+  "asked": [
+   {
+    "id": "K1",
+    "kind": "claim",
+    "asked": "The principal asked me to keep track of what I spend on diesel",
+    "exit": 42,
+    "served": [
+     {
+      "where": "lessons/03-open-lesson-who-keeps-the-log.md:1",
+      "text": "# Who keeps the log"
+     },
+     {
+      "where": "lessons/03-open-lesson-who-keeps-the-log.md:3",
+      "text": "_FICTION. Invented for a demo; no real person, school or company is described. The \"open community lesson\" of this demo's plan is a stand-in written for the demo, not a real lesson._"
+     },
+     {
+      "where": "lessons/03-open-lesson-who-keeps-the-log.md:5",
+      "text": "Adapted from \"Who Keeps the Log\", a fictional open lesson, shared for reuse with credit."
+     }
+    ],
+    "stdout": "some parts   lessons/03-open-lesson-who-keeps-the-log.md:1   keep   lacks principal, asked, track, spend, diesel\nsome parts   lessons/03-open-lesson-who-keeps-the-log.md:3   keep   lacks principal, asked, track, spend, diesel\nsome parts   lessons/03-open-lesson-who-keeps-the-log.md:5   keep   lacks principal, asked, track, spend, diesel\nno file has  principal, asked\n"
+   },
+   {
+    "id": "K2",
+    "kind": "words-es",
+    "asked": "¿Qué le pidió el director sobre el diésel?",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"5cfe05b4ec413487f7d20e0517e27ff5d7562739ea8fcc1d49f740dbd6270042\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has pidió\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "K3",
+    "kind": "claim",
+    "asked": "My father worked 28 years in the plant's laboratory",
+    "exit": 42,
+    "served": [
+     {
+      "where": "web-pages/wikipedia-prepa.html.txt:286",
+      "text": "As a result of the 2019–20 Puerto Rico earthquakes the Costa Sur Power Plant in Guayanilla was knocked out of service. An estimated 327,000 customers were left without power, and many, as a result, were also without water service. The President of the AEE/PREPA, Jose Ortiz, informed there was extensive damage in the facilities and that repairs would take more than a year. [ 17 ] [ 18 ] FEMA assigned $238 million to help cover cost related to backup units which are used to meet the demand previou"
+     },
+     {
+      "where": "web-pages/wikipedia-prepa.html.txt:310",
+      "text": "With June 1 the official start of the 2018 hurricane season, an estimated 11,000+ customers remained without power, possibly for another two months. [ 33 ] Although an estimated $3.8B was spent on power grid work since the September hurricanes, the grid is still considered fragile and vulnerable. [ 34 ] PREPA announced a $500M one-year master service agreement with MasTec for further power grid reconstruction and modernization services. [ 35 ] [ 36 ]"
+     },
+     {
+      "where": "web-pages/wikipedia-prepa.html.txt:330",
+      "text": "In 2023, Genera PR, a subsidiary of New Fortress Energy , signed a ten-year contract to take over operation of Puerto Rico's power plants. [ 3 ]"
+     }
+    ],
+    "stdout": "some parts   web-pages/wikipedia-prepa.html.txt:286   years, plant   lacks father, worked, 28, laboratory\nsome parts   web-pages/wikipedia-prepa.html.txt:310   worked, years   lacks father, 28, plant, laboratory\nsome parts   web-pages/wikipedia-prepa.html.txt:330   years, plant   lacks father, worked, 28, laboratory\nno file has  father, laboratory\n"
+   },
+   {
+    "id": "K4",
+    "kind": "words-es",
+    "asked": "¿Cuántos años llevaba Ernesto en el laboratorio?",
+    "exit": 0,
+    "served": [
+     {
+      "where": "subtitles/notes/ernesto-interview.vtt.txt:1",
+      "text": "00:00:04  Marisol: Papá, cuéntame del cierre de la planta, con calma.\n00:00:15  Ernesto: Cerró en el verano de 2004. Yo tenía cincuenta y dos años y llevaba veintiocho en el laboratorio.\n00:00:26  Marisol: ¿Y por qué cerró?\n00:00:37  Ernesto: Por la ley. Ese crédito federal de la 936 se acabó en el noventa y seis, y de ahí para acá fue cuesta abajo.\n00:00:48  Marisol: ¿Seguro que fue en el noventa y seis?"
+     }
+    ],
+    "stdout": "{\"state\": \"populated\", \"bite_key\": \"5eb0fc7d2a11c548a7891cb815232e162daee9877e4b3110e088da820a87e2c2\", \"served\": [{\"id\": \"ac3cddf017426ff9b356069038c6ce1361f58d70f08b1997b9d7a42b479080b0\", \"where\": \"subtitles/notes/ernesto-interview.vtt.txt:1\", \"echo\": false, \"text\": \"00:00:04  Marisol: Papá, cuéntame del cierre de la planta, con calma.\\n00:00:15  Ernesto: Cerró en el verano de 2004. Yo tenía cincuenta y dos años y llevaba veintiocho en el laboratorio.\\n00:00:26  Marisol: ¿Y por qué cerró?\\n00:00:37  Ernesto: Por la ley. Ese crédito federal de la 936 se acabó en el noventa y seis, y de ahí para acá fue cuesta abajo.\\n00:00:48  Marisol: ¿Seguro que fue en el noventa y seis?\"}]}\n"
+   },
+   {
+    "id": "K5",
+    "kind": "words-es",
+    "asked": "¿En qué año cerró la planta?",
+    "exit": 0,
+    "served": [
+     {
+      "where": "subtitles/notes/ernesto-interview.vtt.txt:1",
+      "text": "00:00:04  Marisol: Papá, cuéntame del cierre de la planta, con calma.\n00:00:15  Ernesto: Cerró en el verano de 2004. Yo tenía cincuenta y dos años y llevaba veintiocho en el laboratorio.\n00:00:26  Marisol: ¿Y por qué cerró?\n00:00:37  Ernesto: Por la ley. Ese crédito federal de la 936 se acabó en el noventa y seis, y de ahí para acá fue cuesta abajo.\n00:00:48  Marisol: ¿Seguro que fue en el noventa y seis?"
+     }
+    ],
+    "stdout": "{\"state\": \"populated\", \"bite_key\": \"c35808395524f73354eb7493617772e1acc6813a9305075eb07715ce3d6e4b30\", \"served\": [{\"id\": \"ac3cddf017426ff9b356069038c6ce1361f58d70f08b1997b9d7a42b479080b0\", \"where\": \"subtitles/notes/ernesto-interview.vtt.txt:1\", \"echo\": false, \"text\": \"00:00:04  Marisol: Papá, cuéntame del cierre de la planta, con calma.\\n00:00:15  Ernesto: Cerró en el verano de 2004. Yo tenía cincuenta y dos años y llevaba veintiocho en el laboratorio.\\n00:00:26  Marisol: ¿Y por qué cerró?\\n00:00:37  Ernesto: Por la ley. Ese crédito federal de la 936 se acabó en el noventa y seis, y de ahí para acá fue cuesta abajo.\\n00:00:48  Marisol: ¿Seguro que fue en el noventa y seis?\"}]}\n"
+   },
+   {
+    "id": "K6",
+    "kind": "claim",
+    "asked": "Puente Digital asked for a source for every claim",
+    "exit": 42,
+    "served": [
+     {
+      "where": "mail/mail/2026-11-03-ines.eml.txt:1",
+      "text": "From: Inés Quiñones <ines.quinones@example.org>\nTo: Marisol Ortiz <marisol.ortiz@example.org>\nDate: 2026-11-03 16:40\nSubject: Su borrador para Puente Digital"
+     },
+     {
+      "where": "mail/mail/2026-11-03-ines.eml.txt:14",
+      "text": "Inés Quiñones\nPuente Digital\n787-555-0144"
+     },
+     {
+      "where": "csv-rows/receipts/outage-costs.csv.txt:49",
+      "text": "[25] 2018-06-02; Computadoras reacondicionadas, 4; Reciclaje Digital Ponce; $1,120.00; equipos"
+     }
+    ],
+    "stdout": "some parts   mail/mail/2026-11-03-ines.eml.txt:1   puente, digital   lacks asked, source, every, claim\nsome parts   mail/mail/2026-11-03-ines.eml.txt:14   puente, digital   lacks asked, source, every, claim\nsome parts   csv-rows/receipts/outage-costs.csv.txt:49   digital   lacks puente, asked, source, every, claim\nno file has  asked\n"
+   },
+   {
+    "id": "K7",
+    "kind": "words-es",
+    "asked": "¿Qué pide Inés para cada afirmación?",
+    "exit": 0,
+    "served": [
+     {
+      "where": "mail/mail/2026-11-03-ines.eml.txt:10",
+      "text": "Gracias por el borrador del laboratorio de robótica y alfabetización en IA. Antes de pasarlo al comité, le pido algo: que cada afirmación lleve su fuente. Donde no haya fuente, dígamelo y lo escribimos así."
+     },
+     {
+      "where": "lessons/01-comprobar-una-fuente.md:14",
+      "text": "Cada grupo recibe un párrafo con una afirmación y su fuente. Responde: ¿Dónde está la línea que lo dice? ¿Dice lo mismo, o algo parecido? ¿Qué falta para estar seguros?"
+     }
+    ],
+    "stdout": "{\"state\": \"populated\", \"bite_key\": \"fd9e367460c8fd02832b2d0af63d96068989a05949b94bd6ec78006a3e005235\", \"served\": [{\"id\": \"338e6b5118e65223752d4e75737b894821e671d08bfbcfdcfe4d38d59d0f8c3d\", \"where\": \"mail/mail/2026-11-03-ines.eml.txt:10\", \"echo\": false, \"text\": \"Gracias por el borrador del laboratorio de robótica y alfabetización en IA. Antes de pasarlo al comité, le pido algo: que cada afirmación lleve su fuente. Donde no haya fuente, dígamelo y lo escribimos así.\"}, {\"id\": \"7e245fa245808f9b2230058767cc0392c61b7d263662b64e903e9d8cfc1ae09d\", \"where\": \"lessons/01-comprobar-una-fuente.md:14\", \"echo\": false, \"text\": \"Cada grupo recibe un párrafo con una afirmación y su fuente. Responde: ¿Dónde está la línea que lo dice? ¿Dice lo mismo, o algo parecido? ¿Qué falta para estar seguros?\"}], \"look\": [{\"why\": \"no file in your folder has pide\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "K8",
+    "kind": "words-es",
+    "asked": "¿Ganó el club de robótica un campeonato estatal?",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"dd782542bad242b8e7c099a07f448ef20e79abaf459a14d56cee2a2003b7ab8c\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has ganó, club, campeonato, estatal\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   }
+  ],
+  "rules": {
+   "served": {
+    "ok": false,
+    "why": [
+     "K2: no served passage holds 'lo que gasta en diésel'"
+    ]
+   },
+   "gap": {
+    "ok": true,
+    "why": []
+   },
+   "unsealed": {
+    "ok": true,
+    "why": []
+   },
+   "verify": {
+    "ok": true,
+    "why": []
+   }
+  }
+ },
+ "misses": {
+  "strand": "misses",
+  "nonsense": false,
+  "asked": [
+   {
+    "id": "M1",
+    "kind": "all-passages",
+    "asked": "When was the Section 936 credit repealed",
+    "exit": 0,
+    "served": [
+     {
+      "rank": 1,
+      "where": "web-pages/crs-rs20695.html.txt:48",
+      "text": "Credit and was provided under section 936 of the Internal Revenue Code. In the years"
+     },
+     {
+      "rank": 2,
+      "where": "web-pages/nber-w23681.html.txt:3",
+      "text": "US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations | NBER"
+     },
+     {
+      "rank": 3,
+      "where": "web-pages/nber-w23681.html.txt:231",
+      "text": "US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations"
+     },
+     {
+      "rank": 4,
+      "where": "web-pages/nber-w23681.html.txt:269",
+      "text": "Zadia M. Feliciano and Andrew Green, \"US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations,\" NBER Working Paper 23681 (2017), https://doi.org/10.3386/w23681."
+     },
+     {
+      "rank": 5,
+      "where": "web-pages/crs-rs20695.html.txt:70",
+      "text": "Creation Act of 1996, which scheduled the credit for phaseout and ultimate repeal in"
+     },
+     {
+      "rank": 6,
+      "where": "web-pages/crs-rs20695.html.txt:108",
+      "text": "corporations that met the section 936 requirements; it was the qualifying subsidiaries"
+     },
+     {
+      "rank": 7,
+      "where": "web-pages/crs-rs20695.html.txt:180",
+      "text": "Service. Puerto Rico and Federal Taxes under Section 936: History and Proposed Changes ."
+     },
+     {
+      "rank": 8,
+      "where": "web-pages/crs-rs20695.html.txt:202",
+      "text": "section 936 reform when it passed the landmark Tax Reform Act of 1986 (TRA86; P.L."
+     },
+     {
+      "rank": 9,
+      "where": "web-pages/crs-rs20695.html.txt:216",
+      "text": "relatively few jobs in the possessions” and that “while section 936 has created employment"
+     },
+     {
+      "rank": 10,
+      "where": "web-pages/crs-rs20695.html.txt:316",
+      "text": "The repeal of the tax credit was effective immediately for firms not already using the"
+     }
+    ],
+    "kernel_served": [
+     "web-pages/crs-rs20695.html.txt:48",
+     "web-pages/nber-w23681.html.txt:3",
+     "web-pages/nber-w23681.html.txt:231"
+    ],
+    "stdout": "{\"state\": \"populated\", \"count\": 10, \"served\": [{\"rank\": 1, \"id\": \"86023b31090059eceed8fe095e55d03b74a387537d5e35bab8d7e41eeaecc703\", \"where\": \"web-pages/crs-rs20695.html.txt:48\", \"echo\": false, \"text\": \"Credit and was provided under section 936 of the Internal Revenue Code. In the years\"}, {\"rank\": 2, \"id\": \"e2a7168b8e7e25fc1bc0a105518df60904a557620a2a15d81a24f0fd2ee7b2bf\", \"where\": \"web-pages/nber-w23681.html.txt:3\", \"echo\": false, \"text\": \"US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations | NBER\"}, {\"rank\": 3, \"id\": \"4eeff1aecd59a08f280ca67b898bd903aa526669cbf87b5a031a9a7aa87ebafe\", \"where\": \"web-pages/nber-w23681.html.txt:231\", \"echo\": false, \"text\": \"US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations\"}, {\"rank\": 4, \"id\": \"d8fdd0982cc5db986e5c3723c1da1b52c25036e53f5ba45fd1393f46c98e0e71\", \"where\": \"web-pages/nber-w23681.html.txt:269\", \"echo\": false, \"text\": \"Zadia M. Feliciano and Andrew Green, \\\"US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations,\\\" NBER Working Paper 23681 (2017), https://doi.org/10.3386/w23681.\"}, {\"rank\": 5, \"id\": \"ffa54b82b66df39a75c86a733e6d6aaf7532252ef1858af442f852c0fa4d5b4d\", \"where\": \"web-pages/crs-rs20695.html.txt:70\", \"echo\": false, \"text\": \"Creation Act of 1996, which scheduled the credit for phaseout and ultimate repeal in\"}, {\"rank\": 6, \"id\": \"d2eda7b415c263a8d7e29431e125d6f6ad1e4061068e6e42688f14600073a991\", \"where\": \"web-pages/crs-rs20695.html.txt:108\", \"echo\": false, \"text\": \"corporations that met the section 936 requirements; it was the qualifying subsidiaries\"}, {\"rank\": 7, \"id\": \"88c5d2073949640488991f29654b41673f055c80b22fd9bb79d11c2171c68d94\", \"where\": \"web-pages/crs-rs20695.html.txt:180\", \"echo\": false, \"text\": \"Service. Puerto Rico and Federal Taxes under Section 936: History and Proposed Changes .\"}, {\"rank\": 8, \"id\": \"afb90352e80a68443f0152fa9b23f135d788f3e620372ec73255a3981f77f639\", \"where\": \"web-pages/crs-rs20695.html.txt:202\", \"echo\": false, \"text\": \"section 936 reform when it passed the landmark Tax Reform Act of 1986 (TRA86; P.L.\"}, {\"rank\": 9, \"id\": \"b889036ed107ff6676987c9162212aba4a8a54da2a9673debb0d59b6b58e6f3c\", \"where\": \"web-pages/crs-rs20695.html.txt:216\", \"echo\": false, \"text\": \"relatively few jobs in the possessions” and that “while section 936 has created employment\"}, {\"rank\": 10, \"id\": \"e0470e1e5416b366bf24076c1811f624f7a79c6594291663660aa77eb9e10480\", \"where\": \"web-pages/crs-rs20695.html.txt:316\", \"echo\": false, \"text\": \"The repeal of the tax credit was effective immediately for firms not already using the\"}]}\n"
+   },
+   {
+    "id": "M2",
+    "kind": "all-passages",
+    "asked": "¿Cuánto mandó Tomás para las baterías?",
+    "exit": 0,
+    "served": [
+     {
+      "rank": 1,
+      "where": "mail/mail/2018-02-09-tomas.eml.txt:1",
+      "text": "From: Tomás Beltrán <tomas.beltran@example.com>\nTo: Marisol Ortiz <marisol.ortiz@example.org>\nDate: 2018-02-09 21:14\nSubject: Transferencia para las baterías"
+     }
+    ],
+    "kernel_served": [
+     "mail/mail/2018-02-09-tomas.eml.txt:1"
+    ],
+    "stdout": "{\"state\": \"populated\", \"count\": 1, \"served\": [{\"rank\": 1, \"id\": \"0d5ecf54d037bc6599518b77507855d0ae0813f29170f646d506016917858480\", \"where\": \"mail/mail/2018-02-09-tomas.eml.txt:1\", \"echo\": false, \"text\": \"From: Tomás Beltrán <tomas.beltran@example.com>\\nTo: Marisol Ortiz <marisol.ortiz@example.org>\\nDate: 2018-02-09 21:14\\nSubject: Transferencia para las baterías\"}]}\n"
+   },
+   {
+    "id": "M3",
+    "kind": "pile-rank",
+    "asked": "When was the Section 936 credit repealed",
+    "exit": 0,
+    "served": [
+     {
+      "rank": 1,
+      "where": "nber-w23681.html.txt:231",
+      "text": "US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations"
+     },
+     {
+      "rank": 2,
+      "where": "crs-rs20695.html.txt:48",
+      "text": "Credit and was provided under section 936 of the Internal Revenue Code. In the years"
+     },
+     {
+      "rank": 3,
+      "where": "nber-w23681.html.txt:3",
+      "text": "US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations | NBER"
+     }
+    ],
+    "stdout": "{\"question\": \"When was the Section 936 credit repealed\", \"state\": \"populated\", \"ranked_by\": \"pile-rank\", \"read_from\": \"folder\", \"served\": [{\"rank\": 1, \"where\": \"nber-w23681.html.txt:231\", \"id\": \"4eeff1aecd59a08f280ca67b898bd903aa526669cbf87b5a031a9a7aa87ebafe\", \"score\": 16.0988, \"phrases\": [\"section 936\"], \"text\": \"US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations\"}, {\"rank\": 2, \"where\": \"crs-rs20695.html.txt:48\", \"id\": \"86023b31090059eceed8fe095e55d03b74a387537d5e35bab8d7e41eeaecc703\", \"score\": 15.9927, \"phrases\": [\"section 936\"], \"text\": \"Credit and was provided under section 936 of the Internal Revenue Code. In the years\"}, {\"rank\": 3, \"where\": \"nber-w23681.html.txt:3\", \"id\": \"e2a7168b8e7e25fc1bc0a105518df60904a557620a2a15d81a24f0fd2ee7b2bf\", \"score\": 15.4293, \"phrases\": [\"section 936\"], \"text\": \"US Multinationals in Puerto Rico and the Repeal of Section 936 Tax Exemption for U.S. Corporations | NBER\"}]}\n"
+   },
+   {
+    "id": "M4",
+    "kind": "pile-rank",
+    "asked": "¿Cuánto mandó Tomás para las baterías?",
+    "exit": 0,
+    "served": [
+     {
+      "rank": 1,
+      "where": "mail/2018-02-09-tomas.eml.txt:1",
+      "text": "From: Tomás Beltrán <tomas.beltran@example.com>\nTo: Marisol Ortiz <marisol.ortiz@example.org>\nDate: 2018-02-09 21:14\nSubject: Transferencia para las baterías"
+     },
+     {
+      "rank": 2,
+      "where": "mail/2018-02-09-tomas.eml.txt:14",
+      "text": "Tomás\n787-555-0121"
+     },
+     {
+      "rank": 3,
+      "where": "mail/2018-02-09-tomas.eml.txt:10",
+      "text": "Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando llegue."
+     }
+    ],
+    "stdout": "{\"question\": \"¿Cuánto mandó Tomás para las baterías?\", \"state\": \"populated\", \"ranked_by\": \"pile-rank\", \"read_from\": \"folder\", \"served\": [{\"rank\": 1, \"where\": \"mail/2018-02-09-tomas.eml.txt:1\", \"id\": \"0d5ecf54d037bc6599518b77507855d0ae0813f29170f646d506016917858480\", \"score\": 5.7427, \"phrases\": [], \"text\": \"From: Tomás Beltrán <tomas.beltran@example.com>\\nTo: Marisol Ortiz <marisol.ortiz@example.org>\\nDate: 2018-02-09 21:14\\nSubject: Transferencia para las baterías\"}, {\"rank\": 2, \"where\": \"mail/2018-02-09-tomas.eml.txt:14\", \"id\": \"f9441ec48e9a1415343695129f907d28eb25d81eabee057e49b5726b5a5cf0eb\", \"score\": 2.65, \"phrases\": [], \"text\": \"Tomás\\n787-555-0121\"}, {\"rank\": 3, \"where\": \"mail/2018-02-09-tomas.eml.txt:10\", \"id\": \"c458192a6ad99172373e7c88cbd0e2bb5ec099b59dd02bbb96f5238c247a4ea5\", \"score\": 2.2837, \"phrases\": [], \"text\": \"Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando llegue.\"}]}\n"
+   }
+  ],
+  "rules": {
+   "reach": {
+    "ok": false,
+    "why": [
+     "M1: no passage holding 'repeal in 2005' in the first 10",
+     "M2: no passage holding '$6,000' in the first 10"
+    ]
+   },
+   "phrases": {
+    "ok": false,
+    "why": [
+     "M3: pile-rank's first three hold no 'repeal in 2005'"
+    ]
+   },
+   "rank": {
+    "ok": true,
+    "why": []
+   },
+   "unsealed": {
+    "ok": true,
+    "why": []
+   },
+   "verify": {
+    "ok": true,
+    "why": []
+   }
+  }
+ }
+}

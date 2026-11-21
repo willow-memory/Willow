@@ -1,8 +1,9 @@
 __pycache__/
 .pytest_cache/
 .ruff_cache/
-# made by each demo's make_life.py, the same bytes every run
+# made by each demo's make_life.py (and make_life_3.py), the same bytes every run
 demo/*/life/
+demo/*/life-more/
 # port builds
 ports/ts/node_modules/
 ports/ts/dist/

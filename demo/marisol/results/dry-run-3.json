@@ -1,0 +1,224 @@
+{
+ "life": {
+  "strand": "life",
+  "nonsense": true,
+  "asked": [
+   {
+    "id": "L1",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   },
+   {
+    "id": "L2",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "L3",
+    "kind": "count",
+    "asked": null,
+    "exit": 0,
+    "served": [],
+    "stdout": ""
+   },
+   {
+    "id": "L4",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "L5",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   },
+   {
+    "id": "L6",
+    "kind": "amounts",
+    "asked": null,
+    "exit": 0,
+    "served": [],
+    "stdout": ""
+   },
+   {
+    "id": "L7",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   },
+   {
+    "id": "L8",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   }
+  ],
+  "rules": {
+   "served": {
+    "ok": true,
+    "why": []
+   },
+   "unsealed": {
+    "ok": true,
+    "why": []
+   },
+   "verify": {
+    "ok": true,
+    "why": []
+   }
+  }
+ },
+ "claims": {
+  "strand": "claims",
+  "nonsense": true,
+  "asked": [
+   {
+    "id": "K1",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   },
+   {
+    "id": "K2",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "K3",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   },
+   {
+    "id": "K4",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "K5",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "K6",
+    "kind": "claim",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+   },
+   {
+    "id": "K7",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   },
+   {
+    "id": "K8",
+    "kind": "words-es",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+   }
+  ],
+  "rules": {
+   "served": {
+    "ok": true,
+    "why": []
+   },
+   "unsealed": {
+    "ok": true,
+    "why": []
+   },
+   "verify": {
+    "ok": true,
+    "why": []
+   }
+  }
+ },
+ "misses": {
+  "strand": "misses",
+  "nonsense": true,
+  "asked": [
+   {
+    "id": "M1",
+    "kind": "all-passages",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "kernel_served": [],
+    "stdout": "{\"state\": \"empty\", \"count\": 0, \"served\": []}\n"
+   },
+   {
+    "id": "M2",
+    "kind": "all-passages",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "kernel_served": [],
+    "stdout": "{\"state\": \"empty\", \"count\": 0, \"served\": []}\n"
+   },
+   {
+    "id": "M3",
+    "kind": "pile-rank",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"question\": \"qqqq zzzz\", \"state\": \"empty\", \"ranked_by\": \"pile-rank\", \"read_from\": \"folder\", \"served\": []}\n"
+   },
+   {
+    "id": "M4",
+    "kind": "pile-rank",
+    "asked": "qqqq zzzz",
+    "exit": 42,
+    "served": [],
+    "stdout": "{\"question\": \"qqqq zzzz\", \"state\": \"empty\", \"ranked_by\": \"pile-rank\", \"read_from\": \"folder\", \"served\": []}\n"
+   }
+  ],
+  "rules": {
+   "served": {
+    "ok": true,
+    "why": []
+   },
+   "unsealed": {
+    "ok": true,
+    "why": []
+   },
+   "verify": {
+    "ok": true,
+    "why": []
+   }
+  }
+ }
+}
