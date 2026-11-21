@@ -12,7 +12,7 @@ makes the cuts; they're never written by hand.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,440 lines)
+├── kernel.py                 the whole program (about 1,490 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -710,6 +710,11 @@ willow/
 │   │   │   ├── synonyms.py   Suggests words-list lines for a word no file has
 │   │   │   ├── test_synonyms.py
 │   │   │   └── README.md     its card
+│   │   ├── word-layers/
+│   │   │   ├── example-master.txt
+│   │   │   ├── word_layers.py one words list made from several, so a box's list is a
+│   │   │   ├── test_word_layers.py
+│   │   │   └── README.md     its card
 │   │   ├── words-ar/
 │   │   │   ├── words_ar.py   a question in Arabic, its common words out, then the kernel's bite
 │   │   │   ├── test_words_ar.py
@@ -738,15 +743,15 @@ willow/
 │   │   │   ├── words_nl.py   a question in Dutch, its common words out, then the kernel's bite
 │   │   │   ├── test_words_nl.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from words-pl/
+
+```
 │   │   ├── words-pl/
 │   │   │   ├── words_pl.py   Polish questions without Polish's common words, then the kernel's own bite
 │   │   │   ├── test_words_pl.py
 │   │   │   └── README.md
-```
-
-#### adapters/stdlib/, from words-pt/
-
-```
 │   │   ├── words-pt/
 │   │   │   ├── words_pt.py   a question in Portuguese, its common words out, then the kernel's bite
 │   │   │   ├── test_words_pt.py
@@ -1359,6 +1364,10 @@ willow/
 │   │   │   ├── approved_only.py the one markdown file a model reads -- only the scope a human
 │   │   │   ├── test_approved_only.py
 │   │   │   └── README.md     its card
+│   │   ├── hook-ask-first/
+│   │   │   ├── hook_ask_first.py a PreToolUse hook that refuses reading by hand a file a
+│   │   │   ├── test_hook_ask_first.py
+│   │   │   └── README.md     its card
 │   │   ├── hook-compact/
 │   │   │   ├── hook_compact.py   what the record holds open, before a summary
 │   │   │   ├── test_hook_compact.py
@@ -1404,15 +1413,15 @@ willow/
 │   │   │   ├── hook_pin.py       a hook runs only as the bytes you approved, pinned on the record
 │   │   │   ├── test_hook_pin.py
 │   │   │   └── README.md
+```
+
+#### adapters/stdlib/, from hook-read-first/
+
+```
 │   │   ├── hook-read-first/
 │   │   │   ├── hook_read_first.py refuses an edit to a file the assistant hasn't read this session, or that changed since
 │   │   │   ├── test_hook_read_first.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from hook-replay/
-
-```
 │   │   ├── hook-replay/
 │   │   │   ├── hook_replay.py    every hook answer a row of hashes, and each one run again
 │   │   │   ├── test_hook_replay.py
@@ -1624,6 +1633,10 @@ willow/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
 │   │   │   └── README.md
+│   │   ├── dice-tower/
+│   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
+│   │   │   ├── test_dice_tower.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
@@ -1668,15 +1681,15 @@ willow/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-liars-dice/
+
+```
 │   │   ├── play-liars-dice/
 │   │   │   ├── play_liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
 │   │   │   ├── test_play_liars_dice.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-life/
-
-```
 │   │   ├── play-life/
 │   │   │   ├── play_life.py  Conway's Game of Life, played on the record
 │   │   │   ├── test_play_life.py

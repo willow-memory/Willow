@@ -135,6 +135,10 @@ def sentences(box: Path, rows: list[dict]) -> list[tuple[str, str]]:
                 + (", ".join(f"{n} {k}" for n, k in counts if n) or "nothing had")
                 + "."
             )
+        elif kind == "words":
+            # by hash only, as the record keeps it: never a word of either list
+            said = ("You gave your record another words list."
+                    if r.get("was_sha256") else "You gave your record a words list.")  # fmt: skip
         else:
             said = f"A {kind} row, written by {r.get('who', 'something')}."
         out.append((str(r.get("ts", "")), said))

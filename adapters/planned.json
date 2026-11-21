@@ -1584,6 +1584,18 @@
   "version": "0.0.1"
  },
  {
+  "name": "practice",
+  "kind": "stdlib",
+  "section": "Keeping track",
+  "line": "One page a child can read of what they're practising: sums missed, cards due, the reading log, what's next. About the work, never the child.",
+  "source": "new",
+  "writes": "nothing",
+  "network": "none",
+  "role": "page",
+  "uses": "digest, flashcards, reading-log",
+  "version": "0.0.1"
+ },
+ {
   "name": "promises",
   "kind": "stdlib",
   "section": "Finding things",
@@ -2294,6 +2306,18 @@
   "writes": "record",
   "network": "none",
   "role": "tools",
+  "version": "0.0.1"
+ },
+ {
+  "name": "tower-math",
+  "kind": "stdlib",
+  "section": "Play",
+  "line": "Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back, not a tally of you.",
+  "source": "new",
+  "writes": "record",
+  "network": "none",
+  "role": "tools",
+  "uses": "dice-tower, play-odds, flashcards, forecasts",
   "version": "0.0.1"
  },
  {

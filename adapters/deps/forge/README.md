@@ -3,7 +3,7 @@ section: Assistants
 line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
-version: 0.3.0
+version: 0.4.1
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
@@ -78,12 +78,29 @@ of thing, each row the card and what it says:
   `--choose close=none`, sealed, keeps the miss on your record and runs
   nothing, and the next time the report says so. Its proposal keeps what
   you were shown: the cards in their order, the one recommended, where your
-  pick fell, and the SHA-256 of similar.py and the words list that ranked
-  them.
+  pick fell, and the matcher that ranked them, known by what it ranks (the
+  SHA-256 of the cards its search puts first for ten fixed sentences), so
+  an edit that moves no card keeps its count and one that moves any starts
+  a new one.
+
+  **One close fork in five is blind**, by the hash of your words, so asking
+  again gets the same: its cards in an order of their own, nothing
+  recommended and no confidence said, the heading saying so, and each
+  card's row its own line and promises and one note the same on every
+  row, never the search's reason for it ("email usually means", "the words
+  of its name are in yours"): those come in the search's order and would
+  say which it put first. A
+  recommendation you can see is one you can follow, and a pick that follows
+  it says how far you trust the search, not how often it is right; a blind
+  pick says only the second. Its proposal keeps the search's order, where
+  your pick fell in it, the order you saw, the search's first (as
+  `search_first`; its `recommended` is empty, since nothing was), and the
+  confidence it kept unsaid. The Forge's plan gets no recommendation for it
+  either, so its checkpoint has nothing to show.
 
       forge: populated, 1 fork waits on you
       ## fork “close”: nothing named that the search agrees with; these are close to what you said
-        adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first; no confidence yet: 0 of 5 close picks sealed on this matcher
+        adapters/deps/noised-count/README.md        noised-count: ...; close, not named: a word of yours is part of its name; recommended, the search's first; no confidence yet: 0 of 5 blind close picks sealed on this matcher
         adapters/stdlib/assistant-scores/README.md  assistant-scores: ...; close, not named: uses often each, suggestion seal
         adapters/stdlib/forecast-ask/README.md      forecast-ask: ...; close, not named: uses count often
         none                                        none: none of these does it: sealed, the miss is on your record and nothing runs
@@ -121,35 +138,53 @@ waits its turn until the first no longer stands.
       rank 3  third: 0 of 2
       none    none of them: 1 of 2
     ## by matcher
-      similar 1f3a…, words 2e43…  the first taken 1 of 2
+      ranks 8390ca66e35c  the first taken 1 of 2
     ## its confidence
-      now     no confidence yet: 2 of 5 close picks sealed on this matcher
+      now      no confidence yet: 1 of 5 blind close picks sealed on this matcher
+      blind    its first taken 1 of 1 blind
+      in view  its first taken 0 of 1 with the recommendation in view
     ## each
       forge/decisions/willow-close-….json  “…”: tip-pin, rank 1 of tip-pin, hook-pin, weights-pin (row 9)
 
 Every fork's proposal keeps what you were shown, a word's as well as the
 search's: the cards in their order, the one recommended (only the close
-fork has one), where your pick fell, and the matcher's hashes.
+fork has one), where your pick fell, and the matcher it was ranked by.
 
 `scores` reads the forks you settled back off your record: only the ones
 you sealed that still stand, through the kernel's `sealed` and `standing`.
 For the close fork it is how often the search's first card was the one you
-took, counted by place and kept apart per matcher, so a change to
-similar.py or the words list starts a count of its own. For a word's fork
+took, counted by place and kept apart per matcher, so a change that moves
+a card starts a count of its own. For a word's fork
 it is how often that word's alias line offered a card you took, and how
 often you said none: a word that keeps getting none is a line of
-ui/search-words.txt to argue. That count is the matchmaker's
+ui/search-words.txt to argue. The blind close picks are the matchmaker's
 measured hit rate, and the only thing a close fork's confidence is made
-from. Once you have sealed five close picks on one matcher, the next close
-fork says you took the search's first k of n and states (k+1)/(n+2) as its
-confidence: five of five is 0.86, never a certainty, and a rate under one
-half says no confidence (the Forge states one only in the direction it
-believes). Before that, or under half, the fork says why it has none, and
-the Forge records no prediction. Each close proposal keeps the confidence
-it was shown, and `scores` scores those against what you took with the
-Forge's own calibration: its Brier score (0 is foresight, 0.25 a coin at
-one half), the mean said and how often the first was taken. It writes
-nothing.
+from. Once you have sealed five blind close picks on one matcher, the next
+close fork says you took the search's first k of n and states (k+1)/(n+2)
+as its confidence: five of five is 0.86, never a certainty, and a rate
+under one half says no confidence (the Forge states one only in the
+direction it believes). Before that, or under half, the fork says why it
+has none, and the Forge records no prediction. A pick made with the
+recommendation in view counts toward neither the confidence nor its
+score; `scores` sets its rate beside the blind one, and the gap between
+them is how often you took the search's first because it was said. Each
+blind fork keeps the confidence it had, and `scores` scores those against
+what you took with the Forge's own calibration: its Brier score (0 is
+foresight, 0.25 a coin at one half), the mean said and how often the first
+was taken. It writes nothing.
+
+A blind fork costs you the hint, so it is one in five and no more, and the
+confidence waits on five of them: about twenty-five close forks. Picks you
+sealed under forge 0.3 count toward none of it: they were all made in view,
+and under a matcher known by its bytes. They stay in `scores`' rank and
+matcher groups, under that old matcher's name. The blind
+ones are known by the hash of their words, so a sentence put another way
+may come out in view; and the search is the same program for anyone who
+runs it, so a blind fork hides its order from a glance, not from someone
+set on knowing it. What was predicted is kept on the proposal with your
+pick, not committed on the record before it: proving it came first is the
+cup's (a commitment made when a fork is posed and opened after the pick,
+as willow's dice are to have it), and not built here.
 
 To share a stack you sealed, with your reasons, see
 [stack-share](../../stdlib/stack-share/).

@@ -2388,6 +2388,69 @@ func initBox(box string, pile *string, key, ts string, wl *string, froms []strin
 	return ALIVE, nil
 }
 
+// relist is kernel.py's relist: their words list, named after the box was
+// made. The row first, then the settings; the list it replaced is the one the
+// record last read through, and the same file edited since is a new list.
+func relist(box, wl, ts string) (int, error) {
+	al, sha, why := readWords(wl, box)
+	if why != nil {
+		return refuse("refused: " + *why), nil
+	}
+	r, err := readRecord(filepath.Join(box, "record.jsonl"))
+	if err != nil {
+		return 0, err
+	}
+	if len(r.breaks) > 0 {
+		return refuse("refused: the record doesn't verify; nothing was changed"), nil
+	}
+	cfg, err := config(box)
+	if err != nil {
+		return 0, err
+	}
+	was := ""
+	if s, ok := get(cfg, "words").(string); ok {
+		was = s
+	}
+	var named []string
+	for _, row := range r.rows {
+		if s, ok := get(row, "words_sha256").(string); ok && s != "" {
+			named = append(named, s)
+		}
+	}
+	same := cfg.Has("words") && was == resolved(wl)
+	if same && (len(named) == 0 || named[len(named)-1] == sha) {
+		fmt.Println("ready: this box already reads " + was)
+		return ALIVE, nil
+	}
+	before := ""
+	if len(named) > 0 {
+		before = named[len(named)-1]
+	} else if cfg.Has("words") {
+		_, before, _ = readWords(was, box)
+	}
+	row, err := appendRow(box, ts, "words", "kernel", obj("words_sha256", sha, "was_sha256", before))
+	if err != nil {
+		return 0, err
+	}
+	if !same {
+		cfg.Set("words", resolved(wl))
+		next := filepath.Join(box, "kernel.json.new")
+		if err := ioutil.WriteFile(next, []byte(dumpsDefault(cfg, true)+"\n"), 0o666); err != nil {
+			return 0, err
+		}
+		if err := os.Rename(next, filepath.Join(box, "kernel.json")); err != nil {
+			return 0, err
+		}
+	}
+	how := "from now on"
+	if same {
+		how = "as it is now, edited since it was last read"
+	}
+	fmt.Printf("ready: this box reads %s %s (%d words), row %s %s\n", wl, how, len(al),
+		pyStr(get(row, "n")), get(row, "hash").(string)[:16])
+	return ALIVE, nil
+}
+
 // ── the loop ────────────────────────────────────────────────────────────────
 
 // bySubject is a dict of rows by subject: a later row for the same subject
@@ -3162,6 +3225,7 @@ const USAGE = `kernel.py: answers questions from your own files. Python 3.9+, st
     python kernel.py decline --box DIR proposal:<sha256>
     python kernel.py verify  --box DIR
     python kernel.py out     --box DIR
+    python kernel.py words   --box DIR --words FILE
     python kernel.py test`
 
 func tablesPath() string {
@@ -3259,6 +3323,8 @@ func run(argv []string) (int, error) {
 		return refuse("refused: not a kernel box; init first"), nil
 	}
 	switch {
+	case verb == "words" && opts["--words"] != "" && len(args) == 0:
+		return relist(box, opts["--words"], ts)
 	case verb == "bite" && len(args) == 1:
 		return bite(box, args[0], ts)
 	case verb == "propose" && opts["--file"] != "" && len(args) == 0:

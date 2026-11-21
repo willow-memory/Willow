@@ -342,3 +342,179 @@ def test_the_bound_counts_only_what_only_kept(tmp_path, monkeypatch, capsys):
     assert (
         latent.main(["rank", "--index", str(ix), "--only", str(f), "client money"]) == 0
     )
+
+
+# --- --to SPACE: the built space kept, and read again while it still fits ---
+
+
+def test_to_keeps_the_space_and_the_next_run_reads_it(tmp_path):
+    ix = index(tmp_path, "k", CORPUS)
+    kept = tmp_path / "space.npz"
+    ask = ("rank", "--index", str(ix), "--top", "4", "--to", str(kept),
+           "outstanding invoice payment")  # fmt: skip
+    first = run(*ask)
+    assert first.returncode == 0, first.stderr
+    assert "built the space of 6 passages and kept it in" in first.stderr
+    assert kept.is_file()
+    made = kept.read_bytes()
+    again = run(*ask)
+    assert "is of these 6 passages; not built again" in again.stderr
+    assert again.stdout == first.stdout and again.returncode == 0
+    assert kept.read_bytes() == made  # read, never written a second time
+    # nothing left beside it: the scratch file it was written through is gone
+    assert sorted(p.name for p in tmp_path.iterdir() if p.is_file()) == ["space.npz"]
+    # and it answers as a run that keeps nothing does
+    plain = run("rank", "--index", str(ix), "--top", "4", "outstanding invoice payment")
+    assert plain.stdout == first.stdout and plain.stderr == ""
+
+
+def test_a_kept_space_is_used_without_building(tmp_path, monkeypatch):
+    import latent
+    import scan
+
+    at = index(tmp_path, "u", CORPUS)
+    kept = tmp_path / "space.npz"
+    q = "outstanding invoice payment"
+    assert run("rank", "--index", str(at), "--to", str(kept), q).returncode == 0
+    ix = scan.Index(at)
+    built = latent.space(ix, None, None)
+
+    def never(*a, **k):
+        raise AssertionError("the space was built again")
+
+    monkeypatch.setattr(latent, "space", never)
+    read, did = latent.kept(ix, None, None, kept)
+    assert did == "kept"
+    assert latent.ranked(ix, read, q, 4) == latent.ranked(ix, built, q, 4)
+    assert read[0] == built[0] and read[1] == built[1]
+
+
+def test_other_passages_build_again_and_replace_what_was_kept(tmp_path):
+    ix = index(tmp_path, "a", CORPUS)
+    other = index(tmp_path, "b", {**CORPUS, "e.md": "a new note about an invoice\n"})
+    kept = tmp_path / "space.npz"
+    q = ("--top", "3", "--to", str(kept), "invoice payment")
+    assert "built the space of 6" in run("rank", "--index", str(ix), *q).stderr
+    assert "built the space of 7" in run("rank", "--index", str(other), *q).stderr
+    assert "not built again" in run("rank", "--index", str(other), *q).stderr
+    # the first index's space is gone from it: asked again, it is built again
+    assert "built the space of 6" in run("rank", "--index", str(ix), *q).stderr
+
+
+def test_only_and_changed_from_are_other_passages_than_the_whole_index(tmp_path):
+    ix = index(tmp_path, "o", CORPUS)
+    kept = tmp_path / "space.npz"
+    q = ("--top", "3", "--to", str(kept), "invoice payment")
+    assert "built the space of 6" in run("rank", "--index", str(ix), *q).stderr
+    import scan
+
+    ids = [c["id"] for c in scan.passages(ix)][:4]
+    only = tmp_path / "only.txt"
+    only.write_text("\n".join(ids) + "\n")
+    got = run("rank", "--index", str(ix), "--only", str(only), *q)
+    assert "built the space of 4" in got.stderr
+    assert (
+        "of these 4 passages"
+        in run("rank", "--index", str(ix), "--only", str(only), *q).stderr
+    )
+    old = index(tmp_path, "old", {"a.md": CORPUS["a.md"]})
+    got = run("rank", "--index", str(ix), "--changed-from", str(old), *q)
+    assert "built the space of 4" in got.stderr  # the two of a.md are lacked
+
+
+def test_a_file_that_is_not_a_kept_space_is_refused_and_left_as_it_was(tmp_path):
+    ix = index(tmp_path, "r", CORPUS)
+    mine = tmp_path / "notes.txt"
+    mine.write_text("my own notes\n")
+    got = run("rank", "--index", str(ix), "--to", str(mine), "invoice payment")
+    assert got.returncode == 2 and got.stdout == ""
+    assert "is there and is not a space latent kept" in got.stderr
+    assert mine.read_text() == "my own notes\n"
+    # an array numpy can read, and not one of latent's, is refused the same
+    import numpy as np
+
+    arr = tmp_path / "other.npz"
+    with arr.open("wb") as f:
+        np.savez(f, something=np.zeros(3))
+    was = arr.read_bytes()
+    got = run("rank", "--index", str(ix), "--to", str(arr), "invoice payment")
+    assert got.returncode == 2 and arr.read_bytes() == was
+
+
+def test_a_to_that_is_a_folder_or_in_no_folder_is_refused(tmp_path):
+    ix = index(tmp_path, "f", CORPUS)
+    for bad in (tmp_path, tmp_path / "nowhere" / "space.npz"):
+        got = run("rank", "--index", str(ix), "--to", str(bad), "invoice payment")
+        assert got.returncode == 2, bad
+        assert "a file, in a folder that is there" in got.stderr
+    assert not (tmp_path / "nowhere").exists()
+    assert run("rank", "--index", str(ix), "--to").returncode == 2  # no value
+
+
+def test_too_few_passages_to_have_a_space_keeps_nothing(tmp_path):
+    ix = index(tmp_path, "one", {"a.md": "one lonely passage\n"})
+    kept = tmp_path / "space.npz"
+    got = run("rank", "--index", str(ix), "--to", str(kept), "lonely")
+    assert got.returncode == 42 and got.stderr == ""
+    assert not kept.exists()
+
+
+def test_a_space_kept_in_another_layout_is_built_again(tmp_path):
+    import latent
+    import numpy as np
+    import scan
+
+    at = index(tmp_path, "v", CORPUS)
+    kept = tmp_path / "space.npz"
+    ask = ("rank", "--index", str(at), "--to", str(kept), "invoice payment")
+    assert "built the space" in run(*ask).stderr
+    ix = scan.Index(at)
+    key = latent.key_of(ix, latent.chosen(ix, None, None))
+    with np.load(kept) as z:
+        parts = {k: z[k] for k in z.files}
+    assert str(parts["format"]) == latent.FORMAT and str(parts["key"]) == key
+    parts["format"] = np.array("latent-space-0")
+    with kept.open("wb") as f:
+        np.savez(f, **parts)
+    assert latent.load(kept, key) is None
+    assert "built the space" in run(*ask).stderr
+    assert latent.load(kept, key) is not None
+    assert latent.load(kept, "0" * 64) is None  # built from something else
+
+
+def test_the_key_is_these_passages_in_this_order_and_nothing_else(tmp_path):
+    import latent
+    import scan
+
+    ix = scan.Index(index(tmp_path, "y", CORPUS))
+    all6 = latent.chosen(ix, None, None)
+    assert all6 == [0, 1, 2, 3, 4, 5]
+    key = latent.key_of(ix, all6)
+    assert key == latent.key_of(ix, list(all6)) and len(key) == 64
+    assert key != latent.key_of(ix, all6[:5])
+    assert key != latent.key_of(ix, all6[::-1])
+    lacked = {ix.pile[0]["id"]}
+    assert latent.chosen(ix, lacked, None) == [1, 2, 3, 4, 5]
+    assert latent.chosen(ix, None, lacked) == [0]
+    assert latent.chosen(ix, lacked, lacked) == []
+
+
+def test_a_space_is_kept_whole_or_not_at_all(tmp_path, monkeypatch):
+    import latent
+    import numpy as np
+    import scan
+
+    ix = scan.Index(index(tmp_path, "w", CORPUS))
+    kept = tmp_path / "space.npz"
+
+    def broke(*a, **k):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(np, "savez", broke)
+    try:
+        latent.kept(ix, None, None, kept)
+    except OSError as e:
+        assert str(e) == "disk full"
+    else:
+        raise AssertionError("the failure was hidden")
+    assert [p.name for p in tmp_path.iterdir() if p.is_file()] == []

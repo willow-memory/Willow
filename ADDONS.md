@@ -817,6 +817,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="synonyms"></a>[**synonyms**](adapters/stdlib/synonyms/) \
   Words-list lines for a word no file holds: the dictionary's other words that your files do hold. \
   Reaches this machine only. *new* `no-install` `this-machine` · near: abbreviations, accents, decisions
+- <a id="word-layers"></a>[**word-layers**](adapters/stdlib/word-layers/) \
+  One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes. \
+  *new* `no-install` `offline` `stack` `several` · near: words-later, stack, stack-share
 - <a id="words-ar"></a>[**words-ar**](adapters/stdlib/words-ar/) \
   Arabic common words ("في", "من", "على"). \
   *new* `no-install` `offline` `common` `arabic` · near: words-it, words-pl, words-pt
@@ -1035,6 +1038,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="lab-notebook"></a>**lab-notebook** (idea) \
   A lab notebook's dated entries, by sample and experiment: what was done to what, and when. \
   *new* `no-install` `offline` `entry` `sampling` · near: joplin, mcp-sampling, journiv
+- <a id="practice"></a>**practice** (idea) \
+  One page a child can read of what they're practising: sums missed, cards due, the reading log, what's next. About the work, never the child. \
+  Uses digest, flashcards, reading-log. *new* `no-install` `offline` `log` `child` · near: reading-log, emergency-card, digest
 - <a id="rubric"></a>**rubric** (idea) \
   Marking against a rubric you wrote: each mark cites the criterion and the line of work it's for. \
   *new* `no-install` `offline` `marks` `citing` · near: model-exam, gradebook, symptoms
@@ -1648,6 +1654,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="approved-only"></a>[**approved-only**](adapters/stdlib/approved-only/) \
   The one file an AI model may read: only the passages you approved, under ids it can't guess, and nothing else. \
   *bot* `no-install` `offline` · near: stack, decisions, folder-card
+- <a id="hook-ask-first"></a>[**hook-ask-first**](adapters/stdlib/hook-ask-first/) \
+  A PreToolUse hook that refuses reading by hand a file one of your boxes holds, until that box has been asked this session. \
+  Uses hook-shell, stack. *new* `no-install` `offline` `pretooluse` `refuses` `hooks` · near: hook-read-first, hook-leaks, hook-cite
 - <a id="hook-compact"></a>[**hook-compact**](adapters/stdlib/hook-compact/) \
   A PreCompact hook that prints what the record holds open (seals waiting, questions unanswered), so it survives the assistant's summary. \
   Uses digest. Hands on the waiting suggestions' text and reasons, to the assistant's model before it summarises. *box* `no-install` `to-a-model` `waiting`
@@ -2003,6 +2012,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: play-quiz, random-passage, stack-row
+- <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
+  A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
+  Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, game-master
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses play-dice, play-odds. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-odds, play-checkers
@@ -2099,12 +2111,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-fight5e"></a>**play-fight5e** (idea) \
   Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
   *new* `no-install` `offline` `rolls` `play` · near: play-dice5e, play-dice, play-tarot
-
-#### Tools you run yourself: ideas, not built yet, p to w
-
 - <a id="play-hanoi"></a>**play-hanoi** (idea) \
   Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
   *new* `no-install` `offline` `play` `move` · near: play-reversi, tic-tac-toe, play-dice
+
+#### Tools you run yourself: ideas, not built yet, p to w
+
 - <a id="play-lunatic"></a>**play-lunatic** (idea) \
   The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. \
   Needs Skyfield; MIT. *new* `needs-install` `offline` `play` `moon` · near: play-hearts, play-dice5e, typos
@@ -2146,6 +2158,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="todays-place"></a>**todays-place** (idea) \
   One place a day drawn from Natural Earth's public-domain list, for the day's questions and bets. \
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
+- <a id="tower-math"></a>**tower-math** (idea) \
+  Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back, not a tally of you. \
+  Uses dice-tower, play-odds, flashcards, forecasts. *new* `no-install` `offline` `tower` `total` · near: email-ask, bot-venv, lesson-time
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
   Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades,

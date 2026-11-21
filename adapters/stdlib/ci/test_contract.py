@@ -700,6 +700,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "debts": ("debts.py", ["--box", "{box}"]),
     "decisions": ("decisions.py", ["ask", "--box", "{box}", "tomatoes"]),
     "deep-links": ("deep_links.py", ["--box", "{box}"]),
+    "dice-tower": ("dice_tower.py", ["--box", "{box}", "check"]),
     "digest": ("digest.py", ["--box", "{box}", *NOW]),
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
@@ -728,6 +729,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "habits": ("habits.py", ["--box", "{box}"]),
     "handover": ("handover.py", ["--project", "{box}/.."]),
     "home-upkeep": ("home_upkeep.py", ["--box", "{box}"]),
+    "hook-ask-first": ("hook_ask_first.py", ["run", "--boxes", "{tmp}/out"]),
     "hook-compact": ("hook_compact.py", ["--box", "{box}"]),
     "hook-elsewhere": ("hook_elsewhere.py", ["list"]),
     "hook-errors": ("hook_errors.py", ["check", "--box", "{box}"]),
@@ -923,6 +925,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "who-said": ("who_said.py", ["--box", "{box}"]),
     "why-not": ("why_not.py", ["--box", "{box}", "tomatoes"]),
     "windsurf": ("windsurf.py", ["--box", "{box}"]),
+    "word-layers": ("word_layers.py", ["make", "--from", "adapters/stdlib/word-layers/example-master.txt", "--to", "{tmp}/words.txt"]),
     "world-ids": ("world_ids.py", ["--box", "{box}"]),
     "zed": ("zed.py", ["--box", "{box}"]),
     # every language pack, from its folder: a new one is run here without a line of its own

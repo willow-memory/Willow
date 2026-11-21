@@ -3,7 +3,7 @@ section: Finding things
 line: Keeps your folder's search ready in one background process on this machine, so a hook's lookup answers in milliseconds instead of seconds.
 source: bot
 added: 2026-10-28
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes

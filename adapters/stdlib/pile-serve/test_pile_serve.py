@@ -7,6 +7,7 @@ is refused; a bad request or command line is refused."""
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import signal
@@ -148,6 +149,35 @@ def test_the_socket_is_this_users_alone(short):
     finally:
         run("stop", "--at", str(sock))
         p.wait(timeout=10)
+
+
+def test_a_sigterm_as_it_starts_listening_ends_it_cleanly(short, monkeypatch, capsys):
+    """Seen on CI (#386): a client connected between listen() and the SIGTERM
+    handler, and the SIGTERM sent then killed it (exit -15, the socket left).
+    Here listen() itself is where the signal lands: the handler is already in
+    place, and what it raises ends the server as Ctrl-C does."""
+    spec = importlib.util.spec_from_file_location("pile_serve_t", PSV)
+    ps = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ps)
+    seen = {}
+
+    def listen(self, *a):
+        seen["handler"] = signal.getsignal(signal.SIGTERM)
+        raise KeyboardInterrupt  # what the handler raises, delivered here
+
+    monkeypatch.setattr(socket.socket, "listen", listen)
+    before = signal.getsignal(signal.SIGTERM)
+    try:
+        sock = short / "s"
+        try:
+            got = ps.serve(a_folder(short), str(sock), None, None)
+        except KeyboardInterrupt:
+            pytest.fail("a SIGTERM as it began listening escaped the server")
+        assert got == kernel.ALIVE
+    finally:
+        signal.signal(signal.SIGTERM, before)
+    assert seen["handler"] is ps.stopped and not sock.exists()
+    assert capsys.readouterr().out.endswith("stopped\n")
 
 
 def test_sigterm_and_idle_each_end_it_and_remove_the_socket(short):

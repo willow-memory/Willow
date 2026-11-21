@@ -1,0 +1,3 @@
+# An example master list: what is true in every box.
+licence = license
+deadline = due, expires

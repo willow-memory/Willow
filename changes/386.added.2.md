@@ -1,0 +1,1 @@
+`kernel.py words --box DIR --words FILE`: a box takes a words list after it was made, or another one, read from the next question on; a words row says so by hash (the new list's and the one it replaced, as the record last read it), never a word of either, and nothing earlier is rewritten. The same refusals as `init`'s, and a record that doesn't verify is not built on
