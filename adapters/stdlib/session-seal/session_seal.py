@@ -1,7 +1,7 @@
 """session_seal.py: one seal at the end of a session, over all of it. Python 3.9+.
 
-    python adapters/stdlib/session-seal/session_seal.py --box DIR [--index INDEX] [--with FILE] [--now TS] [--json]
-    python adapters/stdlib/session-seal/session_seal.py --box DIR check [--json]
+    python adapters/stdlib/session-seal/session_seal.py --box DIR [--index INDEX] [--with FILE] [--log FILE] [--now TS] [--json]
+    python adapters/stdlib/session-seal/session_seal.py --box DIR check [--log FILE] [--json]
 
 A session is the record's rows since the last one was bundled (from row 0,
 the first time). Its bundle is every row by number, kind and hash, and what
@@ -28,6 +28,15 @@ same row on the record without reading every file again: on a big folder,
 seconds instead of a minute. An index that isn't current, or claude-code,
 index-cache or scan not here, and the kernel reads the folder as before.
 
+With `--log FILE`, a log kept beside the box, a line a row, each line
+naming the hash of the one before it, the bundle holds where the log ended:
+its lines, and the hash of the last. A log's last line has no later one to
+vouch for it, so a cut or an edit there doesn't show in the log itself;
+sealed with the session, it is pinned under the person's key. `check --log
+FILE` holds the log to the last sealed session that names one: it holds
+(perhaps with lines since), it was cut short, or the line it ended at was
+rewritten.
+
 Exit codes, the kernel's: 0 nothing waits (for `check`, every session
 sealed, or none yet: empty); 42 a session waits on the person's seal, or
 (for `check`) one's bundle is broken; 2 refused (a record that doesn't
@@ -37,6 +46,7 @@ verify, a bad command line).
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import io
 import json
 import sys
@@ -81,6 +91,52 @@ def bundle(rows: list[dict], first: int) -> dict:
         "rows": [[r["n"], r["kind"], r["hash"]] for r in mine],
         "came_of": {t: told.count(t) for t in sorted(set(told))},
     }
+
+
+def log_end(path: Path) -> dict | None:
+    """--log FILE: where a log beside the box ends, its lines and the hash of
+    the last; None when it can't be read as text."""
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, ValueError):
+        return None
+    tip = hashlib.sha256(lines[-1].encode()).hexdigest() if lines else ""
+    return {"rows": len(lines), "tip": tip}
+
+
+def log_held(box: Path, rows: list[dict], path: Path) -> tuple[str, str]:
+    """The log against the last sealed session that names where it ended:
+    (where, what), what one of `holds`, `cut short`, `rewritten`, `not
+    sealed yet` or `unreadable`."""
+    good = kernel.sealed(box, rows)
+    pinned = None
+    for s in (r for r in rows if r["kind"] == KIND):
+        subj = str(s.get("subject", ""))
+        if subj not in good:
+            continue
+        try:
+            prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+            end = (
+                json.loads(prop["data"]).get("log")
+                if kernel.subject_of(prop) == subj
+                else None
+            )
+            pinned = (int(end["rows"]), str(end["tip"]), s) if end else pinned
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            continue
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, ValueError):
+        return str(path), "unreadable"
+    if pinned is None:
+        return str(path), "not sealed yet"
+    want, tip, s = pinned
+    where = f"rows {s.get('from')} to {s.get('to')}: {want} lines"
+    if len(lines) < want:
+        return where, f"cut short: {len(lines)} lines now"
+    if want and hashlib.sha256(lines[want - 1].encode()).hexdigest() != tip:
+        return where, f"rewritten at line {want - 1}"
+    return where, f"holds: {len(lines) - want} lines since"
 
 
 def quiet(fn, *args) -> tuple[int, str]:
@@ -137,7 +193,7 @@ def corrections(path: Path) -> list[str] | None:
 
 def close(
     box: Path, ts: str, as_json: bool = False, index: Path | None = None,
-    corrected: list[str] | None = None,
+    corrected: list[str] | None = None, log: dict | None = None,
 ) -> int:  # fmt: skip
     rows, _ = kernel.read(box / "record.jsonl")
     first = start(rows)
@@ -150,6 +206,8 @@ def close(
     b = bundle(rows, first)
     if corrected:  # the person's corrections, sealed with the session, once
         b["corrections"] = corrected
+    if log is not None:  # where the log beside the box ended, pinned by the seal
+        b["log"] = log
     ask = f"session {b['from']} to {b['to']}"
     code, said = bitten(box, ask, ts, index)
     if code == kernel.REFUSED:
@@ -165,7 +223,8 @@ def close(
             f", and {len(corrected)} correction{'s' * (len(corrected) != 1)} of yours"
             if corrected
             else ""
-        ),
+        )
+        + (f", and your log's {log['rows']} lines" if log is not None else ""),
     }
     code, said = quiet(kernel.propose, box, [json.dumps(prop)], ts)
     subj = kernel.subject_of(prop)
@@ -262,10 +321,18 @@ def say(doc: dict, as_json: bool) -> None:
     print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
 
 
-def check_report(box: Path, rows: list[dict]) -> tuple[dict, int]:
+def check_report(
+    box: Path, rows: list[dict], log: Path | None = None
+) -> tuple[dict, int]:
     """`check` as a report, by state, and its exit code: 42 when a session
-    waits on your seal or its bundle is broken, both yours to look at."""
+    waits on your seal or its bundle is broken, both yours to look at, or
+    the log named is cut short or rewritten."""
     told = each_session(box, rows)
+    held = log_held(box, rows, log) if log is not None else None
+    bad = held is not None and held[1].startswith(("cut short", "rewritten"))
+    if not told and held is not None:
+        said = f"no session bundled yet; your log: {held[1]}"
+        return report(NAME, "populated", said, [("your log", [held])]), kernel.ALIVE
     if not told:
         said = (f"no session bundled yet; {len(rows) - start(rows)} rows since,"
                 " not yet bundled")  # fmt: skip
@@ -274,7 +341,11 @@ def check_report(box: Path, rows: list[dict]) -> tuple[dict, int]:
                       for span, s, subj in told if s == state])
               for state, (name, what) in GROUPS.items()]  # fmt: skip
     code = kernel.ESCALATE if any(s != "sealed" for _, s, _ in told) else kernel.ALIVE
-    return report(NAME, "populated", tally(told, rows), groups), code
+    said = tally(told, rows)
+    if held is not None:
+        groups.insert(0, ("your log", [held]))
+        said += f"; your log: {held[1].split(':')[0]}"
+    return report(NAME, "populated", said, groups), kernel.ESCALATE if bad else code
 
 
 def main(argv: list[str]) -> int:
@@ -282,7 +353,7 @@ def main(argv: list[str]) -> int:
     args: list[str] = []
     it = iter(argv)
     for a in it:
-        if a in ("--box", "--now", "--index", "--with"):
+        if a in ("--box", "--now", "--index", "--with", "--log"):
             opts[a] = next(it, "")
         elif a == "--json":
             opts[a] = "yes"
@@ -293,6 +364,7 @@ def main(argv: list[str]) -> int:
         or args not in ([], ["check"])
         or opts.get("--index") == ""
         or opts.get("--with") == ""
+        or opts.get("--log") == ""
         or ("--with" in opts and args)
     ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
@@ -306,7 +378,9 @@ def main(argv: list[str]) -> int:
         print("refused:", *breaks, sep="\n  ", file=sys.stderr)
         return kernel.REFUSED
     if args == ["check"]:
-        doc, code = check_report(box, rows)
+        doc, code = check_report(
+            box, rows, Path(opts["--log"]) if "--log" in opts else None
+        )
         say(doc, "--json" in opts)
         return code
     index = Path(opts["--index"]) if "--index" in opts else None
@@ -318,8 +392,15 @@ def main(argv: list[str]) -> int:
                   f"{WITH_MOST} at most, each {SAID_MOST} characters at most",
                   file=sys.stderr)  # fmt: skip
             return kernel.REFUSED
+    log = None
+    if "--log" in opts:
+        log = log_end(Path(opts["--log"]))
+        if log is None:
+            print(f"refused: {opts['--log']} isn't a log that can be read",
+                  file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
     return close(
-        box, opts.get("--now") or kernel.now(), "--json" in opts, index, corrected
+        box, opts.get("--now") or kernel.now(), "--json" in opts, index, corrected, log
     )
 
 

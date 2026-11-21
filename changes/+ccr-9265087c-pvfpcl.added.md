@@ -1,0 +1,1 @@
+`session-seal` 0.4.0: `--log FILE` seals where a log beside the box ended (its lines, and the hash of the last) with the session, and `check --log FILE` holds the log to the last sealed session: holds, cut short, or rewritten where it ended, since a chained log can't vouch for its own last line
