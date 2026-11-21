@@ -1132,3 +1132,23 @@ def test_a_sealed_when_that_isnt_one_is_refused(sealed, says):
     w["scenes"][0]["beats"][0]["when"]["sealed"] = sealed
     with pytest.raises(gm.WorldError, match=says):
         gm.validate(w)
+
+
+def test_an_action_with_real_dice_is_read_from_the_faces_said(t):
+    t.run("open")
+    got = t.run("act", "Grit", "--said", "4,5")
+    assert got.returncode == 0, got.stderr
+    roll, beat = t.rows()[-2:]
+    assert roll["kind"] == "roll" and roll["generator"] == "said" and "seed" not in roll
+    assert beat["roll_row"] == roll["n"] and beat["roll"] == 9 and beat["total"] == 12
+    assert beat["band"] == "strong" and "2d6: 4 + 5 = 9, as said, +3 Grit = 12: strong" in got.stdout  # fmt: skip
+    assert t.run("check", world=False).returncode == 0  # held as said
+
+
+def test_real_dice_that_arent_two_d6_are_refused_and_nothing_written(t):
+    t.run("open")
+    before = t.raw()
+    for faces in ("7,1", "4", "4,5,6"):
+        got = t.run("act", "Grit", "--said", faces)
+        assert got.returncode == 2 and "dice refused the roll" in got.stderr, faces
+    assert t.raw() == before

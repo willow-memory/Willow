@@ -3,7 +3,7 @@ person's rulings as rows on the record. Python 3.9+.
 
     python adapters/stdlib/game-master/game_master.py --box DIR open   --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR status --world W.json
-    python adapters/stdlib/game-master/game_master.py --box DIR act STAT --world W.json [--now TS]
+    python adapters/stdlib/game-master/game_master.py --box DIR act STAT [--said FACES] --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR ask    --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR settle --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR offer CHARACTER "FACT" [--as KIND] --world W.json [--now TS]
@@ -16,7 +16,10 @@ An action beat is `act STAT`: it rolls 2d6 with dice's own `roll` (the row is
 seeded by the record's tip, so nobody picks the faces), adds the acting
 character's stat, and reads the total as strong (10 or more), weak (7 to 9)
 or miss (6 or less). The roll row and a `table-beat` row naming it go on the
-record, and the beat's own line for that band is printed.
+record, and the beat's own line for that band is printed. With `--said 4,6`
+the table threw real dice and says the faces: dice's `said` keeps them as
+said (a `roll` row with no seed, marked so), and the beat is read from them
+the same way.
 
 A decision beat is a ruling, and the game master's call is the person's, not
 this code's. `ask` hands the beat's fact in as a proposal through the
@@ -480,7 +483,7 @@ def cmd_status(box: Path, world: dict) -> int:
     return kernel.ALIVE if what != "open" else kernel.ESCALATE
 
 
-def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
+def cmd_act(box: Path, world: dict, stat: str, ts: str, faces: str = "") -> int:
     rows, game, err = current(box, world)
     if err:
         return fail(err)
@@ -491,7 +494,10 @@ def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
         return fail(f"beat {b['id']} is a decision: it has no roll; ask, then wait for your seal")  # fmt: skip
     if stat not in world["stats"]:
         return fail(f"{stat!r} isn't a stat here: {', '.join(world['stats'])}")
-    got = subprocess.run([sys.executable, str(DICE), "--box", str(box), "roll", ROLL, "--now", ts],
+    how = (
+        ["said", ROLL, faces] if faces else ["roll", ROLL]
+    )  # real dice, as the table read them
+    got = subprocess.run([sys.executable, str(DICE), "--box", str(box), *how, "--now", ts],
                          capture_output=True, text=True)  # fmt: skip
     rows, breaks = kernel.read(box / "record.jsonl")
     roll = rows[-1] if rows else {}
@@ -751,7 +757,7 @@ def cmd_check(box: Path, world: dict | None) -> int:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return fail("the record doesn't verify: " + "; ".join(breaks))
-    held, why = play_dice.check(rows)
+    held, why = play_dice.check(rows, said=True)  # a table's real dice, kept as said
     if why:
         return fail(f"{why} ({held} rolls before it held)")
     mine = games(rows, world["id"] if world else None)
@@ -768,7 +774,7 @@ def cmd_check(box: Path, world: dict | None) -> int:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--box", "--world", "--now", "--as"):
+        if a in ("--box", "--world", "--now", "--as", "--said"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -796,7 +802,7 @@ def main(argv: list[str]) -> int:
     if verb == "status":
         return cmd_status(box, world)
     if verb == "act":
-        return cmd_act(box, world, args[1], ts)
+        return cmd_act(box, world, args[1], ts, opts.get("--said", ""))
     if verb == "offer":
         return cmd_offer(box, world, args[1], args[2], ts, opts.get("--as", ""))
     return (cmd_ask if verb == "ask" else cmd_settle)(box, world, ts)
