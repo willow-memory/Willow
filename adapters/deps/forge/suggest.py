@@ -237,6 +237,10 @@ BLIND_SAID = (
     f"blind (one close fork in {BLIND_EVERY}): in no order of the search's, "
     "nothing recommended, so your pick measures the search"
 )
+#: what every row of a blind fork says of itself, the same on each: the
+#: search's own reasons ("email usually means", "the words of its name are in
+#: yours") come in its order, and would say which it put first
+BLIND_ROW = "close to your words or named in them; the search's reasons kept back"
 
 
 def blind(sentence: str) -> bool:
@@ -675,7 +679,11 @@ def plan(
                 continue
             card = by_name[n]
             said = tradeoff(card)
-            if word == CLOSE:  # pointed at, or named and doubted: said on every row
+            if (
+                word == CLOSE and blinded
+            ):  # one line for all: the search's reasons say its order
+                said += f"; {BLIND_ROW}"
+            elif word == CLOSE:  # pointed at, or named and doubted: said on every row
                 said += f"; {why_close[n]}"
             options.append(shape.ForkOption(label=n, tradeoff=said))
             resolves[n] = (
@@ -997,10 +1005,14 @@ def propose(
         hidden = out.get("hidden") if word == CLOSE else None
         # a blind fork's pick is kept in the search's order, which it wasn't shown in
         offered = hidden["offered"] if hidden else shown
+        # blind, nothing was recommended, and the search's first is kept under
+        # its own name, so the record says what was shown and what was not
         data.update(kind="close" if word == CLOSE else "word", offered=offered,
-                    recommended=offered[0] if word == CLOSE else None,
+                    recommended=offered[0] if word == CLOSE and not hidden else None,
                     rank=offered.index(name) + 1 if name in offered else None,
                     matcher=matcher())  # fmt: skip
+        if hidden:
+            data["search_first"] = offered[0]
         if word == CLOSE:  # and the confidence it had, said or not, to be scored
             data["sentence"] = sentence
             data["blind"] = hidden is not None

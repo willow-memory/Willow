@@ -3,7 +3,7 @@ section: Assistants
 line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
-version: 0.4.0
+version: 0.4.1
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
@@ -85,13 +85,18 @@ of thing, each row the card and what it says:
 
   **One close fork in five is blind**, by the hash of your words, so asking
   again gets the same: its cards in an order of their own, nothing
-  recommended and no confidence said, the heading saying so. A
+  recommended and no confidence said, the heading saying so, and each
+  card's row its own line and promises and one note the same on every
+  row, never the search's reason for it ("email usually means", "the words
+  of its name are in yours"): those come in the search's order and would
+  say which it put first. A
   recommendation you can see is one you can follow, and a pick that follows
   it says how far you trust the search, not how often it is right; a blind
   pick says only the second. Its proposal keeps the search's order, where
-  your pick fell in it, the order you saw, and the confidence it kept
-  unsaid. The Forge's plan gets no recommendation for it either, so its
-  checkpoint has nothing to show.
+  your pick fell in it, the order you saw, the search's first (as
+  `search_first`; its `recommended` is empty, since nothing was), and the
+  confidence it kept unsaid. The Forge's plan gets no recommendation for it
+  either, so its checkpoint has nothing to show.
 
       forge: populated, 1 fork waits on you
       ## fork “close”: nothing named that the search agrees with; these are close to what you said
@@ -169,7 +174,10 @@ foresight, 0.25 a coin at one half), the mean said and how often the first
 was taken. It writes nothing.
 
 A blind fork costs you the hint, so it is one in five and no more, and the
-confidence waits on five of them: about twenty-five close forks. The blind
+confidence waits on five of them: about twenty-five close forks. Picks you
+sealed under forge 0.3 count toward none of it: they were all made in view,
+and under a matcher known by its bytes. They stay in `scores`' rank and
+matcher groups, under that old matcher's name. The blind
 ones are known by the hash of their words, so a sentence put another way
 may come out in view; and the search is the same program for anyone who
 runs it, so a blind fork hides its order from a glance, not from someone
