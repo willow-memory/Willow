@@ -183,11 +183,14 @@ def serve(folder: Path, at: str, store: Path | None, idle: float | None) -> int:
         return kernel.REFUSED
     finally:
         os.umask(old)
-    server.listen()
+    # stopped before anyone can connect, and listening only inside the try: a
+    # SIGTERM from the moment a client could reach it ends it as Ctrl-C does,
+    # never by the default (exit -15, the socket left behind)
     signal.signal(signal.SIGTERM, stopped)
-    server.settimeout(idle)  # None: until stopped
-    print(f"serving {len(held.pile)} passages of {folder} at {at}", flush=True)
     try:
+        server.listen()
+        server.settimeout(idle)  # None: until stopped
+        print(f"serving {len(held.pile)} passages of {folder} at {at}", flush=True)
         while True:
             try:
                 conn, _ = server.accept()
