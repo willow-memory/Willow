@@ -1598,6 +1598,54 @@ public final class Kernel {
         return ALIVE;
     }
 
+    /** kernel.py's relist: their words list, named after the box was made. The
+     *  row first, then the settings; the list it replaced is the one the record
+     *  last read through, and the same file edited since is a new list. */
+    @SuppressWarnings("unchecked")
+    static int relist(Path box, Path wl, String ts) throws IOException {
+        Object[] got = readWords(wl, box);
+        if (got[2] != null) {
+            System.err.println("refused: " + got[2]);
+            return REFUSED;
+        }
+        String sha = (String) got[1];
+        Read r = read(box.resolve("record.jsonl"));
+        if (!r.breaks.isEmpty()) {
+            System.err.println("refused: the record doesn't verify; nothing was changed");
+            return REFUSED;
+        }
+        Map<String, Object> cfg = config(box);
+        Object was = cfg.get("words");
+        List<String> named = new ArrayList<>();
+        for (Map<String, Object> row : r.rows)
+            if (row.get("words_sha256") instanceof String && !((String) row.get("words_sha256")).isEmpty())
+                named.add((String) row.get("words_sha256"));
+        String here = resolved(wl).toString();
+        boolean same = here.equals(was);
+        if (same && (named.isEmpty() || named.get(named.size() - 1).equals(sha))) {
+            System.out.println("ready: this box already reads " + was);
+            return ALIVE;
+        }
+        String before = !named.isEmpty() ? named.get(named.size() - 1)
+            : was instanceof String ? (String) readWords(Path.of((String) was), box)[1] : "";
+        Map<String, Object> fields = new LinkedHashMap<>();
+        fields.put("words_sha256", sha);
+        fields.put("was_sha256", before);
+        Map<String, Object> row = append(box, ts, "words", "kernel", fields);
+        if (!same) {
+            cfg.put("words", here);
+            Path next = box.resolve("kernel.json.new");
+            Files.writeString(next, dumpsDefault(cfg, true) + "\n");
+            Files.move(next, box.resolve("kernel.json"), java.nio.file.StandardCopyOption.REPLACE_EXISTING,
+                java.nio.file.StandardCopyOption.ATOMIC_MOVE);
+        }
+        System.out.println("ready: this box reads " + wl + " "
+            + (same ? "as it is now, edited since it was last read" : "from now on")
+            + " (" + ((Map<String, Object>) got[0]).size() + " words), row " + row.get("n") + " "
+            + ((String) row.get("hash")).substring(0, 16));
+        return ALIVE;
+    }
+
     @SuppressWarnings("unchecked")
     static Map<String, Map<String, Object>> sealed(Path box, List<Map<String, Object>> rows) throws IOException {
         return sealed(box, rows, "seal");
@@ -2138,6 +2186,7 @@ public final class Kernel {
         "    python kernel.py decline --box DIR proposal:<sha256>\n" +
         "    python kernel.py verify  --box DIR\n" +
         "    python kernel.py out     --box DIR\n" +
+        "    python kernel.py words   --box DIR --words FILE\n" +
         "    python kernel.py test";
 
     static Path tablesPath() {
@@ -2202,6 +2251,8 @@ public final class Kernel {
             System.err.println("refused: not a kernel box; init first");
             return REFUSED;
         }
+        if (verb.equals("words") && !opts.getOrDefault("--words", "").isEmpty() && args.isEmpty())
+            return relist(box, Path.of(opts.get("--words")), ts);
         if (verb.equals("bite") && args.size() == 1) return bite(box, args.get(0), ts);
         if (verb.equals("propose") && !opts.getOrDefault("--file", "").isEmpty() && args.isEmpty())
             return propose(box, splitlines(Files.readString(Path.of(opts.get("--file")))), ts);

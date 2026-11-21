@@ -2634,6 +2634,73 @@ fn init_box(
     Ok(ALIVE)
 }
 
+/// kernel.py's relist: their words list, named after the box was made. The
+/// row first, then the settings; the list it replaced is the one the record
+/// last read through, and the same file edited since is a new list.
+fn relist(box_: &str, wl: &str, ts: &str) -> Res<i32> {
+    let (al, sha) = match read_words(wl, box_) {
+        Ok(got) => got,
+        Err(why) => return Ok(refuse(&format!("refused: {}", why))),
+    };
+    let bp = Path::new(box_);
+    let r = read_record(&bp.join("record.jsonl"))?;
+    if !r.breaks.is_empty() {
+        return Ok(refuse(
+            "refused: the record doesn't verify; nothing was changed",
+        ));
+    }
+    let mut cfg = config(bp)?;
+    let was = cfg.str("words").map(|w| w.to_string());
+    let named: Vec<String> = r
+        .rows
+        .iter()
+        .filter_map(|row| row.str("words_sha256"))
+        .filter(|s| !s.is_empty())
+        .map(|s| s.to_string())
+        .collect();
+    let here = resolved(wl).to_string_lossy().into_owned();
+    let same = was.as_deref() == Some(here.as_str());
+    if same && named.last().map_or(true, |last| *last == sha) {
+        println!("ready: this box already reads {}", here);
+        return Ok(ALIVE);
+    }
+    let before = match (named.last(), &was) {
+        (Some(last), _) => last.clone(),
+        (None, Some(w)) => read_words(w, box_).map(|(_, s)| s).unwrap_or_default(),
+        (None, None) => String::new(),
+    };
+    let fields = obj(&[
+        ("words_sha256", Value::Str(sha)),
+        ("was_sha256", Value::Str(before)),
+    ]);
+    let row = append_row(bp, ts, "words", "kernel", &fields)?;
+    if !same {
+        cfg.set("words", Value::Str(here));
+        let next = bp.join("kernel.json.new");
+        fs::write(
+            &next,
+            format!("{}\n", dumps_default(&Value::Obj(cfg), true)),
+        )
+        .map_err(io_err)?;
+        fs::rename(&next, bp.join("kernel.json")).map_err(io_err)?;
+    }
+    let how = if same {
+        "as it is now, edited since it was last read"
+    } else {
+        "from now on"
+    };
+    let hash = row.str("hash").unwrap_or("");
+    println!(
+        "ready: this box reads {} {} ({} words), row {} {}",
+        wl,
+        how,
+        al.len(),
+        py_str(row.get("n").unwrap_or(&Value::Null)),
+        &hash[..16.min(hash.len())]
+    );
+    Ok(ALIVE)
+}
+
 // ── the loop ────────────────────────────────────────────────────────────────
 
 /// A dict of rows by subject: a later row for the same subject takes the
@@ -3519,6 +3586,7 @@ const USAGE: &str = "kernel.py: answers questions from your own files. Python 3.
     python kernel.py decline --box DIR proposal:<sha256>
     python kernel.py verify  --box DIR
     python kernel.py out     --box DIR
+    python kernel.py words   --box DIR --words FILE
     python kernel.py test";
 
 fn tables_path() -> String {
@@ -3633,6 +3701,9 @@ fn run(argv: &[String]) -> Res<i32> {
         return Ok(refuse("refused: not a kernel box; init first"));
     }
     match verb.as_str() {
+        "words" if !opt_("--words").is_empty() && args.is_empty() => {
+            relist(&box_, &opt_("--words"), &ts)
+        }
         "bite" if args.len() == 1 => bite(&box_, args[0], &ts),
         "propose" if !opt_("--file").is_empty() && args.is_empty() => {
             let raw = fs::read(opt_("--file")).map_err(io_err)?;

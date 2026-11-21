@@ -1500,6 +1500,41 @@ public static class Kernel
         return ALIVE;
     }
 
+    /** kernel.py's relist: their words list, named after the box was made. The
+     *  row first, then the settings; the list it replaced is the one the record
+     *  last read through, and the same file edited since is a new list. */
+    static int Relist(string box, string wl, string ts)
+    {
+        var (alias, sha, why) = ReadWords(wl, box);
+        if (why != null) { Console.Error.WriteLine("refused: " + why); return REFUSED; }
+        var r = ReadRecord(System.IO.Path.Combine(box, "record.jsonl"));
+        if (r.Breaks.Count > 0) { Console.Error.WriteLine("refused: the record doesn't verify; nothing was changed"); return REFUSED; }
+        var cfg = Config(box);
+        var was = cfg.Get("words") as string;
+        var named = new List<string>();
+        foreach (var row0 in r.Rows)
+            if (row0.Get("words_sha256") is string s && s != "") named.Add(s);
+        var here = Resolved(wl);
+        var same = was == here;
+        if (same && (named.Count == 0 || named[named.Count - 1] == sha))
+        {
+            Console.WriteLine("ready: this box already reads " + was);
+            return ALIVE;
+        }
+        var before = named.Count > 0 ? named[named.Count - 1] : was != null ? ReadWords(was, box).sha : "";
+        var row = Append(box, ts, "words", "kernel", Obj("words_sha256", sha, "was_sha256", before));
+        if (!same)
+        {
+            cfg["words"] = here;
+            var next = System.IO.Path.Combine(box, "kernel.json.new");
+            File.WriteAllText(next, DumpsDefault(cfg, true) + "\n", Utf8);
+            File.Move(next, System.IO.Path.Combine(box, "kernel.json"), true);
+        }
+        var how = same ? "as it is now, edited since it was last read" : "from now on";
+        Console.WriteLine($"ready: this box reads {wl} {how} ({alias!.Count} words), row {PyStr(row["n"])} {((string)row["hash"]!).Substring(0, 16)}");
+        return ALIVE;
+    }
+
     static Dictionary<string, JObj> Declined(string box, List<JObj> rows) => Sealed(box, rows, new List<string>(), "decline");
 
     // What waits on the person: each proposal that passed the door, neither
@@ -1858,6 +1893,7 @@ public static class Kernel
         "    python kernel.py decline --box DIR proposal:<sha256>\n" +
         "    python kernel.py verify  --box DIR\n" +
         "    python kernel.py out     --box DIR\n" +
+        "    python kernel.py words   --box DIR --words FILE\n" +
         "    python kernel.py test";
 
     static int Run(string[] argv)
@@ -1891,6 +1927,7 @@ public static class Kernel
             return Init(box, Opt("--pile") != "" ? Opt("--pile") : null, Opt("--key"), ts, Opt("--words") != "" ? Opt("--words") : null, froms);
         if (froms.Count > 0) { Console.Error.WriteLine(USAGE); return REFUSED; }
         if (!File.Exists(System.IO.Path.Combine(box, "kernel.json"))) { Console.Error.WriteLine("refused: not a kernel box; init first"); return REFUSED; }
+        if (verb == "words" && Opt("--words") != "" && args.Count == 0) return Relist(box, Opt("--words"), ts);
         if (verb == "bite" && args.Count == 1) return Bite(box, args[0], ts);
         if (verb == "propose" && Opt("--file") != "" && args.Count == 0) return Propose(box, Splitlines(Utf8.GetString(File.ReadAllBytes(Opt("--file")))), ts);
         if (verb == "seal" && args.Count == 1 && args[0].StartsWith("proposal:", StringComparison.Ordinal)) return Seal(box, args[0], ts);

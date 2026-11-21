@@ -1699,6 +1699,42 @@ function vectors(casesFile: string, resultsFile: string): number {
   return ALIVE;
 }
 
+/** kernel.py's relist: their words list, named after the box was made. The
+ *  row first, then the settings; the list it replaced is the one the record
+ *  last read through, and the same file edited since is a new list. */
+function relist(box: string, wl: string, ts: string): number {
+  const [al, sha, why] = readWords(wl, box);
+  if (why !== null) {
+    console.error(`refused: ${why}`);
+    return REFUSED;
+  }
+  const r = read(path.join(box, "record.jsonl"));
+  if (r.breaks.length) {
+    console.error("refused: the record doesn't verify; nothing was changed");
+    return REFUSED;
+  }
+  const cfg = config(box);
+  const was = cfg.get("words");
+  const named = r.rows.map((row) => row.get("words_sha256")).filter((s): s is string => typeof s === "string" && s !== "");
+  const here = resolved(wl);
+  const same = was === here;
+  if (same && (!named.length || named[named.length - 1] === sha)) {
+    console.log(`ready: this box already reads ${was}`);
+    return ALIVE;
+  }
+  const before = named.length ? named[named.length - 1] : typeof was === "string" ? readWords(was, box)[1] : "";
+  const row = append(box, ts, "words", "kernel", obj(["words_sha256", sha], ["was_sha256", before]));
+  if (!same) {
+    cfg.set("words", here);
+    const next = path.join(box, "kernel.json.new");
+    fs.writeFileSync(next, dumpsDefault(cfg, true) + "\n");
+    fs.renameSync(next, path.join(box, "kernel.json"));
+  }
+  const how = same ? "as it is now, edited since it was last read" : "from now on";
+  console.log(`ready: this box reads ${wl} ${how} (${al!.size} words), row ${row.get("n")} ${(row.get("hash") as string).slice(0, 16)}`);
+  return ALIVE;
+}
+
 // ── the command line ───────────────────────────────────────────────────────
 const now = () => new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const USAGE =
@@ -1711,6 +1747,7 @@ const USAGE =
   "    python kernel.py decline --box DIR proposal:<sha256>\n" +
   "    python kernel.py verify  --box DIR\n" +
   "    python kernel.py out     --box DIR\n" +
+  "    python kernel.py words   --box DIR --words FILE\n" +
   "    python kernel.py test";
 
 function main(argv: string[]): number {
@@ -1755,6 +1792,7 @@ function main(argv: string[]): number {
     console.error("refused: not a kernel box; init first");
     return REFUSED;
   }
+  if (verb === "words" && opts.get("--words") && !args.length) return relist(box, opts.get("--words")!, ts);
   if (verb === "bite" && args.length === 1) return bite(box, args[0], ts);
   if (verb === "propose" && opts.get("--file") && !args.length)
     return propose(box, splitlines(UTF8.decode(fs.readFileSync(opts.get("--file")!))), ts);
