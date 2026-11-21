@@ -118,12 +118,15 @@ def out(box: Path, rows: list[dict], diefile: Path, ts: str) -> int:
     try:
         held = json.loads(diefile.read_text(encoding="utf-8"))
         secret = str(held["secret"])
-        mine = (r["n"] for r in rows if r["kind"] == DROP and r.get("commit") == commit(secret))  # fmt: skip
         n = (
-            int(held["drop"]) if "drop" in held else next(mine, -1)
+            int(held["drop"]) if "drop" in held else None
         )  # a die file made before this named its row
     except (OSError, ValueError, KeyError, TypeError):
         return refuse(f"{diefile} isn't a die file")
+    if n is None:  # the drop whose hash it is
+        n = next((r["n"] for r in rows if r["kind"] == DROP and r.get("commit") == commit(secret)), None)  # fmt: skip
+        if n is None:
+            return refuse(f"{diefile} isn't a die dropped in this box")
     dropped = rows[n] if 0 <= n < len(rows) else None
     if dropped is None or dropped["kind"] != DROP or dropped.get("commit") != commit(secret):  # fmt: skip
         return refuse(f"{diefile} isn't a die dropped in this box")
