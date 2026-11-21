@@ -23,6 +23,10 @@ its rules, each named when it refuses (exit 2, the reason on standard error):
     beside-write  with --also DIR (repeatable): the same as box-write, for a
                folder kept beside the box that only its own program writes in.
                The folder need not exist yet. Reading it is fine.
+    seal       the call runs a kernel's seal or decline, kernel.py's or a
+               port's, on any box: the kernel reads the key itself, so the
+               command never names it. A seal is the person's, never an
+               assistant's. Every other kernel command is fine.
 
     refused: rule box-write: this Write is inside the box; only kernel.py writes there.
 
@@ -55,6 +59,7 @@ RULES = {
     "key": "the call names the box's key file",
     "box-write": "the call would change a file inside the box other than through kernel.py",
     "beside-write": "with --also DIR, the call would change a file inside that folder kept beside the box",
+    "seal": "the call runs a kernel's seal or decline, which read the key themselves",
 }
 WRITERS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 READERS = {"Read", "NotebookRead"}
@@ -79,6 +84,12 @@ FIND_RUNS = {"-exec", "-execdir", "-ok", "-okdir"}
 #: git's commands that change the files of the tree they work on
 GIT_CHANGES = {"clean", "checkout", "restore", "reset", "rm", "mv", "apply", "am",
                "pull", "merge", "rebase", "switch", "stash"}  # fmt: skip
+#: the kernel and its ports, by the name of the file (or program) that runs:
+#: each has a seal and a decline that read the person's key themselves
+KERNELS = {"kernel.py", "kernel.ts", "kernel.js", "kernel.mjs", "kernel.go",
+           "kernel.rs", "Kernel.java", "Kernel.cs", "Kernel.dll", "Kernel", "kernel"}  # fmt: skip
+#: the kernel's verbs that write the person's yes or no with their key
+SEALS = {"seal", "decline"}
 SEPARATORS = {";", "&&", "||", "|", "&", "|&"}
 REDIRECTS = {">", ">>", ">|", "1>", "2>", "&>", "1>>", "2>>", "&>>"}
 
@@ -207,6 +218,19 @@ def git_changes(cmd: list[str], box: Path, cwd: str) -> bool:
     return bool(rest) and rest[0] in GIT_CHANGES
 
 
+def seals(command: str) -> bool:
+    """Whether a command runs a kernel's seal or decline: a word that is a
+    kernel (by its file's name, wherever it is) followed by seal or decline,
+    the kernel's verb, which it reads from the word after it and nowhere
+    else. "seal" further on is a word of a question. The box it names
+    doesn't matter; no assistant seals any box."""
+    return any(
+        Path(w).name in KERNELS and nxt in SEALS
+        for cmd in words(command)
+        for w, nxt in zip(cmd, cmd[1:])
+    )
+
+
 def writes_box(command: str, box: Path, cwd: str) -> bool:
     """Whether the command would change something in the folder `box`."""
     for cmd in words(command):
@@ -286,6 +310,11 @@ def judge(
             return (
                 2,
                 "refused: rule key: this command names the key file; the key is the person's.",
+            )
+        if seals(command):
+            return (
+                2,
+                "refused: rule seal: this command runs the kernel's seal or decline; a seal is the person's, never an assistant's.",
             )
         if writes_box(command, box, cwd):
             return (

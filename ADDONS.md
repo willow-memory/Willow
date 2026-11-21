@@ -357,7 +357,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Your dotfiles as passages: which file sets what, for 'where did I set my editor?' \
   *new* `no-install` `offline` · near: org, json-paths, latex
 - <a id="gh-json"></a>[**gh-json**](adapters/stdlib/gh-json/) \
-  What gh prints with --json (issues, pull requests, runs), saved to a file and read as dated passages. \
+  What gh prints with --json, or GitHub's API answers (issues, pull requests, runs), saved to a file and read as dated passages. \
   *new* `no-install` `offline` `issues` `pull` · near: goodreads, jira, day-one
 - <a id="git-history"></a>[**git-history**](adapters/stdlib/git-history/) \
   Commit messages and diffs as a dated pile: "when did we change the retry limit?" \
@@ -1678,7 +1678,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Throws empty, malformed, oversized and non-UTF-8 input at a hook and fails it if any crash it, since a crashed hook lets the tool run. \
   *new* `no-install` `offline` `crash` `fails` `hooks` · near: hook-fail-closed, fuzz, hook-replay
 - <a id="hook-guard"></a>[**hook-guard**](adapters/stdlib/hook-guard/) \
-  A PreToolUse hook that blocks, by fixed rule and never by judgment, a call that would read your key or write the record behind its back. \
+  A PreToolUse hook that blocks, by fixed rule, never judgment, a call that would read your key, seal with it, or write your record. \
   *box* `no-install` `offline` `assistant` `pretooluse` `hooks` · near: hook-impact, hook-leaks, hook-read-first
 
 #### What guards it, h to h
