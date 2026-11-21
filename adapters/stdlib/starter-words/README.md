@@ -3,7 +3,7 @@ section: Your own words
 line: A first-day words list to copy and edit (owes = invoice, outstanding; doctor = dr, physician, clinic).
 source: new
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: words
@@ -16,6 +16,7 @@ from.
 
     python adapters/stdlib/starter-words/starter.py copy --to ~/my-words.txt
     python kernel.py init --box my-record --pile FOLDER --key my.key --words ~/my-words.txt
+    python kernel.py words --box my-record --words ~/my-words.txt   # a record made without one
 
 `words.txt` is in the kernel's own format: one of your words, then the words
 your files might use, a comma between. It covers money, dates, health, home

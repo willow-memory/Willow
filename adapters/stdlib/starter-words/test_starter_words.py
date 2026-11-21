@@ -48,6 +48,15 @@ def test_copy_writes_it_for_you_alone_and_never_overwrites(tmp_path):
     ok = run(str(KERNEL), "init", "--box", str(tmp_path / "b"), "--pile", str(pile),
              "--key", str(tmp_path / "k"), "--words", str(tmp_path / "list.txt"), *NOW)  # fmt: skip
     assert ok.returncode == 0  # the kernel accepts the copy as it is
+    # and a record already made takes it too, the way the copy says
+    made = run(str(KERNEL), "init", "--box", str(tmp_path / "c"), "--pile", str(pile),
+               "--key", str(tmp_path / "k2"), *NOW)  # fmt: skip
+    assert made.returncode == 0
+    said = got.stdout
+    assert f"init --words {to}" in said and f"words --box DIR --words {to}" in said
+    given = run(str(KERNEL), "words", "--box", str(tmp_path / "c"),
+                "--words", str(tmp_path / "list.txt"), *NOW)  # fmt: skip
+    assert given.returncode == 0, given.stderr
 
 
 def test_a_debt_written_as_lend_is_served_with_it_and_not_without(tmp_path):

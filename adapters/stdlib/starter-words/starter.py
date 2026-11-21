@@ -4,8 +4,9 @@
 
 Writes `words.txt` (beside this file) to FILE, readable only by you (mode
 600), because the kernel refuses a words list anyone else can read. It never
-overwrites: FILE must not exist yet. Then edit it, and give it to
-`kernel.py init --words FILE`.
+overwrites: FILE must not exist yet. Then edit it, and give it to a new
+record (`kernel.py init --words FILE`) or one already made (`kernel.py
+words --box DIR --words FILE`).
 """
 
 from __future__ import annotations
@@ -33,7 +34,10 @@ def copy(to: Path) -> int:
         return kernel.REFUSED
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         f.write(text)
-    print(f"wrote {to} (readable only by you): edit it, then init --words {to}")
+    print(
+        f"wrote {to} (readable only by you): edit it, then give it to a record, "
+        f"init --words {to} for a new one or words --box DIR --words {to} for one made"
+    )
     return kernel.ALIVE
 
 
