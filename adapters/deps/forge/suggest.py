@@ -37,18 +37,26 @@ contract), a group per kind of thing:
             a seal for one sentence settles no other; `none`, sealed, keeps
             the miss on your record and runs nothing. Its proposal keeps
             what was shown: the cards in their order, the one recommended,
-            the rank of your pick, and the hashes of what ranked them
+            the rank of your pick, and the matcher that ranked them. One
+            close fork in five, by the hash of its words, is blind: its cards
+            in an order of their own, nothing recommended and no confidence
+            said, so your pick there measures the search and not your trust
+            in it; its proposal keeps the search's order, your pick's rank in
+            it, the order you saw, and the confidence it kept unsaid
 
 `scores` reads those back: over the close decisions you sealed that still
 stand, how often you took the first (the recommendation), the second, the
-third, or none, all together and per matcher (the bytes of similar.py and
-the words list), and each one. It is the matchmaker's measured hit rate,
-the only number a close fork's confidence comes from: once you have sealed
-five close picks on one matcher, the fork says you took its first k of n
-and states (k+1)/(n+2) as its confidence, never 1, and none while that is
-under one half. Each close proposal keeps the confidence it was shown, and
-`scores` scores those against your picks with the Forge's calibration
-(Brier). It writes nothing; exit 0, empty before any is sealed.
+third, or none, all together and per matcher (known by the cards it ranks
+first for ten fixed sentences, not by its bytes), and each one. Its blind
+picks are the matchmaker's measured hit rate, the only number a close
+fork's confidence comes from: once you have sealed five blind close picks
+on one matcher, the fork says you took its first k of n and states
+(k+1)/(n+2) as its confidence, never 1, and none while that is under one
+half. A pick made with the recommendation in view counts not: it would
+measure how often you went with it. `scores` sets the two rates side by
+side, and scores each blind fork's kept confidence against your pick with
+the Forge's calibration (Brier). It writes nothing; exit 0, empty before
+any is sealed.
 
 A stack you sealed for these very words is served first, as the kernel
 serves any sealed answer, and nothing else is asked.
@@ -166,6 +174,7 @@ def searched(sentence: str) -> list[dict] | None:
     None when this willow's similar hasn't one. Built once a run."""
     if _SEARCH.get("from") is not wanting:  # built again if the search was swapped
         want = wanting()
+        _SEARCH.clear()  # and what was known of the old one (its ranks) with it
         _SEARCH.update({"from": wanting, "want": want() if want is not None else None})
     if _SEARCH["want"] is None:
         return None
@@ -189,55 +198,107 @@ def near(sentence: str, by_name: dict, leave_out: set = frozenset()) -> list[dic
     ]
 
 
-WORDS = ROOT / "ui/search-words.txt"
+#: the sentences a matcher is known by: demo/want-finders' ten wants, as that
+#: study froze them on 2026-11-16, kept here so this needs no demo to run
+PROBES = (
+    "write down a prediction before the person is asked, and score it once they pick",
+    "count how often each suggestion was sealed or declined",
+    "keep a no with its reason and the condition that would reopen it",
+    "check that my tests catch a broken line of code",
+    "pin the ledger's tip outside the box so a truncation is caught",
+    "which tests can a change reach",
+    "a sealed answer stands only while what it cites still hashes the same",
+    "what each step of a stack takes from an earlier step",
+    "score a model against the answers the person sealed",
+    "find a rubber stamp in the reasons people give",
+)
 
 
 def matcher() -> dict:
-    """What ranked a close fork's cards, by the bytes of the files it read:
-    similar.py and the words list (absent, said as absent). A score is kept
-    per matcher, so a change to either starts a count of its own."""
+    """What ranks a close fork's cards, known by what it does, not by its
+    bytes: the SHA-256 of the cards similar's search puts first, in order,
+    for each of PROBES ("absent" with no search). A score is kept per
+    matcher, so an edit to similar.py or the words list that moves no card
+    keeps the count, and one that moves any card, or a new card that comes
+    in among them, starts a count of its own. Asked once a run."""
+    if searched(PROBES[0]) is None:
+        return {"ranks": "absent"}
+    if "ranks" not in _SEARCH:
+        ranks = [[f["name"] for f in searched(p)] for p in PROBES]
+        _SEARCH["ranks"] = kernel.h256(json.dumps(ranks, ensure_ascii=False))
+    return {"ranks": _SEARCH["ranks"]}
 
-    def sha(p: Path) -> str:
-        return hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else "absent"
 
-    return {"similar": sha(SIMILAR), "words": sha(WORDS)}
+#: one close fork in BLIND_EVERY is blind: its cards in an order that says
+#: nothing of the search's, with no recommendation and no confidence, so a
+#: pick there measures the search and not your trust in what it said
+BLIND_EVERY = 5
+BLIND_SAID = (
+    f"blind (one close fork in {BLIND_EVERY}): in no order of the search's, "
+    "nothing recommended, so your pick measures the search"
+)
+#: what every row of a blind fork says of itself, the same on each: the
+#: search's own reasons ("email usually means", "the words of its name are in
+#: yours") come in its order, and would say which it put first
+BLIND_ROW = "close to your words or named in them; the search's reasons kept back"
 
 
-#: how many close picks you sealed on one matcher before its first card is
-#: given a confidence: fewer is no measurement, and none is said
+def blind(sentence: str) -> bool:
+    """Whether this sentence's close fork is blind: by the hash of its words,
+    so suggest and propose agree, and nothing is kept to decide it."""
+    key = kernel.bite_key(sentence) or sentence
+    return int(kernel.h256(f"blind {key}")[:8], 16) % BLIND_EVERY == 0
+
+
+def shuffled(sentence: str, names: list[str]) -> list[str]:
+    """A blind fork's cards as shown: ordered by the hash of the sentence and
+    each name, the same each time it is asked, and nothing of the search's."""
+    key = kernel.bite_key(sentence) or sentence
+    return sorted(names, key=lambda n: kernel.h256(f"shown {key} {n}"))
+
+
+#: how many blind close picks you sealed on one matcher before its first
+#: card is given a confidence: fewer is no measurement, and none is said
 MEASURED = 5
 
 
 def confidence(every: list[dict], now: dict) -> tuple[float | None, str]:
     """The close fork's confidence and what to say of it, from your sealed
-    picks alone: of the close forks you settled on this matcher (the same
-    similar.py and words list), you took the search's first k of n, stated
-    as (k+1)/(n+2), so five of five is 0.86 and never a certainty. None
-    before MEASURED are sealed, or when it falls under one half: the Forge
-    states a confidence only in the direction it believes."""
-    same = [o for o in every if o["kind"] == "close" and o["matcher"] == now]
+    blind picks alone: of the blind close forks you settled on this matcher
+    (the same ranks on PROBES), you took the search's first k of n, stated
+    as (k+1)/(n+2), so five of five is 0.86 and never a certainty. A pick
+    made with the recommendation in view counts not: it says how often you
+    went with it, which it would have lifted. None before MEASURED are
+    sealed, or when it falls under one half: the Forge states a confidence
+    only in the direction it believes."""
+    same = [o for o in every if o["kind"] == "close" and o.get("blind")
+            and o["matcher"] == now]  # fmt: skip
     n, k = len(same), sum(o["rank"] == 1 for o in same)
     if n < MEASURED:
         return (
             None,
-            f"no confidence yet: {n} of {MEASURED} close picks sealed on this matcher",
+            f"no confidence yet: {n} of {MEASURED} blind close picks sealed on this matcher",
         )
     if 2 * k < n:  # (k+1)/(n+2) < 1/2
         return (
             None,
-            f"no confidence: its first taken {k} of {n} on this matcher, under half",
+            f"no confidence: its first taken {k} of {n} blind on this matcher, under half",
         )
     c = min(round((k + 1) / (n + 2), 2), 0.99)
-    return c, f"confidence {c:.2f}: its first taken {k} of {n} on this matcher"
+    return c, f"confidence {c:.2f}: its first taken {k} of {n} blind on this matcher"
 
 
 def outcomes(box: Path, rec) -> list[dict]:
     """Every fork you settled and sealed that still stands, through the
     kernel: {kind, word, decision_type, sentence, offered, chose, rank,
-    matcher, confidence, row}; `confidence` is what the close fork said
-    when you were shown it (None when it said none). `kind` is "close" for the search's fork and "word" for one
-    a word reached through its name or alias line. A proposal from before
-    `offered` was kept is left out: it says nothing of what was shown."""
+    matcher, confidence, blind, row}; `offered` is in the search's order and
+    `rank` is where the pick fell in it, blind or not; `confidence` is what
+    the close fork said (or, blind, kept unsaid) when you were asked (None
+    when it had none); `blind` is whether you were asked without the
+    recommendation in view. `kind` is "close" for the search's fork and
+    "word" for one a word reached through its name or alias line. A proposal
+    from before `offered` was kept is left out: it says nothing of what was
+    shown."""
     rows, _ = kernel.read(box / "record.jsonl")
     out = []
     for subj, row in kernel.sealed(box, rows).items():
@@ -262,7 +323,8 @@ def outcomes(box: Path, rec) -> list[dict]:
                     "sentence": data.get("sentence", ""), "offered": data["offered"],
                     "chose": data.get("chose"), "rank": data.get("rank"),
                     "matcher": data.get("matcher") or {},
-                    "confidence": data.get("confidence"), "row": row["n"]})  # fmt: skip
+                    "confidence": data.get("confidence"),
+                    "blind": data.get("blind") is True, "row": row["n"]})  # fmt: skip
     return sorted(out, key=lambda o: o["row"])
 
 
@@ -293,13 +355,17 @@ def scores(box: Path, rec) -> tuple[dict, int]:
         )
         return rows
 
-    by_matcher: dict[tuple, list[dict]] = {}
+    def known_as(m: dict) -> str:
+        if "ranks" in m:  # by what it ranks (this one's own)
+            return f"ranks {m['ranks'][:12]}"
+        # by the bytes it read, as forge 0.3 kept it: a count of its own
+        return f"similar {m.get('similar', '?')[:12]}, words {m.get('words', '?')[:12]}"
+
+    by_matcher: dict[str, list[dict]] = {}
     for o in got:
-        key = (o["matcher"].get("similar", "?"), o["matcher"].get("words", "?"))
-        by_matcher.setdefault(key, []).append(o)
-    matchers = [(f"similar {s[:12]}, words {w[:12]}",
-                 f"the first taken {sum(o['rank'] == 1 for o in outs)} of {len(outs)}")
-                for (s, w), outs in by_matcher.items()]  # fmt: skip
+        by_matcher.setdefault(known_as(o["matcher"]), []).append(o)
+    matchers = [(m, f"the first taken {sum(o['rank'] == 1 for o in outs)} of {len(outs)}")
+                for m, outs in by_matcher.items()]  # fmt: skip
     by_word: dict[str, list[dict]] = {}
     for o in words:
         by_word.setdefault(o["word"], []).append(o)
@@ -313,12 +379,22 @@ def scores(box: Path, rec) -> tuple[dict, int]:
                   f"none of {', '.join(o['offered'])}")  # fmt: skip
         return f"{asked}: {o['chose']}, {picked} (row {o['row']})"
 
-    # the confidence the close fork says now, and each one it said, scored
-    # against your pick with the Forge's own calibration (Brier: 0 is
-    # foresight, 0.25 a coin at one half)
+    # the confidence the close fork says now; the first taken blind and with
+    # the recommendation in view, side by side (the gap is how far it is
+    # followed for being said); and each confidence kept on a blind fork,
+    # scored against your pick with the Forge's own calibration (Brier: 0 is
+    # foresight, 0.25 a coin at one half). One said in view is never scored:
+    # the pick it would be scored on is one it could have moved.
     trust = [("now", confidence(every, matcher())[1])] if got else []
+    for where, outs, how in (
+        ("blind", [o for o in got if o["blind"]], "blind"),
+        ("in view", [o for o in got if not o["blind"]], "with the recommendation in view"),
+    ):  # fmt: skip
+        if outs:
+            hit = sum(o["rank"] == 1 for o in outs)
+            trust.append((where, f"its first taken {hit} of {len(outs)} {how}"))
     pairs = [(o["confidence"], o["rank"] == 1) for o in got
-             if isinstance(o["confidence"], (int, float))]  # fmt: skip
+             if o["blind"] and isinstance(o["confidence"], (int, float))]  # fmt: skip
     if pairs:
         try:
             from forge import calibration
@@ -511,7 +587,7 @@ def plan(
     rec,
     sealed: dict,
     sentence: str = "",
-    measured: tuple = (None, ""),
+    measured=(None, ""),
 ) -> dict:
     """{cards, steps, forks, sealed, ideas, plan}, and `close` while that fork
     is open: what the sentence reaches, what the record settled, and the
@@ -519,7 +595,10 @@ def plan(
     that reaches no card by name or alias line gets the `close` fork: what
     similar's search points at, the first recommended, and `none` beside
     them. `measured` is `confidence()`'s (value, said): the close fork's
-    confidence, from your sealed picks, or none."""
+    confidence, from your sealed blind picks, or none; or a function that
+    gives it, asked only when there is a close fork (knowing the matcher
+    builds the search, a second, which a sentence with no close fork never
+    needs)."""
     found = list(box.lookup(hits))
     # every fork offers `none`: a word's alias line can point wrong, and the
     # person saying so is an outcome, kept like any pick
@@ -543,6 +622,8 @@ def plan(
         found += [SimpleNamespace(name=f["name"], why=f["why"]) for f in close]
         found += [SimpleNamespace(name=c.name, why=DOUBTED) for c in doubted]
         forks[CLOSE] = options + [NONE]
+    if callable(measured):  # asked only now there is a close fork to say it for
+        measured = measured() if options else (None, "")
     why_close = {f["name"]: f"close, not named: {f['why']}" for f in close}
     why_close.update({c.name: DOUBTED for c in doubted})
     settled, open_forks = {}, {}
@@ -583,9 +664,13 @@ def plan(
                 dest_path=f"steps/{cand.name}.md", content=step_line(cand.name)
             )
         )
-    fork_docs = {}
+    fork_docs, hidden = {}, None
+    blinded = CLOSE in open_forks and blind(sentence)
     for word, names in open_forks.items():
         options, resolves, docs = [], {}, []
+        if word == CLOSE and blinded:  # shown in no order of the search's
+            hidden = {"offered": names[:-1], "confidence": measured[0]}
+            names = shuffled(sentence, names[:-1]) + [NONE]
         for n in names:
             if n == NONE:  # every fork's way out, a word's as much as the search's
                 options.append(shape.ForkOption(label=n, tradeoff=NONE_TRADEOFF))
@@ -594,7 +679,11 @@ def plan(
                 continue
             card = by_name[n]
             said = tradeoff(card)
-            if word == CLOSE:  # pointed at, or named and doubted: said on every row
+            if (
+                word == CLOSE and blinded
+            ):  # one line for all: the search's reasons say its order
+                said += f"; {BLIND_ROW}"
+            elif word == CLOSE:  # pointed at, or named and doubted: said on every row
                 said += f"; {why_close[n]}"
             options.append(shape.ForkOption(label=n, tradeoff=said))
             resolves[n] = (
@@ -606,8 +695,10 @@ def plan(
         if word == CLOSE:
             surface = (f"“{sentence}” names no add-on the search agrees with; the fork holds "
                        f"{', '.join(names[:-1])}: which, if any, does it?")  # fmt: skip
-            recommended = names[0]  # the search's first
-            conf = measured[0]  # from your sealed picks on this matcher, or none
+            # the search's first, and a confidence from your sealed blind
+            # picks on this matcher (or none); blind, neither is said, so
+            # nothing is put in front of you to follow
+            recommended, conf = (None, None) if blinded else (names[0], measured[0])
         else:
             surface = (
                 f"“{word}” could be {', '.join(names[:-1])}: which add-on, if any?"
@@ -640,8 +731,11 @@ def plan(
         "ideas": ideas,
         "plan": doc,
     }
-    if CLOSE in open_forks:
-        out["close"] = {"confidence": measured[0], "said": measured[1]}
+    if blinded:
+        out["close"] = {"blind": True, "confidence": None, "said": BLIND_SAID}
+        out["hidden"] = hidden  # for propose to keep, and main never to print
+    elif CLOSE in open_forks:
+        out["close"] = {"blind": False, "confidence": measured[0], "said": measured[1]}
     return out
 
 
@@ -667,7 +761,10 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
                          for s in out["steps"]])]  # fmt: skip
     for word, options in out["forks"].items():
         rows = [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options]
-        if word == CLOSE:  # the search's first is the recommendation, and says so
+        if word == CLOSE and out.get("close", {}).get("blind"):
+            # blind: in no order of the search's, nothing recommended, said once
+            groups.append((f"fork “{CLOSE}”, {BLIND_SAID}: nothing named that the search agrees with; these are close to what you said", rows))  # fmt: skip
+        elif word == CLOSE:  # the search's first is the recommendation, and says so
             said = out.get("close", {}).get("said")
             rows[0] = (rows[0][0], rows[0][1] + "; recommended, the search's first"
                        + (f"; {said}" if said else ""))  # fmt: skip
@@ -904,14 +1001,28 @@ def propose(
         # what was shown is the outcome once sealed: the cards in their order,
         # the one recommended (only the search's fork has one), where the pick
         # fell, and what put them there. The close fork is this sentence's own.
-        offered = [o["name"] for o in out["forks"][word] if o["name"] != NONE]
+        shown = [o["name"] for o in out["forks"][word] if o["name"] != NONE]
+        hidden = out.get("hidden") if word == CLOSE else None
+        # a blind fork's pick is kept in the search's order, which it wasn't shown in
+        offered = hidden["offered"] if hidden else shown
+        # blind, nothing was recommended, and the search's first is kept under
+        # its own name, so the record says what was shown and what was not
         data.update(kind="close" if word == CLOSE else "word", offered=offered,
-                    recommended=offered[0] if word == CLOSE else None,
+                    recommended=offered[0] if word == CLOSE and not hidden else None,
                     rank=offered.index(name) + 1 if name in offered else None,
                     matcher=matcher())  # fmt: skip
-        if word == CLOSE:  # and the confidence it was shown with, to be scored
+        if hidden:
+            data["search_first"] = offered[0]
+        if word == CLOSE:  # and the confidence it had, said or not, to be scored
             data["sentence"] = sentence
-            data["confidence"] = out.get("close", {}).get("confidence")
+            data["blind"] = hidden is not None
+            data["confidence"] = (
+                hidden["confidence"]
+                if hidden
+                else out.get("close", {}).get("confidence")
+            )
+            if hidden:  # and the order you saw, in its own word
+                data["shown"] = shown
         if name != NONE:
             card = by_name[name]
             pinned = hashlib.sha256((ROOT / card.where).read_bytes()).hexdigest()
@@ -1014,7 +1125,10 @@ def main(argv: list[str]) -> int:
     sealed, stacks = on_record(box, rec)
     lines, where_from = commands(str(kernel.folder(kernel.config(box))))
     STEPS.update(lines)
-    measured = confidence(outcomes(box, rec), matcher())
+
+    def measured():  # only when a close fork is open: the matcher builds the search
+        return confidence(outcomes(box, rec), matcher())
+
     out = plan(cards, cards.scan(a.sentence), shape, rec, sealed, a.sentence, measured)
     out["cards"]["commands"] = where_from
     if (k := kernel.bite_key(a.sentence)) in stacks:
@@ -1038,8 +1152,9 @@ def main(argv: list[str]) -> int:
             say(doc, as_json)
         return code
     doc, code = to_report(out, rec)
-    if a.plan:
-        print(json.dumps(out, indent=2, ensure_ascii=False))
+    if a.plan:  # all of it but what a blind fork keeps from you
+        shown = {k: v for k, v in out.items() if k != "hidden"}
+        print(json.dumps(shown, indent=2, ensure_ascii=False))
     else:
         say(doc, as_json)
     return code

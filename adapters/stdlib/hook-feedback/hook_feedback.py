@@ -1,5 +1,5 @@
 """hook_feedback.py: your corrections to an assistant (no, wrong, I said)
-caught by fixed patterns at each prompt and handed in through propose, for
+caught by a words list (corrections.txt) at each prompt and handed in through propose, for
 you to keep or drop. Python 3.9+.
 
     python adapters/stdlib/hook-feedback/hook_feedback.py run --box DIR [--now TS]
@@ -26,7 +26,6 @@ from __future__ import annotations
 import contextlib
 import io
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -35,12 +34,30 @@ import kernel  # noqa: E402
 
 KIND = "hook-feedback"
 GIVE = {"UserPromptSubmit", "user_prompt_submit"}
-# Fixed patterns named in the idea: a correction, not a new ask.
-MARKERS = (
-    re.compile(r"(?i)^\s*no\b"),
-    re.compile(r"(?i)^\s*wrong\b"),
-    re.compile(r"(?i)\bi said\b"),
-)
+#: the base words list: what marks a prompt as a correction (+ at its start,
+#: ~ anywhere) and what never does (- at its start, read first)
+WORDS = Path(__file__).resolve().parent / "corrections.txt"
+
+
+def read_words(path: Path) -> dict[str, list[str]] | None:
+    """A words list as {"+": [...], "~": [...], "-": [...]}, each phrase in
+    small letters; None when a line isn't one of the three."""
+    out: dict[str, list[str]] = {"+": [], "~": [], "-": []}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        mark, _, phrase = line.partition(" ")
+        phrase = plain(phrase)
+        if mark not in out or not phrase:
+            return None
+        out[mark].append(phrase)
+    return out
+
+
+def plain(text: str) -> str:
+    """Small letters, one space between words, straight apostrophes."""
+    return " ".join(text.replace("\u2019", "'").lower().split())
 
 
 def quiet(fn, *args) -> tuple[int, str]:
@@ -63,8 +80,28 @@ def event_of(call: dict) -> str:
     return e if isinstance(e, str) else ""
 
 
-def is_correction(text: str) -> bool:
-    return any(p.search(text) for p in MARKERS)
+def ends(text: str, at: int) -> bool:
+    """Whether a phrase ending at `at` ends at a word's end."""
+    return at >= len(text) or not text[at].isalnum()
+
+
+def is_correction(text: str, words: dict[str, list[str]] | None = None) -> bool:
+    """Whether the prompt is a correction by the words list: never when it
+    starts with a - phrase; when it starts with a + phrase, or holds a ~
+    phrase as words of their own."""
+    words = words or read_words(WORDS) or {}
+    said = plain(text)
+    if any(said.startswith(p) and ends(said, len(p)) for p in words.get("-", [])):
+        return False
+    if any(said.startswith(p) and ends(said, len(p)) for p in words.get("+", [])):
+        return True
+    for p in words.get("~", []):
+        at = said.find(p)
+        while at >= 0:
+            if (at == 0 or not said[at - 1].isalnum()) and ends(said, at + len(p)):
+                return True
+            at = said.find(p, at + 1)
+    return False
 
 
 def waiting(box: Path, rows: list[dict]) -> list[dict]:
@@ -100,7 +137,7 @@ def hand_in(box: Path, text: str, ts: str) -> tuple[int, str]:
     return 0, ""
 
 
-def judge(raw: str, box: Path, ts: str) -> tuple[int, str]:
+def judge(raw: str, box: Path, ts: str, words: dict | None = None) -> tuple[int, str]:
     try:
         call = json.loads(raw)
     except ValueError:
@@ -113,7 +150,7 @@ def judge(raw: str, box: Path, ts: str) -> tuple[int, str]:
     if event_of(call) not in GIVE:
         return 0, ""
     text = prompt_of(call)
-    if text is None or not is_correction(text):
+    if text is None or not is_correction(text, words):
         return 0, ""
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
@@ -124,7 +161,7 @@ def judge(raw: str, box: Path, ts: str) -> tuple[int, str]:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--box", "--now"):
+        if a in ("--box", "--now", "--words"):
             opts[a] = next(it, "")
         elif a.startswith("--"):
             args = []
@@ -132,15 +169,41 @@ def main(argv: list[str]) -> int:
         else:
             args.append(a)
     verb = args[0] if args else ""
-    if not opts.get("--box") or verb not in ("run", "check") or len(args) != 1:
+    if (
+        verb not in ("run", "check", "match")
+        or len(args) != 1
+        or (verb != "match" and not opts.get("--box"))
+    ):
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
+    words = None
+    if opts.get("--words") is not None:
+        try:
+            words = read_words(Path(opts["--words"]))
+        except (OSError, UnicodeDecodeError):
+            words = None
+        if words is None:
+            print(f"refused: {opts['--words']} isn't a words list (+, ~ or - and a phrase, a line)",
+                  file=sys.stderr)  # fmt: skip
+            return kernel.REFUSED
+    if verb == "match":  # only whether it is one: nothing proposed, nothing written
+        try:
+            call = json.loads(sys.stdin.read())
+        except ValueError:
+            call = None
+        if not isinstance(call, dict):
+            print("refused: the hook was sent something it can't read", file=sys.stderr)
+            return kernel.REFUSED
+        text = prompt_of(call) if event_of(call) in GIVE else None
+        return kernel.ESCALATE if text and is_correction(text, words) else kernel.ALIVE
     box = Path(opts["--box"])
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
         return kernel.REFUSED
     if verb == "run":
-        code, why = judge(sys.stdin.read(), box, opts.get("--now") or kernel.now())
+        code, why = judge(
+            sys.stdin.read(), box, opts.get("--now") or kernel.now(), words
+        )
         if why:
             print(why, file=sys.stderr)
         return code

@@ -3,7 +3,7 @@ section: Privacy and safety
 line: Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.
 source: bot
 added: 2026-10-23
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: none
 role: guards
@@ -26,6 +26,7 @@ What a question prints, with personal data and keys withheld.
 | itin | a US taxpayer number, 9xx-7x-xxxx in its ranges |
 | ein | a US employer number, 12-3456789 |
 | birthdate, passport, licence, medical, case | a number after its label: DOB, passport no., driver's licence, MRN, case or claim no. The label stays, and the number holds a digit, so `passport renewal` and `claim no longer open` are left |
+| code | 3 to 10 digits after what they open: a gate, door, alarm, entry, access, lock, keypad or unlock code, a passcode, a PIN, a combination (`Gate code is 4471`, `my PIN is 0000`): a 4-digit secret is the usual one. The label stays; a bare `code` (`error code 404`, `zip code`) is left |
 | ip | an address that names a machine (not 127.x or 0.0.0.0, and an IPv6 one of three groups or more) |
 | mac | a network card's address |
 | wallet | a Bitcoin or Ethereum address |
@@ -37,7 +38,10 @@ Each becomes `[withheld: KIND]`, and the output counts them
 (`"withheld": {"phone": 2}`). The checksums keep it from crying wolf on order
 numbers and serials.
 
-**Misses, said rather than hidden:** a street address, and a name on its own.
+**Misses, said rather than hidden:** a street address, a name on its own, and a
+secret of a few digits with nothing before it saying what it opens: `4471` alone
+reads as a year, a time or a house number, so it is left. Write what it opens
+beside it (`gate 4471` is not enough; `gate code 4471` is) and it is withheld.
 A home path's account name is [transcript-redact](../transcript-redact/)'s.
 An EIN has no checksum, so an order number written 12-3456789 is withheld too.
 

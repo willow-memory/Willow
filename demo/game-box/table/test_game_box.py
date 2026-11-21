@@ -485,6 +485,12 @@ def test_recap_before_anything_says_nothing_is_true_yet(t):
 
 def test_recap_reads_aloud_only_what_the_table_made_true_last_time_first(t):
     t.open()
+    f = t.dir / "worlds" / "clockwork-cellar.json"
+    w = json.loads(f.read_text())
+    next(c for c in w["characters"] if c["id"] == "brann")["stats"]["Heart"] = (
+        10  # the riddle is answered, so night two frees the prince whatever the dice
+    )
+    f.write_text(json.dumps(w))
     t.session()
     t.session("offer", "pell", VELL, "--as", "guest")
     for subj in t.asked() + [

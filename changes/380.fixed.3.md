@@ -1,0 +1,1 @@
+`hook-guard`: `find` from the box with `-delete` or an `-exec` that changes files, `git -C` or `--work-tree` on it with `clean`, `checkout`, `reset` and the like, and `tar` extracting or `unzip` into it are refused as `box-write`; `find`, `git status` and `log`, `tar -c` and `-t`, and `unzip -l` are let through

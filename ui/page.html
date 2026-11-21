@@ -507,7 +507,7 @@ async function addFolder(path){const r=await api('folder?path='+encodeURICompone
 // kernel's own reading when the page proposes, so what's sealed is what it takes.
 const WORDLINE=/^[^\s=,]+\s*=\s*[^\s=,]+(\s*,\s*[^\s=,]+)*$/;
 function ownWords(){const st=P['starter-words'],used=all().includes('starter-words'),no=st?cantAdd('starter-words'):'not on the list';
- const ta=el('textarea',{rows:'5',class:'words',placeholder:'car test = MOT, inspection\nmum = Margaret\ndentist = dr, appointment',spellcheck:'false'});ta.value=S.words||'';
+ const ta=el('textarea',{rows:'5',class:'words',placeholder:'mot = inspection, test\nmum = Margaret\ndentist = dr, appointment',spellcheck:'false'});ta.value=S.words||'';
  const note=el('div',{class:'note'}),check=()=>{const bad=(ta.value.split('\n').map((x,i)=>[x.trim(),i+1])).filter(([x])=>x&&!x.startsWith('#')&&!WORDLINE.test(x));const n=myWords().length;
   note.className='note'+(bad.length?' no':'');note.textContent=bad.length?'line '+bad.map(b=>b[1]).join(', ')+': one word, then =, then the words your files use, a comma between':n?n+' line'+(n===1?'':'s')+' of your own, sealed with the rest':'none yet: your words go here, one line each'};
  let tw;ta.addEventListener('input',()=>{S.words=ta.value;check();clearTimeout(tw);tw=setTimeout(()=>{remember();save();refreshSeal();subject=null;SEALED=false;stale();summary();steplist();flow()},400)});check();
