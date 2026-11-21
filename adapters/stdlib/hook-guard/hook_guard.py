@@ -46,7 +46,9 @@ config names for it, and writes nothing. Exit codes: 0 allowed (or `rules`);
 
 from __future__ import annotations
 
+import fnmatch
 import json
+import re
 import shlex
 import sys
 from pathlib import Path
@@ -270,6 +272,47 @@ def writes_box(command: str, box: Path, cwd: str) -> bool:
     return False
 
 
+def searches_key(tool: str, given: dict, key: Path, cwd: str) -> bool:
+    """Whether a Grep, or a recursive Glob, would reach the key: its path (the
+    call's own folder when it names none) is the key's folder or one above it,
+    and its own filter doesn't leave the key out (bug #90). A Grep reads every
+    file it finds; a Glob only lists names, so only a recursive one is held, and
+    only when its pattern could name the key."""
+    where = given.get("path") if isinstance(given.get("path"), str) else ""
+    at = resolved(where or ".", cwd)
+    if at is None or not (at == key.parent or at in key.parents):
+        return False
+    rel = key.relative_to(at).as_posix()
+    if tool == "Grep":
+        glob = given.get("glob")
+        return not isinstance(glob, str) or not glob.strip() or _may_name(glob, rel)
+    pattern = given.get("pattern")
+    return isinstance(pattern, str) and "**" in pattern and _may_name(pattern, rel)
+
+
+def _may_name(pattern: str, rel: str) -> bool:
+    """Whether a glob pattern could name the file at rel, a path below where
+    the search starts. A pattern with a folder in it is held to the whole path
+    (`secret/**`, not `pile/**`); one without, to the file's name, at any depth
+    (`*.key`, `**/k*`). A pattern's {a,b} is read as each of its parts."""
+    alts = [pattern]
+    m = re.search(r"\{([^{}]*)\}", pattern)
+    if m:
+        alts = [
+            pattern[: m.start()] + part + pattern[m.end() :]
+            for part in m.group(1).split(",")
+        ]
+    name = rel.rsplit("/", 1)[-1]
+    for a in alts:
+        flat = a.replace("**/", "").replace("**", "*")
+        if "/" in flat:
+            if fnmatch.fnmatchcase(rel, flat):
+                return True
+        elif fnmatch.fnmatchcase(name, flat) or fnmatch.fnmatchcase(rel, flat):
+            return True
+    return False
+
+
 def judge(
     raw: str, box: Path, key: Path, also: tuple[Path, ...] = ()
 ) -> tuple[int, str]:
@@ -294,6 +337,11 @@ def judge(
                 2,
                 f"refused: rule key: this {tool} names the key file; the key is the person's.",
             )
+    if tool in ("Grep", "Glob") and searches_key(tool, given, key, cwd):
+        return (
+            2,
+            f"refused: rule key: this {tool} searches the folder that holds the key file; the key is the person's.",
+        )
     if tool in WRITERS and any(inside(p, box, cwd) for p in paths):
         return (
             2,

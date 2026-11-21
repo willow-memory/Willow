@@ -10,7 +10,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
 
 HERE = Path(__file__).resolve().parent
 SCRIPT = HERE / "hook_guard.py"
@@ -271,15 +270,47 @@ def test_it_writes_nothing_and_the_same_call_gets_the_same_answer(tmp_path):
     assert {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="bug #90: a Grep or recursive Glob over the folder holding the key is allowed",
-)
 def test_a_search_of_the_folder_holding_the_key_is_refused(tmp_path):
+    """Bug #90: a Grep reads every file it finds, so one over the key's
+    folder, or a folder above it, reads the key; a recursive Glob names it."""
     b, key = box(tmp_path)
     for raw in (call("Grep", pattern=".", path=str(key.parent)),
                 call("Glob", pattern="**/*", path=str(key.parent))):  # fmt: skip
-        assert hg.judge(raw, b, key)[0] == 2
+        code, why = hg.judge(raw, b, key)
+        assert code == 2 and "rule key" in why and "holds the key" in why
+
+
+def test_a_search_that_would_reach_the_key_in_any_shape_is_refused(tmp_path):
+    b, key = box(tmp_path)
+    for raw in (
+        call("Grep", pattern="a", path=str(tmp_path)),  # a folder above it
+        call("Grep", pattern="a", path=str(key.parent), glob="*"),
+        call("Grep", pattern="a", path=str(tmp_path), glob="**/k*"),
+        call("Grep", pattern="a", path=str(key.parent), glob="{*.md,key}"),
+        call("Glob", pattern="**/key", path=str(tmp_path)),
+        call("Glob", pattern="secret/**", path=str(tmp_path)),
+    ):
+        assert hg.judge(raw, b, key)[0] == 2, raw
+    # no path: the call's own folder is where it searches
+    at_root = json.dumps(
+        {"tool_name": "Grep", "tool_input": {"pattern": "a"}, "cwd": str(tmp_path)}
+    )
+    assert hg.judge(at_root, b, key)[0] == 2
+
+
+def test_a_search_that_leaves_the_key_out_is_let_by(tmp_path):
+    b, key = box(tmp_path)
+    elsewhere = tmp_path / "pile"
+    for raw in (
+        call("Grep", pattern="a", path=str(elsewhere)),  # not where the key is
+        call(
+            "Grep", pattern="a", path=str(tmp_path), glob="*.md"
+        ),  # its filter leaves it out
+        call("Glob", pattern="**/*.md", path=str(tmp_path)),
+        call("Glob", pattern="*", path=str(key.parent)),  # a listing, not recursive
+        call("Glob", pattern="pile/**", path=str(tmp_path)),
+    ):
+        assert hg.judge(raw, b, key) == (0, ""), raw
 
 
 def test_a_command_that_seals_is_refused(tmp_path):

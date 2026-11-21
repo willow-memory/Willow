@@ -3,7 +3,7 @@ section: Assistants
 line: A PreToolUse hook that blocks, by fixed rule, never judgment, a call that would read your key, seal with it, or write your record.
 source: box
 added: 2026-10-29
-version: 0.2.0
+version: 0.2.1
 writes: nothing
 network: none
 role: guards
@@ -38,7 +38,7 @@ refused: rule seal: this command runs the kernel's seal or decline; a seal is th
 
 | Rule | It refuses | It leaves alone |
 |---|---|---|
-| `key` | a Read, Grep or Glob whose path is the key; a command with the key's path in it, or a word that resolves to it | every other file; the key's folder; the record |
+| `key` | a Read, Grep or Glob whose path is the key; a Grep whose path (the call's own folder, when it names none) is the key's folder or one above it, or a recursive Glob there whose pattern could name the key, since a Grep reads every file it finds; a command with the key's path in it, or a word that resolves to it | every other file; a listing of the key's folder; a search there whose own `glob` or pattern leaves the key out (`*.md`, or a folder the key is not in); the record |
 | `box-write` | a Write, Edit, MultiEdit or notebook edit of a file in the box; a command that redirects into it, or runs rm, mv, cp, tee, touch, mkdir, ln, truncate, chmod, install, dd or sed -i on it (for mv, cp, ln, install the place it puts something; for mv also what it moves, since a file moved out of the box changes it); `find` from it with `-delete`, or `-exec` of one of those; `git -C` or `--work-tree` on it with a command that changes files (`clean`, `checkout`, `reset`, `restore` and the like); `tar` extracting, or `unzip`, into it (its `-C` or `-d`, else the folder the command runs in) | reading the box, copying out of it, `kernel.py` run on it, a box's sibling folder, `find`, `git status` or `git log` on it, `tar -c` or `-t` from it, `unzip -l` |
 | `beside-write` | with `--also DIR`: the same as `box-write`, for that folder; the folder need not exist yet | reading it, copying out of it, a folder whose name only starts with the same letters |
 | `seal` | a command that runs a kernel with `seal` or `decline` as its verb: `kernel.py`, or a port's (TypeScript's, Java's, C#'s, Go's and Rust's, built or run from source), by the file's name wherever it is, on any box | every other kernel command (`bite`, `propose`, `verify`, `out`); "seal" or "decline" as any other word, a question's included |

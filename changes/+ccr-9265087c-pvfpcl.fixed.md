@@ -1,0 +1,1 @@
+`hook-guard` 0.2.1 refuses a Grep over the folder that holds the key, or a folder above it (the call's own folder when it names none), and a recursive Glob there whose pattern could name the key, since a Grep reads every file it finds and printed the key (bug #90); a search whose own `glob` or pattern leaves the key out, and a plain listing of the folder, are let by
