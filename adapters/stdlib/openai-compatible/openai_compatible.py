@@ -12,8 +12,9 @@ folder holds that, and a model with no passage has nothing to say.
 Otherwise the served passages go to URL's `/chat/completions` (llama.cpp's
 server, Ollama, LM Studio, vLLM, or any endpoint that speaks the same JSON),
 numbered, with the rule that it answers only from them and cites each it uses
-as [1], [2]. Asked at temperature 0 with a fixed seed, so a server that
-honours them answers the same each time. `--system FILE` puts the text of FILE
+as [1], [2]. Asked at temperature 0 with a fixed seed: as alike each time as
+the server can make it, not the same every time, since batching, its cache and
+a runtime update can each move an answer. `--system FILE` puts the text of FILE
 before that rule: a voice, a persona, never a way around the rule.
 `--reasoning none|low|medium|high` asks the model to think that much before it
 answers, as `reasoning_effort` in the request; without it, the request says

@@ -15,7 +15,10 @@ passages served and the answer. It writes nothing: keep what it prints
 where you keep things.
 
 `again` asks the same model the same questions now and holds each answer to
-the frozen one, its spaces closed up:
+the frozen one, its spaces closed up. Temperature 0 and a seed don't make a
+server answer the same every time (batching, its cache, a runtime update), so
+a drift is one to look at, and one that comes back on every run of `again` is
+the model's:
 
     same       what goes in biscochitos
     drifted    when does the gate stick
