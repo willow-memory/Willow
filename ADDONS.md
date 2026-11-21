@@ -2017,7 +2017,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, game-master
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
-  Uses play-dice, play-odds. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-odds, play-checkers
+  Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-odds, play-checkers
 - <a id="oracle-text"></a>[**oracle-text**](adapters/stdlib/oracle-text/) \
   Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. \
   Uses play-tarot. *new* `no-install` `offline` `seeded` `branch` · near: hook-replay, restack, ink-story

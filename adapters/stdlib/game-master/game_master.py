@@ -3,7 +3,7 @@ person's rulings as rows on the record. Python 3.9+.
 
     python adapters/stdlib/game-master/game_master.py --box DIR open   --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR status --world W.json
-    python adapters/stdlib/game-master/game_master.py --box DIR act STAT --world W.json [--now TS]
+    python adapters/stdlib/game-master/game_master.py --box DIR act STAT [--said FACES | --tower DIEFILE] --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR ask    --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR settle --world W.json [--now TS]
     python adapters/stdlib/game-master/game_master.py --box DIR offer CHARACTER "FACT" [--as KIND] --world W.json [--now TS]
@@ -16,7 +16,13 @@ An action beat is `act STAT`: it rolls 2d6 with dice's own `roll` (the row is
 seeded by the record's tip, so nobody picks the faces), adds the acting
 character's stat, and reads the total as strong (10 or more), weak (7 to 9)
 or miss (6 or less). The roll row and a `table-beat` row naming it go on the
-record, and the beat's own line for that band is printed.
+record, and the beat's own line for that band is printed. With `--said 4,6`
+the table threw real dice and says the faces: dice's `said` keeps them as
+said (a `roll` row with no seed, marked so), and the beat is read from them
+the same way. With `--tower DIEFILE` the 2d6 was dropped in dice-tower when
+the moment was posed: it comes out now (a `tower-out` row, the roll), so no
+row written between, an offer, a call, could have chosen it, and nobody
+reading the record knew it first.
 
 A decision beat is a ruling, and the game master's call is the person's, not
 this code's. `ask` hands the beat's fact in as a proposal through the
@@ -56,12 +62,15 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2]))
 sys.path.insert(0, str(HERE.parent / "play-dice"))
 sys.path.insert(0, str(HERE.parent / "play-odds"))
+sys.path.insert(0, str(HERE.parent / "dice-tower"))
+import dice_tower  # noqa: E402
 import play_dice  # noqa: E402
 import kernel  # noqa: E402
 import play_odds  # noqa: E402
 
 KERNEL = HERE.parents[2] / "kernel.py"
 DICE = HERE.parent / "play-dice" / "play_dice.py"
+TOWER = HERE.parent / "dice-tower" / "dice_tower.py"
 OPEN, ASK, BEAT = "table-open", "table-ask", "table-beat"
 OFFER, HEARD = (
     "table-offer",
@@ -480,7 +489,7 @@ def cmd_status(box: Path, world: dict) -> int:
     return kernel.ALIVE if what != "open" else kernel.ESCALATE
 
 
-def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
+def cmd_act(box: Path, world: dict, stat: str, ts: str, faces: str = "", die: str = "") -> int:  # fmt: skip
     rows, game, err = current(box, world)
     if err:
         return fail(err)
@@ -491,11 +500,26 @@ def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
         return fail(f"beat {b['id']} is a decision: it has no roll; ask, then wait for your seal")  # fmt: skip
     if stat not in world["stats"]:
         return fail(f"{stat!r} isn't a stat here: {', '.join(world['stats'])}")
-    got = subprocess.run([sys.executable, str(DICE), "--box", str(box), "roll", ROLL, "--now", ts],
-                         capture_output=True, text=True)  # fmt: skip
+    if faces and die:
+        return fail("a roll is said or comes out of the tower, not both")
+    if die:  # dropped in the tower when the moment was posed; out now
+        try:
+            dropped = json.loads(Path(die).read_text(encoding="utf-8")).get("dice")
+        except (OSError, ValueError, AttributeError):
+            dropped = None
+        if dropped != ROLL:
+            return fail(f"{die} isn't a {ROLL} die in the tower")
+        got = subprocess.run([sys.executable, str(TOWER), "--box", str(box), "out", "--die", die, "--now", ts],
+                             capture_output=True, text=True)  # fmt: skip
+        kind = dice_tower.OUT
+    else:
+        how = ["said", ROLL, faces] if faces else ["roll", ROLL]  # fmt: skip
+        got = subprocess.run([sys.executable, str(DICE), "--box", str(box), *how, "--now", ts],
+                             capture_output=True, text=True)  # fmt: skip
+        kind = "roll"
     rows, breaks = kernel.read(box / "record.jsonl")
     roll = rows[-1] if rows else {}
-    if got.returncode != 0 or breaks or roll.get("kind") != "roll":
+    if got.returncode != 0 or breaks or roll.get("kind") != kind:
         return fail("dice refused the roll: " + (got.stderr or got.stdout).strip())
     bonus = stat_of(world, char, stat)
     total = roll["total"] + bonus
@@ -504,7 +528,8 @@ def cmd_act(box: Path, world: dict, stat: str, ts: str) -> int:
                         scene=sc["id"], beat=b["id"], character=char["id"], stat=stat,
                         bonus=bonus, roll_row=roll["n"], roll=roll["total"], total=total,
                         band=band, text=b["outcomes"][band])  # fmt: skip
-    print(f"{char['name']} tries {stat}: {play_dice.said(roll)}, {bonus:+d} {stat} = {total}: {band}   (rows {roll['n']}, {row['n']})")  # fmt: skip
+    whence = ", out of the tower" if roll["kind"] == dice_tower.OUT else ""
+    print(f"{char['name']} tries {stat}: {play_dice.said(roll)}{whence}, {bonus:+d} {stat} = {total}: {band}   (rows {roll['n']}, {row['n']})")  # fmt: skip
     print(b["outcomes"][band])
     after = [*game["beats"], row]
     for text in entering(world, after, game["heard"], game["canon"]):
@@ -673,7 +698,7 @@ def check_game(
                 return f"{where}: a {r.get('beat_kind')} row on a {b['kind']} beat"
         if r.get("beat_kind") == "action":
             roll = rows[at - 1] if at else {}
-            if roll.get("kind") != "roll" or roll.get("dice") != ROLL or r.get("roll_row") != at - 1:  # fmt: skip
+            if roll.get("kind") not in ("roll", dice_tower.OUT) or roll.get("dice") != ROLL or r.get("roll_row") != at - 1:  # fmt: skip
                 return f"{where}: not straight after a {ROLL} roll it names"
             if r.get("roll") != roll["total"] or r.get("total") != roll["total"] + r.get("bonus", 0):  # fmt: skip
                 return f"{where}: its total isn't the roll plus the stat"
@@ -751,9 +776,12 @@ def cmd_check(box: Path, world: dict | None) -> int:
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:
         return fail("the record doesn't verify: " + "; ".join(breaks))
-    held, why = play_dice.check(rows)
+    held, why = play_dice.check(rows, said=True)  # a table's real dice, kept as said
     if why:
         return fail(f"{why} ({held} rolls before it held)")
+    _, _, why = dice_tower.check(rows)  # every die out of the tower held to its drop
+    if why:
+        return fail(why)
     mine = games(rows, world["id"] if world else None)
     for g in mine:
         theirs = world if world and g["open"].get("world") == world["id"] else None
@@ -768,7 +796,7 @@ def cmd_check(box: Path, world: dict | None) -> int:
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
-        if a in ("--box", "--world", "--now", "--as"):
+        if a in ("--box", "--world", "--now", "--as", "--said", "--tower"):
             opts[a] = next(it, "")
         else:
             args.append(a)
@@ -796,7 +824,7 @@ def main(argv: list[str]) -> int:
     if verb == "status":
         return cmd_status(box, world)
     if verb == "act":
-        return cmd_act(box, world, args[1], ts)
+        return cmd_act(box, world, args[1], ts, opts.get("--said", ""), opts.get("--tower", ""))  # fmt: skip
     if verb == "offer":
         return cmd_offer(box, world, args[1], args[2], ts, opts.get("--as", ""))
     return (cmd_ask if verb == "ask" else cmd_settle)(box, world, ts)

@@ -124,3 +124,47 @@ def test_one_roll_is_said_as_one(tmp_path):
 def test_a_roll_with_no_count_is_one_die():
     assert dc.parse("d6") == ([(1, 1, 6)], 0)
     assert dc.parse("d20+3") == ([(1, 1, 20)], 3)
+
+
+def test_a_roll_said_is_kept_as_said_and_marked_so(tmp_path):
+    b = make(tmp_path)
+    got = run("--box", str(b), "said", "2d6", "4,6", *NOW)
+    assert got.returncode == 0, got.stderr
+    assert got.stdout == "2d6: 4 + 6 = 10, as said   (row 1)\n"
+    row = json.loads((b / "record.jsonl").read_text().splitlines()[-1])
+    assert row["kind"] == "roll" and row["generator"] == "said" and "seed" not in row
+    assert (row["faces"], row["add"], row["total"]) == ([[4, 6]], 0, 10)
+    assert run("--box", str(b), "said", "1d8-1d4+2", "8 1", *NOW).stdout.startswith("1d8-1d4+2: 8 + (-1) + 2 = 9, as said")  # fmt: skip
+    seeded = run("--box", str(b), "roll", "2d6", *NOW)
+    assert ", as said" not in seeded.stdout
+    out = run("--box", str(b), "check")
+    assert out.returncode == 0 and out.stdout == "3 rolls on the record; every one holds. 2 of them said, kept as said.\n"  # fmt: skip
+
+
+def test_faces_that_arent_the_dices_are_refused_and_nothing_written(tmp_path):
+    b = make(tmp_path)
+    for faces, why in [("7,1", "7 isn't a face of a d6: 1 to 6"), ("0,3", "0 isn't a face of a d6"), ("4", "2d6 is 2 dice: say one face for each"), ("4,5,6", "2d6 is 2 dice"), ("four,six", "isn't faces")]:  # fmt: skip
+        got = run("--box", str(b), "said", "2d6", faces, *NOW)
+        assert got.returncode == 2 and why in got.stderr, (faces, got.stderr)
+    kinds = [json.loads(x)["kind"] for x in (b / "record.jsonl").read_text().splitlines()]  # fmt: skip
+    assert "roll" not in kinds
+
+
+def test_only_a_caller_that_takes_said_rolls_holds_one(tmp_path):
+    b = make(tmp_path)
+    run("--box", str(b), "roll", "2d6", *NOW)
+    run("--box", str(b), "said", "2d6", "3,3", *NOW)
+    rows = [json.loads(x) for x in (b / "record.jsonl").read_text().splitlines()]
+    assert dc.check(rows) == (1, f"row {rows[-1]['n']}: a roll said, not thrown, where only seeded rolls count")  # fmt: skip
+    assert dc.check(rows, said=True) == (2, None)
+
+
+def test_a_said_roll_changed_after_the_fact_doesnt_hold(tmp_path):
+    b = make(tmp_path)
+    run("--box", str(b), "said", "2d6", "3,4", *NOW)
+    good = [json.loads(x) for x in (b / "record.jsonl").read_text().splitlines()]
+    for change in ({"total": 12}, {"faces": [[3, 9]]}, {"faces": [[3]]}, {"add": 1}, {"dice": "1d6"}, {"faces": "x"}):  # fmt: skip
+        rows = [dict(r) for r in good]
+        rows[-1].update(change)
+        held, why = dc.check(rows, said=True)
+        assert held == 0 and why and why.startswith(f"row {rows[-1]['n']}: "), change
