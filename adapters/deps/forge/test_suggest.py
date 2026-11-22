@@ -40,6 +40,10 @@ ROW = re.compile(r"  \S.*")
 
 
 def run(*argv: str) -> subprocess.CompletedProcess:
+    """The script, with no defaults unless the test names a list: a test
+    about a word or the search then sees only what the words reached."""
+    if argv[:1] in (("suggest",), ("propose",), ("next",)) and "--defaults" not in argv:
+        argv = (*argv, "--defaults", "none")
     return subprocess.run(
         [sys.executable, str(SCRIPT), *argv], capture_output=True, text=True
     )
@@ -253,8 +257,12 @@ def test_a_sentence_that_names_no_card_gets_the_close_fork(box):
         "fork “close”: nothing named that the search agrees with"
     )
     names = [r["what"].split(":", 1)[0] for r in g["rows"]]
-    assert "assistant-scores" in names and names[-1] == "none" and len(names) <= 4
-    assert all("close, not named: " in r["what"] for r in g["rows"][:-1])
+    assert (
+        "assistant-scores" in names
+        and names[-2:] == ["none", "not-now"]
+        and len(names) <= 5
+    )
+    assert all("close, not named: " in r["what"] for r in g["rows"][:-2])
     assert g["rows"][0]["what"].endswith(
         "; recommended, the search's first"
         "; no confidence yet: 0 of 5 blind close picks sealed on this matcher"
@@ -279,7 +287,7 @@ def test_a_card_named_by_an_ordinary_word_the_search_puts_nowhere_near_is_asked_
         "fork “close”: nothing named that the search agrees with; these are close to what you said"
     ]
     rows = {r["what"].split(":", 1)[0]: r["what"] for r in doc["groups"][0]["rows"]}
-    assert list(rows)[0] == "model-exam" and list(rows)[-1] == "none"
+    assert list(rows)[0] == "model-exam" and list(rows)[-2:] == ["none", "not-now"]
     assert rows["against"].endswith(
         "named, but not close: the search puts it nowhere near your words"
     )
@@ -534,7 +542,7 @@ def test_a_blind_fork_says_so_recommends_nothing_and_hides_the_searchs_order(box
     assert g["name"].startswith(f"fork “close”, {suggest.BLIND_SAID}: nothing named")
     assert not any("recommended" in r["what"] or "confidence" in r["what"]
                    for r in g["rows"]), "nothing in front of you to follow"  # fmt: skip
-    cards = g["rows"][:-1]
+    cards = g["rows"][:-2]  # all but the two ways out, none and not-now
     assert all(r["what"].endswith(f"; {suggest.BLIND_ROW}") for r in cards), (
         "every card says the same of itself: the search's reasons would say its order"
     )
@@ -633,6 +641,7 @@ def test_a_words_fork_offers_none_and_keeps_what_was_shown(box):
         "apple-mail",
         "mail",
         "none",
+        "not-now",
     ]
     got = run(
         "propose", "my email", "--box", str(box), "--choose", "email=none", "--json"
@@ -700,8 +709,24 @@ def test_the_plan_is_one_the_forge_validates_and_extracts(box):
     assert got.returncode == 42
     d = json.loads(got.stdout)
     assert (
-        set(d) == {"cards", "steps", "forks", "sealed", "ideas", "plan"}
+        set(d)
+        == {
+            "cards",
+            "steps",
+            "defaults",
+            "defaults_not_here",
+            "forks",
+            "sealed",
+            "not_now",
+            "unsealed",
+            "ideas",
+            "plan",
+        }
         and d["sealed"] == {}
+        and d["not_now"] == {}
+        and d["unsealed"] == {}
+        and d["defaults"] == []
+        and d["defaults_not_here"] == []
     )
     doc = plan_shape.validate(d["plan"])
     forks = [e for e in doc.entries if isinstance(e, plan_shape.Fork)]
@@ -752,7 +777,7 @@ def test_a_choice_not_on_offer_is_refused(box):
     )
     assert got.returncode == 2 and "nothing to choose for “x”" in got.stderr
     got = run("propose", EMAIL, "--box", str(box), "--choose", "email")
-    assert got.returncode == 2 and "WORD=VALUE" in got.stderr
+    assert got.returncode == 2 and "WORD=NAME" in got.stderr
 
 
 def test_nothing_to_propose_is_refused(box):
@@ -787,8 +812,19 @@ def test_propose_puts_each_settled_fork_and_the_stack_at_the_door_as_a_report(bo
     stack = json.loads(
         (box / "proposals" / f"{waiting['forge/stack.md'][9:]}.json").read_text()
     )
-    assert stack["data"].splitlines()[-1] == "- coming-up -- --box {box}"
-    assert stack["data"].splitlines()[-2].startswith("- mail -- mirror --from ")
+    # the stack is a page of wants: each step under the want it answers, what
+    # it was chosen over and why, numbered in the order they run
+    page = stack["data"].splitlines()
+    assert page[-1] == "- coming-up -- --box {box}"
+    assert page[-3].startswith("Want 2: “due”: coming-up, not ") and page[-4] == ""
+    assert page[-2].startswith("coming-up: ") and "because" not in page[-3]
+    mail = next(
+        i for i, ln in enumerate(page) if ln.startswith("- mail -- mirror --from ")
+    )
+    assert page[mail - 2] == "Want 1: “email”: mail, not apple-mail." and page[mail - 1].startswith("mail: ")  # fmt: skip
+    assert page[2] == suggest.WANTS_INTRO and "## what you chose" in page
+    assert [ln for ln in page if ln.startswith("- ")] == [page[mail], page[-1]], "only the steps are steps"  # fmt: skip
+    assert suggest.steps_of(stack["data"]) == ["mail", "coming-up"]
 
 
 def test_propose_prints_its_report_as_text_too(box):
@@ -830,7 +866,10 @@ def test_a_proposal_is_not_an_answer_until_sealed(box):
     assert text.returncode == 42 and [g["name"] for g in doc["groups"]] == [
         "fork “email”",
         "fork “due”",
-    ]
+        "picked, not sealed yet",
+    ], "still asked, and what waits on the seal is said"
+    assert [r["what"].split(",")[0] for r in doc["groups"][2]["rows"]] == [
+        "mail for “email”", "coming-up for “due”"]  # fmt: skip
 
 
 # ── the seal, and both sides reading it back ──────────────────────────────────
@@ -1228,3 +1267,550 @@ def test_without_the_contract_every_step_takes_the_default_and_says_so(
     d = json.loads(capsys.readouterr().out)
     assert code == 0 and d["cards"]["commands"].startswith("the ci add-on isn't here")
     assert d["plan"]["entries"][0]["content"] == "- merkle -- --box {box}\n"
+
+
+# ── the defaults: in every stack, never asked and never scored ───────────────
+def with_defaults(tmp_path: Path, text: str) -> list[str]:
+    f = tmp_path / "defaults.txt"
+    f.write_text(text, encoding="utf-8")
+    return ["--defaults", str(f)]
+
+
+def default_names(doc: dict) -> list[str]:
+    return [d["name"] for d in doc["defaults"]]
+
+
+def test_the_list_beside_the_script_names_built_add_ons_each_once_with_its_reason():
+    names = []
+    for raw in (HERE / "defaults.txt").read_text(encoding="utf-8").splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if line:
+            name, _, why = line.partition(" ")
+            assert why.strip(), f"{name} says why it is a default"
+            assert (ROOT / "adapters/stdlib" / name / "README.md").is_file(), name
+            names.append(name)
+    assert names and len(set(names)) == len(names)
+    assert {"todo", "duplicates", "contradictions"} <= set(names)
+
+
+def test_defaults_ride_after_the_steps_in_their_own_group_and_in_the_plan(
+    box, tmp_path
+):
+    mine = with_defaults(tmp_path, "# mine\ntodo   open items\n\npeople  who is named  # a note\ntodo  again\n")  # fmt: skip
+    got = run(
+        "suggest", "a merkle proof of one row", "--box", str(box), *mine, "--json"
+    )
+    assert got.returncode == 0, got.stderr
+    doc = json.loads(got.stdout)
+    assert [g["name"] for g in doc["groups"]] == [
+        "steps", "defaults: in every stack, not asked and not scored"]  # fmt: skip
+    whats = [r["what"] for r in doc["groups"][1]["rows"]]
+    assert [w.split(":", 1)[0] for w in whats] == ["todo", "people"], (
+        "in the list's order, each once"
+    )
+    assert whats[0].endswith("; open items") and whats[1].endswith("; who is named")
+    plan = json.loads(run("suggest", "a merkle proof of one row", "--box", str(box), *mine, "--plan").stdout)  # fmt: skip
+    assert default_names(plan) == ["todo", "people"]
+    assert [e["dest_path"] for e in plan["plan"]["entries"]] == [
+        "steps/merkle.md", "steps/todo.md", "steps/people.md"]  # fmt: skip
+
+
+def test_the_shipped_list_is_what_is_read_when_none_is_named(box):
+    got = subprocess.run(
+        [sys.executable, str(SCRIPT), "suggest", "a merkle proof of one row", "--box", str(box), "--plan"],
+        capture_output=True, text=True)  # fmt: skip
+    assert "todo" in default_names(json.loads(got.stdout))
+    none = json.loads(run("suggest", "a merkle proof of one row", "--box", str(box), "--plan").stdout)  # fmt: skip
+    assert none["defaults"] == [], "--defaults none proposes with none"
+
+
+def test_a_default_is_never_an_option_of_the_close_fork(box, tmp_path):
+    """Picking a default there would be scored as the search being right."""
+    plain = [o["name"] for o in plan_of(box, COUNT)["forks"]["close"]]
+    first = plain[0]
+    mine = with_defaults(tmp_path, f"{first}  kept in every stack\n")
+    doc = json.loads(run("suggest", COUNT, "--box", str(box), *mine, "--plan").stdout)
+    offered = [o["name"] for o in doc["forks"]["close"]]
+    assert first not in offered and offered[-1] == "none"
+    assert default_names(doc) == [first], "it rides beside the fork instead"
+    assert doc["plan"]["entries"][-1]["dest_path"] == f"steps/{first}.md"
+
+
+def test_a_default_the_words_reached_is_that_step_and_not_a_default_too(box, tmp_path):
+    mine = with_defaults(tmp_path, "merkle  kept in every stack\ntodo  open items\n")
+    doc = json.loads(run("suggest", "a merkle proof of one row", "--box", str(box), *mine, "--plan").stdout)  # fmt: skip
+    assert [s["name"] for s in doc["steps"]] == ["merkle"] and default_names(doc) == [
+        "todo"
+    ]
+
+
+def test_twice_reaches_duplicates_as_a_step_and_not_a_default_too(box):
+    """ "anything said twice" reached nothing; "twice" is a line of
+    ui/search-words.txt now, and duplicates (a shipped default) is that step."""
+    sentence = "Check for anything said twice"
+    doc = plan_of(box, sentence)
+    assert [s["name"] for s in doc["steps"]] == ["duplicates"] and "close" not in doc["forks"]  # fmt: skip
+    shipped = subprocess.run(
+        [sys.executable, str(SCRIPT), "suggest", sentence, "--box", str(box), "--plan"],
+        capture_output=True, text=True)  # fmt: skip
+    got = json.loads(shipped.stdout)
+    assert [s["name"] for s in got["steps"]] == ["duplicates"]
+    assert "duplicates" not in default_names(got) and "todo" in default_names(got)
+
+
+def test_back_up_reaches_backup_and_a_due_back_deposit_does_not_fork_it(box):
+    """The words list is one word to a line, so "back up" is the word "back";
+    suggest's phrase table keeps the hit only with "up" within a word or two."""
+    for said in ("back up my record", "back it up", "back them all up"):
+        up = plan_of(box, said)
+        assert [s["name"] for s in up["steps"]] == ["backup"], said
+    due = plan_of(box, "The deposit is due back at the end of the month")
+    assert due["steps"] == []
+    assert list(due["forks"]) == ["due"]
+    assert [o["name"] for o in due["forks"]["due"]][:2] == ["coming-up", "renewals"]
+
+
+def test_a_back_up_step_says_the_phrase_it_came_from(box):
+    got = run("suggest", "back it up", "--box", str(box), "--plan")
+    steps = json.loads(got.stdout)["steps"]
+    assert [s["name"] for s in steps] == ["backup"]
+    assert "“back it up”" in steps[0]["why"]
+
+
+def test_phrases_for_open_items_reach_todo_and_bare_to_do_does_not(box):
+    for said in (
+        "I still have a list of things to do",
+        "what do I still have to do",
+        "what is left to do",
+        "a to-do list",
+    ):
+        got = plan_of(box, said)
+        assert [s["name"] for s in got["steps"]] == ["todo"], said
+        assert "close" not in got["forks"], said
+    mixed = plan_of(box, "what is due and what do I still have to do")
+    assert [s["name"] for s in mixed["steps"]] == ["todo"]
+    assert list(mixed["forks"]) == ["due"]
+    ordinary = plan_of(box, "what do I want to do with this folder")
+    assert ordinary["steps"] == []
+    assert list(ordinary["forks"]) == ["close"]
+
+
+def test_a_default_a_words_fork_offers_stays_yours_to_pick(box, tmp_path):
+    mine = with_defaults(tmp_path, "mail  kept in every stack\ntodo  open items\n")
+    doc = json.loads(
+        run("suggest", "my email", "--box", str(box), *mine, "--plan").stdout
+    )
+    assert "mail" in [o["name"] for o in doc["forks"]["email"]]
+    assert default_names(doc) == ["todo"]
+
+
+def test_defaults_never_make_a_plan_or_a_stack_of_their_own(box, tmp_path):
+    mine = with_defaults(tmp_path, "todo  open items\n")
+    got = run("suggest", NONSENSE, "--box", str(box), *mine, "--plan")
+    assert json.loads(got.stdout)["plan"] is None, (
+        "nothing reached: still nothing to run"
+    )
+    miss = run(
+        "propose", COUNT, "--box", str(box), *mine, "--choose", "close=none", "--json"
+    )
+    assert miss.returncode == 42, miss.stderr
+    assert "no stack: nothing settled runs" in json.loads(miss.stdout)["said"]
+
+
+def test_a_proposed_stack_carries_the_defaults_after_its_own_steps(box, tmp_path):
+    mine = with_defaults(tmp_path, "todo  open items\nmail  kept in every stack\n")
+    got = run(
+        "propose",
+        "my email",
+        "--box",
+        str(box),
+        *mine,
+        "--choose",
+        "email=mail",
+        "--json",
+    )
+    assert got.returncode == 42, got.stderr
+    rows_ = [r for g in json.loads(got.stdout)["groups"] for r in g["rows"]]
+    (stack,) = [r["what"] for r in rows_ if r["where"] == "forge/stack.md"]
+    assert stack.endswith("a stack: mail, todo"), (
+        "its own step first; a default picked is not twice"
+    )
+    subj = stack.split()[0]
+    text = json.loads((box / "proposals" / (subj[9:] + ".json")).read_text())["data"]
+    assert [ln.split()[1] for ln in text.splitlines() if ln.startswith("- ")] == [
+        "mail",
+        "todo",
+    ]
+
+
+def test_a_line_naming_no_built_add_on_is_said_and_left_out(box, tmp_path):
+    mine = with_defaults(tmp_path, "todo  open items\nno-such-thing  a typo\n")
+    doc = json.loads(run("suggest", "a merkle proof of one row", "--box", str(box), *mine, "--json").stdout)  # fmt: skip
+    last = doc["groups"][-1]
+    assert last["name"] == "defaults named that are no built add-on here"
+    assert last["rows"] == [{"where": "defaults.txt", "what": "no-such-thing"}]
+
+
+def test_a_defaults_file_that_isnt_there_is_refused(box, tmp_path):
+    got = run(
+        "suggest",
+        "my email",
+        "--box",
+        str(box),
+        "--defaults",
+        str(tmp_path / "gone.txt"),
+    )
+    assert got.returncode == 2 and "isn't a file of defaults" in got.stderr
+
+
+# ── not now: not deciding is a decision, and nothing waiting goes quiet ──────
+def test_every_fork_offers_not_now_last_and_the_plan_does_not(box):
+    text, doc = suggested(box, EMAIL)
+    forks = [g for g in doc["groups"] if g["name"].startswith("fork ")]
+    assert len(forks) == 2
+    for g in forks:
+        assert g["rows"][-1]["where"] == "not-now"
+        assert g["rows"][-1]["what"].startswith("not-now: leave this one undecided")
+        assert g["rows"][-2]["where"] == "none", "beside none, after it"
+    plan = plan_of(box, EMAIL)
+    assert all(
+        o["name"] != "not-now" for opts in plan["forks"].values() for o in opts
+    ), "it is no option of the Forge's fork: nothing there resolves to it"
+
+
+def test_not_now_is_proposed_under_its_own_question_and_the_rest_still_stacks(box):
+    before = len(rows(box))
+    got = run("propose", EMAIL, "--box", str(box), "--choose", "email=mail",
+              "--choose", "due=not-now", "--why", "due=I haven't looked at either", "--json")  # fmt: skip
+    assert got.returncode == 42, got.stderr
+    took = {
+        r["where"]: r["what"]
+        for g in json.loads(got.stdout)["groups"]
+        for r in g["rows"]
+    }
+    assert set(took) == {"forge/decisions/willow-email.json", "forge/not-now/willow-due.json",
+                         "forge/stack.md"}  # fmt: skip
+    assert took["forge/not-now/willow-due.json"].endswith("not now for “due”")
+    assert took["forge/stack.md"].endswith("a stack: mail"), (
+        "no card of the fork left open"
+    )
+    subj = took["forge/not-now/willow-due.json"].split()[0]
+    prop = json.loads((box / "proposals" / (subj[9:] + ".json")).read_text())
+    data = json.loads(prop["data"])
+    assert data["chose"] == "not-now" and data["why"] == "I haven't looked at either"
+    assert data["decision_type"] == "willow-due" and data["shown"] == [
+        "coming-up",
+        "renewals",
+    ]
+    assert data["asked_at"] > before and prop["claim"].startswith(
+        "for “due”: not now; "
+    )
+    assert prop["bite_key"] == suggest.kernel.bite_key("forge not now willow-due")
+    assert prop["bite_key"] != suggest.kernel.bite_key("forge decision willow-due"), (
+        "the decision's own question stays unanswered"
+    )
+
+
+def test_a_sealed_not_now_is_said_keeps_the_fork_open_and_is_never_scored(box):
+    took = proposed(box, "email=not-now", "due=not-now")
+    assert set(took) == {
+        "forge/not-now/willow-email.json",
+        "forge/not-now/willow-due.json",
+    }
+    text, doc = suggested(box, EMAIL)
+    assert "picked, not sealed yet" in [g["name"] for g in doc["groups"]], (
+        "said while it waits"
+    )
+    seal_all(box, took)
+    text, doc = suggested(box, EMAIL)
+    assert text.returncode == 42 and doc["said"] == "2 forks wait on you", (
+        "still open, still asked"
+    )
+    (said,) = [g for g in doc["groups"] if g["name"] == "you said not now"]
+    assert [r["where"] for r in said["rows"]] == [
+        "forge/not-now/willow-email.json", "forge/not-now/willow-due.json"]  # fmt: skip
+    assert said["rows"][0]["what"].startswith(
+        "“email” left undecided, by your seal (row "
+    )
+    assert "picked, not sealed yet" not in [g["name"] for g in doc["groups"]]
+    assert plan_of(box, EMAIL)["sealed"] == {}, "no decision was sealed"
+    assert (
+        json.loads(run("scores", "--box", str(box), "--json").stdout)["state"]
+        == "empty"
+    )
+
+
+def test_a_pick_made_after_a_not_now_settles_the_fork_and_the_not_now_goes(box):
+    seal_all(box, proposed(box, "email=not-now", sentence="my email"))
+    again = proposed(box, "email=not-now", sentence="my email")
+    assert again, "a second not now for one fork is a proposal of its own"
+    seal_all(box, proposed(box, "email=mail", sentence="my email"))
+    text, doc = suggested(box, "my email")
+    assert "a stack is sealed for these words" in doc["said"]
+    assert "you said not now" not in [g["name"] for g in doc["groups"]]
+
+
+def test_a_stack_sealed_without_its_pick_says_which_pick_is_left(box):
+    took = proposed(box, "email=mail", sentence="my email")
+    seal_all(box, {"forge/stack.md": took["forge/stack.md"]})
+    text, doc = suggested(box, "my email")
+    assert text.returncode == 0
+    assert doc["said"].endswith("1 of its forks is not settled, said below")
+    (left,) = [g for g in doc["groups"] if g["name"] == "picked, not sealed yet"]
+    assert left["rows"][0]["where"] == "forge/decisions/willow-email.json"
+    assert left["rows"][0]["what"].startswith("mail for “email”, proposed at row ")
+    assert "nothing is scored until then" in left["rows"][0]["what"]
+    seal_all(box, {k: v for k, v in took.items() if k != "forge/stack.md"})
+    text, doc = suggested(box, "my email")
+    assert doc["said"].endswith("nothing to ask") and len(doc["groups"]) == 1
+
+
+def test_not_now_alone_makes_no_stack(box):
+    got = run(
+        "propose", "my email", "--box", str(box), "--choose", "email=not-now", "--json"
+    )
+    assert got.returncode == 42, got.stderr
+    assert "no stack: nothing settled runs" in json.loads(got.stdout)["said"]
+
+
+def test_a_refusal_names_not_now_among_the_options(box):
+    got = run("propose", "my email", "--box", str(box))
+    assert (
+        got.returncode == 2
+        and "--choose email=apple-mail|mail|none|not-now" in got.stderr
+    )
+    got = run("propose", "my email", "--box", str(box), "--choose", "email=later")
+    assert got.returncode == 2 and got.stderr.strip().endswith(
+        "apple-mail, mail, none, not-now"
+    )
+
+
+# ── more than one: any one might be good, and so might two ───────────────────
+def test_a_fork_takes_more_than_one_as_one_decision_and_every_one_is_a_step(box):
+    got = run("propose", EMAIL, "--box", str(box), "--choose", "email=mail,apple-mail",
+              "--choose", "due=renewals", "--choose", "due=coming-up", "--choose", "due=renewals",
+              "--why", "email=both kinds are in the folder", "--json")  # fmt: skip
+    assert got.returncode == 42, got.stderr
+    took = {
+        r["where"]: r["what"]
+        for g in json.loads(got.stdout)["groups"]
+        for r in g["rows"]
+    }
+    assert set(took) == {"forge/decisions/willow-email.json", "forge/decisions/willow-due.json",
+                         "forge/stack.md"}, "one proposal a fork, however many were taken"  # fmt: skip
+    assert took["forge/decisions/willow-email.json"].endswith(
+        "apple-mail and mail for “email”"
+    )
+    assert took["forge/stack.md"].endswith(
+        "a stack: mail, apple-mail, renewals, coming-up"
+    ), "the stack runs them in the order you named them"
+    subj = took["forge/decisions/willow-email.json"].split()[0]
+    prop = json.loads((box / "proposals" / (subj[9:] + ".json")).read_text())
+    data = json.loads(prop["data"])
+    assert data["chose"] == "apple-mail" and data["also"] == ["mail"], (
+        "in the order offered"
+    )
+    assert (
+        data["rank"] == 1
+        and data["over"] == []
+        and data["card"]["name"] == "apple-mail"
+    )
+    assert [c["name"] for c in data["also_cards"]] == ["mail"] and len(
+        data["also_cards"][0]["sha256"]
+    ) == 64
+    assert prop["claim"].startswith(
+        "for “email”: apple-mail and mail over nothing; both kinds"
+    )
+    due = json.loads(json.loads((box / "proposals" / (
+        took["forge/decisions/willow-due.json"].split()[0][9:] + ".json")).read_text())["data"])  # fmt: skip
+    assert due["chose"] == "coming-up" and due["also"] == ["renewals"], (
+        "given twice counts once"
+    )
+
+
+def test_one_pick_reads_as_it_always_did(box):
+    took = proposed(box, "email=mail", sentence="my email")
+    subj = took["forge/decisions/willow-email.json"]
+    data = json.loads(
+        json.loads((box / "proposals" / (subj[9:] + ".json")).read_text())["data"]
+    )
+    assert data["chose"] == "mail" and "also" not in data and "also_cards" not in data
+
+
+def test_sealed_every_card_taken_is_a_step_and_nothing_is_asked(box):
+    took = proposed(box, "email=mail,apple-mail", sentence="my email")
+    seal_all(box, {k: v for k, v in took.items() if k != "forge/stack.md"})
+    plan = plan_of(box, "my email")
+    assert [s["name"] for s in plan["steps"]] == ["apple-mail", "mail"] and plan[
+        "forks"
+    ] == {}
+    assert all(s["why"].startswith("you sealed it for “email”") for s in plan["steps"])
+    assert plan["sealed"]["email"]["chose"] == "apple-mail" and plan["sealed"]["email"][
+        "also"
+    ] == ["mail"]
+
+
+def test_a_way_out_is_taken_alone(box):
+    for both in ("email=mail,none", "email=not-now,mail", "email=none,not-now"):
+        got = run("propose", "my email", "--box", str(box), "--choose", both)
+        assert got.returncode == 2 and "stands alone" in got.stderr, both
+    got = run("propose", "my email", "--box", str(box), "--choose", "email=mail,pigeon")
+    assert got.returncode == 2 and "pigeon is not an option" in got.stderr
+    got = run("propose", "my email", "--box", str(box), "--choose", "email=,")
+    assert got.returncode == 2 and "WORD=NAME or WORD=NAME,NAME" in got.stderr
+    assert len(rows(box)) == 1, "a refusal writes nothing"
+
+
+def test_a_close_fork_is_scored_on_the_highest_of_what_was_taken(box):
+    shown = [
+        o["name"] for o in plan_of(box, COUNT)["forks"]["close"] if o["name"] != "none"
+    ]
+    waiting, data = data_of(
+        box, proposed(box, f"close={shown[2]},{shown[0]}", sentence=COUNT)
+    )
+    assert (
+        data["chose"] == shown[0] and data["also"] == [shown[2]] and data["rank"] == 1
+    )
+    assert data["over"] == [shown[1]] and data["recommended"] == shown[0]
+
+
+# ── next: what your own stacks put beside what you have ──────────────────────
+def a_home_of_stacks(tmp_path: Path) -> Path:
+    home = tmp_path / "stacks"
+    for name, steps in {
+        "one": ["merkle", "todo", "people"],
+        "two": ["merkle", "todo", "duplicates"],
+        "three": ["merkle", "todo"],
+        "four": ["mail", "people"],
+        "lonely": ["merkle"],
+    }.items():
+        (home / name).mkdir(parents=True)
+        (home / name / "stack.md").write_text(
+            "# a stack\n" + "".join(f"- {s} -- --box {{box}}\n" for s in steps),
+            encoding="utf-8",
+        )
+    (home / "one" / "pile").mkdir()
+    (home / "one" / "pile" / "stack.md").write_text(
+        "- merkle -- x\n- amounts -- x\n- amounts -- y\n"
+    )
+    (home / "one" / "notes.md").write_text("- merkle -- x\n- amounts -- x\n")
+    return home
+
+
+def group_of(doc: dict, opens: str) -> list[str]:
+    """The rows' text of the report group whose name opens so; [] when it isn't there."""
+    return [
+        r["what"]
+        for g in doc["groups"]
+        if (g["name"] or "").startswith(opens)
+        for r in g["rows"]
+    ]
+
+
+BESIDE, UNTRIED = "what your stacks put beside them", "what you have never stacked"
+
+
+def test_next_counts_what_your_stacks_put_beside_what_you_have(box, tmp_path):
+    home = a_home_of_stacks(tmp_path)
+    got = run(
+        "next",
+        "a merkle proof of one row",
+        "--box",
+        str(box),
+        "--stacks",
+        str(home),
+        "--json",
+    )
+    assert got.returncode == 0, got.stderr
+    doc = holds_the_shape(json.loads(got.stdout), 0)
+    assert doc["said"].startswith(
+        "1 of 1 your stacks put beside these 1 steps, from 4 stacks in "
+    )
+    assert group_of(doc, "you have") == ["merkle"]
+    (row,) = group_of(doc, BESIDE)
+    assert row.startswith("todo: ") and row.endswith("with merkle in 3 of 3")
+    beside = " ".join(group_of(doc, BESIDE))
+    assert "amounts" not in beside, (
+        "a file in a pile, or not called a stack, is no stack of yours"
+    )
+    assert "people" not in beside and "duplicates" not in beside, (
+        "beside it once is not a habit"
+    )
+
+
+def test_next_starts_from_the_stack_you_sealed_for_these_words(box, tmp_path):
+    home = a_home_of_stacks(tmp_path)
+    seal_all(box, proposed(box, "email=mail", sentence="my email"))
+    doc = json.loads(
+        run(
+            "next", "my email", "--box", str(box), "--stacks", str(home), "--json"
+        ).stdout
+    )
+    assert group_of(doc, BESIDE) == [], "mail sits beside people in one stack only"
+    for d in ("five", "six"):
+        (home / d).mkdir()
+        (home / d / "stack.md").write_text("- mail -- x\n- people -- x\n- todo -- x\n")
+    doc = json.loads(
+        run(
+            "next", "my email", "--box", str(box), "--stacks", str(home), "--json"
+        ).stdout
+    )
+    whats = group_of(doc, BESIDE)
+    assert [w.split(":")[0] for w in whats] == ["people"], (
+        "todo is beside mail in 2 of 3, but in 5 of your 7 stacks: beside everything says nothing"
+    )
+    assert whats[0].endswith("with mail in 3 of 3")
+
+
+def test_next_offers_what_you_never_stacked_and_the_catalogue_puts_near(box, tmp_path):
+    """Counting can only offer what you have done; the search gives the rest a first chance."""
+    home = a_home_of_stacks(tmp_path)
+    seal_all(box, proposed(box, "email=mail", sentence="my email"))
+    doc = json.loads(
+        run(
+            "next", "my email", "--box", str(box), "--stacks", str(home), "--json"
+        ).stdout
+    )
+    fresh = [w.split(":")[0] for w in group_of(doc, UNTRIED)]
+    assert fresh and "apple-mail" in fresh, (
+        "near mail by its own card, and in no stack of yours"
+    )
+    stacked = {"merkle", "todo", "people", "duplicates", "mail"}
+    assert not stacked & set(fresh), "a card any stack of yours holds is not untried"
+    assert all("near " in w for w in group_of(doc, UNTRIED)), (
+        "each says what it is near"
+    )
+    assert " you have never stacked and the catalogue puts near" in doc["said"]
+    (home / "seven").mkdir()
+    (home / "seven" / "stack.md").write_text("- apple-mail -- x\n- todo -- x\n")
+    doc = json.loads(
+        run(
+            "next", "my email", "--box", str(box), "--stacks", str(home), "--json"
+        ).stdout
+    )
+    assert "apple-mail" not in [w.split(":")[0] for w in group_of(doc, UNTRIED)], (
+        "stacked once, it's tried"
+    )
+
+
+def test_next_does_not_look_beside_a_default(box, tmp_path):
+    home = a_home_of_stacks(tmp_path)
+    mine = with_defaults(tmp_path, "todo  open items\n")
+    plain = json.loads(run("next", "a merkle proof of one row", "--box", str(box), "--stacks", str(home), "--json").stdout)  # fmt: skip
+    withd = json.loads(run("next", "a merkle proof of one row", "--box", str(box), "--stacks", str(home), *mine, "--json").stdout)  # fmt: skip
+    assert group_of(withd, "you have") == ["merkle", "todo"]
+    assert not any("near todo" in w for w in group_of(withd, UNTRIED)), (
+        "a default suits any folder: what is near it says nothing of the want"
+    )
+    assert set(group_of(withd, UNTRIED)) <= set(group_of(plain, UNTRIED))
+
+
+def test_next_writes_nothing_and_refuses_a_folder_that_isnt_there(box, tmp_path):
+    before = len(rows(box))
+    home = a_home_of_stacks(tmp_path)
+    assert (
+        run("next", NONSENSE, "--box", str(box), "--stacks", str(home)).returncode == 0
+    )
+    got = run("next", "my email", "--box", str(box), "--stacks", str(tmp_path / "gone"))
+    assert got.returncode == 2 and "isn't a folder of stacks" in got.stderr
+    assert len(rows(box)) == before

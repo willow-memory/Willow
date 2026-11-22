@@ -31,12 +31,24 @@ so.
 --to FOLDER keeps the run as it happens, for following while it goes and for
 reading after: `00-stack.txt` gets a line as each step starts and a line as it
 ends (its exit code, and how many lines it made), and each step's output is
-`NN-NAME.txt`, NN its place in the stack file. A step that prints as it goes
-is written as it prints; a step asked for a report is written once, when its
-report is whole, and its report is kept as data too, in `reports/NN-NAME.json`,
-for a page to draw (browse's --run). FOLDER must be there and empty: a run is one folder, and a
-second run in it would read as part of the first. Without --to nothing is
-kept but the page, as before.
+`words/NN-NAME.txt`, NN its place in the stack file. A step that prints as it
+goes is written as it prints; a step asked for a report is written once, when
+its report is whole, and its report is kept as data too, in
+`reports/NN-NAME.json`, for a page to draw (browse's --run). FOLDER must be
+there and empty: a run is one folder, and a second run in it would read as
+part of the first. Without --to nothing is kept but the page, as before.
+
+What a person opens is each step's page, `NN-NAME.md`, in the run's own
+folder, written when the step ends: the step's report as markdown. Its
+headings are made from what the run already knows: the step's place and
+name, its card's line, the pool it is in, what the stack file calls itself
+(its first `#` line), the `#` lines the stack file says above the step, how
+it was asked, and what it said. A report is then its groups as headings and
+its rows as a list; anything else is what the step printed, fenced. The
+words folder holds what each step printed, exactly: that is what `{NN}`
+hands a later step, what --resume reads back, and what the add-ons that read
+a run take in. A run kept before there was a words folder has its words in
+the run's own folder, and is read and resumed as it is.
 
 --resume goes on with the run that is in FOLDER, one that was cut off or one
 whose stack has had steps added. From the top of the stack, each step the
@@ -209,6 +221,7 @@ def mark(name: str, args: list[str]) -> str:
 #: `{03}` or `{03.json}` in a step's args: an earlier step's kept output
 HANDS = re.compile(r"\{(\d+)(\.json)?\}")
 RUN = "{run}"  # the kept run's own folder, for a step that writes a file
+WORDS = "words"  # the folder in a kept run that holds what each step printed
 
 
 def hands(args: list[str]) -> list[tuple[int, bool]]:
@@ -317,13 +330,40 @@ class Run:
         with open(self.log, "a", encoding="utf-8") as f:
             f.write(line + "\n")
 
+    def stem(self, n: int, name: str) -> str:
+        """A step's name in the run: its place in the stack file, then it."""
+        return f"{n:0{self.width}d}-{name}"
+
     def file(self, n: int, name: str) -> Path:
-        return self.folder / f"{n:0{self.width}d}-{name}.txt"
+        """Where the words a step prints are kept, exactly as printed: in the
+        run's words folder, so the run's own folder holds pages to read."""
+        return self.folder.joinpath(WORDS, self.stem(n, name) + ".txt")
+
+    def words(self, n: int, name: str) -> Path:
+        """Where a step's words are read from: the words folder, or the
+        run's own folder in a run kept before it had one."""
+        new = self.file(n, name)
+        old = self.folder.joinpath(new.name)
+        return old if old.is_file() and not new.is_file() else new
 
     def data(self, n: int, name: str) -> Path:
         """Where a report step's report is kept as data, for a page to draw:
         in a folder of its own, so what follows the run reads words only."""
         return self.folder / "reports" / f"{n:0{self.width}d}-{name}.json"
+
+    def page(self, n: int, name: str) -> Path:
+        """Where a step's page is kept, in the run's own folder: its report
+        as markdown, headed, to be read."""
+        return self.folder.joinpath(self.stem(n, name) + ".md")
+
+    def report(self, n: int, name: str) -> dict | None:
+        """A report step's report as it was kept as data, or None."""
+        try:
+            doc = json.loads(self.data(n, name).read_text(encoding="utf-8"))
+            report_text(doc)  # a report in the one shape, or not one
+            return doc
+        except (OSError, ValueError, KeyError, TypeError):
+            return None
 
     def keep_report(self, n: int, name: str, doc: dict | None) -> None:
         """The step's report as JSON beside its words, or nothing there when
@@ -347,7 +387,7 @@ class Run:
         if was["fed"] is not None and was["fed"] != fed(args, box):
             return None
         try:
-            text = self.file(n, name).read_text(encoding="utf-8", errors="replace")
+            text = self.words(n, name).read_text(encoding="utf-8", errors="replace")
         except OSError:
             return None
         return {**was, "out": text.rstrip()}
@@ -360,7 +400,7 @@ class Run:
         def path(m) -> str:
             n = int(m.group(1))
             name = flat[n - 1][0]
-            p = self.data(n, name) if m.group(2) else self.file(n, name)
+            p = self.data(n, name) if m.group(2) else self.words(n, name)
             if not p.is_file() or not p.stat().st_size:
                 missing.append(f"step {n} ({name})")
             return str(p)
@@ -369,12 +409,15 @@ class Run:
         return ([], missing[0]) if missing else (filled, "")
 
     def start(self, n: int, name: str, args: list[str], box: str) -> Path:
+        """The step's start said in the log; where its words are to go."""
         given = fed(args, box)
         self.say(
             f"{n:0{self.width}d} {name}: started ({mark(name, args)}"
             f"{', fed ' + given if given else ''})"
         )
-        return self.file(n, name)
+        live = self.file(n, name)
+        live.parent.mkdir(exist_ok=True)
+        return live
 
     def end(self, n: int, name: str, code: int, out: str, size: int, note: str, flagged: bool) -> None:  # fmt: skip
         """`size` is said when it isn't the lines (a report weighs its rows),
@@ -400,6 +443,102 @@ def prints_a_report(script: Path) -> bool:
         head
         and re.search(r"^output:(?:.*,)?\s*report\s*(?:,.*)?$", head.group(1), re.M)
     )
+
+
+def card_line(script: Path) -> str:
+    """The one line the step's card says of it, or "" with no card or line."""
+    try:
+        card = (script.parent / "README.md").read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    head = re.search(r"<!--\s*willow-addon\s*\n(.*?)-->", card, re.S)
+    line = head and re.search(r"^line:[ \t]*(.+)$", head.group(1), re.M)
+    return line.group(1).strip() if line else ""
+
+
+def notes(text: str) -> tuple[str, dict[int, list[str]]]:
+    """(what a stack file calls itself, what it says above each step): its
+    first `#` line, and for each step, by its place, the lines written since
+    the pool's heading or the step before it: `#` lines, and plain prose,
+    which is how a stack of wants is written (`Want 3: "…"`, then why this
+    card answers it, then the step). A run skips them all (parse_stack); a
+    step's page is headed with them, since they are where the person said
+    why the step is there. What is written above the first pool is the
+    stack's own introduction, and is no step's."""
+    title, above, held, n, pooled = "", {}, [], 0, False
+    for raw in text.splitlines():
+        line = raw.strip()
+        if line.startswith("##"):
+            pooled, held = True, []
+        elif line.startswith("#"):
+            words = line.lstrip("#").strip()
+            if not pooled:
+                title = title or words
+            elif words:
+                held.append(words)
+        elif line.startswith("- ") and pooled:
+            n += 1
+            if held:
+                above[n] = held
+            held = []
+        elif line and pooled:
+            held.append(line)
+    return title, above
+
+
+def ticks(text: str, least: int) -> str:
+    """Backticks enough to fence TEXT: one more than its longest run."""
+    longest = max((len(run) for run in re.findall(r"`+", text)), default=0)
+    return "`" * max(least, longest + 1)
+
+
+def as_code(text: str) -> str:
+    """TEXT as markdown code in a line, whatever backticks it holds."""
+    fence = ticks(text, 1)
+    pad = " " if text.startswith("`") or text.endswith("`") else ""
+    return f"{fence}{pad}{text}{pad}{fence}"
+
+
+def step_page(place: str, name: str, args: list[str], pool: str, title: str, above: list[str],
+              line: str, code: int, flagged: bool, out: str, doc: dict | None) -> str:  # fmt: skip
+    """A step's page, as markdown: headed with what the step is (its place
+    and name, its card's line), what it is for (the pool's heading, the
+    stack's own name, the lines the stack file says above it), how it was
+    asked and what it said; then what it found. A report is its groups as
+    headings and its rows as a list; anything else is what the step printed,
+    fenced. It says nothing the run didn't: no date, so the same run gives
+    the same page."""
+    asked = f"{name} -- {' '.join(args)}" if args else name
+    if doc is not None:
+        said = f"{doc['state']}, {doc['said']}"
+    else:
+        lines = mass(out)
+        said = f"{lines} line{'s' * (lines != 1)}"
+    page = [f"# {place} {name}", ""]
+    if line:
+        page += [line, ""]
+    page.append(f"- **for:** {pool}")
+    if title:
+        page.append(f"- **in:** {title}")
+    page.append(f"- **asked:** {as_code(asked)}")
+    page.append(f"- **said:** {said} (exit {code}{', flagged' if flagged else ''})")
+    page.append("")
+    if above:
+        page += [f"> {words}" for words in above] + [""]
+    if doc is None:
+        fence = ticks(out, 3)
+        page += [fence, *(out.splitlines() or ["(nothing)"]), fence]
+    else:
+        for group in doc["groups"]:
+            if group["name"] is not None:
+                page += [f"## {group['name']}", ""]
+            for row in group["rows"]:
+                where = f"{as_code(row['where'])}: " if row["where"] else ""
+                page.append(f"- {where}{row['what']}".rstrip())
+            page.append("")
+        if not any(group["rows"] for group in doc["groups"]):
+            page.append("(nothing)")
+    return "\n".join(page).rstrip() + "\n"
 
 
 def report_text(doc: dict) -> str:
@@ -555,15 +694,18 @@ def main(argv: list[str]) -> int:
     worst, flagged, nsteps = kernel.ALIVE, 0, 0
     fresh = False  # once a step runs, every step after it runs: it may need it
     ran: list = []
+    title, above = notes(text)
     for heading, steps in pools:
         done: list = []
         for idx, (name, args) in enumerate(steps):
             nsteps += 1
+            asked, found = args, None  # as the stack file has it; its report
             report = prints_a_report(scripts[name])  # its rows decide its mass
             was = run.kept(nsteps, name, args, str(box)) if run and not fresh else None
             if was is not None:
                 code, out, size, is_flagged = was["code"], was["out"], was["size"], was["flagged"]  # fmt: skip
                 note = was["note"] if report else step_result(name, code)[1]
+                found = run.report(nsteps, name) if report else None
                 run.say(f"{nsteps:0{run.width}d} {name}: kept from before")
             elif hands(args) and not (given := run.handed(flat, args))[0]:
                 # the step before kept nothing: nothing to take, so not run
@@ -580,22 +722,29 @@ def main(argv: list[str]) -> int:
                     args = [a.replace(RUN, str(run.folder)) for a in args]
                 if report:
                     code, out = run_step(scripts[name], [*args, "--json"], str(box))
-                    doc, out = as_report(code, out)
+                    found, out = as_report(code, out)
                     if live is not None:  # whole, once: its JSON is nothing to follow
                         live.write_text(out + "\n" if out else "", encoding="utf-8")
-                        run.keep_report(nsteps, name, doc)
-                    if doc is None:
+                        run.keep_report(nsteps, name, found)
+                    if found is None:
                         is_flagged, note, size = True, f"exit {code}", mass(out)
                     else:
                         is_flagged = code != kernel.ALIVE
-                        note = doc["state"] if is_flagged else ""
-                        size = 1 + sum(len(g["rows"]) for g in doc["groups"])
+                        note = found["state"] if is_flagged else ""
+                        size = 1 + sum(len(g["rows"]) for g in found["groups"])
                 else:
                     code, out = run_step(scripts[name], args, str(box), live)
                     is_flagged, note = step_result(name, code)
                     size = mass(out)
                 if run:
                     run.end(nsteps, name, code, out, size, note if report else "", is_flagged)  # fmt: skip
+            if run:
+                run.page(nsteps, name).write_text(
+                    step_page(f"{nsteps:0{run.width}d}", name, asked, heading, title,
+                              above.get(nsteps, []), card_line(scripts[name]), code,
+                              is_flagged, out, found),
+                    encoding="utf-8",
+                )  # fmt: skip
             done.append((size, idx, name, args, code, out, note))
             if is_flagged:
                 flagged += 1

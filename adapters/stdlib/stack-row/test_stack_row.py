@@ -156,6 +156,24 @@ def test_the_log_is_read_as_stack_writes_it():
     assert stack_row.said(steps) == "3 steps (2 clean, 0 ended otherwise, 1 not run)"
 
 
+def test_a_steps_words_are_hashed_from_the_runs_words_folder(tmp_path):
+    (tmp_path / "00-stack.txt").write_text(
+        "01 a: started (11111111)\n01 a: exit 0, 1 line\n"
+        "02 b: started (22222222)\n02 b: exit 0, 1 line\n"
+    )
+    there = tmp_path.joinpath("words")
+    there.mkdir()
+    there.joinpath("01-a.txt").write_text("its words\n")
+    tmp_path.joinpath("01-a.txt").write_text("not these\n")
+    tmp_path.joinpath("01-a.md").write_text("# 01 a\n\nits page, never hashed\n")
+    # a run from before the folder: step 02's words are in the run's own
+    tmp_path.joinpath("02-b.txt").write_text("older words\n")
+    assert [s["sha256"] for s in stack_row.steps_of(tmp_path)] == [
+        hashlib.sha256(b"its words\n").hexdigest(),
+        hashlib.sha256(b"older words\n").hexdigest(),
+    ]
+
+
 def test_a_run_with_no_step_ended_writes_nothing_and_ends_42(tmp_path):
     box = box_in(tmp_path)
     folder = a_run(tmp_path, "01 todo: started (aaaaaaaa)\n", {})

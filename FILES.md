@@ -1125,6 +1125,10 @@ willow/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
 │   │   │   └── README.md
+│   │   ├── retire/
+│   │   │   ├── retire.py     propose setting aside an approved answer that no longer holds; it's aside only once you seal that
+│   │   │   ├── test_retire.py
+│   │   │   └── README.md     its card
 │   │   ├── session-seal/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
 │   │   │   ├── test_session_seal.py
@@ -1706,6 +1710,10 @@ willow/
 │   │   │   ├── play_tarot.py a seeded tarot draw on the record, replayable by anyone with it
 │   │   │   ├── test_play_tarot.py
 │   │   │   └── README.md     its card
+│   │   ├── table/
+│   │   │   ├── table.py      one way to sit at any table on the record
+│   │   │   ├── test_table.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: For maintainers: What runs on your page
@@ -1916,6 +1924,7 @@ willow/
 │   │   │   ├── requirements-floor.txt  forge-play at its floor, also tested
 │   │   │   ├── suggest.py    a sentence in, the add-ons it names or means out, as a report and as a plan the Forge resolves
 │   │   │   ├── test_suggest.py
+│   │   │   ├── defaults.txt
 │   │   │   └── README.md
 │   │   ├── in-process/
 │   │   │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
@@ -1930,17 +1939,17 @@ willow/
 │   │   │   ├── requirements-floor.txt  kartikeya at its floor, also tested
 │   │   │   ├── test_kart.py  the sandbox probed from inside, the seals at both doors, and the Johnson folders
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from latent/
+
+```
 │   │   ├── latent/
 │   │   │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
 │   │   │   ├── requirements.txt  numpy, pinned
 │   │   │   ├── requirements-floor.txt  numpy at its floor, also tested
 │   │   │   ├── test_latent.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from llm-cli/
-
-```
 │   │   ├── llm-cli/
 │   │   │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
 │   │   │   ├── requirements.txt  llm, pinned
@@ -1989,17 +1998,17 @@ willow/
 │   │   │   ├── requirements-floor.txt  Pillow at its floor, also tested
 │   │   │   ├── test_photos.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from record-sql/
+
+```
 │   │   ├── record-sql/
 │   │   │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
 │   │   │   ├── requirements.txt  duckdb, pinned
 │   │   │   ├── requirements-floor.txt  duckdb at its floor, also tested
 │   │   │   ├── test_record_sql.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from ripgrep/
-
-```
 │   │   ├── ripgrep/
 │   │   │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
 │   │   │   ├── requirements.txt  ripgrep, pinned
@@ -2047,17 +2056,17 @@ willow/
 │   │   │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
 │   │   │   ├── test_static_search.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from stems/
+
+```
 │   │   ├── stems/
 │   │   │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
 │   │   │   ├── requirements.txt  snowballstemmer, pinned
 │   │   │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
 │   │   │   ├── test_stems.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from wake-gate/
-
-```
 │   │   ├── wake-gate/
 │   │   │   ├── LICENSE-openWakeWord
 │   │   │   ├── LICENSE-willow-mcp

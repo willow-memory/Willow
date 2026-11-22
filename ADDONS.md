@@ -1286,6 +1286,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="restore-drill"></a>[**restore-drill**](adapters/stdlib/restore-drill/) \
   A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it. \
   Uses backup. *new* `no-install` `offline` `backup` `zip` · near: backup, diverge, ci
+- <a id="retire"></a>[**retire**](adapters/stdlib/retire/) \
+  Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
+  *bot* `no-install` `offline` `aside` · near: assistant-scores, stale-answers, approved-only
 - <a id="session-seal"></a>[**session-seal**](adapters/stdlib/session-seal/) \
   One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. \
   *bot* `no-install` `offline` `end` · near: rules, abbreviations, stack-row
@@ -1302,7 +1305,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet, b to n
+#### Tools you run yourself: ideas, not built yet, b to m
 
 - <a id="before-copy"></a>**before-copy** (idea) \
   A file beside its dated before-copy (plan.py.pre-2026-09-30, notes.md.bak) side by side: what changed since the copy was made. \
@@ -1337,13 +1340,13 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="model-recall"></a>**model-recall** (idea) \
   Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. \
   *new* `no-install` `offline` `suggested` `second` · near: openai-compatible, model-exam, sort-ask
+
+#### Tools you run yourself: ideas, not built yet, n to y
+
 - <a id="notary"></a>**notary** (idea) \
   The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. \
   Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: opentimestamps, persona-card,
   three-two-one
-
-#### Tools you run yourself: ideas, not built yet, o to y
-
 - <a id="opentimestamps"></a>**opentimestamps** (idea) \
   The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. \
   Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: notary, merkle, three-two-one
@@ -1365,9 +1368,6 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. \
   Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `forge` · near:
   repro, git-notes, provenance
-- <a id="retire"></a>**retire** (idea) \
-  Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
-  *bot* `no-install` `offline` `aside` · near: assistant-scores, stale-answers, approved-only
 - <a id="sheet-drift"></a>**sheet-drift** (idea) \
   A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side. \
   *new* `no-install` `offline` `between` `sheets` · near: pair-drift, contradictions, second-opinion
@@ -2007,14 +2007,14 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Your record as a Gource film: every question, approval and miss growing like a tree. \
   Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `film` · near: bench, family-tree, vectors
 
-### Tools you run yourself
+### Tools you run yourself, d to p
 
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` · near: play-quiz, random-passage, stack-row
 - <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
-  Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, game-master
+  Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, table
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-odds, play-checkers
@@ -2036,6 +2036,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-crazy-eights"></a>[**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
   *new* `no-install` `offline` `play` `rules` · near: play-hearts, play-liars-dice, play-tarot
+
+#### Tools you run yourself, p to t
+
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
   *bot* `no-install` `offline` `play` `dice` · near: play-dice5e, play-liars-dice, play-backgammon
@@ -2063,6 +2066,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-tarot"></a>[**play-tarot**](adapters/stdlib/play-tarot/) \
   A seeded tarot draw on the record, replayable by anyone with the seed. \
   *new* `no-install` `offline` `play` `seeded` · near: play-hearts, play-crazy-eights, play-checkers
+- <a id="table"></a>[**table**](adapters/stdlib/table/) \
+  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
+  *new* `no-install` `offline` `play` `game` · near: game-baselines, play-checkers, play-catgrid
 
 #### Tools you run yourself: ideas, not built yet, a to p
 
@@ -2111,12 +2117,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-fight5e"></a>**play-fight5e** (idea) \
   Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
   *new* `no-install` `offline` `rolls` `play` · near: play-dice5e, play-dice, play-tarot
-- <a id="play-hanoi"></a>**play-hanoi** (idea) \
-  Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
-  *new* `no-install` `offline` `play` `move` · near: play-reversi, tic-tac-toe, play-dice
 
 #### Tools you run yourself: ideas, not built yet, p to w
 
+- <a id="play-hanoi"></a>**play-hanoi** (idea) \
+  Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
+  *new* `no-install` `offline` `play` `move` · near: play-reversi, tic-tac-toe, play-dice
 - <a id="play-lunatic"></a>**play-lunatic** (idea) \
   The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. \
   Needs Skyfield; MIT. *new* `needs-install` `offline` `play` `moon` · near: play-hearts, play-dice5e, typos
@@ -2145,9 +2151,6 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="spurious"></a>**spurious** (idea) \
   Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. \
   *new* `no-install` `offline` `front` `join` · near: front-page, ci-why, readme
-- <a id="table"></a>**table** (idea) \
-  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
-  *new* `no-install` `offline` `play` `game` · near: game-baselines, play-checkers, play-catgrid
 - <a id="tic-tac-toe"></a>**tic-tac-toe** (idea) \
   Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. \
   *new* `no-install` `offline` `play` `move` · near: play-reversi, play-nim, play-checkers

@@ -183,6 +183,14 @@ ELSEWHERE = {
         ".ci-record/": "made by `ci.py run`, ignored by git",
         ".ci-record.key": "made by `ci.py run`, ignored by git",
     },
+    "adapters/stdlib/table/README.md": {
+        "table-words.txt": "the host's own file beside a table's box, made by them",
+        "stack.md": "the folder's own stack beside the box, the host's",
+        "prep.md": "a table's prep sheet beside the box, written when the host says yes",
+        "bites/": "a table's runs of what a bite asked, made beside the box",
+        "bites/001": "the first of a table's bite runs, made beside the box",
+        "bites/002": "the second of a table's bite runs, made beside the box",
+    },
     "adapters/stdlib/random-passage/README.md": {
         "sha256-stream/v1": "the name of willow-bot's stream generator, not a file",
     },

@@ -340,7 +340,7 @@ def test_a_stack_really_run_is_said_step_by_step_with_its_flagged_steps_first(tm
     assert got.stdout == (
         "handover: populated, proj: 1 step flagged, 1 stack run\n"
         "## flagged\n"
-        "  work.md step 04  projects: refused: nowhere isn't a folder (mine/run-1/04-projects.txt)\n"
+        "  work.md step 04  projects: refused: nowhere isn't a folder (mine/run-1/04-projects.md)\n"
         "## last runs\n"
         "  work.md          mine/run-1: 4 steps, 1 flagged\n"
         "  work.md step 01  projects: empty, no folder under home/proj/box holds a record\n"

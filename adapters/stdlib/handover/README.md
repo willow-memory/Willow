@@ -3,7 +3,7 @@ section: Keeping track
 line: Where one project stands, to hand on: what waits on you, what each stack's last run said step by step, and where each line can be checked.
 source: new
 added: 2026-11-10
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: tools
@@ -20,7 +20,7 @@ Where one project stands, to hand on: what waits on you, what each stack's last 
     ## waits on you
       box-full         10 suggestions waiting, of 24 rows
     ## flagged
-      work.md step 03  sort: populated, 435 files: 271 sorted into 8 categories (mine/run-work-2/03-sort.txt)
+      work.md step 03  sort: populated, 435 files: 271 sorted into 8 categories (mine/run-work-2/03-sort.md)
     ## last runs
       mend.md          mine/run-mend-4: 4 steps, nothing flagged
       mend.md step 04  batch-glance: populated, 18 questions: 9 held whole, 9 in part, 0 found nothing
