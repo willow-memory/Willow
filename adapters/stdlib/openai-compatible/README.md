@@ -3,7 +3,7 @@ section: Assistants
 line: Suggestions from any OpenAI-compatible endpoint you choose (LM Studio, vLLM, LocalAI, OpenRouter, Groq, Mistral...), citing your passages.
 source: new
 added: 2026-10-31
-version: 0.1.0
+version: 0.1.1
 writes: record
 network: the endpoint you configure, to ask for suggestions
 role: suggests
@@ -33,8 +33,10 @@ passage under it has nothing to say, and is not given the chance.
 **A reply is a suggestion, never an answer.** It goes to `kernel.py
 propose`, citing the passages its brackets name, and waits there for your
 seal. A reply whose brackets name no served passage is printed and
-proposed to no one. Asked at temperature 0 with a fixed seed, so a server
-that honours them says the same thing twice. It waits up to fifteen
+proposed to no one. Asked at temperature 0 with a fixed seed, which makes
+a server's answers as alike as it can, not the same every time: how many
+requests it batches together, what it has cached, and an update to the
+runtime or the driver can each move an answer. It waits up to fifteen
 minutes for a reply, since a model on a laptop's CPU can be slow.
 
 **Its claim** says who answered, where, at what settings and what it did,

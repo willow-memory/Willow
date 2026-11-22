@@ -318,3 +318,56 @@ def test_with_the_persons_corrections_they_are_sealed_once_with_the_session(tmp_
         run("--box", str(box), "--with", str(tmp_path / "gone.json"), *NOW).returncode
         == 2
     )
+
+
+def test_with_a_log_where_it_ended_is_sealed_and_a_cut_there_is_caught(tmp_path):
+    """--log: a log beside the box, a line a row. Its last line has nothing
+    after it to vouch for it, so where it ended goes in the bundle, pinned by
+    the person's seal; check --log holds the log to that, and only to a
+    sealed session's word."""
+    box = make(tmp_path)
+    log = tmp_path / "box.runtime-sent.jsonl"
+    log.write_text('{"n": 0}\n{"n": 1}\n{"n": 2}\n')
+    kernel("bite", "--box", str(box), "tomatoes sun", *NOW)
+    got = run("--box", str(box), "--log", str(log), *NOW)
+    assert got.returncode == 42, got.stderr
+    subj = waiting_subject(box)
+    prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+    tip = ss.hashlib.sha256(b'{"n": 2}').hexdigest()
+    assert json.loads(prop["data"])["log"] == {"rows": 3, "tip": tip}
+    assert prop["claim"].endswith(", and your log's 3 lines")
+
+    def held() -> tuple[int, dict]:
+        got = run("--box", str(box), "check", "--log", str(log), "--json")
+        doc = json.loads(got.stdout)
+        return got.returncode, doc["groups"][0]["rows"][0]
+
+    assert held()[1]["what"] == "not sealed yet"  # waiting is no one's word yet
+    assert kernel("seal", "--box", str(box), subj, *NOW).returncode == 0
+    code, row = held()
+    assert (code, row) == (
+        0,
+        {"where": "rows 0 to 1: 3 lines", "what": "holds: 0 lines since"},
+    )
+    with log.open("a") as f:
+        f.write('{"n": 3}\n')
+    assert held() == (
+        0,
+        {"where": "rows 0 to 1: 3 lines", "what": "holds: 1 lines since"},
+    )
+    log.write_text('{"n": 0}\n{"n": 1}\n')
+    assert held() == (
+        42,
+        {"where": "rows 0 to 1: 3 lines", "what": "cut short: 2 lines now"},
+    )
+    log.write_text('{"n": 0}\n{"n": 1}\n{"n": 9}\n{"n": 3}\n')
+    assert held() == (
+        42,
+        {"where": "rows 0 to 1: 3 lines", "what": "rewritten at line 2"},
+    )
+    got = run("--box", str(box), "check", "--log", str(log))
+    assert got.returncode == 42
+    assert "; your log: rewritten at line 2" in got.stdout.splitlines()[0]
+    assert run("--box", str(box), "check").returncode == 0  # no --log: as ever
+    assert run("--box", str(box), "--log", str(tmp_path / "gone"), *NOW).returncode == 2
+    assert run("--box", str(box), "--log", "", *NOW).returncode == 2

@@ -1,0 +1,1 @@
+`openai-compatible` 0.1.1 and `model-drift` 0.1.2 no longer say temperature 0 with a fixed seed makes a server answer the same every time: batching, its cache and a runtime or driver update can each move an answer, so `model-drift` says a drift is one to look at, and one that comes back on every run of `again` is the model's

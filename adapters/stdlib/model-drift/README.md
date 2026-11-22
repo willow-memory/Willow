@@ -3,7 +3,7 @@ section: Assistants
 line: Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same.
 source: new
 added: 2026-11-02
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: the endpoint you configure, to ask your questions again
 role: suggests
@@ -59,6 +59,15 @@ only when nothing else moved:
 
 Run `again` when you like: after an update to the runtime, or on a schedule
 of your own.
+
+**A drifted answer is one to look at, not proof the model changed.**
+Temperature 0 and a fixed seed don't make a server answer the same every
+time: how many requests it batches together, what it has cached, and an
+update to the runtime or the driver can each move an answer with the model
+untouched. So before trusting a drift, run `again` more than once: a
+change that comes back the same each time is the model's, one that comes
+and goes is the server's. Freezing on the server and settings you will ask
+at, one request at a time, keeps that noise smallest.
 
 Exit codes, the kernel's: 0 frozen, or no held answer drifted (or the card
 changed, so none is flagged); 42 one drifted, nothing could be asked or

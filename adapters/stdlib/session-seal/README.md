@@ -3,7 +3,7 @@ section: Trust and proof
 line: One seal at the end of a session, over everything asked and approved in it: yes, these were my actions.
 source: bot
 added: 2026-10-24
-version: 0.3.1
+version: 0.4.0
 looks-for: claude-code, index-cache
 writes: record
 network: none
@@ -67,6 +67,23 @@ record, in seconds:
 
 An index that isn't current, or those add-ons not here, and the kernel
 reads the folder, as without one.
+
+**A log beside the box.** A log kept a line a row, each line naming the
+hash of the one before it, shows a cut or an edit anywhere but at its end:
+the last line has no later one to vouch for it. Name it, and where it ended
+goes in the bundle, its lines and the hash of the last, so your seal pins it:
+
+    python adapters/stdlib/session-seal/session_seal.py --box DIR --log FILE
+    python adapters/stdlib/session-seal/session_seal.py --box DIR check --log FILE
+    session-seal: populated, 1 sessions: 1 sealed, 0 waiting, 0 broken; 1 rows since, not yet bundled; your log: holds
+    ## your log
+      rows 0 to 1: 3 lines  holds: 0 lines since
+
+`check --log` holds the log to the last sealed session that names one:
+`holds` (with the lines since), `cut short`, or `rewritten` at the line it
+ended, the last two exit 42. A session waiting on your seal is no one's word
+yet, so until one is sealed it says `not sealed yet`. The log is read for
+its lines' hashes, never its words.
 
 `check` reads each session back: `sealed`, `waiting`, or `broken` when its
 bundle's file no longer hashes to its subject or its rows no longer match
