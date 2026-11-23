@@ -510,6 +510,18 @@ def standing_by(box: Path, ts: str, choice: str, met: list[dict], subject: str, 
             keep_both(box, ts, old, subject, fact)
 
 
+def settle(box: Path, ts: str, subject: str, fact: str, choice: str, met: list[dict]) -> bool:  # fmt: skip
+    """The host's CHOICE over what was brought in ("yes", "no", or at a
+    heads-up "mine", "old", "both"), made the record's by the kernel: a seal
+    or a decline, and what the choice keeps of what it MET. True when the
+    word is kept. The asking, and its words, are the caller's."""
+    kept = choice not in ("no", "old")
+    answer(box, ts, subject, kept)
+    if kept:
+        standing_by(box, ts, choice, met, subject, fact)
+    return kept
+
+
 # ── the forge, asked as a guest: what could answer a want ────────────────────
 def forge(*argv) -> tuple[dict | None, str]:
     """(the forge add-on's report as data, what it said beside it), or (None,
@@ -772,10 +784,7 @@ class Seat:
         if choice == SET_ASIDE:
             print("   " + self.w["aside"])
             return SET_ASIDE
-        kept = choice not in ("no", "old")
-        answer(self.box, self.now, subject, kept)
-        if kept:
-            standing_by(self.box, self.now, choice, met, subject, fact)
+        settle(self.box, self.now, subject, fact, choice, met)
         print("   " + self.said_of(choice))
         return choice
 
