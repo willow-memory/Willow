@@ -1133,7 +1133,7 @@ def what_next(have: list[str], stacks: list[list[str]], by_name: dict, beside: l
     return sorted(out, key=lambda c: (-c["score"], -len(c["beside"]), c["name"]))
 
 
-def untried(have: list[str], stacks: list[list[str]], by_name: dict, sentence: str) -> list[dict] | None:  # fmt: skip
+def untried(have: list[str], stacks: list[list[str]], by_name: dict, sentence: str, asked: list[str] | None = None) -> list[dict] | None:  # fmt: skip
     """The built cards no stack of yours has ever held, that the catalogue's
     own search puts near what you asked for or near a step you have, best
     first: [{name, words, steps}]. `words` is whether it is near your
@@ -1160,7 +1160,7 @@ def untried(have: list[str], stacks: list[list[str]], by_name: dict, sentence: s
         note([f["name"] for f in searched(sentence) or []], None)
     # a default suits any folder, so what is near one says nothing of what you
     # are after: only the steps your words or your picks brought are looked beside
-    base = {n for n, _ in defaults(by_name)[0]}
+    base = {n for n, _ in defaults(by_name)[0]} - set(asked or [])
     for step in have:
         if step in by_name and step not in base:
             note([f["name"] for f in searched(by_name[step].line) or []], step)
@@ -1169,14 +1169,16 @@ def untried(have: list[str], stacks: list[list[str]], by_name: dict, sentence: s
     )
 
 
-def next_report(have: list[str], stacks: list[list[str]], by_name: dict, where: str, sentence: str = "") -> tuple[dict, int]:  # fmt: skip
+def next_report(have: list[str], stacks: list[list[str]], by_name: dict, where: str, sentence: str = "", asked: list[str] | None = None) -> tuple[dict, int]:  # fmt: skip
     """What could go in next, as a report, from two places said apart: what
     your stacks have put beside these steps, and what you have never stacked
     that the catalogue puts near. Exit 0: it offers, it never asks."""
     if not have:
         return report(NAME, "empty", "no steps yet to look beside: say what you want first", []), kernel.ALIVE  # fmt: skip
     base = {n for n, _ in defaults(by_name)[0]}
-    own = [n for n in have if n not in base]  # what the words or the picks brought
+    # what the words or the picks brought. ASKED is the steps the words named:
+    # one of those is looked beside even when it is a default as well
+    own = [n for n in have if n not in base or n in (asked or [])]
     found = what_next(have, stacks, by_name, own or None)
     rows = []
     for c in found[:NEXT_TOP]:
@@ -1192,7 +1194,7 @@ def next_report(have: list[str], stacks: list[list[str]], by_name: dict, where: 
         rows.append(
             (card.where, f"{card.name}: {card.line} ({promises(card)}); {b}{more}")
         )
-    new = untried(have, stacks, by_name, sentence)
+    new = untried(have, stacks, by_name, sentence, asked)
     fresh = []
     for c in (new or [])[:NEXT_TOP]:
         card = by_name[c["name"]]
@@ -1691,6 +1693,7 @@ def main(argv: list[str]) -> int:
             {c.name: c for c in cards.cards},
             a.stacks,
             a.sentence,
+            None if "stack" in out else [s["name"] for s in out["steps"]],
         )
         say(doc, as_json)
         return code

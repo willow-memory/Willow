@@ -1805,6 +1805,21 @@ def test_next_does_not_look_beside_a_default(box, tmp_path):
     assert set(group_of(withd, UNTRIED)) <= set(group_of(plain, UNTRIED))
 
 
+def test_next_looks_beside_a_default_your_words_named(box, tmp_path):
+    """A step the words asked for is looked beside, default or not; the
+    defaults that only ride along are not."""
+    home = a_home_of_stacks(tmp_path)
+    for d in ("five", "six"):
+        (home / d).mkdir()
+        (home / d / "stack.md").write_text("- todo -- x\n- amounts -- x\n")
+    mine = with_defaults(tmp_path, "merkle  a proof\ntodo  open items\n")
+    doc = json.loads(run("next", "a merkle proof of one row", "--box", str(box), "--stacks", str(home), *mine, "--json").stdout)  # fmt: skip
+    assert group_of(doc, "you have") == ["merkle", "todo"]
+    assert "amounts" not in " ".join(group_of(doc, BESIDE)), (
+        "amounts sits with todo, which rode along; the words asked for merkle"
+    )
+
+
 def test_next_writes_nothing_and_refuses_a_folder_that_isnt_there(box, tmp_path):
     before = len(rows(box))
     home = a_home_of_stacks(tmp_path)

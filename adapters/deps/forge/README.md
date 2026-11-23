@@ -129,7 +129,8 @@ have: the steps of the stack you sealed for these words (or, before one is
 sealed, what the words reach), held against every stack file under FOLDER,
 your own. For each card you don't have it counts how often your stacks put
 it beside a step you do. It looks beside the steps your words or picks
-brought, not the defaults, and scores each card by how much more often it
+brought, not the defaults (a default your words named is one your words
+brought, and is looked beside), and scores each card by how much more often it
 sits beside those steps than in your stacks at large, so one that is in
 nearly every stack, and so beside everything, is not offered:
 
@@ -143,7 +144,7 @@ with any of your steps is not offered.
 Counting can only offer what you have already done, so a second group, said
 apart, gives the rest a first chance: built cards that are in none of your
 stacks and that the catalogue's own search puts near your words or near a
-step you have, each saying what it is near. A default is not looked beside:
+step you have, each saying what it is near. A default your words did not name is not looked beside:
 it suits any folder, so what is near it says nothing of what you are after.
 Once you take one and seal it, it is in a stack of yours, and the counting
 knows it. It writes nothing and asks nothing.
