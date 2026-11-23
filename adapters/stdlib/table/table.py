@@ -398,16 +398,18 @@ def stems(text: str) -> set:
     return {kernel.stem(w) for w in contradictions.subject(text)}
 
 
-def meets(box: Path, rows: list[dict], fact: str, subject: str = "") -> list[dict]:
+def meets(box: Path, rows: list[dict], fact: str, subject: str = "", among: list[dict] | None = None) -> list[dict]:  # fmt: skip
     """What the table holds true that FACT is about the same thing as: not
-    itself, not the same words, and not a pair the host called both true."""
+    itself, not the same words, and not a pair the host called both true.
+    AMONG is what stands, each {subject, fact}, for a table that keeps its
+    truths its own way (a game's calls and offers); else this table's own."""
     if contradictions is None:
         return []
     ok = {frozenset(r["facts"]) for r in rows if r["kind"] == BOTH}
     mine = {"stems": stems(fact)}
     return [
         t
-        for t in standing(box, rows)
+        for t in (standing(box, rows) if among is None else among)
         if t["subject"] != subject
         and t["fact"] != fact
         and frozenset((t["fact"], fact)) not in ok

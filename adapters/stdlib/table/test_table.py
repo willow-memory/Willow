@@ -1216,3 +1216,26 @@ def test_a_close_pick_and_a_yes_put_the_want_on_the_sheet_and_run_it(tmp_path):
     assert "Want 1:" in page.read_text() and "it is close" in page.read_text()
     assert "Here is what that found:" in got.stdout, got.stdout
     assert kinds(box).count("seal") == 2 and holds(box)
+
+
+def test_the_heads_up_rule_reads_what_another_table_holds_true(tmp_path):
+    """A table that keeps its truths its own way (a game's calls and offers)
+    hands them in, and the same rule says which a new word is about."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("willow_table_for_test", SCRIPT)
+    table = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(table)
+    box = a_box(tmp_path)
+    old = {"subject": "proposal:a", "fact": "The old mill bridge is washed out."}
+    far = {"subject": "proposal:b", "fact": "Mira keeps bees."}
+    got = table.meets(box, [], "The old mill bridge stands again.", among=[old, far])
+    assert got == [old], "about the same thing: the bridge, and not the bees"
+    both = [{"kind": "table-both", "facts": sorted((old["fact"], "The old mill bridge stands again."))}]  # fmt: skip
+    assert (
+        table.meets(box, both, "The old mill bridge stands again.", among=[old]) == []
+    )
+    assert table.meets(box, [], old["fact"], among=[old]) == [], "the same words"
+    assert table.meets(box, [], "The old mill bridge stands again.") == [], (
+        "with nothing handed in, it reads this table's own, which holds nothing yet"
+    )
