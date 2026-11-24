@@ -1170,13 +1170,13 @@
   },
   "dice-tower": {
    "near": [
-    "play-encounter",
+    "play-fight",
     "play-dice",
-    "play-dice5e"
+    "play-fight5e"
    ],
    "topics": [
-    "dice",
-    "roll"
+    "roll",
+    "dice"
    ]
   },
   "dictate": {
@@ -2546,8 +2546,8 @@
   },
   "lesson-time": {
    "near": [
-    "make-it-so",
     "my-lessons",
+    "make-it-so",
     "test-impact"
    ],
    "topics": [
@@ -3883,32 +3883,32 @@
     "roll"
    ]
   },
-  "play-encounter": {
+  "play-fight": {
    "near": [
+    "play-fight5e",
     "dice-tower",
-    "wake-gate",
-    "pdf"
+    "ripgrep"
    ],
    "topics": [
-    "tower",
-    "dropped"
+    "dice",
+    "tower"
    ]
   },
   "play-fight5e": {
    "near": [
-    "play-dice5e",
-    "play-dice",
-    "play-encounter"
+    "play-fight",
+    "dice-tower",
+    "play-dice5e"
    ],
    "topics": [
     "roll",
-    "replayable"
+    "dice"
    ]
   },
   "play-hanoi": {
    "near": [
+    "play-fight",
     "play-reversi",
-    "play-encounter",
     "tic-tac-toe"
    ],
    "topics": [
@@ -3963,8 +3963,8 @@
   "play-lunatic": {
    "near": [
     "play-hearts",
-    "play-encounter",
-    "play-dice5e"
+    "play-dice5e",
+    "typos"
    ],
    "topics": [
     "moon",
@@ -4072,8 +4072,8 @@
     "model-fit"
    ],
    "topics": [
-    "fit",
-    "lack"
+    "lack",
+    "fit"
    ]
   },
   "port-crates": {
@@ -5779,7 +5779,7 @@
    "near": [
     "dice-tower",
     "email-ask",
-    "bot-venv"
+    "play-fight"
    ],
    "topics": [
     "tower",
@@ -5875,7 +5875,7 @@
    "near": [
     "outdated",
     "advisories",
-    "claim-check"
+    "unpinned"
    ],
    "topics": [
     "dependency",
@@ -5961,8 +5961,8 @@
   "vocab": {
    "near": [
     "oracle-text",
-    "apple-notes",
-    "equations"
+    "equations",
+    "apple-notes"
    ],
    "topics": []
   },
@@ -6434,8 +6434,8 @@
     "cursor-chats"
    ],
    "topics": [
-    "sqlite",
-    "copy"
+    "copy",
+    "sqlite"
    ]
   },
   "x-archive": {

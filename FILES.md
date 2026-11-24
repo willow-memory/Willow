@@ -1989,6 +1989,12 @@ willow/
 │   │   │   ├── requirements-floor.txt  Pillow at its floor, also tested
 │   │   │   ├── test_photos.py
 │   │   │   └── README.md
+│   │   ├── play-fight/
+│   │   │   ├── play_fight.py a fight blow by blow, on dice dropped in the tower, played again from the record to check it. Python 3.10+ (dndwright's)
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── test_play_fight.py
+│   │   │   └── README.md     its card
 ```
 
 #### adapters/deps/, from play-fight5e/
