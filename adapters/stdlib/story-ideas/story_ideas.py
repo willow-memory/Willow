@@ -229,7 +229,7 @@ def main(argv: list[str]) -> int:
     print("\n".join(f"  {p}:{i}  {t}" for p, i, t in promises) or "  No promises made for next time.")  # fmt: skip
     got = subprocess.run([sys.executable, str(SURPRISE), "--box", str(box)], capture_output=True, text=True, check=False)  # fmt: skip
     print("\n## Something you wrote and forgot\n")
-    print("\n".join(f"  {ln}" for ln in got.stdout.rstrip().splitlines()) or "  (nothing long enough to draw)")  # fmt: skip
+    print("\n".join(f"  {ln}" for ln in (got.stdout + got.stderr).rstrip().splitlines()))  # its own words, a draw or why not  # fmt: skip
     return kernel.ALIVE
 
 

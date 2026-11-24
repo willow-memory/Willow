@@ -219,6 +219,10 @@ def test_a_box_with_too_little_in_it_says_so(tmp_path):
     assert got.returncode == 0 and "too little in it yet to deal from" in got.stdout
     assert "Everything the binder sets up has come out" in got.stdout
     assert "No promises made for next time." in got.stdout
+    drawn = got.stdout.split("## Something you wrote and forgot\n")[1]
+    assert (
+        drawn.strip() == "No passage in your folder has 8 words or more."
+    )  # random-passage's own words
 
 
 def test_a_world_file_that_is_not_a_world_is_left_out(b):
