@@ -230,7 +230,7 @@ FACT_TAGS = {
 }
 #: what an add-on may write: the guard in adapters/stdlib/ci/guard holds it
 #: to this while its tests run; a file of the repo may also be named
-WRITES = {"nothing", "record", "to"}
+WRITES = {"nothing", "record", "to", "beside"}
 SOURCES = {"bot", "box", "new"}
 #: where an add-on's idea or code was taken from, beside `source`: how it was
 #: taken (its shape rebuilt, its code ported, or the project depended on), the
@@ -359,7 +359,7 @@ def addons() -> list[dict]:
         writes = [w.strip() for w in a["writes"].split(",")]
         bad = [w for w in writes if w not in WRITES and not any(ROOT.glob(w))]
         if bad or ("nothing" in writes and len(writes) > 1):
-            raise Refused(f"{where}: writes is nothing, or any of record, to, or a file of the repo: {a['writes']!r}")  # fmt: skip
+            raise Refused(f"{where}: writes is nothing, or any of record, to, beside, or a file of the repo: {a['writes']!r}")  # fmt: skip
         if not a["network"].strip():
             raise Refused(f"{where}: network is none, loopback, or what it reaches and why")  # fmt: skip
         ver = VERSION.fullmatch(str(a["version"]))

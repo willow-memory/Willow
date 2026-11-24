@@ -72,6 +72,9 @@ and raises the moment it breaks one:
 - **`to` means under the path in `--to` on the command line.** It reads
   `sys.argv`, so a test that calls `main()` in-process passes `--to` there
   too, or the write is judged as outside it.
+- **`beside` means right next to a box**: a file or folder in the folder
+  that holds it (a table's sheets, kept by its box), never in the box, an
+  original or the repo, and nothing deeper.
 - **Making a missing folder is a write.** An add-on that creates the parent
   of its `--to` file has written outside `to`; refuse a missing folder
   instead.

@@ -5,7 +5,7 @@ source: new
 added: 2026-11-21
 version: 0.1.0
 looks-for: contradictions, session-seal, stack, forge
-writes: record, to
+writes: record, to, beside
 network: none
 role: tools
 -->

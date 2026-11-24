@@ -28,6 +28,10 @@ and an add-on is held to its card's header:
                              made itself with tempfile
     writes: record           may write the record, only through the kernel
     writes: to               writes only under the path given to --to
+    writes: beside           writes right beside a box: a file or folder
+                             in the folder that holds the box, never in the
+                             box, an original or the repo (a table's own
+                             sheets, kept next to its box)
     writes: README.md        writes that one file of the repo; a pattern,
                              such as adapters/*/*/README.md, matches one
                              path segment per segment
@@ -194,6 +198,16 @@ def box_of(path: str) -> str | None:
         d = up
 
 
+def beside_a_box(path: str) -> bool:
+    """Whether a path is right beside a box: the folder it is in holds a box
+    (a folder of its own with kernel.json) next to it."""
+    try:
+        with os.scandir(os.path.dirname(path)) as it:
+            return any(e.is_dir() and os.path.isfile(os.path.join(e.path, "kernel.json")) for e in it)  # fmt: skip
+    except OSError:
+        return False
+
+
 def box_fields(box: str | None) -> dict:
     if not box:
         return {}
@@ -258,6 +272,8 @@ def judge_write(addon: str, via_kernel: bool, path: str) -> None:
     if under(path, ROOT) and any(
         repo_file(os.path.relpath(path, ROOT), w) for w in writes
     ):
+        return
+    if "beside" in writes and not under(path, ROOT) and beside_a_box(path):
         return
     if any(under(path, s) for s in _scratch):
         return  # its own scratch, made with tempfile
