@@ -2018,6 +2018,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-odds, play-checkers
+- <a id="lines-veils"></a>[**lines-veils**](adapters/stdlib/lines-veils/) \
+  What never happens at your table and what happens off-screen, checked before a part is read; the X-card kept with no one named. \
+  From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline` `screen` · near:
+  backup, pile-store, skim
 - <a id="oracle-text"></a>[**oracle-text**](adapters/stdlib/oracle-text/) \
   Readings written by a Tracery grammar, every branch picked by the seeded stream, so each one can be replayed. \
   Uses play-tarot. *new* `no-install` `offline` `seeded` `branch` · near: hook-replay, restack, ink-story

@@ -764,6 +764,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "lending": ("lending.py", ["--box", "{box}"]),
     "lesson-time": ("lesson_time.py", ["--box", "{box}"]),
     "licenses": ("licenses.py", ["--box", "{box}"]),
+    "lines-veils": ("lines_veils.py", ["--page", "tomatoes", "show"]),
     "livestock": ("livestock.py", ["--box", "{box}"]),
     "llms-txt": ("llms_txt.py", ["write", "--from", "{pile}", "--to", "{tmp}/llms.txt"]),
     "local-model": ("local_model.py", ["ask", "--box", "{box}", "--url", "http://127.0.0.1:9/v1",
