@@ -1989,17 +1989,31 @@ willow/
 │   │   │   ├── requirements-floor.txt  Pillow at its floor, also tested
 │   │   │   ├── test_photos.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from play-fight5e/
+
+```
+│   │   ├── play-fight5e/
+│   │   │   ├── board.py      a fight drawn from its rows: who's hurt, who's down, whose turn
+│   │   │   ├── combat.py     aetheris5e's 5e combat engine: saves, resistances, specials
+│   │   │   ├── dice5e.py     5e dice notation over a generator handed in, the dice library its authority
+│   │   │   ├── LICENSE-die-namic-games  the licence of the code that came from Die-Namic
+│   │   │   ├── LICENSE-willow-bot  the licence of the dice seam that came from willow-bot
+│   │   │   ├── play_fight5e.py  the encounters fought on the tower's dice, every blow a row
+│   │   │   ├── requirements.txt  dice, pinned
+│   │   │   ├── requirements-floor.txt  dice at its floor, also tested
+│   │   │   ├── statblocks.py  the Aetheris setting's stat blocks, pregens and encounters
+│   │   │   ├── test_board.py
+│   │   │   ├── test_combat.py
+│   │   │   ├── test_play_fight5e.py
+│   │   │   └── README.md     its card
 │   │   ├── record-sql/
 │   │   │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
 │   │   │   ├── requirements.txt  duckdb, pinned
 │   │   │   ├── requirements-floor.txt  duckdb at its floor, also tested
 │   │   │   ├── test_record_sql.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from ripgrep/
-
-```
 │   │   ├── ripgrep/
 │   │   │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
 │   │   │   ├── requirements.txt  ripgrep, pinned
@@ -2026,6 +2040,11 @@ willow/
 │   │   │   ├── requirements-floor.txt  openpyxl at its floor, also tested
 │   │   │   ├── test_sheets.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from star-system/
+
+```
 │   │   ├── star-system/
 │   │   │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
 │   │   │   ├── requirements.txt  numpy, pinned
@@ -2053,11 +2072,6 @@ willow/
 │   │   │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
 │   │   │   ├── test_stems.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from wake-gate/
-
-```
 │   │   ├── wake-gate/
 │   │   │   ├── LICENSE-openWakeWord
 │   │   │   ├── LICENSE-willow-mcp
