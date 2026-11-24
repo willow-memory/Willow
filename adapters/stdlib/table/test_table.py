@@ -1218,6 +1218,7 @@ def test_a_close_pick_and_a_yes_put_the_want_on_the_sheet_and_run_it(tmp_path):
     assert kinds(box).count("seal") == 2 and holds(box)
 
 
+@needs_rule
 def test_the_heads_up_rule_reads_what_another_table_holds_true(tmp_path):
     """A table that keeps its truths its own way (a game's calls and offers)
     hands them in, and the same rule says which a new word is about."""
