@@ -551,7 +551,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   `online` `transcribed` `audio` · near: transcripts, wake-gate, writefreely
 - <a id="writefreely"></a>**writefreely** (idea) \
   WriteFreely posts, from its export or a copy of its SQLite database, as dated text. \
-  *new* `no-install` `offline` `copy` `sqlite` · near: sqlite, bookmarks, cursor-chats
+  *new* `no-install` `offline` `sqlite` `copy` · near: sqlite, bookmarks, cursor-chats
 - <a id="youtube-studio"></a>**youtube-studio** (idea) \
   YouTube Studio's exported CSVs: each video's views, watch time and subscribers gained as dated lines. \
   *new* `no-install` `offline` `views` `csv` · near: tiktok-studio, reddit-pro, takeout
@@ -873,7 +873,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *new* `no-install` `offline` `pairs` `language` · near: why-not, stems, latent
 - <a id="vocab"></a>**vocab** (idea) \
   The words you're learning, from your notes and the texts you read, with where you met each one. \
-  *new* `no-install` `offline` · near: oracle-text, equations, apple-notes
+  *new* `no-install` `offline` · near: oracle-text, apple-notes, equations
 - <a id="words-hi"></a>**words-hi** (idea) \
   Hindi common words ('और', 'है'). \
   *new* `no-install` `offline` `common` · near: words-ja, words-zh, words-it
@@ -1417,7 +1417,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Uses openai-compatible. *new* `no-install` `offline` `left` `log` · near: gaps, play-hearts, model-sentence
 - <a id="typosquat"></a>[**typosquat**](adapters/stdlib/typosquat/) \
   Dependency names a letter off from a popular one (reqeusts, lodahs), checked against a list of top packages you downloaded. \
-  Uses advisories. *new* `no-install` `offline` `dependency` `package` · near: outdated, advisories, unpinned
+  Uses advisories. *new* `no-install` `offline` `dependency` `package` · near: outdated, advisories, claim-check
 
 #### What runs on your page: ideas, not built yet
 
@@ -1596,7 +1596,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *bot* `no-install` `offline` `jeles` `nestor` · near: jeles, first-mention, nestor
 - <a id="pool-fit"></a>**pool-fit** (idea) \
   How many passages a model on this machine can be handed at once, measured on your own questions, before its answers add what they lack. \
-  Reaches this machine only. *new* `no-install` `this-machine` `lack` `fit` · near: model-sentence, model-exam, model-fit
+  Reaches this machine only. *new* `no-install` `this-machine` `fit` `lack` · near: model-sentence, model-exam, model-fit
 - <a id="schema-check"></a>**schema-check** (idea) \
   A model's answer held to a JSON schema before anything reads it, and a reply that doesn't fit recorded as a result, not lost as an error. \
   *box* `no-install` `offline` `fit` `result` · near: weights-pin, pool-fit, model-fit
@@ -2014,7 +2014,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `daily` · near: play-quiz, random-passage, stack-row
 - <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
-  Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-fight, play-dice, play-fight5e
+  Uses play-dice, play-dice5e. *new* `no-install` `offline` `dice` `roll` · near: play-fight, play-dice, play-dice5e
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-odds, play-checkers
@@ -2049,13 +2049,13 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it. \
   Needs dndwright, which brings pydantic and PyYAML; MIT. Uses dice-tower. From: dep of [sligara7/dndwright](https://github.com/sligara7/dndwright), MIT;
   shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `needs-install` `offline` `dice` `tower` · near:
-  play-fight5e, dice-tower, ripgrep
+  dice-tower, ripgrep, play-dice
 - <a id="play-fight5e"></a>[**play-fight5e**](adapters/deps/play-fight5e/) \
   Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
   Needs dice, which brings pyparsing; MIT. Uses dice-tower, play-dice, play-dice5e. From: code of
   [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0; code of
-  [willow-memory/willow-bot](https://github.com/willow-memory/willow-bot), Apache-2.0. *new* `needs-install` `offline` `roll` `dice` · near: play-fight,
-  dice-tower, play-dice5e
+  [willow-memory/willow-bot](https://github.com/willow-memory/willow-bot), Apache-2.0. *new* `needs-install` `offline` `roll` `replayable` · near:
+  play-dice5e, play-dice, play-tarot
 - <a id="play-hearts"></a>[**play-hearts**](adapters/stdlib/play-hearts/) \
   Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
   *new* `no-install` `offline` `rules` `seeded` · near: play-crazy-eights, play-liars-dice, play-backgammon
