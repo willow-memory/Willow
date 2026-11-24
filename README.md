@@ -149,15 +149,15 @@ says how to pick one up:
 - **For maintainers:** the repo's own tools: CI, the list, tests that can fail. For example [mutants](adapters/stdlib/mutants/) and [ci](adapters/stdlib/ci/).
 <!-- /willow:summary -->
 
-<!-- willow:front show=pick week=2026-W47 -->
+<!-- willow:front show=pick week=2026-W48 -->
 **Add-on of the week**
 
-**[unpinned](adapters/stdlib/unpinned/)** \
-Version ranges in package.json, pyproject.toml or Cargo.toml that no lockfile holds.
+**[random-passage](adapters/stdlib/random-passage/)** \
+One passage from your folder at random, seeded so it can be replayed.
 
-*Drawn for 2026-W47: SHA-256 of "willow add-on of the week 2026-W47", modulo the 382 built add-ons in name order.*
+*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 388 built add-ons in name order.*
 
-[Every add-on, 382 built of 605, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 388 built of 618, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
