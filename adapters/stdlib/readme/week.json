@@ -380,8 +380,8 @@
   },
   "blind-deal": {
    "near": [
-    "dice-tower",
     "play-hearts",
+    "dice-tower",
     "persona-card"
    ],
    "topics": [
@@ -467,8 +467,7 @@
     "handover"
    ],
    "topics": [
-    "waiting",
-    "open"
+    "waiting"
    ]
   },
   "braille": {
@@ -907,8 +906,8 @@
   "connect-four": {
    "near": [
     "connect",
-    "cloudevents",
-    "schema-check"
+    "schema-check",
+    "cloudevents"
    ],
    "topics": [
     "result",
@@ -1162,7 +1161,7 @@
    "near": [
     "dialect",
     "code-shape",
-    "pdf"
+    "wasm"
    ],
    "topics": [
     "dialect",
@@ -1171,13 +1170,13 @@
   },
   "dice-tower": {
    "near": [
+    "play-fight",
     "play-dice",
-    "play-dice5e",
-    "game-master"
+    "play-dice5e"
    ],
    "topics": [
-    "roll",
-    "dice"
+    "dice",
+    "roll"
    ]
   },
   "dictate": {
@@ -2211,8 +2210,8 @@
   "ink-story": {
    "near": [
     "oracle-text",
-    "story-ideas",
-    "play-tarot"
+    "play-tarot",
+    "timeline"
    ],
    "topics": [
     "seeded",
@@ -2717,11 +2716,11 @@
    "near": [
     "mutants",
     "next-question",
-    "story-ideas"
+    "llms-txt"
    ],
    "topics": [
     "fact",
-    "story"
+    "world"
    ]
   },
   "losc": {
@@ -2905,13 +2904,11 @@
   },
   "memoir": {
    "near": [
-    "story-ideas",
     "play-quiz",
-    "run-answer"
+    "run-answer",
+    "why-not"
    ],
-   "topics": [
-    "story"
-   ]
+   "topics": []
   },
   "memory-import": {
    "near": [
@@ -3028,7 +3025,7 @@
    ],
    "topics": [
     "quote",
-    "drops"
+    "dropped"
    ]
   },
   "mlx": {
@@ -3679,8 +3676,8 @@
   },
   "pgp": {
    "near": [
-    "pdf",
     "export-answers",
+    "pdf",
     "mcp"
    ],
    "topics": []
@@ -3752,8 +3749,8 @@
     "pile-store"
    ],
    "topics": [
-    "matched",
-    "phrases"
+    "phrases",
+    "store"
    ]
   },
   "pile-serve": {
@@ -3886,6 +3883,17 @@
     "roll"
    ]
   },
+  "play-fight": {
+   "near": [
+    "dice-tower",
+    "ripgrep",
+    "play-dice"
+   ],
+   "topics": [
+    "dice",
+    "tower"
+   ]
+  },
   "play-fight5e": {
    "near": [
     "play-dice5e",
@@ -3899,9 +3907,9 @@
   },
   "play-hanoi": {
    "near": [
+    "play-fight",
     "play-reversi",
-    "tic-tac-toe",
-    "play-dice"
+    "tic-tac-toe"
    ],
    "topics": [
     "move",
@@ -3945,7 +3953,7 @@
    "near": [
     "play-catgrid",
     "play-hearts",
-    "play-backgammon"
+    "game-master"
    ],
    "topics": [
     "seeded",
@@ -4125,8 +4133,8 @@
   },
   "port-pypi": {
    "near": [
-    "port-nuget",
     "port-npm",
+    "port-nuget",
     "port-maven"
    ],
    "topics": [
@@ -4346,16 +4354,18 @@
    ],
    "topics": [
     "quote",
-    "drops"
+    "dropped"
    ]
   },
   "random-passage": {
    "near": [
-    "story-ideas",
     "on-this-day",
-    "approved-only"
+    "approved-only",
+    "daily-word"
    ],
-   "topics": []
+   "topics": [
+    "replayed"
+   ]
   },
   "reading-level": {
    "near": [
@@ -5449,8 +5459,8 @@
   "steam": {
    "near": [
     "game-baselines",
-    "play-life",
-    "game-master"
+    "game-master",
+    "play-life"
    ],
    "topics": [
     "game",
@@ -5476,17 +5486,6 @@
    "topics": [
     "commit",
     "left"
-   ]
-  },
-  "story-ideas": {
-   "near": [
-    "game-master",
-    "random-passage",
-    "play-life"
-   ],
-   "topics": [
-    "game",
-    "seeded"
    ]
   },
   "strava": {
@@ -5780,11 +5779,11 @@
    "near": [
     "dice-tower",
     "email-ask",
-    "bot-venv"
+    "play-fight"
    ],
    "topics": [
-    "die",
-    "total"
+    "tower",
+    "die"
    ]
   },
   "transcript-redact": {

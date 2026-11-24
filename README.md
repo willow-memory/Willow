@@ -152,8 +152,8 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W48 -->
 **Add-on of the week**
 
-**[reading-level](adapters/stdlib/reading-level/)** \
-How hard a passage reads (sentence length, word length, Flesch), so a teacher can find texts for a class.
+**[random-passage](adapters/stdlib/random-passage/)** \
+One passage from your folder at random, seeded so it can be replayed.
 
 *Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 388 built add-ons in name order.*
 
