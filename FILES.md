@@ -1990,16 +1990,30 @@ willow/
 │   │   │   ├── test_photos.py
 │   │   │   └── README.md
 │   │   ├── play-fight/
-│   │   │   ├── play_fight.py  a fight blow by blow on the tower's dice, played again from the record to check it
-│   │   │   ├── requirements.txt  dndwright, pinned
-│   │   │   ├── requirements-floor.txt  dndwright at its floor, also tested
+│   │   │   ├── play_fight.py a fight blow by blow, on dice dropped in the tower, played again from the record to check it. Python 3.10+ (dndwright's)
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
 │   │   │   ├── test_play_fight.py
-│   │   │   └── README.md
+│   │   │   └── README.md     its card
 ```
 
-#### adapters/deps/, from record-sql/
+#### adapters/deps/, from play-fight5e/
 
 ```
+│   │   ├── play-fight5e/
+│   │   │   ├── board.py      a fight drawn from its rows: who's hurt, who's down, whose turn
+│   │   │   ├── combat.py     aetheris5e's 5e combat engine: saves, resistances, specials
+│   │   │   ├── dice5e.py     5e dice notation over a generator handed in, the dice library its authority
+│   │   │   ├── LICENSE-die-namic-games  the licence of the code that came from Die-Namic
+│   │   │   ├── LICENSE-willow-bot  the licence of the dice seam that came from willow-bot
+│   │   │   ├── play_fight5e.py  the encounters fought on the tower's dice, every blow a row
+│   │   │   ├── requirements-floor.txt  dice at its floor, also tested
+│   │   │   ├── requirements.txt  dice, pinned
+│   │   │   ├── statblocks.py  the Aetheris setting's stat blocks, pregens and encounters
+│   │   │   ├── test_board.py
+│   │   │   ├── test_combat.py
+│   │   │   ├── test_play_fight5e.py
+│   │   │   └── README.md     its card
 │   │   ├── record-sql/
 │   │   │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
 │   │   │   ├── requirements.txt  duckdb, pinned
@@ -2032,6 +2046,11 @@ willow/
 │   │   │   ├── requirements-floor.txt  openpyxl at its floor, also tested
 │   │   │   ├── test_sheets.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from star-system/
+
+```
 │   │   ├── star-system/
 │   │   │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
 │   │   │   ├── requirements.txt  numpy, pinned
@@ -2053,11 +2072,6 @@ willow/
 │   │   │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
 │   │   │   ├── test_static_search.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from stems/
-
-```
 │   │   ├── stems/
 │   │   │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
 │   │   │   ├── requirements.txt  snowballstemmer, pinned
