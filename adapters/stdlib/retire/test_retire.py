@@ -11,10 +11,16 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 KERNEL = HERE.parents[2] / "kernel.py"
 NOW = ["--now", "2026-11-21T00:00:00Z"]
 WAITS = "waiting on your seal"
+#: stale answers are the stale-answers add-on's, which the card only looks for
+STALE = (HERE.parent / "stale-answers").is_dir()
+NOT_LOOKED = "stale answers not looked for: stale-answers isn't beside this add-on"
+needs_stale = pytest.mark.skipif(not STALE, reason="no stale-answers add-on")
 
 
 def k(*argv: str) -> subprocess.CompletedProcess:
@@ -99,9 +105,8 @@ def test_a_box_where_every_answer_holds_is_empty_and_nothing_waits(tmp_path):
     b, _, _, _ = approved(tmp_path)
     got = retire(b)
     assert got.returncode == 0, got.stderr
-    assert got.stdout.strip() == (
-        f"retire: empty, 2 approved; 0 set aside; 0 {WAITS}; 0 no longer hold"
-    )
+    line = f"retire: empty, 2 approved; 0 set aside; 0 {WAITS}; 0 no longer hold"
+    assert got.stdout.strip() == (line if STALE else f"{line}; {NOT_LOOKED}")
 
 
 def test_json_is_the_same_report(tmp_path):
@@ -328,6 +333,7 @@ def test_a_waiting_retirement_whose_file_was_changed_is_not_counted(tmp_path):
 
 
 # ── stale answers ───────────────────────────────────────────────────────────
+@needs_stale
 def test_an_answer_whose_cited_passage_went_is_named_then_proposed_once(tmp_path):
     b, pile, sun, shed = approved(tmp_path)
     assert retire(b, "propose", "--stale", *NOW).stdout.strip() == (
@@ -356,6 +362,7 @@ def test_an_answer_whose_cited_passage_went_is_named_then_proposed_once(tmp_path
     assert done.returncode == 0 and "is already set aside" in done.stdout
 
 
+@needs_stale
 def test_each_stale_answer_gets_a_proposal_of_its_own(tmp_path):
     b, pile, _, _ = approved(tmp_path)
     (pile / "garden.md").unlink()
@@ -363,6 +370,20 @@ def test_each_stale_answer_gets_a_proposal_of_its_own(tmp_path):
     got = retire(b, "propose", "--stale", *NOW)
     assert got.returncode == 42 and got.stdout.count(WAITS) == 2
     assert f"2 {WAITS}" in retire(b).stdout
+
+
+@pytest.mark.skipif(
+    STALE, reason="stale-answers is here: this is for a copy without it"
+)
+def test_without_stale_answers_it_is_said_and_propose_stale_is_refused(tmp_path):
+    b, _, _, _ = approved(tmp_path)
+    said = retire(b)
+    assert said.returncode == 0 and NOT_LOOKED in said.stdout
+    got = retire(b, "propose", "--stale", *NOW)
+    assert (
+        got.returncode == 2
+        and got.stderr == "refused: stale-answers isn't beside this add-on\n"
+    )
 
 
 def test_a_box_stale_answers_cant_read_is_said_not_crashed_on(tmp_path):
