@@ -1,5 +1,5 @@
 {
- "week": "2026-W47",
+ "week": "2026-W48",
  "worked": {
   "a11y-check": {
    "near": [
@@ -8,8 +8,8 @@
     "scrub"
    ],
    "topics": [
-    "problems",
-    "screen"
+    "screen",
+    "share"
    ]
   },
   "abbreviations": {
@@ -56,7 +56,7 @@
    "near": [
     "cursor-chats",
     "instruction-files",
-    "session-cost"
+    "hook-elsewhere"
    ],
    "topics": [
     "gemini",
@@ -133,8 +133,8 @@
     "route"
    ],
    "topics": [
-    "amount",
-    "debts"
+    "debts",
+    "amounts"
    ]
   },
   "anki": {
@@ -337,7 +337,7 @@
    ],
    "topics": [
     "seeded",
-    "draw"
+    "beacon"
    ]
   },
   "bedrock": {
@@ -354,7 +354,7 @@
    "near": [
     "garden",
     "policy-watch",
-    "contradictions"
+    "milestones"
    ],
    "topics": []
   },
@@ -380,9 +380,9 @@
   },
   "blind-deal": {
    "near": [
+    "dice-tower",
     "play-hearts",
-    "persona-card",
-    "play-crazy-eights"
+    "persona-card"
    ],
    "topics": [
     "open",
@@ -452,9 +452,9 @@
   },
   "box-heir": {
    "near": [
+    "kept-clash",
     "approved-only",
-    "family-box",
-    "blind-deal"
+    "hook-guard"
    ],
    "topics": [
     "person"
@@ -545,8 +545,8 @@
   "calendar": {
    "near": [
     "chats",
-    "sms",
-    "office"
+    "office",
+    "sms"
    ],
    "topics": []
   },
@@ -575,8 +575,8 @@
   "capture": {
    "near": [
     "coming-up",
-    "sentences",
-    "notes"
+    "notes",
+    "sentences"
    ],
    "topics": [
     "tags"
@@ -596,8 +596,8 @@
   "care": {
    "near": [
     "car",
-    "coming-up",
-    "bluesky"
+    "practice",
+    "coming-up"
    ],
    "topics": [
     "due",
@@ -851,8 +851,8 @@
   },
   "codeowners": {
    "near": [
-    "gitlab",
     "many-boxes",
+    "gitlab",
     "play-checkers"
    ],
    "topics": [
@@ -918,7 +918,7 @@
    "near": [
     "narrator-review",
     "hosts",
-    "grant"
+    "hook-ask-first"
    ],
    "topics": [
     "narrator",
@@ -944,17 +944,17 @@
    ],
    "topics": [
     "contracts",
-    "matter"
+    "breaks"
    ]
   },
   "contradictions": {
    "near": [
     "duplicates",
-    "connect",
-    "amounts"
+    "kept-clash",
+    "connect"
    ],
    "topics": [
-    "amount"
+    "amounts"
    ]
   },
   "contribute": {
@@ -971,7 +971,7 @@
   "contributions": {
    "near": [
     "bot-venv",
-    "hook-guard",
+    "removed",
     "welcome"
    ],
    "topics": [
@@ -1003,9 +1003,9 @@
   },
   "copy-in": {
    "near": [
+    "removed",
     "almanac-keep",
-    "snapshot",
-    "hook-pin"
+    "snapshot"
    ],
    "topics": [
     "sha",
@@ -1068,9 +1068,9 @@
   },
   "cycle": {
    "near": [
+    "practice",
     "coming-up",
-    "next-question",
-    "silence-log"
+    "next-question"
    ],
    "topics": [
     "log"
@@ -1079,10 +1079,12 @@
   "daily-word": {
    "near": [
     "play-quiz",
-    "random-passage",
-    "stack-row"
+    "game-canon",
+    "random-passage"
    ],
-   "topics": []
+   "topics": [
+    "game"
+   ]
   },
   "datasette": {
    "near": [
@@ -1096,8 +1098,8 @@
   },
   "day-one": {
    "near": [
-    "gh-json",
     "chats",
+    "gh-json",
     "karakeep"
    ],
    "topics": [
@@ -1166,6 +1168,17 @@
     "far"
    ]
   },
+  "dice-tower": {
+   "near": [
+    "play-dice",
+    "play-dice5e",
+    "game-master"
+   ],
+   "topics": [
+    "roll",
+    "dice"
+   ]
+  },
   "dictate": {
    "near": [
     "wake-gate",
@@ -1213,8 +1226,8 @@
   "docs-i18n": {
    "near": [
     "readme",
-    "against",
-    "llms-txt"
+    "llms-txt",
+    "against"
    ],
    "topics": [
     "readme",
@@ -1250,8 +1263,8 @@
   },
   "email-ask": {
    "near": [
+    "tower-math",
     "jeles",
-    "bot-venv",
     "willow-box"
    ],
    "topics": [
@@ -1262,8 +1275,8 @@
   "emergency-card": {
    "near": [
     "contact-audit",
-    "repo-digest",
-    "privacy"
+    "practice",
+    "repo-digest"
    ],
    "topics": [
     "contacts",
@@ -1288,7 +1301,7 @@
    ],
    "topics": [
     "latex",
-    "sources"
+    "equation"
    ]
   },
   "evernote": {
@@ -1572,6 +1585,17 @@
     "game"
    ]
   },
+  "game-canon": {
+   "near": [
+    "game-master",
+    "daily-word",
+    "market-calls"
+   ],
+   "topics": [
+    "game",
+    "master"
+   ]
+  },
   "game-master": {
    "near": [
     "play-dice",
@@ -1626,8 +1650,8 @@
   },
   "gh-json": {
    "near": [
+    "github-archive",
     "goodreads",
-    "jira",
     "day-one"
    ],
    "topics": [
@@ -1639,7 +1663,7 @@
    "near": [
     "repro",
     "hook-replay",
-    "opentimestamps"
+    "daily-word"
    ],
    "topics": [
     "twice"
@@ -1660,7 +1684,7 @@
    "near": [
     "repo-mirrors",
     "stale-answers",
-    "annotations"
+    "still-kept"
    ],
    "topics": [
     "commit",
@@ -1696,8 +1720,8 @@
     "sourcehut"
    ],
    "topics": [
-    "github",
-    "host"
+    "host",
+    "github"
    ]
   },
   "gitlab-export": {
@@ -1757,7 +1781,7 @@
   "grant": {
    "near": [
     "gather",
-    "approved-only",
+    "kept-clash",
     "hook-compact"
    ],
    "topics": [
@@ -1768,7 +1792,7 @@
    "near": [
     "second-opinion",
     "contradictions",
-    "sheet-drift"
+    "which-one"
    ],
    "topics": []
   },
@@ -1795,7 +1819,7 @@
    "near": [
     "projects",
     "stack-row",
-    "stack-share"
+    "red-on-main"
    ],
    "topics": [
     "stack",
@@ -1842,8 +1866,8 @@
     "browse"
    ],
    "topics": [
-    "assistant",
-    "voice"
+    "voice",
+    "home"
    ]
   },
   "home-sensors": {
@@ -1879,6 +1903,17 @@
     "ledger"
    ]
   },
+  "hook-ask-first": {
+   "near": [
+    "hook-read-first",
+    "hook-leaks",
+    "hook-cite"
+   ],
+   "topics": [
+    "pretooluse",
+    "refuses"
+   ]
+  },
   "hook-checks": {
    "near": [
     "hook-errors",
@@ -1892,9 +1927,9 @@
   },
   "hook-cite": {
    "near": [
+    "hook-ask-first",
     "claim-check",
-    "cite-honesty",
-    "hook-read-first"
+    "cite-honesty"
    ],
    "topics": [
     "refuses",
@@ -1916,22 +1951,22 @@
    "near": [
     "claude-code",
     "gemini-cli",
-    "hook-feedback"
+    "hook-fail-closed"
    ],
    "topics": [
-    "prompt",
-    "gemini"
+    "gemini",
+    "claude"
    ]
   },
   "hook-errors": {
    "near": [
     "hook-read-first",
-    "hook-feedback",
-    "hook-handoff"
+    "hook-handoff",
+    "hook-impact"
    ],
    "topics": [
     "assistant",
-    "fails"
+    "hash"
    ]
   },
   "hook-fail-closed": {
@@ -1947,13 +1982,13 @@
   },
   "hook-feedback": {
    "near": [
-    "hook-handoff",
-    "hook-read-first",
-    "hook-errors"
+    "word-layers",
+    "hermes",
+    "memory-import"
    ],
    "topics": [
-    "prompt",
-    "assistant"
+    "handed",
+    "propose"
    ]
   },
   "hook-fuzz": {
@@ -1971,18 +2006,18 @@
    "near": [
     "hook-impact",
     "hook-leaks",
-    "hook-read-first"
+    "hook-ask-first"
    ],
    "topics": [
-    "assistant",
-    "pretooluse"
+    "pretooluse",
+    "key"
    ]
   },
   "hook-handoff": {
    "near": [
     "hook-read-first",
-    "hook-feedback",
-    "hook-errors"
+    "hook-errors",
+    "hook-impact"
    ],
    "topics": [
     "assistant",
@@ -1992,8 +2027,8 @@
   "hook-impact": {
    "near": [
     "hook-read-first",
-    "hook-feedback",
-    "hook-handoff"
+    "hook-handoff",
+    "hook-errors"
    ],
    "topics": [
     "assistant",
@@ -2003,8 +2038,8 @@
   "hook-leaks": {
    "near": [
     "hook-read-first",
-    "hook-impact",
-    "hook-guard"
+    "hook-ask-first",
+    "hook-impact"
    ],
    "topics": [
     "pretooluse",
@@ -2014,12 +2049,12 @@
   "hook-pin": {
    "near": [
     "hook-replay",
-    "ci-memo",
-    "hook-checks"
+    "removed",
+    "ci-memo"
    ],
    "topics": [
-    "pin",
-    "sha"
+    "sha",
+    "pin"
    ]
   },
   "hook-read-first": {
@@ -2030,7 +2065,7 @@
    ],
    "topics": [
     "assistant",
-    "edit"
+    "session"
    ]
   },
   "hook-replay": {
@@ -2045,9 +2080,9 @@
   },
   "hook-sequence": {
    "near": [
+    "hook-ask-first",
     "hook-read-first",
-    "hook-stop",
-    "hook-guard"
+    "hook-stop"
    ],
    "topics": [
     "session",
@@ -2080,7 +2115,7 @@
    "near": [
     "hook-handoff",
     "hook-read-first",
-    "hook-feedback"
+    "hook-impact"
    ],
    "topics": [
     "assistant",
@@ -2142,9 +2177,9 @@
   },
   "in-case": {
    "near": [
+    "hook-guard",
     "witness",
-    "model-exam",
-    "nicknames"
+    "model-exam"
    ],
    "topics": [
     "people",
@@ -2164,8 +2199,8 @@
   },
   "in-toto": {
    "near": [
-    "ro-crate",
     "annotations",
+    "ro-crate",
     "prov"
    ],
    "topics": [
@@ -2186,8 +2221,8 @@
   "ink-story": {
    "near": [
     "oracle-text",
-    "play-tarot",
-    "play-hearts"
+    "game-canon",
+    "play-tarot"
    ],
    "topics": [
     "seeded",
@@ -2240,8 +2275,8 @@
   },
   "invoices": {
    "near": [
-    "approved-only",
     "share",
+    "approved-only",
     "privacy"
    ],
    "topics": []
@@ -2406,11 +2441,22 @@
     "sent"
    ]
   },
+  "kept-clash": {
+   "near": [
+    "contradictions",
+    "share",
+    "wasm"
+   ],
+   "topics": [
+    "sent",
+    "amounts"
+   ]
+  },
   "kids": {
    "near": [
     "student-records",
-    "approved-only",
-    "boxes-here"
+    "boxes-here",
+    "export-answers"
    ],
    "topics": [
     "choose"
@@ -2453,7 +2499,7 @@
    "near": [
     "jeles",
     "first-mention",
-    "hook-handoff"
+    "nestor"
    ],
    "topics": [
     "jeles",
@@ -2669,8 +2715,8 @@
   "logs": {
    "near": [
     "discord",
-    "irc",
-    "linkedin"
+    "linkedin",
+    "irc"
    ],
    "topics": [
     "messages",
@@ -2743,8 +2789,8 @@
     "timeline"
    ],
    "topics": [
-    "digest",
-    "several"
+    "timeline",
+    "digest"
    ]
   },
   "markdown": {
@@ -2765,8 +2811,8 @@
     "play-checkers"
    ],
    "topics": [
-    "score",
-    "forecast"
+    "forecast",
+    "settle"
    ]
   },
   "mastodon": {
@@ -2838,7 +2884,7 @@
    "near": [
     "route",
     "run-answer",
-    "starter-words"
+    "sort"
    ],
    "topics": [
     "owes",
@@ -2963,13 +3009,13 @@
   },
   "mirror-sweep": {
    "near": [
+    "removed",
     "copy-in",
-    "pile-sweep",
-    "format-rot"
+    "pile-sweep"
    ],
    "topics": [
     "deleted",
-    "reader"
+    "copy"
    ]
   },
   "misheard": {
@@ -3017,8 +3063,8 @@
   },
   "model-drift": {
    "near": [
-    "same-way",
     "model-card",
+    "same-way",
     "model-exam"
    ],
    "topics": []
@@ -3069,7 +3115,7 @@
    "near": [
     "connect",
     "sentence-check",
-    "on-this-day"
+    "kart"
    ],
    "topics": [
     "sentence",
@@ -3083,8 +3129,8 @@
     "model-fit"
    ],
    "topics": [
-    "hash",
-    "jan"
+    "jan",
+    "ollama"
    ]
   },
   "month-first": {
@@ -3162,6 +3208,17 @@
     "test"
    ]
   },
+  "my-installs": {
+   "near": [
+    "what-changed",
+    "policy-watch",
+    "skill-picks"
+   ],
+   "topics": [
+    "hook",
+    "skills"
+   ]
+  },
   "my-lessons": {
    "near": [
     "lessons",
@@ -3175,8 +3232,8 @@
   },
   "narrator-review": {
    "near": [
-    "hook-feedback",
     "turns",
+    "hook-feedback",
     "consent-register"
    ],
    "topics": [
@@ -3259,9 +3316,9 @@
   },
   "noised-count": {
    "near": [
-    "kart",
     "wasm",
-    "wasi-python"
+    "wasi-python",
+    "kart"
    ],
    "topics": [
     "job",
@@ -3271,8 +3328,8 @@
   "notary": {
    "near": [
     "opentimestamps",
-    "persona-card",
-    "three-two-one"
+    "dice-tower",
+    "persona-card"
    ],
    "topics": [
     "hash",
@@ -3438,8 +3495,8 @@
   },
   "opml": {
    "near": [
-    "rss-out",
     "notes",
+    "rss-out",
     "slack"
    ],
    "topics": [
@@ -3542,7 +3599,7 @@
    ],
    "topics": [
     "ranges",
-    "pairs"
+    "drift"
    ]
   },
   "paper-key": {
@@ -3631,8 +3688,8 @@
   },
   "pgp": {
    "near": [
-    "export-answers",
     "pdf",
+    "export-answers",
     "mcp"
    ],
    "topics": []
@@ -3751,7 +3808,7 @@
    "near": [
     "sarif",
     "readwise",
-    "family-tree"
+    "day-one"
    ],
    "topics": []
   },
@@ -3848,7 +3905,7 @@
     "play-tarot"
    ],
    "topics": [
-    "rolls",
+    "roll",
     "play"
    ]
   },
@@ -3947,8 +4004,8 @@
     "play-liars-dice"
    ],
    "topics": [
-    "play",
-    "dice"
+    "dice",
+    "play"
    ]
   },
   "play-quiz": {
@@ -4013,7 +4070,7 @@
    ],
    "topics": [
     "snapshot",
-    "copy"
+    "clauses"
    ]
   },
   "pool-fit": {
@@ -4141,11 +4198,22 @@
    "near": [
     "github",
     "against",
-    "repo-digest"
+    "restack-open"
    ],
    "topics": [
-    "order",
-    "pull"
+    "pull",
+    "request"
+   ]
+  },
+  "practice": {
+   "near": [
+    "reading-log",
+    "emergency-card",
+    "digest"
+   ],
+   "topics": [
+    "log",
+    "child"
    ]
   },
   "print": {
@@ -4192,8 +4260,8 @@
   "promises": {
    "near": [
     "who-said",
-    "thesis",
-    "timeline"
+    "timeline",
+    "thesis"
    ],
    "topics": [
     "saved",
@@ -4501,6 +4569,17 @@
     "quote"
    ]
   },
+  "removed": {
+   "near": [
+    "copy-in",
+    "hook-pin",
+    "snapshot"
+   ],
+   "topics": [
+    "sha",
+    "deleted"
+   ]
+  },
   "renewals": {
    "near": [
     "warranties",
@@ -4560,8 +4639,7 @@
     "gather"
    ],
    "topics": [
-    "build",
-    "project"
+    "build"
    ]
   },
   "report": {
@@ -4599,8 +4677,8 @@
   "restack": {
    "near": [
     "restack-open",
-    "similar",
-    "oracle-text"
+    "oracle-text",
+    "similar"
    ],
    "topics": [
     "branch",
@@ -4633,7 +4711,7 @@
    "near": [
     "assistant-scores",
     "stale-answers",
-    "approved-only"
+    "kept-clash"
    ],
    "topics": [
     "aside"
@@ -4768,12 +4846,11 @@
   "rules": {
    "near": [
     "session-seal",
-    "game-master",
-    "approved-only"
+    "approved-only",
+    "game-master"
    ],
    "topics": [
-    "game",
-    "rules"
+    "game"
    ]
   },
   "run-answer": {
@@ -4784,7 +4861,7 @@
    ],
    "topics": [
     "step",
-    "job"
+    "owes"
    ]
   },
   "safe-app": {
@@ -4795,7 +4872,7 @@
    ],
    "topics": [
     "store",
-    "session"
+    "safe"
    ]
   },
   "same-way": {
@@ -4830,8 +4907,8 @@
   "sbom": {
    "near": [
     "lockfiles",
-    "gh-json",
-    "day-one"
+    "day-one",
+    "gh-json"
    ],
    "topics": [
     "json",
@@ -4915,7 +4992,7 @@
    "near": [
     "assistant-scores",
     "contradictions",
-    "sheet-drift"
+    "kept-clash"
    ],
    "topics": [
     "assistant",
@@ -4987,6 +5064,17 @@
     "served"
    ]
   },
+  "server-picks": {
+   "near": [
+    "skill-picks",
+    "mcp",
+    "my-installs"
+   ],
+   "topics": [
+    "upkeep",
+    "touch"
+   ]
+  },
   "session-cost": {
    "near": [
     "agent-transcript",
@@ -5011,8 +5099,8 @@
   "share": {
    "near": [
     "secure-sum",
-    "kart",
-    "wasm"
+    "kept-clash",
+    "kart"
    ],
    "topics": [
     "sent",
@@ -5022,12 +5110,12 @@
   "sheet-drift": {
    "near": [
     "pair-drift",
-    "contradictions",
-    "second-opinion"
+    "which-one",
+    "contradictions"
    ],
    "topics": [
-    "between",
-    "sheets"
+    "drift",
+    "between"
    ]
   },
   "sheets": {
@@ -5108,8 +5196,8 @@
   },
   "silence-log": {
    "near": [
-    "stack-row",
     "cursor-chats",
+    "stack-row",
     "who-said"
    ],
    "topics": [
@@ -5124,6 +5212,17 @@
     "restack"
    ],
    "topics": []
+  },
+  "skill-picks": {
+   "near": [
+    "server-picks",
+    "my-installs",
+    "home-upkeep"
+   ],
+   "topics": [
+    "best",
+    "upkeep"
+   ]
   },
   "skim": {
    "near": [
@@ -5255,12 +5354,12 @@
   "stack": {
    "near": [
     "many-boxes",
-    "stack-bridges",
-    "stack-row"
+    "word-layers",
+    "stack-bridges"
    ],
    "topics": [
     "stack",
-    "order"
+    "several"
    ]
   },
   "stack-bridges": {
@@ -5298,8 +5397,8 @@
   "stack-share": {
    "near": [
     "forge",
-    "kart",
-    "stack"
+    "stack",
+    "kart"
    ],
    "topics": [
     "stack",
@@ -5335,8 +5434,8 @@
   },
   "starter-words": {
    "near": [
-    "snapshot",
     "first-run",
+    "snapshot",
     "pdf"
    ],
    "topics": [
@@ -5384,6 +5483,17 @@
    ],
    "topics": [
     "form"
+   ]
+  },
+  "still-kept": {
+   "near": [
+    "git-notes",
+    "provenance",
+    "issue-answer"
+   ],
+   "topics": [
+    "commit",
+    "left"
    ]
   },
   "strava": {
@@ -5475,8 +5585,8 @@
   "table": {
    "near": [
     "game-baselines",
-    "play-checkers",
-    "play-catgrid"
+    "game-canon",
+    "play-checkers"
    ],
    "topics": [
     "play",
@@ -5651,7 +5761,7 @@
    ],
    "topics": [
     "pin",
-    "end"
+    "reach"
    ]
   },
   "todays-place": {
@@ -5672,6 +5782,17 @@
     "sort"
    ],
    "topics": []
+  },
+  "tower-math": {
+   "near": [
+    "dice-tower",
+    "email-ask",
+    "bot-venv"
+   ],
+   "topics": [
+    "die",
+    "total"
+   ]
   },
   "transcript-redact": {
    "near": [
@@ -5848,8 +5969,8 @@
   "vocab": {
    "near": [
     "oracle-text",
-    "equations",
-    "apple-notes"
+    "apple-notes",
+    "equations"
    ],
    "topics": []
   },
@@ -5902,7 +6023,6 @@
     "pile-store"
    ],
    "topics": [
-    "start",
     "between"
    ]
   },
@@ -6046,9 +6166,17 @@
   },
   "what-changed": {
    "near": [
+    "my-installs",
     "box-health",
-    "policy-watch",
-    "play-backgammon"
+    "policy-watch"
+   ],
+   "topics": []
+  },
+  "which-one": {
+   "near": [
+    "contradictions",
+    "second-opinion",
+    "sheet-drift"
    ],
    "topics": []
   },
@@ -6107,12 +6235,23 @@
   "witness": {
    "near": [
     "second-opinion",
-    "connect",
-    "copies"
+    "kept-clash",
+    "hook-guard"
    ],
    "topics": [
     "second",
-    "agree"
+    "people"
+   ]
+  },
+  "word-layers": {
+   "near": [
+    "words-later",
+    "stack",
+    "stack-share"
+   ],
+   "topics": [
+    "true",
+    "several"
    ]
   },
   "words-ar": {
@@ -6198,9 +6337,9 @@
   },
   "words-later": {
    "near": [
-    "ask-later",
+    "word-layers",
     "starter-words",
-    "record-sync"
+    "ask-later"
    ],
    "topics": []
   },
@@ -6325,8 +6464,8 @@
     "sheet-drift"
    ],
    "topics": [
-    "sources",
-    "claim"
+    "claim",
+    "sources"
    ]
   },
   "youtube-studio": {

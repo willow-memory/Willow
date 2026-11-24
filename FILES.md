@@ -1637,6 +1637,10 @@ willow/
 │   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
 │   │   │   ├── test_dice_tower.py
 │   │   │   └── README.md     its card
+│   │   ├── game-canon/
+│   │   │   ├── game_canon.py what a game's table holds true, and what a new word meets of it
+│   │   │   ├── test_game_canon.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
@@ -1677,15 +1681,15 @@ willow/
 │   │   │   ├── play_hearts.py Hearts played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_hearts.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-horoscope/
+
+```
 │   │   ├── play-horoscope/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-liars-dice/
-
-```
 │   │   ├── play-liars-dice/
 │   │   │   ├── play_liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
 │   │   │   ├── test_play_liars_dice.py
