@@ -2017,7 +2017,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, game-master
 - <a id="game-canon"></a>[**game-canon**](adapters/stdlib/game-canon/) \
   What a game's table holds true, a heads-up when a new word meets it, and the GM's choice kept: replace it, keep both, take a yes back. \
-  Uses game-master, contradictions. From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new*
+  Uses game-master, table, contradictions. From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new*
   `no-install` `offline` `game` `master` · near: game-master, daily-word, market-calls
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \

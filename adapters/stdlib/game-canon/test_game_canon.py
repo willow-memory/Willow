@@ -183,15 +183,28 @@ def test_mine_stands_now_waits_on_the_persons_seal_and_erases_nothing(t):
     assert [r["kind"] for r in t.rows() if r.get("subject") == old and r["kind"] in ("seal", "decline")] == ["seal"]  # fmt: skip
 
 
-def test_a_replacement_is_kept_under_the_old_subjects_own_hash(t):
+def test_a_replacement_is_the_table_add_ons_own_shape(t):
     old = t.offer(OLD)
     t.run("replace", "--old", old, "--new", "", "--fact", NEW, *NOW)
     rep = next(r for r in t.rows() if r["kind"] == gc.REPLACES)
     claim = f"From now on this stands in place of what the table made true on 2026-11-20: {OLD}"  # fmt: skip
-    prop = {"path": "table/replaces/" + old.split(":")[-1][:16] + ".txt", "data": NEW, "cites": [], "claim": claim}  # fmt: skip
-    assert rep["subject"] == kernel.subject_of(
-        prop
-    )  # a record Die-Namic kept reads the same
+    path = "table/replaces/2026-11-20-" + old.split(":")[-1][:16] + ".md"
+    prop = {"path": path, "data": NEW + "\n", "cites": [], "claim": claim}
+    assert rep["subject"] == kernel.subject_of(prop)  # as the table hands one in
+    assert gc.REPLACES == gc.table.REPLACES and gc.BOTH == gc.table.BOTH
+
+
+def test_what_game_canon_keeps_the_table_reads_by_its_own_rule(t):
+    old = t.offer(OLD)
+    t.run("replace", "--old", old, "--new", "", "--fact", NEW, *NOW)
+    rep = next(r for r in t.rows() if r["kind"] == gc.REPLACES)
+    assert gc.table.replaced(t.box, t.rows()) == {}  # waiting: nothing replaced yet
+    assert t.k("seal", rep["subject"]).returncode == 0
+    assert gc.table.replaced(t.box, t.rows()) == {old: rep}
+    t.run("both", "--old", t.offer(OLD + " Truly."), "--new", "s2", "--fact", NEW, *NOW)
+    among = [{"subject": "s1", "fact": OLD + " Truly."}]
+    # the table won't raise it either
+    assert gc.table.meets(t.box, t.rows(), NEW, among=among) == []
 
 
 def test_a_replacement_declined_leaves_the_old_one_standing(t):
@@ -212,7 +225,10 @@ def test_only_what_the_table_holds_true_can_be_replaced_or_kept_beside(t, verb):
 
 
 def test_a_replacement_the_kernel_will_not_take_is_refused_in_its_words(t, monkeypatch):  # fmt: skip
-    monkeypatch.setattr(gc.gm, "hand_in", lambda *a: ("", "the kernel's propose: no"))
+    def no(*a):
+        raise gc.table.Refused("the kernel's propose: no")
+
+    monkeypatch.setattr(gc.table, "hand_in", no)
     old = {"subject": "proposal:" + "ab12" * 16, "day": "2026-11-20", "fact": OLD}
     with pytest.raises(RuntimeError, match="the kernel's propose: no"):
         gc.replace(Path("."), NOW[1], old, "", NEW)

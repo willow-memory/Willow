@@ -7,7 +7,7 @@ version: 0.1.0
 writes: record
 network: none
 role: tools
-uses: game-master, contradictions
+uses: game-master, table, contradictions
 from: shape, https://github.com/rudi193-cmd/die-namic-games, Apache-2.0
 -->
 # game-canon
@@ -40,7 +40,8 @@ and your new word is about the same thing.
 `--json` gives `holds`, `tonight` and `meets` as a list, each truth's
 `subject`, `fact`, `n` (the row of your seal) and `day`.
 
-**About the same thing** is [contradictions](../contradictions/)' rule,
+**About the same thing** is [table](../table/)'s heads-up, run over a game's
+calls and offers, which is [contradictions](../contradictions/)' rule
 unchanged: the two share at least two of their own words, and at least half
 of the shorter one's. It can't tell whether they disagree and never picks a
 side. Not raised: the word itself (`--subject`), the same words made true
@@ -62,16 +63,21 @@ again (a story played twice), and a pair you said are both true.
 Only something the table holds true now can be replaced or kept beside;
 anything else is refused by name, and nothing is written.
 
-**Rows:** `table-replaces` and `table-both`, the kinds Die-Namic's table
-already wrote, so a record it kept reads the same here. A replacement's
-proposal is `table/replaces/<the old subject's first 16 hex>.txt`, as there.
+**Rows:** [table](../table/)'s own `table-replaces` and `table-both`, in its
+shape and read by its rule, so one record can hold a game's calls and a
+table's words, and a replacement or a "both" made at either reads the same
+at the other. A replacement's proposal is the table's too:
+`table/replaces/<day>-<the old subject's first 16 hex>.md`. The one
+difference is the seal: the table's host types a replacement at its terminal
+and the table seals it there; here it waits on yours. Each row's `who` is
+`game-canon`.
 
 **Source:** Die-Namic's heads-up (its box's clash module), rebuilt here as an add-on
 over game-master's record, with its seals left to you.
 
-**Uses:** game-master's `games`, `ruling` and `hand_in`; contradictions'
-`subject` and `same`; the kernel's `read`, `append`, `stem`, `bite` and
-`propose`.
+**Uses:** game-master's `games` and `ruling`; table's row kinds, `replaced`,
+`meets`, `last_end`, `hand_in` and its slip; the kernel's `read`, `append`,
+`bite` and `propose`.
 
 **Never:** seals or declines anything, reads your key, writes the record
 except through the kernel, or goes online.

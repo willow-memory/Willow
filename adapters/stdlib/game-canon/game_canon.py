@@ -19,7 +19,10 @@ one's). It can't tell whether they disagree and never picks a side: it only
 says, and the person decides. Not raised: FACT itself, the same words made
 true again, and a pair the person said are both true.
 
-What the person chooses is kept, and nothing here chooses:
+What the person chooses is kept, and nothing here chooses. The rows are
+[table](../table/)'s own, `table-replaces` and `table-both` in its shape, read
+by its rule, so one record holds a game's calls and a table's words and one
+replacement or one "both" reads the same at either:
 
 - **Mine stands now:** `replace` hands in, through the kernel's own bite and
   propose, a proposal that the new word stands in place of the old, and
@@ -45,14 +48,13 @@ HERE = Path(__file__).resolve().parent
 STDLIB = HERE.parent
 sys.path.insert(0, str(HERE.parents[2]))
 sys.path.insert(0, str(STDLIB / "game-master"))
-sys.path.insert(0, str(STDLIB / "contradictions"))
-import contradictions  # noqa: E402
+sys.path.insert(0, str(STDLIB / "table"))
 import game_master as gm  # noqa: E402
 import kernel  # noqa: E402
+import table  # noqa: E402  the rows are the table's, read by its rule
 
-REPLACES, BOTH = "table-replaces", "table-both"
+REPLACES, BOTH, SLIP = table.REPLACES, table.BOTH, table.SLIP
 WHO = "game-canon"
-SLIP = "nothing: that yes was pressed by mistake"
 USAGE = __doc__.split("\n\n")[1]
 
 
@@ -61,17 +63,10 @@ def refuse(why: str) -> int:
     return kernel.REFUSED
 
 
-def stems(text: str) -> set:
-    return {kernel.stem(w) for w in contradictions.subject(text)}
-
-
 def replaced(box: Path, rows: list[dict]) -> dict:
-    """{the old subject: the replacing row} for every replacement the person sealed."""
-    out = {}
-    for r in rows:
-        if r["kind"] == REPLACES and gm.ruling(box, rows, r["subject"])[0] == "sealed":
-            out[r["old"]] = r
-    return out
+    """{the old subject: the replacing row} for every replacement the person
+    sealed: the table's own reading of its `table-replaces` rows."""
+    return table.replaced(box, rows)
 
 
 def standing(box: Path, rows: list[dict]) -> list[dict]:
@@ -95,39 +90,34 @@ def both(rows: list[dict]) -> set:
 
 
 def meets(box: Path, fact: str, subject: str = "") -> list[dict]:
-    """What the table holds true that FACT is about the same thing as: not
-    itself, not the same words made true again, and not a pair the person
-    already said are both true."""
+    """What the table holds true that FACT is about the same thing as, by the
+    table's own heads-up over a game's calls and offers: not itself, not the
+    same words made true again, and not a pair the person already said are
+    both true."""
     rows, _ = kernel.read(box / "record.jsonl")
-    said, ok = {"stems": stems(fact)}, both(rows)
-    return [
-        t
-        for t in standing(box, rows)
-        if t["subject"] != subject
-        and t["fact"] != fact
-        and frozenset((t["fact"], fact)) not in ok
-        and contradictions.same(said, {"stems": stems(t["fact"])})
-    ]
+    return table.meets(box, rows, fact, subject, among=standing(box, rows))
 
 
 def tonight(box: Path, rows: list[dict]) -> list[dict]:
     """What the table made true since the last session ended, still standing,
     oldest first."""
-    ends = [r["to"] for r in rows if r["kind"] == "session"]
-    after = ends[-1] if ends else -1
+    after = table.last_end(rows)
     return [t for t in standing(box, rows) if t["n"] > after]
 
 
 def replace(box: Path, ts: str, old: dict, new_subject: str, new_fact: str) -> str:
-    """The person's "mine stands now": a replacement handed in, and its
-    subject, waiting on their seal. RuntimeError with the kernel's words if it
-    won't take it."""
+    """The person's "mine stands now": a replacement handed in, in the table's
+    shape, and its subject, waiting on their seal. Unlike the table's own,
+    which a host types at its terminal and seals, this seals nothing.
+    RuntimeError with the kernel's words if it won't take it."""
     tail = old["subject"].split(":")[-1][:16]
-    prop = {"path": f"table/replaces/{tail}.txt", "data": new_fact, "cites": [],
-            "claim": f"From now on this stands in place of what the table made true on {old['day']}: {old['fact']}"}  # fmt: skip
-    subject, why = gm.hand_in(box, ts, f"game-canon replaces {old['subject']}", prop)
-    if why:
-        raise RuntimeError(why)
+    claim = f"From now on this stands in place of what the table made true on {old['day']}: {old['fact']}"  # fmt: skip
+    prop = {"path": f"table/replaces/{ts[:10]}-{tail}.md", "data": new_fact + "\n",
+            "cites": [], "claim": claim}  # fmt: skip
+    try:
+        subject = table.hand_in(box, ts, f"game-canon replaces {old['subject']}", prop)
+    except table.Refused as e:
+        raise RuntimeError(str(e)) from None
     kernel.append(box, ts, REPLACES, who=WHO, old=old["subject"], new=new_subject, fact=new_fact, subject=subject)  # fmt: skip
     return subject
 
@@ -141,7 +131,8 @@ def take_back(box: Path, ts: str, old: dict) -> str:
 
 
 def keep_both(box: Path, ts: str, old: dict, new_subject: str, new_fact: str) -> None:
-    """The person's "both are true": the pair isn't raised again."""
+    """The person's "both are true": a `table-both` row in the table's shape,
+    so the pair isn't raised again, here or at the table."""
     kernel.append(box, ts, BOTH, who=WHO, pair=sorted((old["subject"], new_subject)), facts=sorted((old["fact"], new_fact)))  # fmt: skip
 
 
