@@ -1172,11 +1172,11 @@
    "near": [
     "play-fight",
     "play-dice",
-    "play-fight5e"
+    "play-dice5e"
    ],
    "topics": [
-    "roll",
-    "dice"
+    "dice",
+    "roll"
    ]
   },
   "dictate": {
@@ -3885,9 +3885,9 @@
   },
   "play-fight": {
    "near": [
-    "play-fight5e",
     "dice-tower",
-    "ripgrep"
+    "ripgrep",
+    "play-dice"
    ],
    "topics": [
     "dice",
@@ -3896,13 +3896,13 @@
   },
   "play-fight5e": {
    "near": [
-    "play-fight",
-    "dice-tower",
-    "play-dice5e"
+    "play-dice5e",
+    "play-dice",
+    "play-tarot"
    ],
    "topics": [
     "roll",
-    "dice"
+    "replayable"
    ]
   },
   "play-hanoi": {
@@ -4072,8 +4072,8 @@
     "model-fit"
    ],
    "topics": [
-    "lack",
-    "fit"
+    "fit",
+    "lack"
    ]
   },
   "port-crates": {
@@ -5875,7 +5875,7 @@
    "near": [
     "outdated",
     "advisories",
-    "unpinned"
+    "claim-check"
    ],
    "topics": [
     "dependency",
@@ -5961,8 +5961,8 @@
   "vocab": {
    "near": [
     "oracle-text",
-    "equations",
-    "apple-notes"
+    "apple-notes",
+    "equations"
    ],
    "topics": []
   },
@@ -6434,8 +6434,8 @@
     "cursor-chats"
    ],
    "topics": [
-    "copy",
-    "sqlite"
+    "sqlite",
+    "copy"
    ]
   },
   "x-archive": {
