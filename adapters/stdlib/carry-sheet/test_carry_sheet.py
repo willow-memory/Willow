@@ -114,6 +114,7 @@ def test_a_line_written_is_a_row_and_the_sheet_as_it_stands(tmp_path):
     assert got.stdout.startswith("Tamsin carries a rope   (row ")
     r = rows_of(box)[-1]
     assert (r["kind"], r["who"], r["char"], r["change"], r["what"]) == (cs.KIND, cs.WHO, "Tamsin", "carry", "a rope")  # fmt: skip
+    assert r["ts"] == NOW[1]  # the time given, not the clock's
     assert write(box, "Tamsin uses the ropes").stdout.startswith("Tamsin carries nothing and isn't hurt")  # fmt: skip
 
 
