@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **388 of 618 built** · 556 need no install · 62 need one
+`█████████████░░░░░░░` **389 of 618 built** · 555 need no install · 63 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Privacy and safety | 15 | 5 | 18 | 2 |
 | Assistants | 52 | 24 | 68 | 8 |
 | Ways to use it | 32 | 20 | 44 | 8 |
-| Play | 20 | 33 | 48 | 5 |
+| Play | 21 | 32 | 47 | 6 |
 | For maintainers | 26 | 24 | 45 | 5 |
 <!-- /willow:pools -->
 
@@ -68,6 +68,8 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
+- 2026-11-23 · [**play-fight5e**](adapters/deps/play-fight5e/) \
+  Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable.
 - 2026-11-23 · [**play-fight**](adapters/deps/play-fight/) \
   A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it.
 - 2026-11-20 · [**dice-tower**](adapters/stdlib/dice-tower/) \
@@ -76,17 +78,15 @@ its list: someone who speaks the language can add one without much Python.
   One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes.
 - 2026-11-19 · [**kept-clash**](adapters/stdlib/kept-clash/) \
   Sealed answers people sent you, side by side: one thing given two dates, times or amounts, or one word defined two ways.
-- 2026-11-19 · [**hook-ask-first**](adapters/stdlib/hook-ask-first/) \
-  A PreToolUse hook that refuses reading by hand a file one of your boxes holds, until that box has been asked this session.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W48 -->
-**[random-passage](adapters/stdlib/random-passage/)** \
-One passage from your folder at random, seeded so it can be replayed.
+**[record-sql](adapters/deps/record-sql/)** \
+SQL straight over your record, in place: 'how many answers did I approve in March?'
 
-*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 388 built add-ons in name order.*
+*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 389 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -2039,17 +2039,23 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
   *bot* `no-install` `offline` `dice` `roll` · near: play-dice5e, play-liars-dice, play-backgammon
-
-#### Tools you run yourself, p to s
-
 - <a id="play-dice5e"></a>[**play-dice5e**](adapters/stdlib/play-dice5e/) \
   Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. \
   Uses play-dice. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-backgammon, play-liars-dice
+
+#### Tools you run yourself, p to s
+
 - <a id="play-fight"></a>[**play-fight**](adapters/deps/play-fight/) \
   A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it. \
   Needs dndwright, which brings pydantic and PyYAML; MIT. Uses dice-tower. From: dep of [sligara7/dndwright](https://github.com/sligara7/dndwright), MIT;
   shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `needs-install` `offline` `dice` `tower` · near:
   dice-tower, ripgrep, play-dice
+- <a id="play-fight5e"></a>[**play-fight5e**](adapters/deps/play-fight5e/) \
+  Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
+  Needs dice, which brings pyparsing; MIT. Uses dice-tower, play-dice, play-dice5e. From: code of
+  [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0; code of
+  [willow-memory/willow-bot](https://github.com/willow-memory/willow-bot), Apache-2.0. *new* `needs-install` `offline` `roll` `replayable` · near:
+  play-dice5e, play-dice, play-tarot
 - <a id="play-hearts"></a>[**play-hearts**](adapters/stdlib/play-hearts/) \
   Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
   *new* `no-install` `offline` `rules` `seeded` · near: play-crazy-eights, play-liars-dice, play-backgammon
@@ -2120,15 +2126,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="pageviews"></a>**pageviews** (idea) \
   Two Wikipedia articles drawn at random: which gets more views tomorrow? \
   Goes online: the Wikimedia pageviews API, to settle it. *new* `no-install` `online` `article` `drawn` · near: random-passage, kiwix, joins
-- <a id="play-fight5e"></a>**play-fight5e** (idea) \
-  Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
-  *new* `no-install` `offline` `roll` `replayable` · near: play-dice5e, play-dice, play-tarot
-
-#### Tools you run yourself: ideas, not built yet, p to w
-
 - <a id="play-hanoi"></a>**play-hanoi** (idea) \
   Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
   *new* `no-install` `offline` `move` `tower` · near: play-fight, play-reversi, tic-tac-toe
+
+#### Tools you run yourself: ideas, not built yet, p to w
+
 - <a id="play-lunatic"></a>**play-lunatic** (idea) \
   The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. \
   Needs Skyfield; MIT. *new* `needs-install` `offline` `moon` `typos` · near: play-hearts, play-dice5e, typos
