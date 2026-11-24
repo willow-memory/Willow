@@ -1637,6 +1637,10 @@ willow/
 │   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
 │   │   │   ├── test_dice_tower.py
 │   │   │   └── README.md     its card
+│   │   ├── exhaustion/
+│   │   │   ├── exhaustion.py  a level of exhaustion's effect on a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2
+│   │   │   ├── test_exhaustion.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py

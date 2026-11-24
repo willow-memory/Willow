@@ -2015,6 +2015,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
   Uses play-dice, play-dice5e. *new* `no-install` `offline` `dice` `roll` · near: play-fight, play-dice, play-dice5e
+- <a id="exhaustion"></a>[**exhaustion**](adapters/stdlib/exhaustion/) \
+  What a level of exhaustion does to a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2, kept apart. \
+  From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline` `roll` · near:
+  digest, repo-kinds, play-fight
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-odds, play-checkers

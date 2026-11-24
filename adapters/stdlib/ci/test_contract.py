@@ -705,6 +705,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "diverge": ("diverge.py", ["{pile}", "{pile}"]),
     "duplicates": ("duplicates.py", ["--box", "{box}"]),
     "emacs": ("emacs.py", ["--box", "{box}"]),
+    "exhaustion": ("exhaustion.py", ["2", "--speed", "30"]),
     "export-answers": ("export_answers.py", ["--box", "{box}"]),
     "fair-merge": ("fair_merge.py", ["--box", "{box}", "tomatoes"]),
     "first-mention": ("first_mention.py", ["--box", "{box}", "tomatoes"]),
