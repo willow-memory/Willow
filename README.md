@@ -152,12 +152,12 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W48 -->
 **Add-on of the week**
 
-**[random-passage](adapters/stdlib/random-passage/)** \
-One passage from your folder at random, seeded so it can be replayed.
+**[record-sql](adapters/deps/record-sql/)** \
+SQL straight over your record, in place: 'how many answers did I approve in March?'
 
-*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 388 built add-ons in name order.*
+*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 389 built add-ons in name order.*
 
-[Every add-on, 388 built of 618, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 389 built of 618, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
