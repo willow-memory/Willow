@@ -1997,17 +1997,23 @@ willow/
 │   │   │   ├── requirements-floor.txt  Pillow at its floor, also tested
 │   │   │   ├── test_photos.py
 │   │   │   └── README.md
+│   │   ├── play-fight/
+│   │   │   ├── play_fight.py  a fight blow by blow on the tower's dice, played again from the record to check it
+│   │   │   ├── requirements.txt  dndwright, pinned
+│   │   │   ├── requirements-floor.txt  dndwright at its floor, also tested
+│   │   │   ├── test_play_fight.py
+│   │   │   └── README.md
+```
+
+#### adapters/deps/, from record-sql/
+
+```
 │   │   ├── record-sql/
 │   │   │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
 │   │   │   ├── requirements.txt  duckdb, pinned
 │   │   │   ├── requirements-floor.txt  duckdb at its floor, also tested
 │   │   │   ├── test_record_sql.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from ripgrep/
-
-```
 │   │   ├── ripgrep/
 │   │   │   ├── ripgrep.py    exact search through rg, each hit checked against the kernel's passages
 │   │   │   ├── requirements.txt  ripgrep, pinned
@@ -2055,17 +2061,17 @@ willow/
 │   │   │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
 │   │   │   ├── test_static_search.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from stems/
+
+```
 │   │   ├── stems/
 │   │   │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
 │   │   │   ├── requirements.txt  snowballstemmer, pinned
 │   │   │   ├── requirements-floor.txt  snowballstemmer at its floor, also tested
 │   │   │   ├── test_stems.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from wake-gate/
-
-```
 │   │   ├── wake-gate/
 │   │   │   ├── LICENSE-openWakeWord
 │   │   │   ├── LICENSE-willow-mcp

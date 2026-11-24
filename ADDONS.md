@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **388 of 618 built** · 557 need no install · 61 need one
+`█████████████░░░░░░░` **388 of 618 built** · 556 need no install · 62 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Privacy and safety | 15 | 5 | 18 | 2 |
 | Assistants | 52 | 24 | 68 | 8 |
 | Ways to use it | 32 | 20 | 44 | 8 |
-| Play | 20 | 33 | 49 | 4 |
+| Play | 20 | 33 | 48 | 5 |
 | For maintainers | 26 | 24 | 45 | 5 |
 <!-- /willow:pools -->
 
@@ -68,8 +68,8 @@ its list: someone who speaks the language can add one without much Python.
 ## Newest
 
 <!-- willow:newest -->
-- 2026-11-23 · [**lines-veils**](adapters/stdlib/lines-veils/) \
-  What never happens at your table and what happens off-screen, checked before a part is read; the X-card kept with no one named.
+- 2026-11-23 · [**play-fight**](adapters/deps/play-fight/) \
+  A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it.
 - 2026-11-20 · [**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for.
 - 2026-11-19 · [**word-layers**](adapters/stdlib/word-layers/) \
@@ -527,7 +527,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *new* `no-install` `offline` `channel` `stats` · near: discord, slack, tiktok-studio
 - <a id="steam"></a>**steam** (idea) \
   Your Steam library from its local files: games, playtime and when you last played. \
-  *new* `no-install` `offline` `game` `play` · near: game-baselines, play-life, game-master
+  *new* `no-install` `offline` `game` `library` · near: game-baselines, game-master, play-life
 - <a id="teams"></a>**teams** (idea) \
   Microsoft Teams chats from your Microsoft account's export, one dated line per message. \
   *new* `no-install` `offline` `messages` `chats` · near: chats, signal, sms
@@ -596,7 +596,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *box* `no-install` `offline` · near: coming-up, sentences, random-passage
 - <a id="people"></a>[**people**](adapters/stdlib/people/) \
   Everyone your files name, and every place each is mentioned. \
-  *new* `no-install` `offline` `play` `mention` · near: first-mention, play-hearts, play-crazy-eights
+  *new* `no-install` `offline` `mention` · near: first-mention, play-hearts, play-crazy-eights
 - <a id="random-passage"></a>[**random-passage**](adapters/stdlib/random-passage/) \
   One passage from your folder at random, seeded so it can be replayed. \
   *bot* `no-install` `offline` `replayed` · near: on-this-day, approved-only, daily-word
@@ -702,7 +702,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Needs numpy; BSD-3-Clause. Uses batch-ask. *new* `needs-install` `offline` `index` `scan` · near: batch-ask, index-cache, all-passages
 - <a id="misquote"></a>[**misquote**](adapters/stdlib/misquote/) \
   A quote that is almost in your files: the closest passage, and the words it adds, drops or changes, so a misquote shows as one. \
-  *new* `no-install` `offline` `quote` `drops` · near: quotes, quote-check, stale-answers
+  *new* `no-install` `offline` `quote` `dropped` · near: quotes, quote-check, stale-answers
 - <a id="pieces"></a>[**pieces**](adapters/stdlib/pieces/) \
   Your folder's passages a folder at a time, the same as the kernel reads them, so a big folder is never held in memory all at once. \
   *new* `no-install` `offline` · near: pile-store, random-passage, batch-ask
@@ -717,7 +717,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   Uses pile-store. *bot* `no-install` `offline` `phrases` `ranked` `pile` · near: pile-rungs, pile-serve, pile-store
 - <a id="pile-rungs"></a>[**pile-rungs**](adapters/stdlib/pile-rungs/) \
   Tries the strict word match first, then your folder's phrases, and says which one found the answer and why the others didn't. \
-  Uses pile-rank. *bot* `no-install` `offline` `matched` `phrases` `pile` · near: pile-rank, pile-serve, pile-store
+  Uses pile-rank. *bot* `no-install` `offline` `phrases` `store` `pile` · near: pile-rank, pile-serve, pile-store
 - <a id="pile-sweep"></a>[**pile-sweep**](adapters/stdlib/pile-sweep/) \
   Finds the passage length that suits your folder, by asking your answered questions at several lengths and naming the one finding the most. \
   Uses batch-ask, pile-gold, pile-rank. *bot* `no-install` `offline` `pile` · near: pile-store, pile-gold, pile-rank
@@ -726,7 +726,7 @@ Each writes plain text into a mirror folder the kernel searches, so your origina
   *box* `no-install` `offline` `quote` · near: quotes, claim-check, ref-check
 - <a id="quotes"></a>[**quotes**](adapters/stdlib/quotes/) \
   Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there. \
-  Uses misquote, quote-check. *new* `no-install` `offline` `quote` `drops` · near: misquote, quote-check, many-boxes
+  Uses misquote, quote-check. *new* `no-install` `offline` `quote` `dropped` · near: misquote, quote-check, many-boxes
 - <a id="record-sql"></a>[**record-sql**](adapters/deps/record-sql/) \
   SQL straight over your record, in place: 'how many answers did I approve in March?' \
   Needs DuckDB; MIT. *box* `needs-install` `offline` `count` · near: mcp, static-search, noised-count
@@ -895,7 +895,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="dialect-dates"></a>[**dialect-dates**](adapters/deps/dialect-dates/) \
   The words your folder uses far more than the world does, each dated by its first and last appearance, with the passage that first says it. \
   Needs wordfreq; Apache-2.0, its data CC BY-SA 4.0. Uses dialect, first-mention. *new* `needs-install` `offline` `dialect` `far` · near: dialect, code-shape,
-  pdf
+  wasm
 
 ### Tools you run yourself
 
@@ -977,7 +977,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *new* `no-install` `offline` · near: on-this-day, licenses, nightstand
 - <a id="lesson-time"></a>[**lesson-time**](adapters/stdlib/lesson-time/) \
   Lesson plans whose timed parts don't add up to the time the plan says it takes, each part's minutes shown beside the total. \
-  *new* `no-install` `offline` `lesson` `plan` `teaching` · near: make-it-so, my-lessons, test-impact
+  *new* `no-install` `offline` `lesson` `plan` `teaching` · near: my-lessons, make-it-so, test-impact
 - <a id="livestock"></a>[**livestock**](adapters/stdlib/livestock/) \
   Each animal's births, treatments and sales, from your farm records. \
   Uses habits. *new* `no-install` `offline` · near: gather, calendar-out, hook-impact
@@ -1230,7 +1230,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   *new* `no-install` `offline` `sqlite` `copy` · near: bookmarks, codebase-memory, zotero
 - <a id="pgp"></a>[**pgp**](adapters/deps/pgp/) \
   Signs exports and reports with your PGP key, verifiable anywhere. \
-  Needs the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause. *new* `needs-install` `offline` · near: pdf, export-answers, mcp
+  Needs the gpg program, run not linked, and python-gnupg; GPL, BSD-3-Clause. *new* `needs-install` `offline` · near: export-answers, pdf, mcp
 - <a id="prov"></a>[**prov**](adapters/stdlib/prov/) \
   The record exported as W3C PROV: what came from what, by which step, sealed by whom. \
   *new* `no-install` `offline` `prov` `tool` · near: cloudevents, annotations, in-toto
@@ -1258,7 +1258,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Needs the git program; GPL, called not linked. *new* `needs-install` `offline` `commit` `forge` · near: repo-mirrors, stale-answers, still-kept
 - <a id="in-case"></a>**in-case** (idea) \
   A letter for the people you trust, if something happens to you: where things are and who to call, from your files, sealed by you. \
-  *new* `no-install` `offline` `trust` `people` · near: hook-guard, witness, model-exam
+  *new* `no-install` `offline` `people` `trust` · near: hook-guard, witness, model-exam
 - <a id="paper-key"></a>**paper-key** (idea) \
   Your key printed as words on paper, to keep somewhere safe, and typed back in to restore it. \
   *new* `no-install` `offline` `prints` `key` · near: notation, print, first-run
@@ -1333,7 +1333,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   transcript-redact
 - <a id="losc"></a>**losc** (idea) \
   Does a project pass the Local Only Servers Club's test: no accounts, no cloud, and your data your own? \
-  *bot* `no-install` `offline` `local` `server` · near: model-quantized, robinhood, github-archive
+  *bot* `no-install` `offline` `local` `server` · near: model-quantized, robinhood, local-model
 - <a id="model-recall"></a>**model-recall** (idea) \
   Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. \
   *new* `no-install` `offline` `suggested` `second` · near: openai-compatible, model-exam, sort-ask
@@ -1557,7 +1557,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses weights-card. *new* `no-install` `offline` `hash` `weights` · near: weights-card, local-model, weights-pin
 - <a id="model-drift"></a>[**model-drift**](adapters/stdlib/model-drift/) \
   Your frozen questions asked again of a model now and then, flagging when its answers change while its name and card stay the same. \
-  Uses openai-compatible. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` · near: same-way, model-card,
+  Uses openai-compatible. Goes online: the endpoint you configure, to ask your questions again. *new* `no-install` `online` · near: model-card, same-way,
   model-exam
 - <a id="model-exam"></a>[**model-exam**](adapters/stdlib/model-exam/) \
   Any model scored against the answers you sealed, your own questions as its exam, before you trust its suggestions. \
@@ -1790,7 +1790,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="tui"></a>**tui** (idea) \
   A full-screen terminal view to ask, read passages and approve, in curses. \
-  *new* `no-install` `offline` `full` `screen` · near: approved-only, browse, jeles
+  *new* `no-install` `offline` `screen` `full` · near: approved-only, browse, jeles
 - <a id="warm"></a>**warm** (idea) \
   The kernel kept running between questions on this machine, so each question skips the start-up. \
   Reaches this machine only. *new* `no-install` `this-machine` `between` · near: run-answer, stack-row, pile-store
@@ -1990,7 +1990,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 
 - <a id="game-baselines"></a>**game-baselines** (idea) \
   A game's measured self-play results as lines, each with its count of games and the policy every seat played: a run, never an estimate. \
-  *new* `no-install` `offline` `play` `game` · near: play-liars-dice, table, hit-kinds
+  *new* `no-install` `offline` `game` `count` · near: play-liars-dice, table, hit-kinds
 
 ### What runs on your page
 
@@ -2018,10 +2018,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `daily` · near: play-quiz, random-passage, stack-row
 - <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
-  Uses play-dice, play-dice5e. *new* `no-install` `offline` `roll` `dice` · near: play-dice, play-dice5e, game-master
+  Uses play-dice, play-dice5e. *new* `no-install` `offline` `dice` `roll` · near: play-fight, play-dice, play-dice5e
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
-  Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-odds, play-checkers
+  Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-odds, play-checkers
 - <a id="lines-veils"></a>[**lines-veils**](adapters/stdlib/lines-veils/) \
   What never happens at your table and what happens off-screen, checked before a part is read; the X-card kept with no one named. \
   From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline` `screen` · near:
@@ -2031,49 +2031,54 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Uses play-tarot. *new* `no-install` `offline` `seeded` `branch` · near: hook-replay, restack, ink-story
 - <a id="play-backgammon"></a>[**play-backgammon**](adapters/stdlib/play-backgammon/) \
   Backgammon on the record, every throw dice's own row: the rules held whole, gammons and backgammons scored. \
-  Uses play-dice. *new* `no-install` `offline` `play` `dice` · near: play-liars-dice, play-checkers, play-dice
+  Uses play-dice. *new* `no-install` `offline` `dice` `rules` · near: play-liars-dice, play-checkers, play-dice
 - <a id="play-bureau"></a>[**play-bureau**](adapters/stdlib/play-bureau/) \
   bureau, the Bureaucracy homage at UTETY, on the record: the deadlock proved, every visit a row, and Gerald's napkin the only way out. \
-  *new* `no-install` `offline` `play` · near: play-hearts, play-backgammon, play-crazy-eights
+  *new* `no-install` `offline` · near: play-hearts, play-backgammon, play-crazy-eights
 - <a id="play-catgrid"></a>[**play-catgrid**](adapters/stdlib/play-catgrid/) \
   A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. \
-  *new* `no-install` `offline` `play` `seeded` · near: play-life, play-checkers, play-backgammon
+  *new* `no-install` `offline` `seeded` · near: play-life, play-checkers, play-backgammon
+- <a id="play-checkers"></a>[**play-checkers**](adapters/stdlib/play-checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
+  *new* `no-install` `offline` `rules` `draw` · near: play-backgammon, play-catgrid, play-hearts
 
 #### Tools you run yourself, p to p
 
-- <a id="play-checkers"></a>[**play-checkers**](adapters/stdlib/play-checkers/) \
-  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
-  *new* `no-install` `offline` `play` `rules` · near: play-backgammon, play-catgrid, play-hearts
 - <a id="play-crazy-eights"></a>[**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
-  *new* `no-install` `offline` `play` `rules` · near: play-hearts, play-liars-dice, play-tarot
+  *new* `no-install` `offline` `rules` `draw` · near: play-hearts, play-liars-dice, play-tarot
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
-  *bot* `no-install` `offline` `play` `dice` · near: play-dice5e, play-liars-dice, play-backgammon
+  *bot* `no-install` `offline` `dice` `roll` · near: play-dice5e, play-liars-dice, play-backgammon
 - <a id="play-dice5e"></a>[**play-dice5e**](adapters/stdlib/play-dice5e/) \
   Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. \
-  Uses play-dice. *bot* `no-install` `offline` `play` `dice` · near: play-dice, play-backgammon, play-liars-dice
+  Uses play-dice. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-backgammon, play-liars-dice
+- <a id="play-fight"></a>[**play-fight**](adapters/deps/play-fight/) \
+  A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it. \
+  Needs dndwright, which brings pydantic and PyYAML; MIT. Uses dice-tower. From: dep of [sligara7/dndwright](https://github.com/sligara7/dndwright), MIT;
+  shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `needs-install` `offline` `dice` `tower` · near:
+  dice-tower, ripgrep, play-dice
 - <a id="play-hearts"></a>[**play-hearts**](adapters/stdlib/play-hearts/) \
   Hearts on the record, hands open and every deal seeded by the record's tip: the passes, the tricks and the moon held to the rules. \
-  *new* `no-install` `offline` `play` `rules` · near: play-crazy-eights, play-liars-dice, play-backgammon
+  *new* `no-install` `offline` `rules` `seeded` · near: play-crazy-eights, play-liars-dice, play-backgammon
 - <a id="play-horoscope"></a>[**play-horoscope**](adapters/stdlib/play-horoscope/) \
   A daily horoscope keyed on your name and the date: same name, same day, same reading, always. \
-  *bot* `no-install` `offline` `play` `daily` · near: daily-word, play-checkers, play-bureau
+  *bot* `no-install` `offline` `daily` `key` · near: daily-word, play-checkers, play-bureau
 - <a id="play-liars-dice"></a>[**play-liars-dice**](adapters/stdlib/play-liars-dice/) \
   Liar's Dice on the record, every cup dice's own throw: the bids, the wild ones and every call counted as the dice give. \
-  Uses play-dice. *new* `no-install` `offline` `play` `dice` · near: play-backgammon, play-hearts, play-crazy-eights
+  Uses play-dice. *new* `no-install` `offline` `dice` `throw` · near: play-backgammon, play-hearts, play-crazy-eights
 - <a id="play-life"></a>[**play-life**](adapters/stdlib/play-life/) \
   Conway's Game of Life as rows: a fully deterministic world on the record. \
-  *bot* `no-install` `offline` `play` `seeded` · near: play-catgrid, play-hearts, game-master
+  *bot* `no-install` `offline` `seeded` `game` · near: play-catgrid, play-hearts, game-master
 - <a id="play-odds"></a>[**play-odds**](adapters/stdlib/play-odds/) \
   Exact odds, as fractions, for a game's dice and tables: what each outcome's chance really is. \
-  *bot* `no-install` `offline` `dice` `play` · near: play-dice, game-master, play-liars-dice
+  *bot* `no-install` `offline` `dice` `roll` · near: play-dice, game-master, play-liars-dice
 - <a id="play-quiz"></a>[**play-quiz**](adapters/stdlib/play-quiz/) \
   A quiz from your own files: a passage with a word missing, and you fill it in. \
-  *new* `no-install` `offline` `play` · near: play-life, play-backgammon, play-checkers
+  *new* `no-install` `offline` · near: play-life, play-backgammon, play-checkers
 - <a id="play-tarot"></a>[**play-tarot**](adapters/stdlib/play-tarot/) \
   A seeded tarot draw on the record, replayable by anyone with the seed. \
-  *new* `no-install` `offline` `play` `seeded` · near: play-hearts, play-crazy-eights, play-checkers
+  *new* `no-install` `offline` `seeded` `draw` · near: play-hearts, play-crazy-eights, play-checkers
 
 #### Tools you run yourself: ideas, not built yet, a to p
 
@@ -2086,13 +2091,13 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   forecast-beacon
 - <a id="blind-deal"></a>**blind-deal** (idea) \
   Cards or dice only one seat can read: each seat's share sealed to it, its hash on the record, opened when the hand ends and checked. \
-  Uses play-dice. *new* `no-install` `offline` `open` `hash` · near: dice-tower, play-hearts, persona-card
+  Uses play-dice. *new* `no-install` `offline` `open` `hash` · near: play-hearts, dice-tower, persona-card
 - <a id="chess-puzzle"></a>**chess-puzzle** (idea) \
   A Lichess puzzle a day, drawn by a seed: predict whether you'll solve it, then solve it. \
   Goes online: lichess.org, to read the puzzle. *new* `no-install` `online` `drawn` `chess` · near: forecast-ask, daily-word, art-of-the-day
 - <a id="connect-four"></a>**connect-four** (idea) \
   Connect Four as rows on the record, held to the solved result: the first player wins. \
-  *new* `no-install` `offline` `result` `held` · near: connect, cloudevents, schema-check
+  *new* `no-install` `offline` `result` `held` · near: connect, schema-check, cloudevents
 - <a id="forecast-beacon"></a>**forecast-beacon** (idea) \
   Twelve yes-or-no questions about random data, forecast now and answered by a beacon round later, with your Brier score. \
   Goes online: api.drand.sh, to read a beacon round's randomness. *bot* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades, tides
@@ -2122,28 +2127,28 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Goes online: the Wikimedia pageviews API, to settle it. *new* `no-install` `online` `article` `drawn` · near: random-passage, kiwix, joins
 - <a id="play-fight5e"></a>**play-fight5e** (idea) \
   Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable. \
-  *new* `no-install` `offline` `roll` `play` · near: play-dice5e, play-dice, play-tarot
+  *new* `no-install` `offline` `roll` `replayable` · near: play-dice5e, play-dice, play-tarot
 
 #### Tools you run yourself: ideas, not built yet, p to w
 
 - <a id="play-hanoi"></a>**play-hanoi** (idea) \
   Towers of Hanoi as rows: each move, n discs in 2^n - 1. \
-  *new* `no-install` `offline` `play` `move` · near: play-reversi, tic-tac-toe, play-dice
+  *new* `no-install` `offline` `move` `tower` · near: play-fight, play-reversi, tic-tac-toe
 - <a id="play-lunatic"></a>**play-lunatic** (idea) \
   The moon's real phase sets how far typos are forgiven: everything at full moon, nothing at new. \
-  Needs Skyfield; MIT. *new* `needs-install` `offline` `play` `moon` · near: play-hearts, play-dice5e, typos
+  Needs Skyfield; MIT. *new* `needs-install` `offline` `moon` `typos` · near: play-hearts, play-dice5e, typos
 - <a id="play-mastermind"></a>**play-mastermind** (idea) \
   Mastermind with the secret's hash at the open: each guess and score on the record. \
-  *new* `no-install` `offline` `play` `open` · near: play-quiz, blind-deal, assistant-scores
+  *new* `no-install` `offline` `open` `secret` · near: play-quiz, blind-deal, assistant-scores
 - <a id="play-nim"></a>**play-nim** (idea) \
   Nim as rows: the heaps and each take, a position lost exactly when the heaps' XOR is 0. \
-  *new* `no-install` `offline` `play` `position` · near: tic-tac-toe, play-catgrid, play-odds
+  *new* `no-install` `offline` `position` · near: tic-tac-toe, play-catgrid, play-odds
 - <a id="play-reversi"></a>**play-reversi** (idea) \
   Reversi as rows: every move, each flip following from the board. \
-  *new* `no-install` `offline` `play` `move` · near: tic-tac-toe, play-catgrid, play-hanoi
+  *new* `no-install` `offline` `move` · near: tic-tac-toe, play-catgrid, play-hanoi
 - <a id="play-sokoban"></a>**play-sokoban** (idea) \
   Sokoban levels and moves on the record, a solution checked by replaying it. \
-  *new* `no-install` `offline` `play` `replayed` · near: play-catgrid, hook-replay, table
+  *new* `no-install` `offline` `replayed` `move` · near: play-catgrid, hook-replay, table
 - <a id="quake-bets"></a>**quake-bets** (idea) \
   Will there be a magnitude 6 this week? Bet, then let the USGS feed settle it against the base rate. \
   Goes online: earthquake.usgs.gov, to read the week's earthquakes. *new* `no-install` `online` `bet` `settle` · near: horoscope-grades, ci-bets, weather-bet
@@ -2159,10 +2164,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `front` `join` · near: front-page, ci-why, readme
 - <a id="table"></a>**table** (idea) \
   One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
-  *new* `no-install` `offline` `play` `game` · near: game-baselines, play-checkers, play-catgrid
+  *new* `no-install` `offline` `game` `seat` · near: game-baselines, play-checkers, play-catgrid
 - <a id="tic-tac-toe"></a>**tic-tac-toe** (idea) \
   Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. \
-  *new* `no-install` `offline` `play` `move` · near: play-reversi, play-nim, play-checkers
+  *new* `no-install` `offline` `move` `draw` · near: play-reversi, play-nim, play-checkers
 - <a id="tides"></a>**tides** (idea) \
   Tide predictions as a control: if your Brier score on tides isn't near zero, the forecasting plumbing is broken. \
   Goes online: NOAA's tides API, to read predictions and what happened. *new* `no-install` `online` `forecast` `score` · near: forecasts, forecast-beacon,
@@ -2172,7 +2177,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   *new* `no-install` `offline` `public` `domain` · near: art-of-the-day, gutenberg, tax-year
 - <a id="tower-math"></a>**tower-math** (idea) \
   Guess while the die is in the tower; the tray shows the faces, not the total, till you've added them. Misses come back, not a tally of you. \
-  Uses dice-tower, play-odds, flashcards, forecasts. *new* `no-install` `offline` `die` `total` · near: dice-tower, email-ask, bot-venv
+  Uses dice-tower, play-odds, flashcards, forecasts. *new* `no-install` `offline` `tower` `die` · near: dice-tower, email-ask, play-fight
 - <a id="weather-bet"></a>**weather-bet** (idea) \
   Wager on rain tomorrow before you look, against Open-Meteo's own forecast, and see whose Brier score wins. \
   Goes online: api.open-meteo.com, to read the forecast and the outcome. *new* `no-install` `online` `forecast` `score` · near: forecasts, horoscope-grades,
@@ -2209,7 +2214,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Goes online: nuget.org, to publish a release a maintainer tags. *new* `no-install` `online` `vectors` `port` · near: port-maven, port-npm, port-pypi
 - <a id="port-pypi"></a>**port-pypi** (idea) \
   kernel.py on PyPI as a package with no dependencies, built from this repo, checked against the vectors and attested; uvx and pipx run it. \
-  Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `vectors` `port` · near: port-nuget, port-npm, port-maven
+  Goes online: upload.pypi.org, to publish a release a maintainer tags. *new* `no-install` `online` `vectors` `port` · near: port-npm, port-nuget, port-maven
 - <a id="repo-index"></a>**repo-index** (idea) \
   This repository as its own deterministic box: its cards, docs and code as dated passages, the same each build, so willow can answer of it. \
   *new* `no-install` `offline` `repositories` `docs` · near: repo-pile, issue-answer, latent
