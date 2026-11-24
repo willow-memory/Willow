@@ -469,6 +469,17 @@ def test_the_runs_log_and_its_other_files_are_no_steps_output(tmp_path):
     run = a_run(tmp_path, "03-debts.txt", "debts.txt", "x3-debts.txt", "04-debts.json")
     assert route.kept(run) == {"debts": [str(run / "03-debts.txt")]}
     assert route.kept(None) == {}
+    # a run that keeps each step's words in its words folder is read from there;
+    # one resumed from before it had the folder has some in each, the folder's first
+    there = run.joinpath("words")
+    there.mkdir()
+    for name in ("03-debts.txt", "05-people.txt", "00-stack.txt"):
+        there.joinpath(name).write_text("kept\n")
+    run.joinpath("04-debts.txt").write_text("kept\n")
+    assert route.kept(run) == {
+        "debts": [str(there.joinpath("03-debts.txt")), str(run.joinpath("04-debts.txt"))],
+        "people": [str(there.joinpath("05-people.txt"))],
+    }  # fmt: skip
     f = tmp_path / "kinds.txt"
     f.write_text("x: zebra -> stack, notes\n")
     out = go("a zebra", "--kinds", f, "--run", run)[1]

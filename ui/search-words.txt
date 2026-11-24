@@ -17,6 +17,7 @@ bookmarks = karakeep, wallabag, readwise, links
 
 # comparing things
 compare = sort, duplicates, diverge, contradictions
+twice = duplicates
 
 # keeping track
 remind = coming, due, dates, deadline, appointments, renewals
@@ -97,3 +98,7 @@ repositories = git, commit, codebase, comments
 # showing your work
 cv = timeline, export, hunt
 resume = timeline, export, hunt
+
+# finding things out
+research = jeles, almanac
+researching = jeles, almanac

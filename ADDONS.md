@@ -19,7 +19,7 @@ is written: `no-install` or `needs-install`; `offline`, `this-machine` or
 tag its author chose, if any. *near* names the three add-ons closest to it.
 
 <!-- willow:pools -->
-`█████████████░░░░░░░` **388 of 618 built** · 557 need no install · 61 need one
+`█████████████░░░░░░░` **390 of 618 built** · 557 need no install · 61 need one
 
 | Section | Built | Ideas | No install | Needs one |
 |---|---|---|---|---|
@@ -27,11 +27,11 @@ tag its author chose, if any. *near* names the three add-ons closest to it.
 | Finding things | 40 | 20 | 50 | 10 |
 | Your own words | 22 | 8 | 27 | 3 |
 | Keeping track | 46 | 19 | 63 | 2 |
-| Trust and proof | 36 | 34 | 61 | 9 |
+| Trust and proof | 37 | 33 | 61 | 9 |
 | Privacy and safety | 15 | 5 | 18 | 2 |
 | Assistants | 52 | 24 | 68 | 8 |
 | Ways to use it | 32 | 20 | 44 | 8 |
-| Play | 20 | 33 | 49 | 4 |
+| Play | 21 | 32 | 49 | 4 |
 | For maintainers | 26 | 24 | 45 | 5 |
 <!-- /willow:pools -->
 
@@ -70,23 +70,23 @@ its list: someone who speaks the language can add one without much Python.
 <!-- willow:newest -->
 - 2026-11-23 · [**game-canon**](adapters/stdlib/game-canon/) \
   What a game's table holds true, a heads-up when a new word meets it, and the GM's choice kept: replace it, keep both, take a yes back.
+- 2026-11-21 · [**table**](adapters/stdlib/table/) \
+  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all.
+- 2026-11-21 · [**retire**](adapters/stdlib/retire/) \
+  Proposes setting aside approved answers that no longer hold, each one gone only when you seal it.
 - 2026-11-20 · [**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for.
 - 2026-11-19 · [**word-layers**](adapters/stdlib/word-layers/) \
   One words list made from several: a master of what is true in every box and a layer for each matter, remade when any of them changes.
-- 2026-11-19 · [**kept-clash**](adapters/stdlib/kept-clash/) \
-  Sealed answers people sent you, side by side: one thing given two dates, times or amounts, or one word defined two ways.
-- 2026-11-19 · [**hook-ask-first**](adapters/stdlib/hook-ask-first/) \
-  A PreToolUse hook that refuses reading by hand a file one of your boxes holds, until that box has been asked this session.
 <!-- /willow:newest -->
 
 ## Add-on of the week
 
 <!-- willow:pick week=2026-W48 -->
-**[random-passage](adapters/stdlib/random-passage/)** \
-One passage from your folder at random, seeded so it can be replayed.
+**[digest](adapters/stdlib/digest/)** \
+One page of what your folder needs from you: suggestions waiting, approvals gone stale, dates coming up, questions that find nothing.
 
-*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 388 built add-ons in name order.*
+*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 390 built add-ons in name order.*
 <!-- /willow:pick -->
 
 <!-- willow:list -->
@@ -1286,6 +1286,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="restore-drill"></a>[**restore-drill**](adapters/stdlib/restore-drill/) \
   A backup zip restored into scratch and verified there, chain and every file, so you know it restores before the day you need it. \
   Uses backup. *new* `no-install` `offline` `backup` `zip` · near: backup, diverge, ci
+- <a id="retire"></a>[**retire**](adapters/stdlib/retire/) \
+  Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
+  *bot* `no-install` `offline` `aside` · near: assistant-scores, stale-answers, kept-clash
 - <a id="session-seal"></a>[**session-seal**](adapters/stdlib/session-seal/) \
   One seal at the end of a session, over everything asked and approved in it: yes, these were my actions. \
   *bot* `no-install` `offline` `end` · near: rules, abbreviations, stack-row
@@ -1302,7 +1305,7 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   A local model's weights file hashed before each run and refused when it differs from the hash on its model card. \
   Uses weights-card. *new* `no-install` `offline` `local` `weights` · near: weights-card, model-card, model-fit
 
-#### Tools you run yourself: ideas, not built yet, b to n
+#### Tools you run yourself: ideas, not built yet, b to m
 
 - <a id="before-copy"></a>**before-copy** (idea) \
   A file beside its dated before-copy (plan.py.pre-2026-09-30, notes.md.bak) side by side: what changed since the copy was made. \
@@ -1337,13 +1340,13 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="model-recall"></a>**model-recall** (idea) \
   Every sealed answer a model suggested, listed for a second look once you mark its card as flawed; nothing is unsealed for you. \
   *new* `no-install` `offline` `suggested` `second` · near: openai-compatible, model-exam, sort-ask
+
+#### Tools you run yourself: ideas, not built yet, n to y
+
 - <a id="notary"></a>**notary** (idea) \
   The record's newest hash timestamped by an outside time server, so anyone can see it existed by then. \
   Goes online: an RFC 3161 time server you choose, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: opentimestamps, dice-tower,
   persona-card
-
-#### Tools you run yourself: ideas, not built yet, o to y
-
 - <a id="opentimestamps"></a>**opentimestamps** (idea) \
   The record's newest hash anchored by OpenTimestamps, proof that it existed by a given block. \
   Goes online: the OpenTimestamps calendars, sent only the hash. *new* `no-install` `online` `hash` `existed` · near: notary, merkle, three-two-one
@@ -1365,9 +1368,6 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
   Checks each mirror of a repo on another forge holds the same commits as the original, so losing a host loses nothing. \
   Needs the git program; GPL, called not linked. Goes online: each mirror's git URL, to read its refs. *new* `needs-install` `online` `commit` `forge` · near:
   repro, git-notes, provenance
-- <a id="retire"></a>**retire** (idea) \
-  Proposes setting aside approved answers that no longer hold, each one gone only when you seal it. \
-  *bot* `no-install` `offline` `aside` · near: assistant-scores, stale-answers, kept-clash
 - <a id="sheet-drift"></a>**sheet-drift** (idea) \
   A creature's or character's numbers that differ between two of your notes: six hits on one page, eight on another, side by side. \
   *new* `no-install` `offline` `drift` `between` · near: pair-drift, which-one, contradictions
@@ -2038,7 +2038,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
   *new* `no-install` `offline` `play` `rules` · near: play-backgammon, play-catgrid, play-hearts
 
-#### Tools you run yourself, p to p
+#### Tools you run yourself, p to t
 
 - <a id="play-crazy-eights"></a>[**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
@@ -2070,6 +2070,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-tarot"></a>[**play-tarot**](adapters/stdlib/play-tarot/) \
   A seeded tarot draw on the record, replayable by anyone with the seed. \
   *new* `no-install` `offline` `play` `seeded` · near: play-hearts, play-crazy-eights, play-checkers
+- <a id="table"></a>[**table**](adapters/stdlib/table/) \
+  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
+  *new* `no-install` `offline` `play` `game` · near: game-baselines, game-canon, play-checkers
 
 #### Tools you run yourself: ideas, not built yet, a to p
 
@@ -2153,9 +2156,6 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="spurious"></a>**spurious** (idea) \
   Everything joined on time and place (CI reds, earthquakes, rain, front pages) to hunt correlations that mean nothing. \
   *new* `no-install` `offline` `front` `join` · near: front-page, ci-why, readme
-- <a id="table"></a>**table** (idea) \
-  One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all. \
-  *new* `no-install` `offline` `play` `game` · near: game-baselines, game-canon, play-checkers
 - <a id="tic-tac-toe"></a>**tic-tac-toe** (idea) \
   Tic-tac-toe as rows: every move, and the solver's value of each position; perfect play draws. \
   *new* `no-install` `offline` `play` `move` · near: play-reversi, play-nim, play-checkers

@@ -70,7 +70,10 @@ def steps_of(run: Path) -> list[dict]:
         step = seen[n]
         if not step.pop("ended"):
             continue
-        files = sorted(run.glob(f"{n:02d}-*.txt"))
+        # its words: in the run's words folder, or the run's own before it had one
+        files = sorted(run.joinpath("words").glob(f"{n:02d}-*.txt")) or sorted(
+            run.glob(f"{n:02d}-*.txt")
+        )
         step["sha256"] = (
             hashlib.sha256(files[0].read_bytes()).hexdigest() if files else None
         )

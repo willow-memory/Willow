@@ -1825,17 +1825,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "retire",
-  "kind": "stdlib",
-  "section": "Trust and proof",
-  "line": "Proposes setting aside approved answers that no longer hold, each one gone only when you seal it.",
-  "source": "bot",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
   "name": "roll-for-merge",
   "kind": "stdlib",
   "section": "Play",
@@ -2194,17 +2183,6 @@
   "source": "new",
   "needs": "scip-python; MIT",
   "writes": "nothing",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
-  "name": "table",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all.",
-  "source": "new",
-  "writes": "record",
   "network": "none",
   "role": "tools",
   "version": "0.0.1"

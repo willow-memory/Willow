@@ -883,7 +883,7 @@ class Willow:
         n = int(line)
         if self.run is not None and re.fullmatch(r"\d+-[\w-]+\.txt", path):
             try:
-                lines = (self.run / path).read_text(encoding="utf-8", errors="replace").splitlines()  # fmt: skip
+                lines = run_words(self.run, path).read_text(encoding="utf-8", errors="replace").splitlines()  # fmt: skip
             except OSError:
                 lines = []
             if 1 <= n <= len(lines):
@@ -953,7 +953,7 @@ class Willow:
             except (OSError, ValueError, KeyError, TypeError):
                 pass  # no report kept, or the step hasn't ended: its words
             try:
-                text = (self.run / f"{name}.txt").read_text(
+                text = run_words(self.run, name + ".txt").read_text(
                     encoding="utf-8", errors="replace"
                 )
             except OSError:
@@ -1370,6 +1370,13 @@ class Willow:
 
 
 AGAIN = 3  # seconds between looks at a run that is still going
+
+
+def run_words(run: Path, name: str) -> Path:
+    """Where a run kept the words a step printed, by the file's name: its
+    words folder, or the run's own folder in a run kept before it had one."""
+    new = run.joinpath("words", name)
+    return new if new.is_file() else run.joinpath(name)
 
 
 def run_steps(log: str, st) -> tuple[list[dict], str | None]:

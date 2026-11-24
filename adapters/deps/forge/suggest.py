@@ -1,10 +1,11 @@
 """suggest.py: the Forge's matchmaker over this willow's add-on cards.
 Python 3.11+ (forge-play's floor), forge-play 0.10 or newer.
 
-    python adapters/deps/forge/suggest.py suggest --box DIR "what you want done" [--json | --plan]
-    python adapters/deps/forge/suggest.py propose --box DIR "what you want done"
+    python adapters/deps/forge/suggest.py suggest --box DIR "what you want done" [--defaults FILE|none] [--json | --plan]
+    python adapters/deps/forge/suggest.py propose --box DIR "what you want done" [--defaults FILE|none]
                                                   --choose WORD=NAME ... [--why WORD=REASON ...] [--json]
     python adapters/deps/forge/suggest.py build   --box DIR "what you want done" --to STACK [--json]
+    python adapters/deps/forge/suggest.py next    --box DIR "what you want done" --stacks FOLDER [--json]
     python adapters/deps/forge/suggest.py scores  --box DIR [--json]
 
 A sentence in, the add-ons it names or means out. The Forge's card box reads
@@ -44,6 +45,22 @@ contract), a group per kind of thing:
             in it; its proposal keeps the search's order, your pick's rank in
             it, the order you saw, and the confidence it kept unsaid
 
+`next` says what could go in after what you have: the steps of the stack you
+sealed for these words (or, before one is sealed, what the words reach and
+the defaults), held against every stack file under FOLDER, your own. For
+each card you don't have, it counts how often your stacks put it beside a
+step you do: "with mail in 9 of 12". It looks beside the steps your words or
+picks brought, not the defaults, and it scores a card by how much more often
+it sits beside those steps than in your stacks at large: a card in nearly
+every stack is beside everything, says nothing, and is not offered. Counting
+and nothing else, no model and no search: it offers what you have done
+before, never what might be good. Beside that, said apart, it offers what you have never
+stacked: built cards in none of your stacks that the catalogue's own search
+puts near your words or near a step you have, so a card gets a first chance
+that counting alone would never give it. A default is not looked beside: it
+suits any folder, so what is near it says nothing of what you are after. It
+writes nothing and asks nothing; exit 0.
+
 `scores` reads those back: over the close decisions you sealed that still
 stand, how often you took the first (the recommendation), the second, the
 third, or none, all together and per matcher (known by the cards it ranks
@@ -60,6 +77,36 @@ any is sealed.
 
 A stack you sealed for these very words is served first, as the kernel
 serves any sealed answer, and nothing else is asked.
+
+    several a fork may take more than one card: `--choose WORD=A,B`, or
+            `--choose WORD=A` given again with B. Any one might be good, and
+            more than one often is ("research": jeles and almanac). It is
+            still one decision and one proposal: the one the search put
+            highest is `chose`, the rest `also`, each with its card pinned;
+            every one is a step of the stack. `none` and `not-now` stand
+            alone. A close fork is scored on `chose`, so taking a second
+            card with the search's first neither helps nor hurts its score.
+    not-now every fork's other way out, beside `none`: `--choose WORD=not-now`
+            leaves it undecided, and says so on your record. Not deciding is
+            a decision: it is a proposal of its own, under its own question
+            ("forge not now willow-WORD"), sealed or declined like any other,
+            with your reason. The fork's own question stays unanswered, so
+            the fork stays open, is offered again, and nothing is scored;
+            the other steps and settled forks still make a stack. The report
+            says each fork you said not now to, and each pick that waits on
+            your seal, so neither goes quiet: a pick is scored only once
+            sealed, and a stack sealed without its pick says which is left.
+    defaults  the add-ons named in defaults.txt, beside this script: in every
+            stack proposed, after the steps your words reached, because they
+            suit any folder (open items, what is due, what is kept twice).
+            A default is never an option of the `close` fork and is never
+            scored, so picking one can't be taken for the search being
+            right. One your words reached, or that a word's fork offers, is
+            that step or that option and not a default too. They ride with
+            a stack and never make one: with no step and no fork there is
+            still nothing to run. A line naming no built add-on is said.
+            `--defaults FILE` reads a list of your own, and `--defaults none`
+            proposes with none; give `propose` what you gave `suggest`.
 
 `propose` settles the open forks with `--choose WORD=NAME` (and a reason with
 `--why WORD=...`) and hands the result to the kernel's door, nothing more:
@@ -111,6 +158,13 @@ folder that isn't a box or whose record doesn't verify, a fork left
 unsettled or settled with an option not on offer, a stack sealed for these
 words already, no stack sealed for these words to build, a STACK whose
 parent is missing, a card beside this script that won't read).
+
+Phrases: the kernel's words list holds one word to a key, so the table at the
+top of this file (NEEDS_PHRASE, NAMES) says what a word cannot. "back" reaches
+backup only with "up" within a word or two ("back up", "back it up"), so "due
+back" does not; "things to do", "still have to do", "left to do", "to-do" and
+"to do list" name todo. Bare "to do" does not: it is in "what do I want to do".
+Every verb reads the sentence through it, so they agree.
 """
 
 from __future__ import annotations
@@ -138,8 +192,98 @@ APP = "willow-stack"
 STACK_PATH = "forge/stack.md"
 NEEDS = "forge-play 0.10 or newer is not installed: pip install -r adapters/deps/forge/requirements.txt"
 SIMILAR = ROOT / "adapters/stdlib/similar/similar.py"
+DEFAULTS = HERE / "defaults.txt"
+DEFAULT_WHY = "a default: in every stack, not asked and not scored"
+
+#: Phrases, as data. The kernel's words list (ui/search-words.txt) is one word
+#: to a key, and a multi-word key blanks the whole list, so it cannot say
+#: "back up" or "things to do". Two kinds of row, applied to the scan's hits
+#: (see `phrased`):
+#:   NEEDS_PHRASE  a hit made by this word stands only if the sentence also
+#:                 has one of the phrases (the hit then reads as the phrase)
+#:   NAMES         these phrases name the add-on on their own
+#: "to do" alone is not named: it is in "what do I want to do with this folder".
+NEEDS_PHRASE = {
+    "back": (
+        "backup",
+        r"back(?:\s+\w+){0,2}\s+up",
+    ),  # back up, back it up, back them all up
+}
+NAMES = {
+    "todo": (
+        "a list of open items, said in more than one word",
+        r"things\s+(?:(?:i|we)\s+)?(?:still\s+)?(?:have\s+|need\s+)?to\s+do"
+        r"|(?:still\s+)?(?:have|need)\s+(?:still\s+)?to\s+do"
+        r"|(?:left|more|else)\s+to\s+do"
+        r"|to-do"
+        r"|to\s+do\s+(?:list|items?)",
+    ),
+}
+_EDGE = r"(?<![\w-])(?:{})(?![\w-])"
+
+
+def phrased(hits: list, sentence: str) -> list:
+    """The scan's hits, as the phrase table above reads them: a hit from a
+    word in NEEDS_PHRASE is dropped unless its phrase is in the sentence (and
+    then says the phrase as what it matched); a NAMES phrase adds a hit for
+    its add-on when the scan has none for it. Same sentence, same answer, for
+    every verb."""
+    from dataclasses import replace
+
+    out = []
+    for h in hits:
+        rule = NEEDS_PHRASE.get(h.matched)
+        if rule is None or h.target != rule[0]:
+            out.append(h)
+        elif m := re.search(_EDGE.format(rule[1]), sentence, re.IGNORECASE):
+            out.append(replace(h, matched=" ".join(m.group(0).lower().split())))
+    for name, (reason, pattern) in NAMES.items():
+        if any(h.target == name for h in out):
+            continue
+        if m := re.search(_EDGE.format(pattern), sentence, re.IGNORECASE):
+            from forge.majors import Hit
+
+            said = " ".join(m.group(0).lower().split())
+            out.append(Hit(source=said, target=name, reason=reason, matched=said))
+    return out
+
+
+def defaults(by_name: dict) -> tuple[list[tuple[str, str]], list[str]]:
+    """([(name, why it is a default)], [lines that name no built add-on]),
+    from defaults.txt, in its order, each name once. No file, no defaults."""
+    if not DEFAULTS.is_file():
+        return [], []
+    held, missing = [], []
+    for raw in DEFAULTS.read_text(encoding="utf-8").splitlines():
+        line = raw.split("#", 1)[0].strip()
+        if not line:
+            continue
+        name, _, why = line.partition(" ")
+        if name in by_name and by_name[name].built:
+            if name not in [n for n, _ in held]:
+                held.append((name, why.strip()))
+        else:
+            missing.append(name)
+    return held, missing
+
+
 #: the fork for a sentence no name or alias line reaches, and its way out
 CLOSE, NONE = "close", "none"
+#: a fork's other way out: not deciding it yet, which is a decision of its own
+NOT_NOW = "not-now"
+NOT_NOW_PATH = "forge/not-now/{}.json"
+NOT_NOW_TRADEOFF = (
+    "leave this one undecided: sealed, that is on your record as a decision "
+    "of its own; the fork stays open and nothing is scored"
+)
+
+
+def not_now_question(dt: str) -> str:
+    """The words a not-now is proposed and sealed under: never the decision's
+    own, so the decision's question stays unanswered for the pick to come."""
+    return f"forge not now {dt}"
+
+
 #: how many cards similar's search may put in that fork
 NEAR = 3
 DOUBTED = "named, but not close: the search puts it nowhere near your words"
@@ -516,9 +660,70 @@ def on_record(box: Path, rec) -> tuple[dict, dict]:
                     decisions.setdefault(
                         dt,
                         {"chose": data["chose"], "word": data.get("word", ""),
+                         "also": [n for n in data.get("also") or [] if isinstance(n, str)],
                          "row": row["n"], "subject": subj},
                     )  # fmt: skip
     return decisions, stacks
+
+
+def undecided(box: Path, rec) -> tuple[dict, dict]:
+    """What isn't settled yet and why, through the kernel: ({decision_type:
+    {row, subject, why}}, the latest not-now you sealed for it, under its own
+    question; {decision_type: [{row, subject, chose}]}, each pick or not-now
+    that passed the door and that you neither sealed nor declined)."""
+    rows, _ = kernel.read(box / "record.jsonl")
+    later: dict = {}
+    for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
+        prop, asked, why = kernel.standing(box, rows, subj, row)
+        if why is not None or not prop["path"].startswith(NOT_NOW_PATH.split("{")[0]):
+            continue
+        try:
+            data = json.loads(prop["data"])
+            dt = data["decision_type"]
+        except (ValueError, KeyError, TypeError):
+            continue
+        if isinstance(dt, str) and asked == kernel.bite_key(not_now_question(dt)):
+            later[dt] = {
+                "row": row["n"],
+                "subject": subj,
+                "why": str(data.get("why", "")),
+            }
+    waits: dict = {}
+    mine = (rec.DECISION_PATH.split("{")[0], NOT_NOW_PATH.split("{")[0])
+    for subj, row in kernel.waiting(box, rows).items():
+        try:
+            prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
+            data = json.loads(prop["data"]) if prop["path"].startswith(mine) else None
+            dt, chose = data["decision_type"], data["chose"]
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if (
+            kernel.subject_of(prop) == subj
+            and isinstance(dt, str)
+            and isinstance(chose, str)
+        ):
+            waits.setdefault(dt, []).append(
+                {"row": row["n"], "subject": subj, "chose": chose}
+            )
+    return later, waits
+
+
+def held_back(out: dict, rec) -> list[tuple[str | None, list]]:
+    """The report's two groups for what isn't settled: the forks you said not
+    now to, and the picks that wait on your seal, each said so it never goes
+    quiet. A pick is scored only once it is sealed."""
+    return [
+        ("you said not now", [
+            (NOT_NOW_PATH.format(got["decision_type"]),
+             f"“{w}” left undecided, by your seal (row {got['row']})"
+             + (f": {got['why']}" if got["why"] else ""))
+            for w, got in out.get("not_now", {}).items()]),
+        ("picked, not sealed yet", [
+            ((NOT_NOW_PATH if g["chose"] == NOT_NOW else rec.DECISION_PATH).format(dt),
+             ("not now" if g["chose"] == NOT_NOW else g["chose"])
+             + f" for “{w}”, proposed at row {g['row']}; it waits on your seal, and nothing is scored until then")
+            for w, (dt, got) in out.get("unsealed", {}).items() for g in got]),
+    ]  # fmt: skip
 
 
 def promises(card) -> str:
@@ -614,8 +819,12 @@ def plan(
         placed = {f["name"] for f in ranked}
         doubted = [c for c in alone if c.name not in placed]
         found = [c for c in found if c not in doubted]
+    kept, not_here = defaults(by_name)
+    # a default never competes: the search's fork doesn't offer one
     close = (
-        near(sentence, by_name, reached) if sentence and (doubted or not found) else []
+        near(sentence, by_name, reached | {n for n, _ in kept})
+        if sentence and (doubted or not found)
+        else []
     )
     options = [f["name"] for f in close] + [c.name for c in doubted]
     if options:
@@ -638,7 +847,8 @@ def plan(
                 settled[word] = {**got, "decision_type": dt,
                                  "stale": f"{got['chose']} no longer does “{word}” here"}  # fmt: skip
     in_fork = {n for names in open_forks.values() for n in names}
-    chosen = {got["chose"]: word for word, got in settled.items() if "stale" not in got}
+    chosen = {n: word for word, got in settled.items() if "stale" not in got
+              for n in (got["chose"], *got.get("also", []))}  # fmt: skip
     in_any_fork = {n for names in forks.values() for n in names}
     steps, ideas, entries = [], [], []
     for cand in found:
@@ -664,6 +874,14 @@ def plan(
                 dest_path=f"steps/{cand.name}.md", content=step_line(cand.name)
             )
         )
+    # the defaults, after what the words reached: not one that is a step
+    # already, or an option of a fork (there it is the person's to pick)
+    stepped = {s["name"] for s in steps}
+    riding = [
+        {"name": n, "line": by_name[n].line, "why": why, "where": by_name[n].where,
+         "promises": promises(by_name[n])}
+        for n, why in kept if n not in stepped and n not in in_any_fork
+    ]  # fmt: skip
     fork_docs, hidden = {}, None
     blinded = CLOSE in open_forks and blind(sentence)
     for word, names in open_forks.items():
@@ -715,6 +933,13 @@ def plan(
             )
         )
         fork_docs[word] = docs
+    if entries:  # they ride with a plan, and never make one
+        entries += [
+            shape.FileWrite(
+                dest_path=f"steps/{d['name']}.md", content=step_line(d["name"])
+            )
+            for d in riding
+        ]
     doc = (
         shape.PlanDoc(app_name=APP, entries=tuple(entries)).to_dict()
         if entries
@@ -726,6 +951,8 @@ def plan(
     out = {
         "cards": {"built": built, "ideas": len(box.cards) - built},
         "steps": steps,
+        "defaults": riding,
+        "defaults_not_here": not_here,
         "forks": fork_docs,
         "sealed": settled,
         "ideas": ideas,
@@ -749,18 +976,27 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
             for i, ln in enumerate(s["text"].splitlines(), 1)
             if ln.strip()
         ]
-        said = f"a stack is sealed for these words (row {s['row']}); nothing to ask"
+        back = held_back(out, rec)
+        left = sum(len(r) for _, r in back)
+        said = f"a stack is sealed for these words (row {s['row']}); " + (
+            f"{left} of its forks {'is' if left == 1 else 'are'} not settled, said below"
+            if left
+            else "nothing to ask"
+        )
         return report(
             NAME,
             "populated",
             said,
-            [(f"stack sealed for these words ({s['subject']})", rows)],
+            [(f"stack sealed for these words ({s['subject']})", rows), *back],
         ), kernel.ALIVE
     groups = [("steps", [(s["where"], f"{s['name']}: {s['line']} ({s['promises']})"
                           + (f"; {s['why']}" if s["why"].startswith("you sealed") else ""))
                          for s in out["steps"]])]  # fmt: skip
     for word, options in out["forks"].items():
         rows = [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options]
+        rows.append(
+            (NOT_NOW, f"{NOT_NOW}: {NOT_NOW_TRADEOFF}")
+        )  # the other way out, always last
         if word == CLOSE and out.get("close", {}).get("blind"):
             # blind: in no order of the search's, nothing recommended, said once
             groups.append((f"fork “{CLOSE}”, {BLIND_SAID}: nothing named that the search agrees with; these are close to what you said", rows))  # fmt: skip
@@ -771,6 +1007,12 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
             groups.append((f"fork “{CLOSE}”: nothing named that the search agrees with; these are close to what you said", rows))  # fmt: skip
         else:
             groups.append((f"fork “{word}”", rows))
+    groups += held_back(out, rec)
+    groups.append((f"defaults: {DEFAULT_WHY[11:]}", [
+        (d["where"], f"{d['name']}: {d['line']} ({d['promises']})" + (f"; {d['why']}" if d["why"] else ""))
+        for d in out.get("defaults", [])]))  # fmt: skip
+    groups.append(("defaults named that are no built add-on here", [
+        (DEFAULTS.name, n) for n in out.get("defaults_not_here", [])]))  # fmt: skip
     misses = {w: got for w, got in out["sealed"].items()
               if got["chose"] == NONE and "stale" not in got}  # fmt: skip
     groups.append(("you sealed none of them", [
@@ -823,6 +1065,160 @@ def steps_of(stack_text: str) -> list[str]:
             if name and name not in out:
                 out.append(name)
     return out
+
+
+NEXT_TOP = 8  # how many are offered next
+NEXT_SEEN = (
+    2  # a card counts beside a step only when two of your stacks put them together
+)
+
+
+def stacks_in(home: Path) -> list[list[str]]:
+    """Every stack file under HOME, as the add-ons it names, in order: a file
+    called stack*.md or across*.md, at most four folders down, never one kept
+    in a pile, a box or a run. A stack that names one add-on says nothing of
+    what goes with what, and is left out."""
+    skip = {"pile", "piles", "box", "runs", "sources", "index", "store", "backups"}
+    out = []
+    for f in sorted(home.rglob("*.md")):
+        rel = f.relative_to(home).parts
+        if (
+            len(rel) > 5
+            or skip & set(rel[:-1])
+            or not f.name.startswith(("stack", "across"))
+        ):
+            continue
+        try:
+            names = steps_of(f.read_text(encoding="utf-8", errors="replace"))
+        except OSError:
+            continue
+        if len(names) > 1:
+            out.append(names)
+    return out
+
+
+def what_next(have: list[str], stacks: list[list[str]], by_name: dict, beside: list[str] | None = None) -> list[dict]:  # fmt: skip
+    """What your own stacks put beside the steps you have, best first:
+    [{name, score, beside}]. Counting, and nothing else: for a card you don't
+    have, and each step you do, the share of your stacks holding that step
+    that hold the card too; its score is the mean over the steps it was seen
+    beside twice or more. `beside` is those steps, strongest first, each
+    {step, both, of}. A card no stack of yours puts with any of them is not
+    offered: this says what you have done, never what might be good."""
+    # `beside` is the steps looked beside, when not all of them: a default is in
+    # nearly every stack, so what sits with it is what sits with everything
+    look = set(beside if beside is not None else have)
+    has = {n: sum(1 for st in stacks if n in st) for n in look}
+    seen: dict[str, list[dict]] = {}
+    for st in stacks:
+        held = set(st)
+        for step in held & look:
+            for card in held - set(have):
+                if card in by_name and by_name[card].built:
+                    row = seen.setdefault(card, {}).setdefault(
+                        step, {"step": step, "both": 0, "of": has[step]}
+                    )
+                    row["both"] += 1
+    out = []
+    for card, rows in seen.items():
+        beside = sorted((r for r in rows.values() if r["both"] >= NEXT_SEEN),
+                        key=lambda r: (-r["both"] / r["of"], r["step"]))  # fmt: skip
+        if beside:
+            # how much more often beside these steps than in your stacks at large:
+            # a card in nearly every stack is beside everything, and says nothing
+            everywhere = sum(1 for st in stacks if card in st) / len(stacks)
+            score = sum(r["both"] / r["of"] for r in beside) / len(beside) - everywhere
+            if score > 0:
+                out.append({"name": card, "score": round(score, 3), "beside": beside})
+    return sorted(out, key=lambda c: (-c["score"], -len(c["beside"]), c["name"]))
+
+
+def untried(have: list[str], stacks: list[list[str]], by_name: dict, sentence: str, asked: list[str] | None = None) -> list[dict] | None:  # fmt: skip
+    """The built cards no stack of yours has ever held, that the catalogue's
+    own search puts near what you asked for or near a step you have, best
+    first: [{name, words, steps}]. `words` is whether it is near your
+    sentence; `steps` the steps of yours it is near, by each step's own card
+    line. Near your words comes first, then near the most steps. None when
+    this willow's similar has no search. Pointing, never answering."""
+    if searched(sentence or "x") is None:
+        return None
+    stacked = {n for st in stacks for n in st} | set(have)
+    found: dict[str, dict] = {}
+
+    def note(names: list[str], step: str | None) -> None:
+        for n in names:
+            if n in by_name and by_name[n].built and n not in stacked:
+                row = found.setdefault(
+                    n, {"name": n, "words": False, "steps": [], "at": len(found)}
+                )
+                if step is None:
+                    row["words"] = True
+                elif step not in row["steps"]:
+                    row["steps"].append(step)
+
+    if sentence:
+        note([f["name"] for f in searched(sentence) or []], None)
+    # a default suits any folder, so what is near one says nothing of what you
+    # are after: only the steps your words or your picks brought are looked beside
+    base = {n for n, _ in defaults(by_name)[0]} - set(asked or [])
+    for step in have:
+        if step in by_name and step not in base:
+            note([f["name"] for f in searched(by_name[step].line) or []], step)
+    return sorted(
+        found.values(), key=lambda r: (not r["words"], -len(r["steps"]), r["at"])
+    )
+
+
+def next_report(have: list[str], stacks: list[list[str]], by_name: dict, where: str, sentence: str = "", asked: list[str] | None = None) -> tuple[dict, int]:  # fmt: skip
+    """What could go in next, as a report, from two places said apart: what
+    your stacks have put beside these steps, and what you have never stacked
+    that the catalogue puts near. Exit 0: it offers, it never asks."""
+    if not have:
+        return report(NAME, "empty", "no steps yet to look beside: say what you want first", []), kernel.ALIVE  # fmt: skip
+    base = {n for n, _ in defaults(by_name)[0]}
+    # what the words or the picks brought. ASKED is the steps the words named:
+    # one of those is looked beside even when it is a default as well
+    own = [n for n in have if n not in base or n in (asked or [])]
+    found = what_next(have, stacks, by_name, own or None)
+    rows = []
+    for c in found[:NEXT_TOP]:
+        card = by_name[c["name"]]
+        b = "; ".join(
+            f"with {r['step']} in {r['both']} of {r['of']}" for r in c["beside"][:3]
+        )
+        more = (
+            f"; and {len(c['beside']) - 3} more of your steps"
+            if len(c["beside"]) > 3
+            else ""
+        )
+        rows.append(
+            (card.where, f"{card.name}: {card.line} ({promises(card)}); {b}{more}")
+        )
+    new = untried(have, stacks, by_name, sentence, asked)
+    fresh = []
+    for c in (new or [])[:NEXT_TOP]:
+        card = by_name[c["name"]]
+        near_ = (["near your words"] if c["words"] else []) + (
+            ["near " + ", ".join(c["steps"][:3]) + (f" and {len(c['steps']) - 3} more" if len(c["steps"]) > 3 else "")]
+            if c["steps"] else [])  # fmt: skip
+        fresh.append(
+            (
+                card.where,
+                f"{card.name}: {card.line} ({promises(card)}); {'; '.join(near_)}",
+            )
+        )
+    said = (f"{len(rows)} of {len(found)} your stacks put beside these {len(have)} steps, "
+            f"from {len(stacks)} stacks in {where}; "
+            + ("no search here for what you haven't tried" if new is None
+               else f"{len(fresh)} of {len(new)} you have never stacked and the catalogue puts near"))  # fmt: skip
+    if not rows and not fresh:
+        said = (f"none of your {len(stacks)} stacks in {where} puts anything beside these {len(have)} steps twice, "
+                "and nothing you haven't stacked is near them")  # fmt: skip
+        return report(NAME, "empty", said, []), kernel.ALIVE
+    groups = [("you have", [(by_name[n].where if n in by_name else n, n) for n in have]),
+              ("what your stacks put beside them, most often first", rows),
+              ("what you have never stacked, and the catalogue puts near", fresh)]  # fmt: skip
+    return report(NAME, "populated", said, groups), kernel.ALIVE
 
 
 ASSEMBLED = re.compile(r"^\+ (\S+)\s+.*?contract (\S+)\s+tests (\S+)(?::\s*(.*))?$")
@@ -952,6 +1348,73 @@ def pairs(items: list[str], what: str) -> tuple[dict[str, str], str | None]:
     return out, None
 
 
+def picks(items: list[str]) -> tuple[dict[str, list[str]], str | None]:
+    """`--choose WORD=NAME` arguments as {word: [names]}, or why one isn't.
+    A fork may take more than one: `WORD=A,B`, or `--choose WORD=A` given
+    again with B. A name given twice counts once."""
+    out: dict[str, list[str]] = {}
+    for it in items or []:
+        word, sep, value = it.partition("=")
+        names = [n.strip() for n in value.split(",") if n.strip()]
+        if not sep or not word.strip() or not names:
+            return {}, f"--choose takes WORD=NAME or WORD=NAME,NAME, not {it!r}"
+        held = out.setdefault(word.strip(), [])
+        held += [n for n in names if n not in held]
+    return out, None
+
+
+WANTS_INTRO = (
+    "A stack of wants, each above the step that answers it. They are "
+    "proposals: cut any, add your own (a want in your words, then the add-on "
+    "that answers it), and it is your stack."
+)
+
+
+def wants(sentence: str, out: dict, choose: dict, why: dict, by_name: dict, run: list[str]) -> str:  # fmt: skip
+    """The stack as a page of wants, the way a person writes one: each step
+    under the want it answers (a short line) and the card's own line,
+    numbered in the order they run. Three pools, each only when it has a
+    step: what the words asked for, what the person chose at a fork (with
+    what it was chosen over and their reason, in their words), and what
+    rides in every stack. The stack add-on skips every line here but the
+    pools and the steps, and heads each step's page with the lines above
+    it, so the why is carried from the fork to the page that is read."""
+    said: dict[str, tuple[str, str]] = {}
+    pools: list[tuple[str, list[str]]] = [(f"for “{sentence}”", []), ("what you chose", []), ("in every stack", [])]  # fmt: skip
+    for s in out["steps"]:
+        said[s["name"]] = (
+            f"“{sentence}”: {s['name']} ({s['why']}).",
+            f"{s['name']}: {s['line']}",
+        )
+        pools[0][1].append(s["name"])
+    for word, names in choose.items():
+        taken = [n for n in names if n in by_name and by_name[n].built]
+        others = [o["name"] for o in out["forks"].get(word, []) if o["name"] not in (*names, NONE)]  # fmt: skip
+        for n in taken:
+            over = f", not {' or '.join(others)}" if others else ""
+            reason = f", because {why[word]}" if why.get(word) else ""
+            said[n] = (f"“{word}”: {n}{over}{reason}.", f"{n}: {by_name[n].line}")
+            pools[1][1].append(n)
+    for d in out.get("defaults", []):
+        if d["name"] in run and d["name"] not in said:
+            said[d["name"]] = (
+                f"{d['why'] or DEFAULT_WHY}.",
+                f"{d['name']}: {d['line']}",
+            )
+            pools[2][1].append(d["name"])
+    text, n = [f"# {sentence}", "", WANTS_INTRO], 0
+    for heading, names in pools:
+        names = [x for x in run if x in names]  # in the order they run
+        if not names:
+            continue
+        text += ["", f"## {heading}"]
+        for name in names:
+            n += 1
+            head, card = said[name]
+            text += ["", f"Want {n}: {head}", card, step_line(name).rstrip("\n")]
+    return "\n".join(text) + "\n"
+
+
 def propose(
     box: Path, sentence: str, out: dict, cards, choose: dict, why: dict, rec
 ) -> tuple[dict | None, int]:
@@ -963,12 +1426,17 @@ def propose(
         names = [o["name"] for o in options]
         if word not in choose:
             print(
-                f"refused: “{word}” is not settled: --choose {word}={'|'.join(names)}",
+                f"refused: “{word}” is not settled: --choose {word}={'|'.join((*names, NOT_NOW))}",
                 file=sys.stderr,
             )
             return None, kernel.REFUSED
-        if choose[word] not in names:
-            print(f"refused: {choose[word]} is not an option for “{word}”: {', '.join(names)}", file=sys.stderr)  # fmt: skip
+        for name in choose[word]:
+            if name not in (*names, NOT_NOW):
+                print(f"refused: {name} is not an option for “{word}”: {', '.join((*names, NOT_NOW))}", file=sys.stderr)  # fmt: skip
+                return None, kernel.REFUSED
+        alone = [n for n in choose[word] if n in (NONE, NOT_NOW)]
+        if alone and len(choose[word]) > 1:  # a way out is taken alone, or not at all
+            print(f"refused: {alone[0]} for “{word}” stands alone; take it, or the cards, not both", file=sys.stderr)  # fmt: skip
             return None, kernel.REFUSED
     for word in choose:
         if word not in out["forks"]:
@@ -976,8 +1444,13 @@ def propose(
             return None, kernel.REFUSED
     by_name = {c.name: c for c in cards}
     run = [s["name"] for s in out["steps"]] + [
-        n for n in choose.values() if n in by_name and by_name[n].built
+        n
+        for names in choose.values()
+        for n in names
+        if n in by_name and by_name[n].built
     ]
+    if run:  # the defaults ride with a stack, after its own steps; they never make one
+        run += [d["name"] for d in out.get("defaults", []) if d["name"] not in run]
     if not run and not choose:
         print(
             "refused: nothing to propose: no step and no settled fork", file=sys.stderr
@@ -985,11 +1458,49 @@ def propose(
         return None, kernel.REFUSED
     ts = kernel.now()
     rows = []
-    for word, name in choose.items():
+    for word, taken in choose.items():
+        # what was shown, and the search's own order when that was kept from you
+        shown = [o["name"] for o in out["forks"][word] if o["name"] != NONE]
+        hidden = out.get("hidden") if word == CLOSE else None
+        offered = hidden["offered"] if hidden else shown
+        # more than one may be taken: the one the search put highest is `chose`,
+        # so a pick is scored the same taken alone or with others; the rest are `also`
+        taken = sorted(
+            taken, key=lambda n: offered.index(n) if n in offered else len(offered)
+        )
+        name, also = taken[0], taken[1:]
         others = [
-            o["name"] for o in out["forks"][word] if o["name"] not in (name, NONE)
+            o["name"] for o in out["forks"][word] if o["name"] not in (*taken, NONE)
         ]
         dt = fork_type(rec, word, sentence)
+        if name == NOT_NOW:
+            # not deciding is a decision: its own proposal, under its own
+            # question, so the fork's question stays open for the pick to come.
+            # It keeps what you were shown, in the order you saw it, and when:
+            # a second not-now for one fork is then a proposal of its own.
+            later = {
+                "word": word, "decision_type": dt, "chose": NOT_NOW, "why": why.get(word, ""),
+                "shown": others, "sentence": sentence,
+                "asked_at": len(kernel.read(box / "record.jsonl")[0]),
+            }  # fmt: skip
+            prop = {
+                "path": NOT_NOW_PATH.format(dt),
+                "data": json.dumps(later, sort_keys=True, ensure_ascii=False),
+                "cites": [],
+                "claim": f"for “{word}”: not now; {why.get(word) or 'no reason given'}",
+            }
+            code, said = quiet(kernel.bite, box, not_now_question(dt), ts)
+            if code == kernel.REFUSED:
+                print("refused:", said.strip(), file=sys.stderr)
+                return None, kernel.REFUSED
+            code, said = quiet(
+                kernel.propose, box, [json.dumps(prop, ensure_ascii=False)], ts
+            )
+            if not said.startswith("pass "):
+                print("refused:", said.strip(), file=sys.stderr)
+                return None, kernel.REFUSED
+            rows.append((prop["path"], f"{said.split()[1]}  not now for “{word}”"))
+            continue
         data = {
             "word": word,
             "decision_type": dt,
@@ -1001,10 +1512,7 @@ def propose(
         # what was shown is the outcome once sealed: the cards in their order,
         # the one recommended (only the search's fork has one), where the pick
         # fell, and what put them there. The close fork is this sentence's own.
-        shown = [o["name"] for o in out["forks"][word] if o["name"] != NONE]
-        hidden = out.get("hidden") if word == CLOSE else None
-        # a blind fork's pick is kept in the search's order, which it wasn't shown in
-        offered = hidden["offered"] if hidden else shown
+        # A blind fork's pick is kept in the search's order, which it wasn't shown in:
         # blind, nothing was recommended, and the search's first is kept under
         # its own name, so the record says what was shown and what was not
         data.update(kind="close" if word == CLOSE else "word", offered=offered,
@@ -1024,19 +1532,22 @@ def propose(
             if hidden:  # and the order you saw, in its own word
                 data["shown"] = shown
         if name != NONE:
-            card = by_name[name]
-            pinned = hashlib.sha256((ROOT / card.where).read_bytes()).hexdigest()
-            data["card"] = {
-                "name": card.name,
-                "line": card.line,
-                "where": card.where,
-                "sha256": pinned,
-            }
+            pinned = [
+                {"name": c.name, "line": c.line, "where": c.where,
+                 "sha256": hashlib.sha256((ROOT / c.where).read_bytes()).hexdigest()}
+                for c in (by_name[n] for n in taken)
+            ]  # fmt: skip
+            data["card"] = pinned[0]
+            if (
+                also
+            ):  # said only when more than one was taken, so one pick reads as before
+                data["also"] = also
+                data["also_cards"] = pinned[1:]
         prop = {
             "path": rec.DECISION_PATH.format(dt),
             "data": json.dumps(data, sort_keys=True, ensure_ascii=False),
             "cites": [],
-            "claim": f"for “{word}”: {name} over {', '.join(others)}; {why.get(word) or 'no reason given'}",
+            "claim": f"for “{word}”: {' and '.join(taken)} over {', '.join(others) or 'nothing'}; {why.get(word) or 'no reason given'}",
         }
         code, said = quiet(kernel.bite, box, rec.question(dt), ts)
         if code == kernel.REFUSED:
@@ -1048,11 +1559,13 @@ def propose(
         if not said.startswith("pass "):
             print("refused:", said.strip(), file=sys.stderr)
             return None, kernel.REFUSED
-        rows.append((prop["path"], f"{said.split()[1]}  {name} for “{word}”"))
+        rows.append(
+            (prop["path"], f"{said.split()[1]}  {' and '.join(taken)} for “{word}”")
+        )
     if not run:  # only a miss settled: nothing to stack, and nothing runs
         said = f"{len(rows)} waiting on your seal, no stack: nothing settled runs"
         return report(NAME, "populated", said, [(None, rows)]), kernel.ESCALATE
-    text = f"# {sentence}\n\n## for “{sentence}”\n" + "".join(step_line(n) for n in run)
+    text = wants(sentence, out, choose, why, by_name, run)
     prop = {
         "path": STACK_PATH,
         "data": text,
@@ -1077,16 +1590,31 @@ def main(argv: list[str]) -> int:
     argv = [a for a in argv if a != "--json"]
     p = argparse.ArgumentParser(prog="suggest.py", description=__doc__.splitlines()[0])
     sub = p.add_subparsers(dest="verb", required=True)
-    for verb in ("suggest", "propose", "build"):
+    for verb in ("suggest", "propose", "build", "next"):
         s = sub.add_parser(verb)
         s.add_argument("sentence", help="what you want done, in your own words")
         s.add_argument("--box", required=True, help="your record")
+        if verb == "next":
+            s.add_argument(
+                "--stacks",
+                required=True,
+                metavar="FOLDER",
+                help="the folder your own stacks are kept under",
+            )
+        if verb != "build":
+            s.add_argument(
+                "--defaults",
+                metavar="FILE",
+                help="your own list of defaults, or `none` for no defaults",
+            )
         if verb == "suggest":
             s.add_argument(
                 "--plan",
                 action="store_true",
                 help="the plan as the Forge reads it, as JSON",
             )
+        elif verb == "next":
+            pass
         elif verb == "build":
             s.add_argument(
                 "--to",
@@ -1122,6 +1650,12 @@ def main(argv: list[str]) -> int:
     except card_table.CardTableError as e:  # a card beside this script that won't read
         print("refused:", e, file=sys.stderr)
         return kernel.REFUSED
+    if getattr(a, "defaults", None):  # the person's own list, or none at all
+        global DEFAULTS
+        DEFAULTS = Path(a.defaults)
+        if a.defaults != "none" and not DEFAULTS.is_file():
+            print(f"refused: {a.defaults} isn't a file of defaults", file=sys.stderr)
+            return kernel.REFUSED
     sealed, stacks = on_record(box, rec)
     lines, where_from = commands(str(kernel.folder(kernel.config(box))))
     STEPS.update(lines)
@@ -1129,10 +1663,40 @@ def main(argv: list[str]) -> int:
     def measured():  # only when a close fork is open: the matcher builds the search
         return confidence(outcomes(box, rec), matcher())
 
-    out = plan(cards, cards.scan(a.sentence), shape, rec, sealed, a.sentence, measured)
+    out = plan(
+        cards,
+        phrased(cards.scan(a.sentence), a.sentence),
+        shape,
+        rec,
+        sealed,
+        a.sentence,
+        measured,
+    )
     out["cards"]["commands"] = where_from
+    later, waits = undecided(box, rec)
+    types = {w: fork_type(rec, w, a.sentence) for w in out["forks"]}
+    out["not_now"] = {w: {**later[dt], "decision_type": dt} for w, dt in types.items() if dt in later}  # fmt: skip
+    out["unsealed"] = {w: (dt, waits[dt]) for w, dt in types.items() if dt in waits}
     if (k := kernel.bite_key(a.sentence)) in stacks:
         out["stack"] = stacks[k]
+    if a.verb == "next":
+        home = Path(a.stacks)
+        if not home.is_dir():
+            print(f"refused: {a.stacks} isn't a folder of stacks", file=sys.stderr)
+            return kernel.REFUSED
+        # what you have: the stack you sealed for these words, or what the words reach now
+        have = (steps_of(out["stack"]["text"]) if "stack" in out
+                else [s["name"] for s in out["steps"]] + [d["name"] for d in out.get("defaults", [])])  # fmt: skip
+        doc, code = next_report(
+            have,
+            stacks_in(home),
+            {c.name: c for c in cards.cards},
+            a.stacks,
+            a.sentence,
+            None if "stack" in out else [s["name"] for s in out["steps"]],
+        )
+        say(doc, as_json)
+        return code
     if a.verb == "build":
         doc, code = build(box, a.sentence, Path(a.to), stacks)
         if doc is not None:
@@ -1142,7 +1706,7 @@ def main(argv: list[str]) -> int:
         if "stack" in out:
             print(f"refused: a stack is sealed for these words already (row {out['stack']['row']})", file=sys.stderr)  # fmt: skip
             return kernel.REFUSED
-        choose, bad = pairs(a.choose, "--choose")
+        choose, bad = picks(a.choose)
         reasons, worse = pairs(a.why, "--why")
         if bad or worse:
             print("refused:", bad or worse, file=sys.stderr)

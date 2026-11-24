@@ -1,0 +1,11 @@
+# The add-ons the forge puts in every stack it proposes, after the steps
+# your words reached. A default is never an option in a fork and is never
+# scored: it is there because it suits any folder, not because of a word.
+#
+# One a line: NAME, two spaces or more, why it is a default. A name that is
+# no built add-on here is said and left out. Yours to edit.
+todo            open items left in your own files, oldest first
+coming-up       what is due soon, from the dates your files give
+duplicates      the same thing kept twice
+contradictions  two passages that disagree about one date or amount
+people          who is named, and where
