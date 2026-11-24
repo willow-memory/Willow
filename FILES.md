@@ -1641,6 +1641,10 @@ willow/
 │   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
 │   │   │   ├── test_dice_tower.py
 │   │   │   └── README.md     its card
+│   │   ├── exhaustion/
+│   │   │   ├── exhaustion.py  a level of exhaustion's effect on a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2
+│   │   │   ├── test_exhaustion.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
@@ -1677,15 +1681,15 @@ willow/
 │   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
 │   │   │   ├── test_play_dice.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-dice5e/
+
+```
 │   │   ├── play-dice5e/
 │   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
 │   │   │   ├── test_play_dice5e.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-hearts/
-
-```
 │   │   ├── play-hearts/
 │   │   │   ├── play_hearts.py Hearts played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_hearts.py
@@ -1713,6 +1717,10 @@ willow/
 │   │   ├── play-tarot/
 │   │   │   ├── play_tarot.py a seeded tarot draw on the record, replayable by anyone with it
 │   │   │   ├── test_play_tarot.py
+│   │   │   └── README.md     its card
+│   │   ├── story-ideas/
+│   │   │   ├── story_ideas.py story ideas between sessions, dealt from a game box's own words
+│   │   │   ├── test_story_ideas.py
 │   │   │   └── README.md     its card
 ```
 

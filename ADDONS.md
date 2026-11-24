@@ -2019,6 +2019,10 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="dice-tower"></a>[**dice-tower**](adapters/stdlib/dice-tower/) \
   A die dropped in a tower: only a hash on the record until it's out, so no roll is foreseen, steered or shopped for. \
   Uses play-dice, play-dice5e. *new* `no-install` `offline` `dice` `roll` · near: play-fight, play-dice, play-dice5e
+- <a id="exhaustion"></a>[**exhaustion**](adapters/stdlib/exhaustion/) \
+  What a level of exhaustion does to a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2, kept apart. \
+  From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline` `roll` · near:
+  digest, play-fight5e, repo-kinds
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-odds, play-checkers
@@ -2045,7 +2049,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
   *new* `no-install` `offline` `rules` `draw` · near: play-hearts, play-liars-dice, play-tarot
 
-#### Tools you run yourself, p to p
+#### Tools you run yourself, p to s
 
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
@@ -2085,6 +2089,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-tarot"></a>[**play-tarot**](adapters/stdlib/play-tarot/) \
   A seeded tarot draw on the record, replayable by anyone with the seed. \
   *new* `no-install` `offline` `seeded` `draw` · near: play-hearts, play-crazy-eights, play-checkers
+- <a id="story-ideas"></a>[**story-ideas**](adapters/stdlib/story-ideas/) \
+  Story ideas between sessions, dealt from a game box's own words, with what was set up and never played and what's still open. \
+  Uses game-master, oracle-text, random-passage. *box* `no-install` `offline` `game` `seeded` · near: game-master, random-passage, play-life
 
 #### Tools you run yourself: ideas, not built yet, a to p
 
