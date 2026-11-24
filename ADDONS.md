@@ -2043,12 +2043,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
   *bot* `no-install` `offline` `dice` `roll` · near: play-dice5e, play-liars-dice, play-backgammon
-
-#### Tools you run yourself, p to p
-
 - <a id="play-dice5e"></a>[**play-dice5e**](adapters/stdlib/play-dice5e/) \
   Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. \
   Uses play-dice. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-backgammon, play-liars-dice
+
+#### Tools you run yourself, p to s
+
 - <a id="play-fight"></a>[**play-fight**](adapters/deps/play-fight/) \
   A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it. \
   Needs dndwright, which brings pydantic and PyYAML; MIT. Uses dice-tower. From: dep of [sligara7/dndwright](https://github.com/sligara7/dndwright), MIT;
@@ -2081,6 +2081,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-tarot"></a>[**play-tarot**](adapters/stdlib/play-tarot/) \
   A seeded tarot draw on the record, replayable by anyone with the seed. \
   *new* `no-install` `offline` `seeded` `draw` · near: play-hearts, play-crazy-eights, play-checkers
+- <a id="story-ideas"></a>[**story-ideas**](adapters/stdlib/story-ideas/) \
+  Story ideas between sessions, dealt from a game box's own words, with what was set up and never played and what's still open. \
+  Uses game-master, oracle-text, random-passage. *box* `no-install` `offline` `game` `seeded` · near: game-master, random-passage, play-life
 
 #### Tools you run yourself: ideas, not built yet, a to p
 

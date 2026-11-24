@@ -1710,6 +1710,10 @@ willow/
 │   │   │   ├── play_tarot.py a seeded tarot draw on the record, replayable by anyone with it
 │   │   │   ├── test_play_tarot.py
 │   │   │   └── README.md     its card
+│   │   ├── story-ideas/
+│   │   │   ├── story_ideas.py story ideas between sessions, dealt from a game box's own words
+│   │   │   ├── test_story_ideas.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: For maintainers: What runs on your page
