@@ -1629,6 +1629,10 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
+│   │   ├── carry-sheet/
+│   │   │   ├── carry_sheet.py what characters carry, use up, and come through, from night to night, on the record
+│   │   │   ├── test_carry_sheet.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1677,6 +1681,11 @@ willow/
 │   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
 │   │   │   ├── test_play_dice.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-dice5e/
+
+```
 │   │   ├── play-dice5e/
 │   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
 │   │   │   ├── test_play_dice5e.py
@@ -1685,11 +1694,6 @@ willow/
 │   │   │   ├── play_hearts.py Hearts played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_hearts.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-horoscope/
-
-```
 │   │   ├── play-horoscope/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py

@@ -2007,8 +2007,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Your record as a Gource film: every question, approval and miss growing like a tree. \
   Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `film` · near: bench, family-tree, vectors
 
-### Tools you run yourself, d to p
+### Tools you run yourself, c to p
 
+- <a id="carry-sheet"></a>[**carry-sheet**](adapters/stdlib/carry-sheet/) \
+  What each character carries, uses up and is hurt by, written in plain words a line at a time, read back as a sheet night to night. \
+  Uses lines-veils. From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline`
+  `night` `down` · near: coming-up, abbreviations, nightstand
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` `daily` · near: play-quiz, random-passage, stack-row
@@ -2018,7 +2022,7 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="exhaustion"></a>[**exhaustion**](adapters/stdlib/exhaustion/) \
   What a level of exhaustion does to a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2, kept apart. \
   From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline` `roll` · near:
-  digest, repo-kinds, play-fight
+  digest, play-fight5e, repo-kinds
 - <a id="game-master"></a>[**game-master**](adapters/stdlib/game-master/) \
   A tabletop game's rolls and rulings as rows on the record, with the game master's calls sealed. \
   Uses dice-tower, play-dice, play-odds. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-odds, play-checkers
@@ -2044,15 +2048,15 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-crazy-eights"></a>[**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
   *new* `no-install` `offline` `rules` `draw` · near: play-hearts, play-liars-dice, play-tarot
+
+#### Tools you run yourself, p to s
+
 - <a id="play-dice"></a>[**play-dice**](adapters/stdlib/play-dice/) \
   Seeded dice rolls as rows: every roll replayable and checkable. \
   *bot* `no-install` `offline` `dice` `roll` · near: play-dice5e, play-liars-dice, play-backgammon
 - <a id="play-dice5e"></a>[**play-dice5e**](adapters/stdlib/play-dice5e/) \
   Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. \
   Uses play-dice. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-backgammon, play-liars-dice
-
-#### Tools you run yourself, p to s
-
 - <a id="play-fight"></a>[**play-fight**](adapters/deps/play-fight/) \
   A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it. \
   Needs dndwright, which brings pydantic and PyYAML; MIT. Uses dice-tower. From: dep of [sligara7/dndwright](https://github.com/sligara7/dndwright), MIT;
