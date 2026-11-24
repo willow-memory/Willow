@@ -1633,6 +1633,10 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
+│   │   ├── carry-sheet/
+│   │   │   ├── carry_sheet.py what characters carry, use up, and come through, from night to night, on the record
+│   │   │   ├── test_carry_sheet.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1641,10 +1645,18 @@ willow/
 │   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
 │   │   │   ├── test_dice_tower.py
 │   │   │   └── README.md     its card
+│   │   ├── exhaustion/
+│   │   │   ├── exhaustion.py  a level of exhaustion's effect on a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2
+│   │   │   ├── test_exhaustion.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
 │   │   │   └── README.md
+│   │   ├── lines-veils/
+│   │   │   ├── lines_veils.py what never happens at a table, what happens off-screen, and the X-card and the pause, on the record
+│   │   │   ├── test_lines_veils.py
+│   │   │   └── README.md     its card
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
@@ -1673,6 +1685,11 @@ willow/
 │   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
 │   │   │   ├── test_play_dice.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-dice5e/
+
+```
 │   │   ├── play-dice5e/
 │   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
 │   │   │   ├── test_play_dice5e.py
@@ -1685,11 +1702,6 @@ willow/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-liars-dice/
-
-```
 │   │   ├── play-liars-dice/
 │   │   │   ├── play_liars_dice.py Liar's Dice played on the record, cups lifted, every cup dice's own row
 │   │   │   ├── test_play_liars_dice.py
@@ -1709,6 +1721,10 @@ willow/
 │   │   ├── play-tarot/
 │   │   │   ├── play_tarot.py a seeded tarot draw on the record, replayable by anyone with it
 │   │   │   ├── test_play_tarot.py
+│   │   │   └── README.md     its card
+│   │   ├── story-ideas/
+│   │   │   ├── story_ideas.py story ideas between sessions, dealt from a game box's own words
+│   │   │   ├── test_story_ideas.py
 │   │   │   └── README.md     its card
 │   │   ├── table/
 │   │   │   ├── table.py      one way to sit at any table on the record
