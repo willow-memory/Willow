@@ -792,6 +792,10 @@ def test_a_step_whose_earlier_step_kept_nothing_is_not_run(tmp_path):
     assert "not run: step 1 (quiet) kept nothing to hand on" in got.stdout
     assert "03 light: exit 0" in log, "the steps after it still run"
     assert "done: 1 of 3 steps flagged" in log
+    # its one line weighs it, peaks first: above the step that said nothing
+    assert got.stdout.index("- `show -- --of {01}`  (not run)") < got.stdout.index(
+        "- `quiet`"
+    )
 
 
 def test_hands_reads_each_earlier_step_a_steps_args_name():

@@ -233,7 +233,7 @@ def do_stale(box: Path, ts: str) -> int:
     found, why = stale(box)
     if found is None:
         return refuse(why or "stale-answers couldn't look")
-    made = 0
+    made = []
     for subj, because in found.items():
         rows = kernel.read(box / "record.jsonl")[0]  # each proposal adds rows
         why = why_not(box, rows, subj, because, None)
@@ -241,7 +241,7 @@ def do_stale(box: Path, ts: str) -> int:
             print(f"left  {short(subj)}  {why}")
             continue
         propose(box, subj, because, None, ts)
-        made += 1
+        made.append(subj)
     if not found:
         print("nothing to propose: every approved answer's cited passages are still in your folder")  # fmt: skip
     return kernel.ESCALATE if made else kernel.ALIVE

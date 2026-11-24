@@ -710,8 +710,9 @@ def main(argv: list[str]) -> int:
             elif hands(args) and not (given := run.handed(flat, args))[0]:
                 # the step before kept nothing: nothing to take, so not run
                 fresh = True
-                code, size, is_flagged, note = kernel.ESCALATE, 1, True, "not run"
+                code, is_flagged, note = kernel.ESCALATE, True, "not run"
                 out = f"not run: {given[1]} kept nothing to hand on"
+                size = mass(out)  # what it says weighs, as a step that ran
                 run.say(f"{nsteps:0{run.width}d} {name}: {out}")
             else:
                 fresh = True

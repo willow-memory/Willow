@@ -393,5 +393,6 @@ def test_a_box_stale_answers_cant_read_is_said_not_crashed_on(tmp_path):
     (b / "kernel.json").write_text(json.dumps(cfg))
     said = retire(b)
     assert said.returncode == 0 and "stale answers not looked for: " in said.stdout
+    why = said.stdout.split("stale answers not looked for: ", 1)[1].splitlines()[0]
     got = retire(b, "propose", "--stale", *NOW)
-    assert got.returncode == 2 and got.stderr.startswith("refused: ")
+    assert got.returncode == 2 and got.stderr == f"refused: {why}\n"  # its own words
