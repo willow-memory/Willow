@@ -2007,8 +2007,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
   Your record as a Gource film: every question, approval and miss growing like a tree. \
   Needs the gource program; GPL-3.0, called not linked. *new* `needs-install` `offline` `tree` `film` · near: bench, family-tree, vectors
 
-### Tools you run yourself, d to p
+### Tools you run yourself, c to p
 
+- <a id="carry-sheet"></a>[**carry-sheet**](adapters/stdlib/carry-sheet/) \
+  What each character carries, uses up and is hurt by, written in plain words a line at a time, read back as a sheet night to night. \
+  Uses lines-veils. From: shape of [rudi193-cmd/die-namic-games](https://github.com/rudi193-cmd/die-namic-games), Apache-2.0. *new* `no-install` `offline`
+  `night` `down` · near: coming-up, abbreviations, nightstand
 - <a id="daily-word"></a>[**daily-word**](adapters/stdlib/daily-word/) \
   A five-letter word game drawn from your own files' words: a new word each day, the same for anyone asking the same folder. \
   *new* `no-install` `offline` `daily` · near: play-quiz, random-passage, stack-row
@@ -2034,12 +2038,12 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-catgrid"></a>[**play-catgrid**](adapters/stdlib/play-catgrid/) \
   A seeded logic grid with one cat in every row, column and colour region and a unique answer, replayed from its moves. \
   *new* `no-install` `offline` `play` `seeded` · near: play-life, play-checkers, play-backgammon
-- <a id="play-checkers"></a>[**play-checkers**](adapters/stdlib/play-checkers/) \
-  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
-  *new* `no-install` `offline` `play` `rules` · near: play-backgammon, play-catgrid, play-hearts
 
 #### Tools you run yourself, p to p
 
+- <a id="play-checkers"></a>[**play-checkers**](adapters/stdlib/play-checkers/) \
+  Checkers played on the record: the code holds the rules, and a draw is only the one who holds the key sealing it. \
+  *new* `no-install` `offline` `play` `rules` · near: play-backgammon, play-catgrid, play-hearts
 - <a id="play-crazy-eights"></a>[**play-crazy-eights**](adapters/stdlib/play-crazy-eights/) \
   Crazy Eights on the record, hands open and the deck seeded by the record's tip: every card, draw and pass held to the rules. \
   *new* `no-install` `offline` `play` `rules` · near: play-hearts, play-liars-dice, play-tarot

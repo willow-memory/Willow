@@ -681,6 +681,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "calendar-out": ("calendar_out.py", ["--box", "{box}", "--to", "{tmp}/coming.ics", *NOW]),
     "capture": ("capture.py", ["--to", "{tmp}", "--type", "idea", "--tags", "garden,veg", *NOW, "Plant out the tomatoes."]),
     "car": ("car.py", ["--box", "{box}"]),
+    "carry-sheet": ("carry_sheet.py", ["--box", "{box}", "sheet"]),
     "ci-cache": ("ci_cache.py", ["--from", "{pile}"]),
     "ci-memo": ("ci_memo.py", ["keys", "mutants:accents"]),
     "ci-why": ("ci_why.py", ["--record", "{box}/record.jsonl"]),
