@@ -93,6 +93,8 @@ def test_show_prints_the_page_as_read(tmp_path):
     assert got.stdout.splitlines() == ["line  spiders", "line  a pet getting hurt", "line  ghosts", "line  x", "veil  kissing"]  # fmt: skip
     none = run("--page", str(tmp_path / "none.md"), "show")
     assert none.returncode == 0 and "no lines or veils" in none.stdout
+    only = run("--page", str(page(tmp_path, "## Lines\n- spiders\n")), "show")
+    assert only.stdout.splitlines() == ["line  spiders"]  # lines and no veils is not "no lines or veils"  # fmt: skip
 
 
 def test_touches_names_the_line_or_the_veil_and_says_what_to_do(tmp_path):
