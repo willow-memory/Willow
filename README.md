@@ -152,12 +152,12 @@ says how to pick one up:
 <!-- willow:front show=pick week=2026-W48 -->
 **Add-on of the week**
 
-**[reddit](adapters/stdlib/reddit/)** \
-Reddit's data export: your posts, comments and saved items as dated lines.
+**[quotes](adapters/stdlib/quotes/)** \
+Every quote in a document checked against your files: as written, almost (and what it adds, drops or changes), or not there.
 
-*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 389 built add-ons in name order.*
+*Drawn for 2026-W48: SHA-256 of "willow add-on of the week 2026-W48", modulo the 391 built add-ons in name order.*
 
-[Every add-on, 389 built of 617, and how to add one: ADDONS.md](ADDONS.md)
+[Every add-on, 391 built of 618, and how to add one: ADDONS.md](ADDONS.md)
 <!-- /willow:front -->
 
 
