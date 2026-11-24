@@ -46,6 +46,7 @@ body:
         - nothing (it only prints)
         - record (through the kernel)
         - to (only where --to points)
+        - beside (right next to a box, as a table's sheets)
     validations:
       required: true
   - type: input
