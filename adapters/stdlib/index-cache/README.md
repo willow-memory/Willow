@@ -20,6 +20,7 @@ SHA-256 of its text — and rebuilds only when the folder actually changed.
 
     python adapters/stdlib/index-cache/index_cache.py --from FOLDER --to INDEX
     python adapters/stdlib/index-cache/index_cache.py --from @LIST --to INDEX
+    python adapters/stdlib/index-cache/index_cache.py --box BOX --to INDEX
 
 On each run it hashes the folder's files and compares them to the manifest:
 
@@ -46,6 +47,18 @@ passages that box does. Only the listed files are hashed: a file beside them
 the list leaves out never forces a rebuild, and a listed file that is gone
 counts as removed. An index may sit beside the listed files; one that would
 hold the list, or a file it names, is refused.
+
+## a whole box
+
+`--box BOX` keeps the index of everything a box reads: its pile folder and
+each source, a folder or a list, named as the kernel names the box's
+passages (the source's name, a slash, and the path: `pile_of_box`). A box laid from several
+places is then asked from one index with the passages its own bite reads;
+[claude-code](../claude-code/)'s hook answers from it. For a box with only
+a pile it is that folder's index and manifest, so one made with
+`--from PILE` stays current. It reads the box's settings file only, never
+its record or its key, and refuses an index inside the box or inside, or
+holding, anything the box reads.
 
 ## what it reads and writes
 

@@ -233,7 +233,11 @@ def test_setup_with_an_index_prints_the_line_that_keeps_it_current(tmp_path, cap
     out = capsys.readouterr().out
     cmd = json.loads(out.split("\n\n")[1])["hooks"]["UserPromptSubmit"][0]["hooks"][0]
     assert cmd["command"].endswith(f"--index {at.resolve()}")
-    assert f"index_cache.py --from {pile} --to {at.resolve()}" in out
+    assert f"index_cache.py --box {b.resolve()} --to {at.resolve()}" in out
+    # the line it prints keeps that same index current: the pile's, unmoved
+    keep = out.strip().splitlines()[-1].split()
+    got = subprocess.run(keep, capture_output=True, text=True)
+    assert got.returncode == 0 and "current" in got.stdout, got.stdout + got.stderr
     assert hk.main(["setup", "--box", str(b), "--index", ""]) == 2
     assert hk.main(["prompt", "--box", str(b), "--rank", str(at)]) == 2
 
@@ -325,3 +329,55 @@ def test_bite_without_an_index_is_the_kernels_bite_and_its_refusals(tmp_path, ca
     for bad in (["bite"], ["bite", "--box", str(b)], ["bite", "--rank", str(b), "q"],
                 ["bite", "--box", str(b), "--index", "", "q"]):  # fmt: skip
         assert hk.main(bad) == 2, bad
+
+
+@pytest.mark.skipif(
+    not BESIDE,
+    reason="scan and index-cache aren't beside it; the test above holds it alone",
+)
+def test_a_box_laid_from_several_places_is_answered_from_its_index(
+    tmp_path, monkeypatch
+):
+    """A box laid with --from (a folder and a list, read where they are kept)
+    is answered from index-cache's --box index as the kernel's bite answers
+    it, the same row on the record, reading none of its files; a listed file
+    that changed since sends the bite back to the kernel."""
+    notes, code = tmp_path / "notes", tmp_path / "code"
+    notes.mkdir(), code.mkdir()
+    (notes / "bus.md").write_text("The bus leaves the square at nine.\n")
+    (code / "ferry.md").write_text("The ferry leaves the square at noon.\n")
+    (code / "left-out.md").write_text("The tram leaves the square at ten.\n")
+    lst = tmp_path / "code.list"
+    lst.write_text(f"{code / 'ferry.md'}\n")
+    b = tmp_path / "box"
+    assert subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(b),
+                           "--from", f"notes={notes}", "--from", f"code=@{lst}",
+                           "--key", str(tmp_path / "k"), *NOW],
+                          capture_output=True).returncode == 0  # fmt: skip
+    at = tmp_path / "index"
+    cache = HERE.parent / "index-cache" / "index_cache.py"
+    made = subprocess.run([sys.executable, str(cache), "--box", str(b), "--to", str(at)],
+                          capture_output=True, text=True)  # fmt: skip
+    assert made.returncode == 0 and "+2 new" in made.stdout, made.stdout + made.stderr
+    question = "when does it leave the square"
+    plain = subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(b),
+                            question], capture_output=True, text=True)  # fmt: skip
+    reads = []
+    for name in ("chunks", "list_chunks"):
+        real = getattr(hk.kernel, name)
+        monkeypatch.setattr(hk.kernel, name,
+                            lambda *a, real=real: reads.append(a) or real(*a))  # fmt: skip
+    code_, out, _ = hk.bite(b, question, at)
+    assert reads == [] and code_ == plain.returncode
+    assert json.loads(out)["served"] == json.loads(plain.stdout)["served"]
+    assert {s["where"] for s in json.loads(out)["served"]} == {
+        "code/ferry.md:1",
+        "notes/bus.md:1",
+    }
+    first, second = bites(b)
+    assert first == second
+    assert hk.main(["setup", "--box", str(b), "--index", str(at)]) == 0
+    (code / "ferry.md").write_text("The ferry leaves the square at one.\n")
+    _, out, _ = hk.bite(b, question, at)
+    assert reads, "a changed listed file must send the bite back to the kernel"
+    assert "at one" in out

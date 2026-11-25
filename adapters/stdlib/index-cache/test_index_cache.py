@@ -207,3 +207,70 @@ def test_an_index_beside_the_listed_files_is_fine_but_one_holding_them_is_not(
 def test_a_list_that_is_not_there_is_refused(tmp_path):
     got = run("--from", f"@{tmp_path / 'missing.list'}", "--to", str(tmp_path / "ix"))
     assert got.returncode == 2 and "is not a list of files" in got.stderr
+
+
+# ── --box BOX: everything a box reads, as the kernel's pile_of_box names it ───
+KERNEL = HERE.parents[2] / "kernel.py"
+
+
+def a_box(tmp: Path, *froms: str, pile: Path | None = None) -> Path:
+    b = tmp / "box"
+    argv = [sys.executable, str(KERNEL), "init", "--box", str(b)]
+    argv += ["--pile", str(pile)] if pile else []
+    for f in froms:
+        argv += ["--from", f]
+    got = subprocess.run(
+        argv + ["--key", str(tmp / "k")], capture_output=True, text=True
+    )
+    assert got.returncode == 0, got.stderr
+    return b
+
+
+def test_a_box_from_several_places_is_indexed_as_the_kernel_reads_it(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "batch-ask"))
+    sys.path.insert(0, str(HERE.parents[2]))
+    import kernel
+    import scan
+
+    folder, lst, index = a_list(tmp_path)
+    other = tmp_path / "other"
+    other.mkdir()
+    (other / "garden.md").write_text("Tomatoes want sun.\n")
+    b = a_box(tmp_path, f"home=@{lst}", f"garden={other}")
+    first = run("--box", str(b), "--to", str(index))
+    assert first.returncode == 0 and "+3 new" in first.stdout, (
+        first.stdout + first.stderr
+    )
+    kept = [(c["path"], c["id"]) for c in scan.passages(index)]
+    read = kernel.pile_of_box(kernel.config(b))
+    assert kept == [(c["path"], c["id"]) for c in read]
+    assert "current: 3 files" in run("--box", str(b), "--to", str(index)).stdout
+    (folder / "unlisted.md").write_text("Still not listed.\n")
+    assert "current" in run("--box", str(b), "--to", str(index)).stdout
+    (other / "garden.md").write_text("Tomatoes want more sun.\n")
+    moved = run("--box", str(b), "--to", str(index))
+    assert "+0 new, ~1 changed, -0 removed" in moved.stdout, moved.stdout
+
+
+def test_a_pile_box_keeps_the_pile_folders_index(tmp_path):
+    folder, index = a_folder(tmp_path)
+    b = a_box(tmp_path, pile=folder)
+    cache(folder, index)  # made with --from PILE
+    again = run("--box", str(b), "--to", str(index))
+    assert again.returncode == 0 and "current" in again.stdout, again.stdout
+
+
+def test_a_box_index_is_refused_inside_the_box_or_what_it_reads(tmp_path):
+    folder, index = a_folder(tmp_path)
+    b = a_box(tmp_path, f"home={folder}")
+    for at in (b / "ix", folder / "ix"):
+        got = run("--box", str(b), "--to", str(at))
+        assert got.returncode == 2 and "hold each other" in got.stderr, at
+
+
+def test_a_box_that_is_not_one_or_both_kinds_of_from_is_refused(tmp_path):
+    folder, index = a_folder(tmp_path)
+    got = run("--box", str(tmp_path / "nobox"), "--to", str(index))
+    assert got.returncode == 2 and "is not a box" in got.stderr
+    both = run("--box", str(tmp_path), "--from", str(folder), "--to", str(index))
+    assert both.returncode == 2 and "index_cache.py" in both.stderr

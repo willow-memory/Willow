@@ -3,7 +3,7 @@ section: Assistants
 line: Claude Code sees cited passages from your folder with each prompt, through its prompt hook.
 source: bot
 added: 2026-10-24
-version: 0.2.0
+version: 0.2.1
 writes: record
 network: none
 hands: the passages served for each prompt, to Claude Code's model
@@ -44,7 +44,9 @@ few seconds, with the same passages and the same row on the record:
 prints the hook with `--index`, and the [index-cache](../index-cache/) line
 that keeps the index current: run it now, and when your folder changes. An
 index that isn't current (index-cache's manifest says a file moved) is never
-asked; the kernel reads the folder, as without one.
+asked; the kernel reads the folder, as without one. A box laid from several
+places (`init --from`) is indexed whole, its pile and every source, by
+`index-cache --box`, and answered from that index the same way.
 
 **The same bite, for another program:**
 

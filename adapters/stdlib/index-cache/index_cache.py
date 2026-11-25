@@ -3,6 +3,7 @@ the folder changed. Python 3.9+.
 
     python adapters/stdlib/index-cache/index_cache.py --from FOLDER --to INDEX
     python adapters/stdlib/index-cache/index_cache.py --from @LIST --to INDEX
+    python adapters/stdlib/index-cache/index_cache.py --box BOX --to INDEX
 
 `scan index` reads the whole folder to build an index; on a big folder that is
 the slow step. But a folder usually hasn't changed since last time, and then
@@ -27,12 +28,20 @@ one path a line, each named by its path from the folder the files share,
 the kernel's own `list_chunks`. A listed file that is gone is read as
 nothing, as a deleted one is, and counts as removed.
 
+`--box BOX` keeps the index of everything the box reads: its pile folder and
+each of its sources, folder or list, named as the kernel's `pile_of_box`
+names them (NAME/ and the path). So a box laid from several places is asked
+from one index with the same passages its bite reads. For a box with only a
+pile, it is the pile folder's index, manifest and all. It reads the box's
+kernel.json and nothing else of the box: never its record or its key.
+
 It reads the folder and writes only under `--to` (the index and its manifest);
 it writes no box, reads no key, and reaches no network. An index made by
 another kernel.py is rebuilt, since its passages were the other kernel's. Exit
 codes, the kernel's: 0 the index is current or was rebuilt; 42 the folder has
 nothing to read; 2 refused (a bad command line, or a `--from` that is not a
-folder, or a `--from @LIST` that is not a list of files).
+folder, a `--from @LIST` that is not a list of files, or a `--box` that is
+not a box).
 """
 
 from __future__ import annotations
@@ -93,6 +102,19 @@ def listed_manifest(lst: Path) -> dict[str, str]:
     return out
 
 
+def box_manifest(cfg: dict) -> dict[str, str]:
+    """`manifest` for everything a box reads, its keys named as the kernel's
+    `pile_of_box` names its passages: the pile folder's paths as they are,
+    then each source's as NAME/ and its path. A box with only a pile has the
+    pile folder's manifest, so an index made with --from PILE stays current."""
+    out = manifest(Path(cfg["pile"])) if "pile" in cfg else {}
+    for name, at in sorted(kernel.sources(cfg).items()):
+        listed = cfg["sources"][name].startswith("@")
+        part = listed_manifest(at) if listed else manifest(at)
+        out.update({f"{name}/{rel}": h for rel, h in part.items()})
+    return out
+
+
 def cached(index: Path) -> dict[str, str] | None:
     """The manifest a past run wrote for `index`, or None when there is none,
     it is of another kind, it was made by another kernel.py, or the index it
@@ -122,16 +144,32 @@ def main(argv: list[str]) -> int:
     opts: dict[str, str] = {}
     it = iter(argv)
     for a in it:
-        if a in ("--from", "--to"):
+        if a in ("--from", "--to", "--box"):
             opts[a] = next(it, "")
         else:
             opts["bad"] = a
-    if opts.get("bad") or "--from" not in opts or "--to" not in opts:
+    if opts.get("bad") or ("--from" in opts) == ("--box" in opts) or "--to" not in opts:
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
-    given, index = opts["--from"], Path(opts["--to"]).resolve()
+    given, index = opts.get("--from", ""), Path(opts["--to"]).resolve()
     lst = Path(given[1:]).resolve() if given.startswith("@") else None
-    if lst is not None:
+    cfg = None
+    if "--box" in opts:
+        box = Path(opts["--box"]).resolve()
+        try:
+            cfg = kernel.config(box)
+            reads = [Path(cfg["pile"])] if "pile" in cfg else []
+            for name, at in kernel.sources(cfg).items():
+                listed = cfg["sources"][name].startswith("@")
+                reads += [at, *kernel.listed(at)] if listed else [at]
+        except (OSError, ValueError, KeyError) as e:
+            print(f"refused: {opts['--box']} is not a box ({e})", file=sys.stderr)
+            return kernel.REFUSED
+        held = index.is_relative_to(box) or any(
+            p.is_relative_to(index) or (p.is_dir() and index.is_relative_to(p))
+            for p in reads
+        )
+    elif lst is not None:
         if not lst.is_file():
             print(f"refused: {given[1:]} is not a list of files", file=sys.stderr)
             return kernel.REFUSED
@@ -154,18 +192,22 @@ def main(argv: list[str]) -> int:
               file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
 
-    now = manifest(folder) if lst is None else listed_manifest(lst)
+    if cfg is not None:
+        now = box_manifest(cfg)
+    else:
+        now = manifest(folder) if lst is None else listed_manifest(lst)
     before = cached(index)
     if before is not None and before == now:
         print(f"current: {len(now)} files unchanged; the index at {opts['--to']} "
               f"still answers. Ask it with scan.")  # fmt: skip
         return kernel.ALIVE
 
-    n = (
-        scan.build(folder, index)
-        if lst is None
-        else scan.build_from(kernel.list_chunks(lst), index)
-    )
+    if cfg is not None:
+        n = scan.build_from(kernel.pile_of_box(cfg), index)
+    elif lst is None:
+        n = scan.build(folder, index)
+    else:
+        n = scan.build_from(kernel.list_chunks(lst), index)
     (index / CACHE).write_text(
         kernel.canon({"format": FORMAT, "kernel": kernel.VERSION, "files": now}) + "\n",
         encoding="utf-8",
