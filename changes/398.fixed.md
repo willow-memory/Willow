@@ -1,0 +1,1 @@
+The strip test gives a run 900 seconds for each 16 test files `WILLOW_STRIP_ONLY` names, not 900 for any list: test-impact's 33 files for game-canon took 835 seconds alone, and ran out of time beside the other gates.

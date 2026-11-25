@@ -49,9 +49,20 @@ def stripped(tmp: Path, without: tuple[str, ...]) -> Path:
     return copy
 
 
+#: how long one run may take: a CI part's add-on tests, or each 16 files of
+#: WILLOW_STRIP_ONLY's list (33 of them took 835 s of 900 run alone, #397)
+PART, PER = 900, 16
+
+
+def timeout() -> int:
+    """PART seconds, and PART again for each PER files WILLOW_STRIP_ONLY
+    names past the first PER: a long list is one run, not a CI part."""
+    return PART * max(1, -(-len(only()) // PER))
+
+
 def run(copy: Path, *argv: str) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, *argv], cwd=copy, capture_output=True,
-                          text=True, timeout=900)  # fmt: skip
+                          text=True, timeout=timeout())  # fmt: skip
 
 
 REPORT = re.compile(r"^=+ (FAILURES|ERRORS) =+$", re.M)
@@ -108,6 +119,12 @@ def adapter_args(copy: Path) -> list[str]:
     ci = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ci)
     return ci.chunks(ci.adapter_tests(copy), n - 1, copy)[k - 2]
+
+
+def test_a_long_list_of_files_has_time_for_each_part(monkeypatch):
+    for n, want in ((0, 900), (1, 900), (16, 900), (17, 1800), (33, 2700)):
+        monkeypatch.setenv("WILLOW_STRIP_ONLY", " ".join(f"t{i}.py" for i in range(n)))
+        assert timeout() == want, n
 
 
 def test_without_github_everything_else_passes(tmp_path):
