@@ -1649,6 +1649,10 @@ willow/
 │   │   │   ├── exhaustion.py  a level of exhaustion's effect on a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2
 │   │   │   ├── test_exhaustion.py
 │   │   │   └── README.md     its card
+│   │   ├── game-canon/
+│   │   │   ├── game_canon.py what a game's table holds true, and what a new word meets of it
+│   │   │   ├── test_game_canon.py
+│   │   │   └── README.md     its card
 │   │   ├── game-master/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
@@ -1681,15 +1685,15 @@ willow/
 │   │   │   ├── play_crazy_eights.py Crazy Eights played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_crazy_eights.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-dice/
+
+```
 │   │   ├── play-dice/
 │   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
 │   │   │   ├── test_play_dice.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-dice5e/
-
-```
 │   │   ├── play-dice5e/
 │   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
 │   │   │   ├── test_play_dice5e.py

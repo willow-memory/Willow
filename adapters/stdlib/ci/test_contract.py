@@ -721,6 +721,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
                   "tomatoes"]),  # fmt: skip
     "format-rot": ("format_rot.py", ["--from", "{pile}"]),
     "fuzzy-dates": ("fuzzy_dates.py", ["--box", "{box}"]),
+    "game-canon": ("game_canon.py", ["--box", "{box}", "holds"]),
     "game-master": ("game_master.py", ["--box", "{box}", "check"]),
     "gaps": ("gaps.py", ["--box", "{box}", *NOW]),
     "garden": ("garden.py", ["--box", "{box}"]),
