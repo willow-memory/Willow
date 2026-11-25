@@ -36,6 +36,20 @@ UTF-8, not hidden, under the size cap — so a dotfile or a binary changing neve
 forces a rebuild. An index made by another `kernel.py` is rebuilt, since its
 passages were the other kernel's.
 
+## only what moved is read
+
+Beside each file's hash the manifest keeps its details on disk (its size,
+its modification and change times, its inode) and when the run began. A
+later run reads again only a file whose details moved, so a check of
+thousands of unchanged files takes a second, not a read of all of them. A
+file whose details were last seen changing within two seconds of a run's
+start is read again regardless, since it could change again inside the
+clock's tick and look the same (git's "racy" files). The change time can't
+be set back, so an edit that keeps a file's size and puts its modification
+time back is still seen. The index's own files are known whole the same
+way: by their details as the run that wrote them left them, and read again
+only when those moved.
+
 ## a list of files, where they are kept
 
 `--from @LIST` keeps the index of the files a list names (one path a line,

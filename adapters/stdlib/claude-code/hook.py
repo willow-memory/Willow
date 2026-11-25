@@ -102,7 +102,7 @@ def indexed(box: Path, text: str, at: Path, ts: str | None = None) -> dict | Non
             return None
         listed = {"words_sha256": sha}
     old = cache.cached(at)
-    if old is None or old != cache.box_manifest(cfg):
+    if old is None or old != cache.box_manifest(cfg, cache.known(at)):
         return None
     rows, breaks = kernel.read(box / "record.jsonl")
     k = kernel.bite_key(text)

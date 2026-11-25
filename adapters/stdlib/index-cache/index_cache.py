@@ -49,6 +49,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -61,75 +62,179 @@ FORMAT = "willow-index-cache/1"
 CACHE = "cache.json"  # the manifest, beside scan's own index files
 
 
-def manifest(folder: Path) -> dict[str, str]:
-    """{relative path: SHA-256 of its text} for the files the kernel reads into
-    an index -- the same filter as kernel.chunks, file by file, hashing the
-    text so a rebuild follows exactly the changes the index would see."""
-    out: dict[str, str] = {}
+#: a file's details on disk, kept beside its hash: when all four are as they
+#: were, its text is the text that was hashed, and it isn't read again
+Stat = list  # [size, mtime_ns, ctime_ns, inode]
+#: a file changed this close to when the last check began may have changed
+#: again inside the clock's tick with the same details: it is read again
+RACY_NS = 2_000_000_000
+
+
+def stat_of(p: Path) -> Stat | None:
+    try:
+        st = p.stat()
+    except OSError:
+        return None
+    return [st.st_size, st.st_mtime_ns, st.st_ctime_ns, st.st_ino]
+
+
+def folder_files(folder: Path) -> list[tuple[str, Path]]:
+    """(name, file) for the files under `folder` the kernel reads, by name:
+    kernel.chunks's walk, hidden folders and files left out."""
+    out = []
     for p in sorted(folder.rglob("*")):
         rel = p.relative_to(folder)
-        if not p.is_file() or any(part.startswith(".") for part in rel.parts):
-            continue
-        try:
-            raw = p.read_bytes()
-            if len(raw) > kernel.MAX_FILE or b"\0" in raw[: kernel.SNIFF]:
-                continue
-            out[str(rel)] = kernel.h256(raw.decode("utf-8"))
-        except (OSError, UnicodeDecodeError):
-            continue
+        if p.is_file() and not any(part.startswith(".") for part in rel.parts):
+            out.append((str(rel), p))
     return out
 
 
-def listed_manifest(lst: Path) -> dict[str, str]:
-    """`manifest` for a list's files, named as the kernel's `list_chunks`
+def listed(lst: Path) -> list[Path]:
+    """The files a list names, as the kernel's `listed` reads them (in its
+    order, each once, a relative path from the list's folder), each once by a
+    set: the kernel's looks back along the list for each line, which on a
+    list of thousands is most of a check's time. The kernel's stays its own."""
+    out: list[Path] = []
+    seen: set[Path] = set()
+    for line in lst.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line and not line.startswith("#"):
+            f = Path(line)
+            f = (f if f.is_absolute() else lst.parent / f).resolve()
+            if f not in seen:
+                seen.add(f)
+                out.append(f)
+    return out
+
+
+def list_files(lst: Path) -> list[tuple[str, Path]]:
+    """(name, file) for a list's files, named as the kernel's `list_chunks`
     names them: by path from the folder the listed files share."""
-    files = kernel.listed(lst)
+    files = listed(lst)
     if not files:
-        return {}
+        return []
     root = Path(os.path.commonpath([str(f.parent) for f in files]))
-    out: dict[str, str] = {}
-    for f in files:
-        rel = f.relative_to(root)
-        if any(part.startswith(".") for part in rel.parts):
-            continue
-        try:
-            raw = f.read_bytes()
-            if len(raw) > kernel.MAX_FILE or b"\0" in raw[: kernel.SNIFF]:
-                continue
-            out[str(rel)] = kernel.h256(raw.decode("utf-8"))
-        except (OSError, UnicodeDecodeError):
-            continue
-    return out
+    return [
+        (str(f.relative_to(root)), f)
+        for f in files
+        if not any(part.startswith(".") for part in f.relative_to(root).parts)
+    ]
 
 
-def box_manifest(cfg: dict) -> dict[str, str]:
-    """`manifest` for everything a box reads, its keys named as the kernel's
+def box_files(cfg: dict) -> list[tuple[str, Path]]:
+    """(name, file) for everything a box reads, named as the kernel's
     `pile_of_box` names its passages: the pile folder's paths as they are,
-    then each source's as NAME/ and its path. A box with only a pile has the
-    pile folder's manifest, so an index made with --from PILE stays current."""
-    out = manifest(Path(cfg["pile"])) if "pile" in cfg else {}
+    then each source's as its name, a slash, and its path."""
+    out = folder_files(Path(cfg["pile"])) if "pile" in cfg else []
     for name, at in sorted(kernel.sources(cfg).items()):
-        listed = cfg["sources"][name].startswith("@")
-        part = listed_manifest(at) if listed else manifest(at)
-        out.update({f"{name}/{rel}": h for rel, h in part.items()})
+        is_list = cfg["sources"][name].startswith("@")
+        part = list_files(at) if is_list else folder_files(at)
+        out += [(f"{name}/{rel}", p) for rel, p in part]
     return out
 
 
-def cached(index: Path) -> dict[str, str] | None:
-    """The manifest a past run wrote for `index`, or None when there is none,
-    it is of another kind, it was made by another kernel.py, or the index it
-    describes is not whole. Then the index is treated as stale."""
+def hashed(
+    files: list[tuple[str, Path]], known: dict | None = None
+) -> tuple[dict[str, str], dict[str, list]]:
+    """({name: SHA-256 of its text}, {name: [stat, hash or None]}) for the
+    files the kernel reads into an index: UTF-8 text with no NUL in its first
+    bytes and under the size cap, the same filter as kernel.chunks, hashing
+    the text so a rebuild follows exactly the changes the index would see. A
+    file whose details are as `known` holds them is not read: its hash, or
+    that it was no text, is taken from there."""
+    known = known or {}
+    out: dict[str, str] = {}
+    seen: dict[str, list] = {}
+    for rel, p in files:
+        st = stat_of(p)
+        if st is None:
+            continue
+        was = known.get(rel)
+        if was is not None and was[0] == st:
+            h = was[1]
+        else:
+            try:
+                raw = p.read_bytes()
+                if len(raw) > kernel.MAX_FILE or b"\0" in raw[: kernel.SNIFF]:
+                    h = None
+                else:
+                    h = kernel.h256(raw.decode("utf-8"))
+            except UnicodeDecodeError:
+                h = None
+            except OSError:
+                continue
+        seen[rel] = [st, h]
+        if h is not None:
+            out[rel] = h
+    return out, seen
+
+
+def manifest(folder: Path, known: dict | None = None) -> dict[str, str]:
+    """{relative path: SHA-256 of its text} for the files of `folder` the
+    kernel reads into an index (see `hashed`)."""
+    return hashed(folder_files(folder), known)[0]
+
+
+def listed_manifest(lst: Path, known: dict | None = None) -> dict[str, str]:
+    """`manifest` for a list's files, named as `list_files` names them."""
+    return hashed(list_files(lst), known)[0]
+
+
+def box_manifest(cfg: dict, known: dict | None = None) -> dict[str, str]:
+    """`manifest` for everything a box reads, named as `box_files` names it.
+    A box with only a pile has the pile folder's manifest, so an index made
+    with --from PILE stays current."""
+    return hashed(box_files(cfg), known)[0]
+
+
+def head_of(index: Path) -> dict | None:
+    """The manifest file a past run wrote for `index`, when it is this kind
+    and this kernel.py's; else None."""
     try:
         head = json.loads((index / CACHE).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
     if head.get("format") != FORMAT or head.get("kernel") != kernel.VERSION:
         return None
-    try:
-        scan.passages(index)  # the scan index is present and this kernel's
-    except (ValueError, OSError):
+    return head
+
+
+def built(index: Path) -> dict[str, Stat | None]:
+    """scan's own files of `index` by their details on disk."""
+    return {f: stat_of(index / f) for f in scan.FILES}
+
+
+def cached(index: Path) -> dict[str, str] | None:
+    """The manifest a past run wrote for `index`, or None when there is none,
+    it is of another kind, it was made by another kernel.py, or the index it
+    describes is not whole. Then the index is treated as stale. An index whose
+    files are as they were when it was written is whole without reading it
+    again; one that isn't, or a manifest that kept no details, is read."""
+    head = head_of(index)
+    if head is None:
         return None
+    if head.get("built") is None or head["built"] != built(index):
+        try:
+            scan.passages(index)  # the scan index is present and this kernel's
+        except (ValueError, OSError):
+            return None
     return head.get("files", {})
+
+
+def known(index: Path) -> dict[str, list]:
+    """{name: [stat, hash]} from the last run's manifest, for `hashed`: only
+    files whose details were last seen changed before that run began, less
+    the racy window, since a file changed while it was being read could look
+    the same again. Nothing, when there is no manifest of this kind."""
+    head = head_of(index)
+    if head is None or not isinstance(head.get("since"), int):
+        return {}
+    edge = head["since"] - RACY_NS
+    return {
+        rel: was
+        for rel, was in head.get("stats", {}).items()
+        if was[0][1] < edge and was[0][2] < edge
+    }
 
 
 def moved(old: dict[str, str], new: dict[str, str]) -> str:
@@ -138,6 +243,16 @@ def moved(old: dict[str, str], new: dict[str, str]) -> str:
     removed = len(set(old) - set(new))
     changed = sum(1 for p in set(old) & set(new) if old[p] != new[p])
     return f"+{added} new, ~{changed} changed, -{removed} removed"
+
+
+def write_head(index: Path, now: dict, seen: dict, since: int) -> None:
+    """The manifest beside the index: each file's hash, and its details on
+    disk with the time this run began, so the next run reads only what
+    moved; and scan's own files' details, so the next run knows the index is
+    whole without reading it."""
+    head = {"format": FORMAT, "kernel": kernel.VERSION, "files": now,
+            "stats": seen, "since": since, "built": built(index)}  # fmt: skip
+    (index / CACHE).write_text(kernel.canon(head) + "\n", encoding="utf-8")
 
 
 def main(argv: list[str]) -> int:
@@ -160,8 +275,8 @@ def main(argv: list[str]) -> int:
             cfg = kernel.config(box)
             reads = [Path(cfg["pile"])] if "pile" in cfg else []
             for name, at in kernel.sources(cfg).items():
-                listed = cfg["sources"][name].startswith("@")
-                reads += [at, *kernel.listed(at)] if listed else [at]
+                is_list = cfg["sources"][name].startswith("@")
+                reads += [at, *listed(at)] if is_list else [at]
         except (OSError, ValueError, KeyError) as e:
             print(f"refused: {opts['--box']} is not a box ({e})", file=sys.stderr)
             return kernel.REFUSED
@@ -173,7 +288,7 @@ def main(argv: list[str]) -> int:
         if not lst.is_file():
             print(f"refused: {given[1:]} is not a list of files", file=sys.stderr)
             return kernel.REFUSED
-        files = kernel.listed(lst)
+        files = listed(lst)
         # only the listed files are read, so an index beside them is fine;
         # one that would hold the list, or a listed file, is not
         held = any(p.is_relative_to(index) for p in [lst, *files])
@@ -192,14 +307,19 @@ def main(argv: list[str]) -> int:
               file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
 
+    since = time.time_ns()
     if cfg is not None:
-        now = box_manifest(cfg)
+        files = box_files(cfg)
     else:
-        now = manifest(folder) if lst is None else listed_manifest(lst)
+        files = folder_files(folder) if lst is None else list_files(lst)
+    now, seen = hashed(files, known(index))
     before = cached(index)
     if before is not None and before == now:
         print(f"current: {len(now)} files unchanged; the index at {opts['--to']} "
               f"still answers. Ask it with scan.")  # fmt: skip
+        head = head_of(index) or {}
+        if head.get("stats") != seen:  # details moved, text the same: keep them
+            write_head(index, now, seen, since)
         return kernel.ALIVE
 
     if cfg is not None:
@@ -208,10 +328,7 @@ def main(argv: list[str]) -> int:
         n = scan.build(folder, index)
     else:
         n = scan.build_from(kernel.list_chunks(lst), index)
-    (index / CACHE).write_text(
-        kernel.canon({"format": FORMAT, "kernel": kernel.VERSION, "files": now}) + "\n",
-        encoding="utf-8",
-    )
+    write_head(index, now, seen, since)
     how = moved(before, now) if before is not None else f"+{len(now)} new"
     print(f"rebuilt {n} passage{'' if n == 1 else 's'} to {opts['--to']} ({how})")
     return kernel.ALIVE if n else kernel.ESCALATE

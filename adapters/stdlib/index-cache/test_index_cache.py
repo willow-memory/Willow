@@ -274,3 +274,97 @@ def test_a_box_that_is_not_one_or_both_kinds_of_from_is_refused(tmp_path):
     assert got.returncode == 2 and "is not a box" in got.stderr
     both = run("--box", str(tmp_path), "--from", str(folder), "--to", str(index))
     assert both.returncode == 2 and "index_cache.py" in both.stderr
+
+
+# ── a file is read again only when its details on disk moved ──────────────────
+def in_process(monkeypatch, racy_ns: int = 0):
+    """index_cache as a module, its racy window set (0: trust every file
+    whose details were last seen before the run began)."""
+    sys.path.insert(0, str(HERE))
+    sys.path.insert(0, str(HERE.parent / "batch-ask"))
+    import index_cache as ic
+
+    monkeypatch.setattr(ic, "RACY_NS", racy_ns)
+    return ic
+
+
+def counting_reads(monkeypatch) -> list:
+    reads: list = []
+    real = Path.read_bytes
+    monkeypatch.setattr(
+        Path, "read_bytes", lambda self: reads.append(self.name) or real(self)
+    )
+    return reads
+
+
+def test_an_unchanged_file_is_not_read_again(tmp_path, monkeypatch, capsys):
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    assert ic.main(["--from", str(folder), "--to", str(index)]) == 0
+    reads = counting_reads(monkeypatch)
+    assert ic.main(["--from", str(folder), "--to", str(index)]) == 0
+    assert "current" in capsys.readouterr().out
+    assert [r for r in reads if r.endswith(".md")] == []
+
+
+def test_an_edit_that_keeps_the_size_and_the_time_is_still_seen(
+    tmp_path, monkeypatch, capsys
+):
+    import os
+
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    roof = folder / "roof.md"
+    was = roof.stat()
+    roof.write_text("2026-03-01 The roof estimate was 4900.\n")  # same length
+    os.utime(roof, ns=(was.st_atime_ns, was.st_mtime_ns))  # the time put back
+    capsys.readouterr()
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert "~1 changed" in capsys.readouterr().out
+
+
+def test_a_file_changed_as_the_last_run_began_is_read_again(tmp_path, monkeypatch):
+    ic = in_process(monkeypatch, racy_ns=10**18)  # every file is racy
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert ic.known(index) == {}
+    reads = counting_reads(monkeypatch)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert sorted(r for r in reads if r.endswith(".md")) == ["mould.md", "roof.md"]
+
+
+def test_a_whole_index_is_known_by_its_files_details(tmp_path, monkeypatch, capsys):
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+
+    def unread(at):
+        raise AssertionError("an index whose files are as written isn't read")
+
+    monkeypatch.setattr(ic.scan, "passages", unread)
+    assert ic.cached(index) is not None
+    monkeypatch.undo()
+    ic = in_process(monkeypatch)
+    (index / "chunks.jsonl").write_text("not an index\n")  # its details moved
+    assert ic.cached(index) is None  # so it is read, and it isn't whole
+    capsys.readouterr()
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert "rebuilt" in capsys.readouterr().out
+
+
+def test_a_list_is_read_as_the_kernel_reads_it(tmp_path, monkeypatch):
+    """index-cache's own reading of a list (by a set, so a list of thousands
+    is quick) names the files the kernel's `listed` names, in its order."""
+    ic = in_process(monkeypatch)
+    sys.path.insert(0, str(HERE.parents[2]))
+    import kernel
+
+    folder, lst, _ = a_list(tmp_path)
+    (tmp_path / "lists" / "near.md").write_text("Beside the list.\n")
+    lst.write_text(
+        lst.read_text() + f"{folder / 'roof.md'}\nnear.md\n  # spaced note\n"
+        f"../folder/unlisted.md\n{folder / 'gone.md'}\n"
+    )
+    assert ic.listed(lst) == kernel.listed(lst)
+    assert len(ic.listed(lst)) == 5  # roof.md once, near.md, gone.md kept
