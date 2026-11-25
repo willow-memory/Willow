@@ -537,3 +537,24 @@ def test_an_index_whose_offsets_dont_match_is_refused(tmp_path):
     (at / "offsets.bin").write_bytes((at / "offsets.bin").read_bytes()[:8])
     with pytest.raises(ValueError, match="offsets"):
         sc.Index(at)
+
+
+def test_a_word_is_found_by_halving_not_by_reading_line_after_line(
+    tmp_path, monkeypatch
+):
+    """On 20,000 words, finding one reads about log2 of them, not a run of
+    them: the search is the speed, so a slip that still finds the word by
+    walking the file is a failure too."""
+    import scan as sc
+
+    f = tmp_path / "w.tsv"
+    words = sorted(f"w{i:05d}" for i in range(20000))
+    f.write_text("".join(f"{w}\t{i}\n" for i, w in enumerate(words)))
+    lines = sc.Lines(f)
+    read = []
+    real = lines._line
+    monkeypatch.setattr(lines, "_line", lambda at: read.append(at) or real(at))
+    for w in ("w00000", "w12345", "w19999", "w99999"):
+        read.clear()
+        lines.get(w)
+        assert len(read) <= 40, (w, len(read))
