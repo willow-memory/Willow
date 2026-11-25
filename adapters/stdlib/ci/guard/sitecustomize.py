@@ -54,6 +54,7 @@ the guard never checks; that is the tests' coverage, and their job.
 from __future__ import annotations
 
 import fnmatch
+import importlib.util  # before any hook: from inside one, importlib kept no .util
 import json
 import os
 import sys
@@ -295,8 +296,6 @@ _owner: dict = {}
 def reach_of(addon: str):
     """(the prefixes `addon` may read, or None for the whole tree; within)."""
     if not _reach:
-        import importlib.util
-
         spec = importlib.util.spec_from_file_location(
             "willow_reach_for_guard",
             os.path.join(os.path.dirname(HERE), os.pardir, "reach.py"),
