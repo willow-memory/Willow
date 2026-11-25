@@ -3,7 +3,7 @@ section: Reading more kinds of files
 line: Folders and files you name, copied into your pile under a name, only the kinds you keep, never a key or a file too big to read.
 source: new
 added: 2026-11-10
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes
@@ -92,6 +92,24 @@ Each of these stops before anything is written, with the reason:
 - Two places with the same name. Both would go to one spot and one would
   overwrite the other. Give each its own `--to`.
 
+## Point instead of copying
+
+`--point` copies nothing. Each place's files, chosen exactly as a copy
+would be (the kinds you keep, the names you skip, never a key or a file
+over 1 MB), are written as a list under `--to`, one path a line, named for
+the place (`panes.list`), and `--to`'s sources.txt holds a line for each,
+`NAME=@LIST`: the `--from` of `kernel.py init`.
+
+    gather -- --from ~/code/app/panes --to ~/piles/app --keep .py,.md --point
+    python kernel.py init --box ~/boxes/app $(sed 's/^/--from /' ~/piles/app/sources.txt) --key ~/keys/app.key
+
+A box laid with them reads the files where they are kept, so it follows
+them as they change. A list names what was there when gather ran: run the
+same line again for a new file (lines sharing a `--to` keep each other's
+sources). Point wherever you can; but a box with sources can't be walked
+as one folder, so an add-on that walks its pile itself won't run on it.
+Keep that box on a pile until it can.
+
 ## In a stack
 
 In a stack file, write one line for each place, at the top. The list of what
@@ -111,5 +129,5 @@ still copied), or nothing was copied, and it waits on you; 2 refused.
 **Uses:** nothing of the kernel's but its exit codes. It reads no box and no
 record.
 
-**Never:** writes outside `--to`, changes a place you named, or copies a
-file that looks like a key.
+**Never:** writes outside `--to`, changes a place you named, or copies (or
+lists) a file that looks like a key.

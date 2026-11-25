@@ -31,6 +31,30 @@ their reasons on their record; you propose, they seal.
    they sealed is on it, and nothing of their folder; they read it and post
    it.
 
+## Point at the files, don't copy them
+
+A box reads its files where they are kept (CONST-VI-9): lay it with
+`kernel.py init --from NAME=FOLDER` or `NAME=@LIST`, not over a pile of
+copies. `gather --point` writes the lists and the `--from` lines
+(sources.txt under its `--to`) in place of copying. **Point wherever it
+is available,** and when you meet a box laid over copies, offer to lay it
+again with pointers:
+
+- **When it is available:** the original is on this machine, and every step
+  the stack runs reads the box through the kernel. A step handed the pile's
+  folder by its path (`code-comments mirror --from PILE/ui`, `scan index
+  --from PILE`), or an add-on that walks one pile folder itself (the
+  kernel's `folder()`, which refuses a box with sources), needs that folder:
+  keep that box on a pile, say why in its stack, and point it when the
+  step can read a box's sources.
+- **What stays a pile:** what has no original here: an export, a download,
+  and what a step makes (mirrors, clauses, histories). Lay it as the box's
+  `--pile`, beside its `--from`.
+- **A box holding the person's seals** is laid again beside it, never over
+  it: the old box and its record stay until the person lets them go.
+- **A pointer follows the files as they change;** a list names the files
+  there when gather ran, so run it again for a new file.
+
 ## One want at a time
 
 A stack is a row of wants, in the order the person had them: each want, the
