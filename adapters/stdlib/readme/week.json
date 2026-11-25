@@ -380,8 +380,8 @@
   },
   "blind-deal": {
    "near": [
-    "dice-tower",
     "play-hearts",
+    "dice-tower",
     "persona-card"
    ],
    "topics": [
@@ -1079,11 +1079,11 @@
   "daily-word": {
    "near": [
     "play-quiz",
-    "game-canon",
-    "random-passage"
+    "random-passage",
+    "stack-row"
    ],
    "topics": [
-    "game"
+    "daily"
    ]
   },
   "datasette": {
@@ -1161,7 +1161,7 @@
    "near": [
     "dialect",
     "code-shape",
-    "pdf"
+    "wasm"
    ],
    "topics": [
     "dialect",
@@ -1170,13 +1170,13 @@
   },
   "dice-tower": {
    "near": [
+    "play-fight",
     "play-dice",
-    "play-dice5e",
-    "game-master"
+    "play-dice5e"
    ],
    "topics": [
-    "roll",
-    "dice"
+    "dice",
+    "roll"
    ]
   },
   "dictate": {
@@ -1581,19 +1581,8 @@
     "hit-kinds"
    ],
    "topics": [
-    "play",
-    "game"
-   ]
-  },
-  "game-canon": {
-   "near": [
-    "game-master",
-    "daily-word",
-    "market-calls"
-   ],
-   "topics": [
     "game",
-    "master"
+    "count"
    ]
   },
   "game-master": {
@@ -1603,8 +1592,8 @@
     "play-checkers"
    ],
    "topics": [
-    "play",
-    "dice"
+    "dice",
+    "roll"
    ]
   },
   "gaps": {
@@ -2221,8 +2210,8 @@
   "ink-story": {
    "near": [
     "oracle-text",
-    "game-canon",
-    "play-tarot"
+    "play-tarot",
+    "timeline"
    ],
    "topics": [
     "seeded",
@@ -2811,8 +2800,8 @@
     "play-checkers"
    ],
    "topics": [
-    "forecast",
-    "settle"
+    "score",
+    "forecast"
    ]
   },
   "mastodon": {
@@ -3036,7 +3025,7 @@
    ],
    "topics": [
     "quote",
-    "drops"
+    "dropped"
    ]
   },
   "mlx": {
@@ -3652,7 +3641,6 @@
     "play-crazy-eights"
    ],
    "topics": [
-    "play",
     "mention"
    ]
   },
@@ -3688,8 +3676,8 @@
   },
   "pgp": {
    "near": [
-    "pdf",
     "export-answers",
+    "pdf",
     "mcp"
    ],
    "topics": []
@@ -3829,8 +3817,8 @@
     "play-dice"
    ],
    "topics": [
-    "play",
-    "dice"
+    "dice",
+    "rules"
    ]
   },
   "play-bureau": {
@@ -3839,9 +3827,7 @@
     "play-backgammon",
     "play-crazy-eights"
    ],
-   "topics": [
-    "play"
-   ]
+   "topics": []
   },
   "play-catgrid": {
    "near": [
@@ -3850,7 +3836,6 @@
     "play-backgammon"
    ],
    "topics": [
-    "play",
     "seeded"
    ]
   },
@@ -3861,8 +3846,8 @@
     "play-hearts"
    ],
    "topics": [
-    "play",
-    "rules"
+    "rules",
+    "draw"
    ]
   },
   "play-crazy-eights": {
@@ -3872,8 +3857,8 @@
     "play-tarot"
    ],
    "topics": [
-    "play",
-    "rules"
+    "rules",
+    "draw"
    ]
   },
   "play-dice": {
@@ -3883,8 +3868,8 @@
     "play-backgammon"
    ],
    "topics": [
-    "play",
-    "dice"
+    "dice",
+    "roll"
    ]
   },
   "play-dice5e": {
@@ -3894,8 +3879,19 @@
     "play-liars-dice"
    ],
    "topics": [
-    "play",
-    "dice"
+    "dice",
+    "roll"
+   ]
+  },
+  "play-fight": {
+   "near": [
+    "dice-tower",
+    "ripgrep",
+    "play-dice"
+   ],
+   "topics": [
+    "dice",
+    "tower"
    ]
   },
   "play-fight5e": {
@@ -3906,18 +3902,18 @@
    ],
    "topics": [
     "roll",
-    "play"
+    "replayable"
    ]
   },
   "play-hanoi": {
    "near": [
+    "play-fight",
     "play-reversi",
-    "tic-tac-toe",
-    "play-dice"
+    "tic-tac-toe"
    ],
    "topics": [
-    "play",
-    "move"
+    "move",
+    "tower"
    ]
   },
   "play-hearts": {
@@ -3927,8 +3923,8 @@
     "play-backgammon"
    ],
    "topics": [
-    "play",
-    "rules"
+    "rules",
+    "seeded"
    ]
   },
   "play-horoscope": {
@@ -3938,8 +3934,8 @@
     "play-bureau"
    ],
    "topics": [
-    "play",
-    "daily"
+    "daily",
+    "key"
    ]
   },
   "play-liars-dice": {
@@ -3949,8 +3945,8 @@
     "play-crazy-eights"
    ],
    "topics": [
-    "play",
-    "dice"
+    "dice",
+    "throw"
    ]
   },
   "play-life": {
@@ -3960,8 +3956,8 @@
     "game-master"
    ],
    "topics": [
-    "play",
-    "seeded"
+    "seeded",
+    "game"
    ]
   },
   "play-lunatic": {
@@ -3971,8 +3967,8 @@
     "typos"
    ],
    "topics": [
-    "play",
-    "moon"
+    "moon",
+    "typos"
    ]
   },
   "play-mastermind": {
@@ -3982,8 +3978,8 @@
     "assistant-scores"
    ],
    "topics": [
-    "play",
-    "open"
+    "open",
+    "secret"
    ]
   },
   "play-nim": {
@@ -3993,7 +3989,6 @@
     "play-odds"
    ],
    "topics": [
-    "play",
     "position"
    ]
   },
@@ -4005,7 +4000,7 @@
    ],
    "topics": [
     "dice",
-    "play"
+    "roll"
    ]
   },
   "play-quiz": {
@@ -4014,9 +4009,7 @@
     "play-backgammon",
     "play-checkers"
    ],
-   "topics": [
-    "play"
-   ]
+   "topics": []
   },
   "play-reversi": {
    "near": [
@@ -4025,7 +4018,6 @@
     "play-hanoi"
    ],
    "topics": [
-    "play",
     "move"
    ]
   },
@@ -4036,8 +4028,8 @@
     "table"
    ],
    "topics": [
-    "play",
-    "replayed"
+    "replayed",
+    "move"
    ]
   },
   "play-tarot": {
@@ -4047,8 +4039,8 @@
     "play-checkers"
    ],
    "topics": [
-    "play",
-    "seeded"
+    "seeded",
+    "draw"
    ]
   },
   "pocket": {
@@ -4141,8 +4133,8 @@
   },
   "port-pypi": {
    "near": [
-    "port-nuget",
     "port-npm",
+    "port-nuget",
     "port-maven"
    ],
    "topics": [
@@ -4362,7 +4354,7 @@
    ],
    "topics": [
     "quote",
-    "drops"
+    "dropped"
    ]
   },
   "random-passage": {
@@ -5467,12 +5459,12 @@
   "steam": {
    "near": [
     "game-baselines",
-    "play-life",
-    "game-master"
+    "game-master",
+    "play-life"
    ],
    "topics": [
     "game",
-    "play"
+    "library"
    ]
   },
   "stems": {
@@ -5585,12 +5577,12 @@
   "table": {
    "near": [
     "game-baselines",
-    "game-canon",
-    "play-checkers"
+    "play-checkers",
+    "play-catgrid"
    ],
    "topics": [
-    "play",
-    "game"
+    "game",
+    "seat"
    ]
   },
   "takeout": {
@@ -5706,8 +5698,8 @@
     "play-checkers"
    ],
    "topics": [
-    "play",
-    "move"
+    "move",
+    "draw"
    ]
   },
   "tides": {
@@ -5787,11 +5779,11 @@
    "near": [
     "dice-tower",
     "email-ask",
-    "bot-venv"
+    "play-fight"
    ],
    "topics": [
-    "die",
-    "total"
+    "tower",
+    "die"
    ]
   },
   "transcript-redact": {
@@ -6250,7 +6242,7 @@
     "stack-share"
    ],
    "topics": [
-    "true",
+    "stack",
     "several"
    ]
   },

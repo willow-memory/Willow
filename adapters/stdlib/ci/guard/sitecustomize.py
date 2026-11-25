@@ -28,6 +28,10 @@ and an add-on is held to its card's header:
                              made itself with tempfile
     writes: record           may write the record, only through the kernel
     writes: to               writes only under the path given to --to
+    writes: beside           writes right beside a box: a file or folder
+                             in the folder that holds the box, never in the
+                             box, an original or the repo (a table's own
+                             sheets, kept next to its box)
     writes: README.md        writes that one file of the repo; a pattern,
                              such as adapters/*/*/README.md, matches one
                              path segment per segment
@@ -50,6 +54,7 @@ the guard never checks; that is the tests' coverage, and their job.
 from __future__ import annotations
 
 import fnmatch
+import importlib.util  # before any hook: from inside one, importlib kept no .util
 import json
 import os
 import sys
@@ -194,6 +199,16 @@ def box_of(path: str) -> str | None:
         d = up
 
 
+def beside_a_box(path: str) -> bool:
+    """Whether a path is right beside a box: the folder it is in holds a box
+    (a folder of its own with kernel.json) next to it."""
+    try:
+        with os.scandir(os.path.dirname(path)) as it:
+            return any(e.is_dir() and os.path.isfile(os.path.join(e.path, "kernel.json")) for e in it)  # fmt: skip
+    except OSError:
+        return False
+
+
 def box_fields(box: str | None) -> dict:
     if not box:
         return {}
@@ -259,6 +274,8 @@ def judge_write(addon: str, via_kernel: bool, path: str) -> None:
         repo_file(os.path.relpath(path, ROOT), w) for w in writes
     ):
         return
+    if "beside" in writes and not under(path, ROOT) and beside_a_box(path):
+        return
     if any(under(path, s) for s in _scratch):
         return  # its own scratch, made with tempfile
     breach(addon, f"wrote {path}; its card says writes: {', '.join(sorted(writes)) or 'nothing'}")  # fmt: skip
@@ -279,8 +296,6 @@ _owner: dict = {}
 def reach_of(addon: str):
     """(the prefixes `addon` may read, or None for the whole tree; within)."""
     if not _reach:
-        import importlib.util
-
         spec = importlib.util.spec_from_file_location(
             "willow_reach_for_guard",
             os.path.join(os.path.dirname(HERE), os.pardir, "reach.py"),

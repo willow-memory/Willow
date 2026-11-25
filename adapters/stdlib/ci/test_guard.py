@@ -92,6 +92,39 @@ def test_writing_outside_to_when_the_card_says_to(repo, tmp_path):
     assert code != 0 and "elsewhere.txt" in log
 
 
+def test_writing_beside_a_box_when_the_card_says_beside(repo, tmp_path):
+    """`beside` is right next to a box (a table's sheets): a file or folder in
+    the folder that holds it, and nowhere further."""
+    root, box, _ = repo
+    beside = f"""\
+        open({str(tmp_path / "prep.md")!r}, 'w').write('## p')
+        os.makedirs({str(tmp_path / "prep")!r})
+    """
+    code, log = run(root, addon(root, "record, beside", "none", beside), "--box", str(box))  # fmt: skip
+    assert code == 0 and log == "", log
+    assert (tmp_path / "prep.md").exists() and (tmp_path / "prep").is_dir()
+    code, log = run(root, addon(root, "record", "none", beside.replace("prep", "end")), "--box", str(box))  # fmt: skip
+    assert code != 0 and "end.md" in log and "writes: record" in log
+
+
+@pytest.mark.parametrize(
+    "where, why",
+    [
+        (("prep", "001", "x.md"), "wrote"),  # further than beside
+        (("box", "x.md"), "not through the kernel"),  # in the box itself
+        (("pile", "a.md"), "changed an original"),  # its pile, beside it too
+        (("repo", "x.md"), "wrote"),  # the repo is never beside
+    ],
+)
+def test_beside_is_only_right_beside_the_box(repo, tmp_path, where, why):
+    root, box, _ = repo
+    (tmp_path / "prep" / "001").mkdir(parents=True)
+    target = tmp_path.joinpath(*where)
+    script = addon(root, "record, beside", "none", f"open({str(target)!r}, 'a').write('x')\n")  # fmt: skip
+    code, log = run(root, script, "--box", str(box))
+    assert code != 0 and why in log, log
+
+
 def test_making_a_folder_that_is_already_there_is_no_write(repo, tmp_path):
     """mkdir over something that's there can only fail, FileExistsError, and
     changes nothing (wasi-python asks for its cache folder each run so). A

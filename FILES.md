@@ -1633,6 +1633,10 @@ willow/
 ### adapters/stdlib/: Play: Tools you run yourself
 
 ```
+│   │   ├── carry-sheet/
+│   │   │   ├── carry_sheet.py what characters carry, use up, and come through, from night to night, on the record
+│   │   │   ├── test_carry_sheet.py
+│   │   │   └── README.md     its card
 │   │   ├── daily-word/
 │   │   │   ├── daily_word.py the day's word from the folder's own words, six guesses marked on the record
 │   │   │   ├── test_daily_word.py
@@ -1640,6 +1644,10 @@ willow/
 │   │   ├── dice-tower/
 │   │   │   ├── dice_tower.py a die dropped in the tower, only a hash on the record until it's out
 │   │   │   ├── test_dice_tower.py
+│   │   │   └── README.md     its card
+│   │   ├── exhaustion/
+│   │   │   ├── exhaustion.py  a level of exhaustion's effect on a roll, a speed and a hit point maximum, by SRD 5.1 or 5.2
+│   │   │   ├── test_exhaustion.py
 │   │   │   └── README.md     its card
 │   │   ├── game-canon/
 │   │   │   ├── game_canon.py what a game's table holds true, and what a new word meets of it
@@ -1649,6 +1657,10 @@ willow/
 │   │   │   ├── game_master.py  a world played beat by beat: 2d6 rolls on the record, rulings that move only on your seal
 │   │   │   ├── test_game_master.py
 │   │   │   └── README.md
+│   │   ├── lines-veils/
+│   │   │   ├── lines_veils.py what never happens at a table, what happens off-screen, and the X-card and the pause, on the record
+│   │   │   ├── test_lines_veils.py
+│   │   │   └── README.md     its card
 │   │   ├── oracle-text/
 │   │   │   ├── oracle_text.py   readings from a Tracery grammar, replayable
 │   │   │   ├── test_oracle_text.py
@@ -1673,6 +1685,11 @@ willow/
 │   │   │   ├── play_crazy_eights.py Crazy Eights played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_crazy_eights.py
 │   │   │   └── README.md     its card
+```
+
+#### adapters/stdlib/, from play-dice/
+
+```
 │   │   ├── play-dice/
 │   │   │   ├── play_dice.py  dice rolled on the record, every roll checkable
 │   │   │   ├── test_play_dice.py
@@ -1685,11 +1702,6 @@ willow/
 │   │   │   ├── play_hearts.py Hearts played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_hearts.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/stdlib/, from play-horoscope/
-
-```
 │   │   ├── play-horoscope/
 │   │   │   ├── play_horoscope.py a daily horoscope, the same for the same name and day
 │   │   │   ├── test_play_horoscope.py
@@ -1713,6 +1725,10 @@ willow/
 │   │   ├── play-tarot/
 │   │   │   ├── play_tarot.py a seeded tarot draw on the record, replayable by anyone with it
 │   │   │   ├── test_play_tarot.py
+│   │   │   └── README.md     its card
+│   │   ├── story-ideas/
+│   │   │   ├── story_ideas.py story ideas between sessions, dealt from a game box's own words
+│   │   │   ├── test_story_ideas.py
 │   │   │   └── README.md     its card
 │   │   ├── table/
 │   │   │   ├── table.py      one way to sit at any table on the record
@@ -2004,9 +2020,29 @@ willow/
 │   │   │   └── README.md
 ```
 
-#### adapters/deps/, from record-sql/
+#### adapters/deps/, from play-fight/
 
 ```
+│   │   ├── play-fight/
+│   │   │   ├── play_fight.py a fight blow by blow, on dice dropped in the tower, played again from the record to check it. Python 3.10+ (dndwright's)
+│   │   │   ├── requirements-floor.txt
+│   │   │   ├── requirements.txt
+│   │   │   ├── test_play_fight.py
+│   │   │   └── README.md     its card
+│   │   ├── play-fight5e/
+│   │   │   ├── board.py      a fight drawn from its rows: who's hurt, who's down, whose turn
+│   │   │   ├── combat.py     aetheris5e's 5e combat engine: saves, resistances, specials
+│   │   │   ├── dice5e.py     5e dice notation over a generator handed in, the dice library its authority
+│   │   │   ├── LICENSE-die-namic-games  the licence of the code that came from Die-Namic
+│   │   │   ├── LICENSE-willow-bot  the licence of the dice seam that came from willow-bot
+│   │   │   ├── play_fight5e.py  the encounters fought on the tower's dice, every blow a row
+│   │   │   ├── requirements-floor.txt  dice at its floor, also tested
+│   │   │   ├── requirements.txt  dice, pinned
+│   │   │   ├── statblocks.py  the Aetheris setting's stat blocks, pregens and encounters
+│   │   │   ├── test_board.py
+│   │   │   ├── test_combat.py
+│   │   │   ├── test_play_fight5e.py
+│   │   │   └── README.md     its card
 │   │   ├── record-sql/
 │   │   │   ├── record_sql.py  SQL over the record in memory, DuckDB's way out locked shut
 │   │   │   ├── requirements.txt  duckdb, pinned
@@ -2039,6 +2075,11 @@ willow/
 │   │   │   ├── requirements-floor.txt  openpyxl at its floor, also tested
 │   │   │   ├── test_sheets.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from star-system/
+
+```
 │   │   ├── star-system/
 │   │   │   ├── star_system.py  a friend's star-system sim (science_bitch) run deterministically, as cited passages
 │   │   │   ├── requirements.txt  numpy, pinned
@@ -2060,11 +2101,6 @@ willow/
 │   │   │   ├── requirements-floor.txt  pagefind and pagefind-bin at their floors, also tested
 │   │   │   ├── test_static_search.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from stems/
-
-```
 │   │   ├── stems/
 │   │   │   ├── stems.py      a word's other forms, by Snowball's stemmer for 30 languages
 │   │   │   ├── requirements.txt  snowballstemmer, pinned

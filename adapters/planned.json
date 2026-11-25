@@ -1383,17 +1383,6 @@
   "version": "0.0.1"
  },
  {
-  "name": "play-fight5e",
-  "kind": "stdlib",
-  "section": "Play",
-  "line": "Tabletop combat run from stat blocks on dice5e's rolls, every attack on the record and replayable.",
-  "source": "new",
-  "writes": "record",
-  "network": "none",
-  "role": "tools",
-  "version": "0.0.1"
- },
- {
   "name": "play-hanoi",
   "kind": "stdlib",
   "section": "Play",

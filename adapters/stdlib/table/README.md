@@ -3,9 +3,9 @@ section: Play
 line: One way to sit at any game on the record: whose seat it is, the moves it may make, one move; so a GM, a bot or a person plays them all.
 source: new
 added: 2026-11-21
-version: 0.2.0
+version: 0.1.0
 looks-for: contradictions, session-seal, stack, forge
-writes: record, to
+writes: record, to, beside
 network: none
 role: tools
 -->

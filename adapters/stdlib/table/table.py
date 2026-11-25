@@ -600,13 +600,12 @@ def run_sheet(box: Path, which: str, page: Path | None = None) -> tuple[Path, li
     to = home.joinpath(str(last + 1).zfill(3))
     text = page.read_text(encoding="utf-8")
     # the stack add-on fills {box} and nothing else, so {tmp} (the forge's
-    # backup step writes there) is filled here: a folder of the run's own
-    # that the run makes as it goes, never one named with braces
+    # backup step writes there) is filled here: the run's own folder, which
+    # the stack add-on makes before any step runs, so a step writes inside a
+    # folder that is there, never one it must make or one named with braces
     with tempfile.TemporaryDirectory() as hold:
         kept = Path(hold).joinpath(page.name)
-        kept.write_text(
-            text.replace("{tmp}", str(to.joinpath("tmp"))), encoding="utf-8"
-        )
+        kept.write_text(text.replace("{tmp}", str(to)), encoding="utf-8")
         subprocess.run([sys.executable, str(STACK), "--box", str(box), "--stack", str(kept), "--to", str(to)],
                        capture_output=True, text=True, check=False)  # fmt: skip
     st = stack_add_on()
