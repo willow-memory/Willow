@@ -368,3 +368,13 @@ def test_a_list_is_read_as_the_kernel_reads_it(tmp_path, monkeypatch):
     )
     assert ic.listed(lst) == kernel.listed(lst)
     assert len(ic.listed(lst)) == 5  # roof.md once, near.md, gone.md kept
+
+
+def test_a_check_that_finds_nothing_moved_writes_nothing(tmp_path, monkeypatch):
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    ic.main(["--from", str(folder), "--to", str(index)])  # details settle
+    was = (index / "cache.json").read_bytes()
+    assert ic.main(["--from", str(folder), "--to", str(index)]) == 0
+    assert (index / "cache.json").read_bytes() == was
