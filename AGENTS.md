@@ -136,7 +136,10 @@ Most gaps are a missing line in a stack, not a missing add-on.
   add-on with their words, propose the card, add it on their yes, run, then
   the next want. Settle its forks with a reason each, and leave the seal to them;
   a missed word is a line in `ui/search-words.txt`, and a sealed stack is
-  shared with stack-share. [docs/agents/stacks.md](docs/agents/stacks.md).
+  shared with stack-share. Point a box at the files where they live
+  (`init --from`, `gather --point`) wherever it's available, never a pile of
+  copies; a box with seals is laid again beside, never over.
+  [docs/agents/stacks.md](docs/agents/stacks.md).
 - **Search.** The kernel's rank is for answering; pointing at where to look
   and comparing texts are other jobs, with other tools.
   [docs/agents/searching.md](docs/agents/searching.md).

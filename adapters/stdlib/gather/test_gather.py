@@ -640,3 +640,61 @@ def test_called_in_process_it_gives_the_same_report_and_exit_codes(
     assert addon.main([*argv, "--from", str(tmp_path / "nowhere")]) == 42
     assert addon.main(["--from", str(panes)]) == 2
     assert capsys.readouterr().err.startswith("usage: gather.py")
+
+
+# --point: nothing copied; a list per place, and the --from lines to lay a box
+
+
+def test_point_copies_nothing_and_lists_each_place_with_its_from_line(tmp_path):
+    panes, app, pile = project(tmp_path)
+    put(panes, {"c.txt": "left out\n"})
+    got = gather("--from", panes, "--from", app, "--to", pile, "--keep", ".py,.md", "--point")  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    assert got.stdout.splitlines()[0] == (
+        "gather: populated, 3 files pointed at from 2 places, 1 left out"
+    )
+    assert sorted(p.name for p in pile.iterdir()) == ["app.py.list", "panes.list", "sources.txt"]  # fmt: skip
+    assert (
+        pile / "panes.list"
+    ).read_text() == f"{panes / 'a.py'}\n{panes / 'sub' / 'b.md'}\n"
+    assert (pile / "app.py.list").read_text() == f"{app}\n"
+    assert (pile / "sources.txt").read_text() == (
+        f"app.py=@{pile / 'app.py.list'}\npanes=@{pile / 'panes.list'}\n"
+    )
+
+
+def test_a_box_laid_from_the_lines_reads_the_files_where_they_are(tmp_path):
+    panes, app, pile = project(tmp_path)
+    assert (
+        gather("--from", panes, "--from", app, "--to", pile, "--point").returncode == 0
+    )
+    froms = [a for line in (pile / "sources.txt").read_text().split() for a in ("--from", line)]  # fmt: skip
+    kernel = HERE.parents[2] / "kernel.py"
+    box = tmp_path / "box"
+    run = subprocess.run([sys.executable, str(kernel), "init", "--box", str(box), *froms,
+                          "--key", str(tmp_path / "test.key")], capture_output=True, text=True)  # fmt: skip
+    assert run.returncode == 0, run.stderr
+    put(panes, {"a.py": "a = 'changed where it is kept'\n"})
+    bite = subprocess.run([sys.executable, str(kernel), "bite", "--box", str(box), "changed where it is kept"],
+                          capture_output=True, text=True)  # fmt: skip
+    assert "panes/a.py" in bite.stdout, bite.stdout + bite.stderr
+
+
+def test_lines_sharing_a_to_keep_each_others_sources_and_an_empty_list_goes(tmp_path):
+    panes, app, pile = project(tmp_path)
+    assert gather("--from", panes, "--to", pile, "--point").returncode == 0
+    assert gather("--from", app, "--to", pile, "--point").returncode == 0
+    assert [ln.split("=")[0] for ln in (pile / "sources.txt").read_text().split()] == ["app.py", "panes"]  # fmt: skip
+    got = gather("--from", panes, "--to", pile, "--keep", ".rs", "--point")
+    assert got.returncode == 42  # nothing pointed at
+    assert not (pile / "panes.list").exists()
+    assert [ln.split("=")[0] for ln in (pile / "sources.txt").read_text().split()] == ["app.py"]  # fmt: skip
+
+
+def test_point_never_lists_a_key_and_only_reads_the_places(tmp_path):
+    panes, app, pile = project(tmp_path)
+    put(panes, {"deploy.key": "x\n"})
+    before = held(panes)
+    assert gather("--from", panes, "--to", pile, "--point").returncode == 0
+    assert "deploy.key" not in (pile / "panes.list").read_text()
+    assert held(panes) == before

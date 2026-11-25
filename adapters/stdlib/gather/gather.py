@@ -1,7 +1,7 @@
 """gather.py: folders and files you name, copied into your pile. Python 3.9+.
 
     python adapters/stdlib/gather/gather.py --from PATH [--from PATH ...] --to FOLDER
-        [--keep .py,.md] [--skip tests,data,test_*.py] [--json]
+        [--keep .py,.md] [--skip tests,data,test_*.py] [--point] [--json]
 
     gather: populated, 148 files copied from 3 places, 212 left out
       panes        61 files
@@ -27,6 +27,15 @@ one reads (.git, node_modules, a virtual environment, caches).
 Run it again to refresh: a file gone from a folder you named goes from its
 copy too. Only inside the copies it made: FOLDER's other contents are left.
 
+`--point` copies nothing: each place's files, as they would have been
+copied, are written as a list (one path a line) under FOLDER, named for the
+place (panes.list), and FOLDER's sources.txt holds a NAME=@LIST line for
+each, the --from of `kernel.py init`. A box laid with them reads the files
+where they are kept (CONST-VI-9), so it follows them as they change; what a
+list names is what was there when it ran, so run it again for a new file.
+Point where a box can: a box with sources can't be walked as one folder,
+so an add-on that walks its pile itself won't run on it.
+
 It writes under --to and nowhere else. Exit codes, the kernel's: 0 copied;
 42 a place you named isn't there (the rest is copied), or nothing was
 copied; 2 refused.
@@ -46,7 +55,7 @@ import kernel  # noqa: E402
 
 USAGE = (
     "usage: gather.py --from PATH [--from PATH ...] --to FOLDER "
-    "[--keep .py,.md] [--skip tests,data] [--json]"
+    "[--keep .py,.md] [--skip tests,data] [--point] [--json]"
 )
 #: the kernel reads no file bigger than this
 BIGGEST = 1_000_000
@@ -117,6 +126,55 @@ def sweep(root: Path, kept: set[Path]) -> int:
     return gone
 
 
+#: the --from lines of `kernel.py init`, one NAME=@LIST a line, under --to
+SOURCES = "sources.txt"
+
+
+def point(sources: list[Path], to: Path, keep: list[str], skip: list[str]):
+    """gather's four, with nothing copied: each place's files as a list
+    under TO, named for the place, and TO's sources.txt holding each as a
+    NAME=@LIST line; a list no longer naming anything is removed."""
+    took: list[tuple[str, int]] = []
+    out = dict.fromkeys(WHY, 0)
+    missing: list[str] = []
+    lines: dict[str, str] = {}
+    for src in sources:
+        if src.is_dir():
+            names = []
+            for p, _ in files_of(src, skip):
+                why = why_not(p, keep, skip)
+                if why:
+                    out[why] += 1
+                else:
+                    names.append(str(p))
+        elif src.is_file():
+            why = why_not(src, [], skip)  # a file named by hand is a kind kept
+            if why:
+                out[why] += 1
+            names = [] if why else [str(src)]
+        else:
+            missing.append(str(src))
+            continue
+        lst = to / (src.name + ".list")
+        if names:
+            lst.write_text("".join(n + "\n" for n in names))
+            lines[src.name] = f"{src.name}=@{lst}"
+        elif lst.is_file():
+            lst.unlink()
+        took.append((src.name, len(names)))
+    kept = to / SOURCES
+    have = {}  # other gather lines' sources, sharing this --to, are kept
+    if kept.is_file():
+        for line in kept.read_text().splitlines():
+            if "=" in line:
+                have[line.split("=", 1)[0]] = line
+    for name, _ in took:
+        have.pop(name, None)
+    have.update(lines)
+    kept.write_text("".join(have[n] + "\n" for n in sorted(have)))
+    return took, out, missing, 0
+
+
 def gather(sources: list[Path], to: Path, keep: list[str], skip: list[str]):
     """(files copied by source, files left out by reason, the sources that
     aren't there, files removed as gone)."""
@@ -155,11 +213,11 @@ def count(n: int, word: str = "file") -> str:
     return f"{n} {word}{'s' * (n != 1)}"
 
 
-def report(took, out, missing, gone) -> dict:
+def report(took, out, missing, gone, verb: str = "copied") -> dict:
     """The report every report add-on prints: state, one line, rows."""
     n = sum(c for _, c in took)
     left = sum(out.values())
-    said = f"{count(n)} copied from {count(len(took), 'place')}"
+    said = f"{count(n)} {verb} from {count(len(took), 'place')}"
     if left:
         said += f", {left} left out"
     if gone:
@@ -201,7 +259,7 @@ def listed(text: str) -> list[str]:
 def main(argv: list[str]) -> int:
     froms: list[str] = []
     opts: dict[str, str] = {}
-    as_json = False
+    as_json = pointing = False
     it = iter(argv)
     for a in it:
         if a == "--from":
@@ -210,6 +268,8 @@ def main(argv: list[str]) -> int:
             opts[a] = next(it, "")
         elif a == "--json":
             as_json = True
+        elif a == "--point":
+            pointing = True
         else:
             print(USAGE, file=sys.stderr)
             return kernel.REFUSED
@@ -238,8 +298,9 @@ def main(argv: list[str]) -> int:
     keep = [k if k.startswith(".") else "." + k for k in listed(opts.get("--keep", ""))]
     keep = [k.lower() for k in keep]
     to.mkdir(parents=True, exist_ok=True)
-    took, out, missing, gone = gather(sources, to, keep, listed(opts.get("--skip", "")))
-    doc = report(took, out, missing, gone)
+    how = point if pointing else gather
+    took, out, missing, gone = how(sources, to, keep, listed(opts.get("--skip", "")))
+    doc = report(took, out, missing, gone, "pointed at" if pointing else "copied")
     print(json.dumps(doc, ensure_ascii=False) if as_json else report_text(doc))
     copied = sum(c for _, c in took)
     return kernel.ESCALATE if missing or not copied else kernel.ALIVE
