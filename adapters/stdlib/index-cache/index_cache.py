@@ -70,22 +70,58 @@ Stat = list  # [size, mtime_ns, ctime_ns, inode]
 RACY_NS = 2_000_000_000
 
 
-def stat_of(p: Path) -> Stat | None:
+def stat_of(p) -> Stat | None:
     try:
-        st = p.stat()
+        st = os.stat(p)
     except OSError:
         return None
     return [st.st_size, st.st_mtime_ns, st.st_ctime_ns, st.st_ino]
 
 
-def folder_files(folder: Path) -> list[tuple[str, Path]]:
+def hidden(rel: str) -> bool:
+    return any(part.startswith(".") for part in rel.split(os.sep))
+
+
+def folder_files(folder: Path) -> list[tuple[str, str]]:
     """(name, file) for the files under `folder` the kernel reads, by name:
-    kernel.chunks's walk, hidden folders and files left out."""
-    out = []
-    for p in sorted(folder.rglob("*")):
-        rel = p.relative_to(folder)
-        if p.is_file() and not any(part.startswith(".") for part in rel.parts):
-            out.append((str(rel), p))
+    kernel.chunks's walk, hidden folders and files left out. Walked as
+    strings (os.walk), never a Path a file: on thousands of files the Path
+    objects were most of a check's time."""
+    top, out = str(folder), []
+    for here, dirs, files in os.walk(top):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for name in files:
+            if not name.startswith("."):
+                full = os.path.join(here, name)
+                if os.path.isfile(full):
+                    out.append((os.path.relpath(full, top), full))
+    return sorted(out)
+
+
+def listed_paths(lst: Path) -> list[str]:
+    """`listed`, as strings: each folder's real path found once, and a file's
+    own only when it is a link, which is the real path of each."""
+    out: list[str] = []
+    seen: set[str] = set()
+    base = str(lst.parent)
+    real: dict[str, str] = {}
+    for line in lst.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        full = os.path.join(base, line)  # an absolute line stays as it is
+        if ".." in full.split(os.sep) or os.path.basename(full) in ("", "."):
+            f = os.path.realpath(full)
+        else:
+            d, name = os.path.split(full)
+            if d not in real:
+                real[d] = os.path.realpath(d)
+            f = os.path.join(real[d], name)
+            if os.path.islink(f):
+                f = os.path.realpath(f)
+        if f not in seen:
+            seen.add(f)
+            out.append(f)
     return out
 
 
@@ -94,34 +130,21 @@ def listed(lst: Path) -> list[Path]:
     order, each once, a relative path from the list's folder), each once by a
     set: the kernel's looks back along the list for each line, which on a
     list of thousands is most of a check's time. The kernel's stays its own."""
-    out: list[Path] = []
-    seen: set[Path] = set()
-    for line in lst.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line and not line.startswith("#"):
-            f = Path(line)
-            f = (f if f.is_absolute() else lst.parent / f).resolve()
-            if f not in seen:
-                seen.add(f)
-                out.append(f)
-    return out
+    return [Path(f) for f in listed_paths(lst)]
 
 
-def list_files(lst: Path) -> list[tuple[str, Path]]:
+def list_files(lst: Path) -> list[tuple[str, str]]:
     """(name, file) for a list's files, named as the kernel's `list_chunks`
     names them: by path from the folder the listed files share."""
-    files = listed(lst)
+    files = listed_paths(lst)
     if not files:
         return []
-    root = Path(os.path.commonpath([str(f.parent) for f in files]))
-    return [
-        (str(f.relative_to(root)), f)
-        for f in files
-        if not any(part.startswith(".") for part in f.relative_to(root).parts)
-    ]
+    root = os.path.commonpath([os.path.dirname(f) for f in files])
+    cut = len(root) + (0 if root.endswith(os.sep) else 1)
+    return [(f[cut:], f) for f in files if not hidden(f[cut:])]
 
 
-def box_files(cfg: dict) -> list[tuple[str, Path]]:
+def box_files(cfg: dict) -> list[tuple[str, str]]:
     """(name, file) for everything a box reads, named as the kernel's
     `pile_of_box` names its passages: the pile folder's paths as they are,
     then each source's as its name, a slash, and its path."""
@@ -133,8 +156,12 @@ def box_files(cfg: dict) -> list[tuple[str, Path]]:
     return out
 
 
+def within(p: str, folder: str) -> bool:
+    return p == folder or p.startswith(folder.rstrip(os.sep) + os.sep)
+
+
 def hashed(
-    files: list[tuple[str, Path]], known: dict | None = None
+    files: list[tuple[str, str]], known: dict | None = None
 ) -> tuple[dict[str, str], dict[str, list]]:
     """({name: SHA-256 of its text}, {name: [stat, hash or None]}) for the
     files the kernel reads into an index: UTF-8 text with no NUL in its first
@@ -154,7 +181,8 @@ def hashed(
             h = was[1]
         else:
             try:
-                raw = p.read_bytes()
+                with open(p, "rb") as fh:
+                    raw = fh.read()
                 if len(raw) > kernel.MAX_FILE or b"\0" in raw[: kernel.SNIFF]:
                     h = None
                 else:
@@ -275,25 +303,29 @@ def main(argv: list[str]) -> int:
         box = Path(opts["--box"]).resolve()
         try:
             cfg = kernel.config(box)
-            reads = [Path(cfg["pile"])] if "pile" in cfg else []
+            folders = [str(Path(cfg["pile"]).resolve())] if "pile" in cfg else []
+            files: list[str] = []
             for name, at in kernel.sources(cfg).items():
-                is_list = cfg["sources"][name].startswith("@")
-                reads += [at, *listed(at)] if is_list else [at]
+                if cfg["sources"][name].startswith("@"):
+                    files += [str(at.resolve()), *listed_paths(at)]
+                else:
+                    folders.append(str(at.resolve()))
         except (OSError, ValueError, KeyError) as e:
             print(f"refused: {opts['--box']} is not a box ({e})", file=sys.stderr)
             return kernel.REFUSED
-        held = index.is_relative_to(box) or any(
-            p.is_relative_to(index) or (p.is_dir() and index.is_relative_to(p))
-            for p in reads
+        ix = str(index)
+        held = (
+            within(ix, str(box))
+            or any(within(ix, d) or within(d, ix) for d in folders)
+            or any(within(f, ix) for f in files)
         )
     elif lst is not None:
         if not lst.is_file():
             print(f"refused: {given[1:]} is not a list of files", file=sys.stderr)
             return kernel.REFUSED
-        files = listed(lst)
         # only the listed files are read, so an index beside them is fine;
         # one that would hold the list, or a listed file, is not
-        held = any(p.is_relative_to(index) for p in [lst, *files])
+        held = any(within(f, str(index)) for f in [str(lst), *listed_paths(lst)])
     else:
         folder = Path(given).resolve()
         if not folder.is_dir():

@@ -289,11 +289,16 @@ def in_process(monkeypatch, racy_ns: int = 0):
 
 
 def counting_reads(monkeypatch) -> list:
+    """The names of the files index_cache opens to read from now on."""
+    import index_cache as ic
+
     reads: list = []
-    real = Path.read_bytes
-    monkeypatch.setattr(
-        Path, "read_bytes", lambda self: reads.append(self.name) or real(self)
-    )
+
+    def counted(f, *a, **k):
+        reads.append(Path(f).name)
+        return open(f, *a, **k)
+
+    monkeypatch.setattr(ic, "open", counted, raising=False)
     return reads
 
 
