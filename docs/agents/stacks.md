@@ -36,15 +36,17 @@ their reasons on their record; you propose, they seal.
 A box reads its files where they are kept (CONST-VI-9): lay it with
 `kernel.py init --from NAME=FOLDER` or `NAME=@LIST`, not over a pile of
 copies. `gather --point` writes the lists and the `--from` lines
-(`sources.txt` under its `--to`) in place of copying. **Point wherever it
+(sources.txt under its `--to`) in place of copying. **Point wherever it
 is available,** and when you meet a box laid over copies, offer to lay it
 again with pointers:
 
-- **When it is available:** the original is on this machine, and every add-on
-  the stack runs reads the box through the kernel. One that walks one pile
-  folder itself (the kernel's `folder()`) refuses a box with sources: keep
-  that box on a pile, say why in its stack, and point it when the add-on
-  can read sources.
+- **When it is available:** the original is on this machine, and every step
+  the stack runs reads the box through the kernel. A step handed the pile's
+  folder by its path (`code-comments mirror --from PILE/ui`, `scan index
+  --from PILE`), or an add-on that walks one pile folder itself (the
+  kernel's `folder()`, which refuses a box with sources), needs that folder:
+  keep that box on a pile, say why in its stack, and point it when the
+  step can read a box's sources.
 - **What stays a pile:** what has no original here: an export, a download,
   and what a step makes (mirrors, clauses, histories). Lay it as the box's
   `--pile`, beside its `--from`.

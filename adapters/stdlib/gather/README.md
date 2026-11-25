@@ -97,7 +97,7 @@ Each of these stops before anything is written, with the reason:
 `--point` copies nothing. Each place's files, chosen exactly as a copy
 would be (the kinds you keep, the names you skip, never a key or a file
 over 1 MB), are written as a list under `--to`, one path a line, named for
-the place (`panes.list`), and `--to`'s `sources.txt` holds a line for each,
+the place (`panes.list`), and `--to`'s sources.txt holds a line for each,
 `NAME=@LIST`: the `--from` of `kernel.py init`.
 
     gather -- --from ~/code/app/panes --to ~/piles/app --keep .py,.md --point
