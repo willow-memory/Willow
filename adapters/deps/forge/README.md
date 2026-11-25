@@ -3,7 +3,7 @@ section: Assistants
 line: A sentence in, the add-ons it means out: a plan with its forks, for the Forge's checkpoint to settle and the person to seal before it runs.
 source: new
 added: 2026-11-03
-version: 0.4.1
+version: 0.5.0
 needs: forge-play; Apache-2.0
 floor: forge-play 0.10.0; the rule names 0.1.0, its first release, but the card box this reads the cards with arrived in 0.10.0
 writes: record, to
@@ -36,11 +36,18 @@ confident wrong answer; what you settle, on your record, under your key.
     forge: populated, 3 waiting on your seal: python kernel.py seal --box DIR proposal:...
       forge/decisions/willow-email.json  proposal:3f1c…  mail for “email”
       forge/decisions/willow-due.json    proposal:a90d…  coming-up for “due”
-      forge/stack.md                     proposal:77be…  a stack: mail, coming-up
+      forge/stack.md                     proposal:77be…  a stack: mail, coming-up, todo, duplicates, contradictions, people
 
 The Forge's card box reads every card beside this script, built or still an
 idea, as a row for its keyword scan: a card's name, and the lines of
 `ui/search-words.txt` that point at it, are what a sentence can hit. The
+words list holds one word to a key, so what a word cannot say is a small
+table at the top of `suggest.py`, applied to the scan's hits before the plan
+(and so the same for every verb): "back" reaches backup only with "up" within
+a word or two ("back up", "back it up"), so "the deposit is due back" does
+not, and the hit then says the phrase it came from; "things to do", "still
+have to do", "left to do", "to-do" and "to do list" name todo. Bare "to do"
+does not, as it is in "what do I want to do with this folder". The
 report (the report contract, in the ci add-on's card) has a group per kind
 of thing, each row the card and what it says:
 
@@ -108,11 +115,95 @@ of thing, each row the card and what it says:
 A stack you sealed for these very words comes first, as the kernel serves
 any sealed answer, and nothing is asked.
 
+**More than one.** A fork isn't one or none: any card might be the one,
+and more than one often is. `--choose WORD=A,B` (or `--choose WORD=A` given
+again with B) takes several, as one decision and one proposal: the one the
+search put highest is `chose`, the rest `also`, each with its card pinned,
+and every one is a step of the stack, in the order you named them. `none`
+and `not-now` stand alone. A close fork is scored on `chose`, so taking a
+second card along with the search's first neither helps nor hurts its
+score.
+
+**What next.** `next --stacks FOLDER` says what could go in after what you
+have: the steps of the stack you sealed for these words (or, before one is
+sealed, what the words reach), held against every stack file under FOLDER,
+your own. For each card you don't have it counts how often your stacks put
+it beside a step you do. It looks beside the steps your words or picks
+brought, not the defaults (a default your words named is one your words
+brought, and is looked beside), and scores each card by how much more often it
+sits beside those steps than in your stacks at large, so one that is in
+nearly every stack, and so beside everything, is not offered:
+
+      ## what your stacks put beside them, most often first
+        adapters/stdlib/people/README.md  people: Everyone your files name ... ; with mail in 3 of 3
+
+Counting and nothing else: no model and no search. It says what you have
+done before, never what might be good, and a card no stack of yours puts
+with any of your steps is not offered.
+
+Counting can only offer what you have already done, so a second group, said
+apart, gives the rest a first chance: built cards that are in none of your
+stacks and that the catalogue's own search puts near your words or near a
+step you have, each saying what it is near. A default your words did not name is not looked beside:
+it suits any folder, so what is near it says nothing of what you are after.
+Once you take one and seal it, it is in a stack of yours, and the counting
+knows it. It writes nothing and asks nothing.
+
+**Not now.** Every fork has a second way out, beside `none`:
+`--choose WORD=not-now` leaves it undecided, and says so on your record.
+Not deciding is a decision: it is a proposal of its own, with your reason,
+under its own question ("forge not now willow-WORD"), sealed or declined
+like any other. The fork's own question stays unanswered, so the fork stays
+open, is offered again, and nothing is scored; the other steps and settled
+forks still make a stack. Neither it nor a pick you haven't sealed goes
+quiet: the report says each fork you said not now to, and each pick that
+waits on your seal, and a stack sealed without its pick says which is left.
+
+      ## picked, not sealed yet
+        forge/decisions/willow-email.json  mail for “email”, proposed at row 4; it waits on your seal, and nothing is scored until then
+
+**Defaults.** The add-ons named in `defaults.txt`, beside the script, go in
+every stack it proposes, after the steps your words reached: todo, coming-up,
+duplicates, contradictions and people, each there because it suits any
+folder and not because of a word. They print as a group of their own:
+
+      ## defaults: in every stack, not asked and not scored
+        adapters/stdlib/todo/README.md  todo: TODO, FIXME and "need to" lines ... ; open items left in your own files, oldest first
+
+- **Never an option of the `close` fork**, so picking one is never scored
+  as the search being right.
+- **One your words reached is that step**, and one a word's fork offers
+  stays yours to pick; neither is a default too.
+- **They ride with a stack and never make one.** With no step and no fork
+  there is still nothing to run, and `none` alone still runs nothing.
+- **The list is yours to edit:** a name, two spaces, why it is there. A line
+  naming no built add-on is said and left out. `--defaults FILE` reads a
+  list of your own and `--defaults none` proposes with none; give `propose`
+  what you gave `suggest`.
+
 `propose` settles the open forks with `--choose WORD=NAME` and your reason
 with `--why WORD=...`, and hands the result to the kernel's door: one
 proposal per settled fork, under the words `forge decision willow-WORD`, and
 one for the stack, under your sentence. Each carries the card's name, line,
-path and SHA-256, so what you seal is what you were shown. Its report is
+path and SHA-256, so what you seal is what you were shown. The stack is a
+page of wants, each above the step that answers it: a short head line (what
+you said, the add-on, what you chose it over and your reason, in your words),
+the card's own line, then the step. They are numbered in the order they run,
+under up to three headings, each only when it has a step:
+
+      ## for “read my email and tell me when the boiler is due”
+      ## what you chose
+      ## in every stack
+
+      Want 2: “due”: coming-up, not renewals, because it has the dates.
+      coming-up: Dates written in your files in the next N days: appointments, renewals, deadlines.
+      - coming-up -- --box {box}
+
+The first holds what your words reached, the second each fork you settled,
+the third the defaults. Cut any want, or add your own (a want in your words,
+then the add-on that answers it), and it is your stack. The stack add-on
+reads only the headings and the `-` steps, and heads each step's page with
+the lines above it, so the why goes with the step. Its report is
 one row per proposal: where it will be written, and what waits. Nothing is
 an answer until you seal it with your key, and nothing runs. The Forge reads
 a sealed decision back the same way, by asking the kernel for those words

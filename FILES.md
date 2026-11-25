@@ -1125,6 +1125,10 @@ willow/
 │   │   │   ├── restore_drill.py  a backup zip restored into scratch; the chain and every file checked there
 │   │   │   ├── test_restore_drill.py
 │   │   │   └── README.md
+│   │   ├── retire/
+│   │   │   ├── retire.py     propose setting aside an approved answer that no longer holds; it's aside only once you seal that
+│   │   │   ├── test_retire.py
+│   │   │   └── README.md     its card
 │   │   ├── session-seal/
 │   │   │   ├── session_seal.py one seal over a session's rows, proposed through the kernel
 │   │   │   ├── test_session_seal.py
@@ -1722,6 +1726,10 @@ willow/
 │   │   │   ├── story_ideas.py story ideas between sessions, dealt from a game box's own words
 │   │   │   ├── test_story_ideas.py
 │   │   │   └── README.md     its card
+│   │   ├── table/
+│   │   │   ├── table.py      one way to sit at any table on the record
+│   │   │   ├── test_table.py
+│   │   │   └── README.md     its card
 ```
 
 ### adapters/stdlib/: For maintainers: What runs on your page
@@ -1932,6 +1940,7 @@ willow/
 │   │   │   ├── requirements-floor.txt  forge-play at its floor, also tested
 │   │   │   ├── suggest.py    a sentence in, the add-ons it names or means out, as a report and as a plan the Forge resolves
 │   │   │   ├── test_suggest.py
+│   │   │   ├── defaults.txt
 │   │   │   └── README.md
 │   │   ├── in-process/
 │   │   │   ├── conftest.py   a llama-shaped GGUF of a few kilobytes from seeded weights, for the tests
@@ -1946,17 +1955,17 @@ willow/
 │   │   │   ├── requirements-floor.txt  kartikeya at its floor, also tested
 │   │   │   ├── test_kart.py  the sandbox probed from inside, the seals at both doors, and the Johnson folders
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from latent/
+
+```
 │   │   ├── latent/
 │   │   │   ├── latent.py     ranks a scan index by meaning (TF-IDF + SVD), offline
 │   │   │   ├── requirements.txt  numpy, pinned
 │   │   │   ├── requirements-floor.txt  numpy at its floor, also tested
 │   │   │   ├── test_latent.py
 │   │   │   └── README.md
-```
-
-#### adapters/deps/, from llm-cli/
-
-```
 │   │   ├── llm-cli/
 │   │   │   ├── llm_cli.py    suggestions through the llm command, from any model its plugins reach, its log naming the model
 │   │   │   ├── requirements.txt  llm, pinned
@@ -2005,17 +2014,17 @@ willow/
 │   │   │   ├── requirements-floor.txt  Pillow at its floor, also tested
 │   │   │   ├── test_photos.py
 │   │   │   └── README.md
+```
+
+#### adapters/deps/, from play-fight/
+
+```
 │   │   ├── play-fight/
 │   │   │   ├── play_fight.py a fight blow by blow, on dice dropped in the tower, played again from the record to check it. Python 3.10+ (dndwright's)
 │   │   │   ├── requirements-floor.txt
 │   │   │   ├── requirements.txt
 │   │   │   ├── test_play_fight.py
 │   │   │   └── README.md     its card
-```
-
-#### adapters/deps/, from play-fight5e/
-
-```
 │   │   ├── play-fight5e/
 │   │   │   ├── board.py      a fight drawn from its rows: who's hurt, who's down, whose turn
 │   │   │   ├── combat.py     aetheris5e's 5e combat engine: saves, resistances, specials

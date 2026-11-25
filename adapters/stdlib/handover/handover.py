@@ -6,7 +6,7 @@
     ## waits on you
       box-full         10 suggestions waiting, of 24 rows
     ## flagged
-      work.md step 03  sort: populated, 435 files: 271 sorted into 8 categories (mine/run-work-2/03-sort.txt)
+      work.md step 03  sort: populated, 435 files: 271 sorted into 8 categories (mine/run-work-2/03-sort.md)
     ## last runs
       mend.md          mine/run-mend-4: 4 steps, nothing flagged
       mend.md step 04  batch-glance: populated, 18 questions: 9 held whole, 9 in part, 0 found nothing
@@ -63,6 +63,19 @@ def sibling(folder: str, module: str):
     return mod
 
 
+def words_of(run: Path, stem: str) -> Path:
+    """Where a run kept the words a step printed: its words folder, or the
+    run's own folder in a run kept before it had one."""
+    new = run.joinpath("words", stem + ".txt")
+    return new if new.is_file() else run.joinpath(stem + ".txt")
+
+
+def page_of(run: Path, stem: str) -> str:
+    """The file of a step's that a person opens: its page, or its words in
+    a run kept before steps had pages."""
+    return stem + (".md" if run.joinpath(stem + ".md").is_file() else ".txt")
+
+
 def said(run: Path, n: int, name: str, width: int) -> str:
     """The one line a step said: its kept report's, or its output's first."""
     stem = f"{n:0{width}d}-{name}"
@@ -71,7 +84,7 @@ def said(run: Path, n: int, name: str, width: int) -> str:
         line = f"{doc['state']}, {doc['said']}"
     except (OSError, ValueError, KeyError):
         try:
-            text = (run / f"{stem}.txt").read_text(encoding="utf-8", errors="replace")
+            text = words_of(run, stem).read_text(encoding="utf-8", errors="replace")
         except OSError:
             return "its output is gone"
         line = next(
@@ -145,9 +158,8 @@ def main(argv: list[str]) -> int:
             line = f"{step['name']}: {said(r['folder'], n, step['name'], width)}"
             where = f"{name} step {n:0{width}d}"
             if step["flagged"]:
-                flagged.append(
-                    (where, f"{line} ({rel}/{n:0{width}d}-{step['name']}.txt)")
-                )
+                opens = page_of(r["folder"], f"{n:0{width}d}-{step['name']}")
+                flagged.append((where, f"{line} ({rel}/{opens})"))
             elif len(clean) <= MANY:
                 last.append((where, line))
         if len(clean) > MANY:  # a long stack by what ran, not a row a step

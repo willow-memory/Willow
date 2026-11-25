@@ -3,7 +3,7 @@ section: Finding things
 line: A question sent to the step whose job it is: money owed to debts and invoices, a date to what's coming up, the rest to the ask.
 source: new
 added: 2026-11-10
-version: 0.1.1
+version: 0.1.2
 writes: nothing
 network: none
 role: tools
@@ -72,10 +72,12 @@ file that run kept the step's output in, so your question lands on what was
 already found:
 
     route: populated, "who still owes me money": money owed (by "owe"); that is the job of debts and invoices
-      debts     Who owes whom, from the IOUs in your notes and messages, each cited.   mine/run/11-debts.txt
+      debts     Who owes whom, from the IOUs in your notes and messages, each cited.   mine/run/words/11-debts.txt
       invoices  For freelancers: invoices and payments matched by the id pattern you give, never guessed.
 
-The file is `<NN>-<NAME>.txt`, the step's place in the stack and its name.
+The file is `<NN>-<NAME>.txt`, the step's place in the stack and its name,
+in the run's `words` folder (in a run kept before it had one, in the run's
+own folder).
 A step that ran more than once shows its last file. For `ask` it is the
 run's glance, or else its scan. A step the run doesn't have gets nothing
 added, as invoices above.

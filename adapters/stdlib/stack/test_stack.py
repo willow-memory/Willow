@@ -93,6 +93,11 @@ def a_stack(tmp: Path, text: str) -> Path:
     return path
 
 
+def words(run: Path, name: str) -> Path:
+    """Where a kept run has the words a step printed."""
+    return run.joinpath("words", name)
+
+
 def snapshot(root: Path) -> dict:
     return {
         p.relative_to(root).as_posix(): p.read_bytes()
@@ -303,8 +308,12 @@ def test_a_run_is_kept_step_by_step_and_the_page_is_the_same(tmp_path):
         plain.stderr,
     )
     assert snapshot(box) == before, "the box is only read"
+    # the run's own folder: its log, a page a step, and the words folder
     assert sorted(p.name for p in to.iterdir()) == [
-        "00-stack.txt", "01-heavy.txt", "02-light.txt", "03-amounts.txt",
+        "00-stack.txt", "01-heavy.md", "02-light.md", "03-amounts.md", "words",
+    ]  # fmt: skip
+    assert sorted(p.name for p in words(to, "").iterdir()) == [
+        "01-heavy.txt", "02-light.txt", "03-amounts.txt",
     ]  # fmt: skip
     assert (to / "00-stack.txt").read_text() == (
         started("01", "heavy")
@@ -315,10 +324,10 @@ def test_a_run_is_kept_step_by_step_and_the_page_is_the_same(tmp_path):
         + "03 amounts: exit 42, 0 lines\n"
         "done: 0 of 3 steps flagged\n"
     )
-    heavy = (to / "01-heavy.txt").read_text()
+    heavy = words(to, "01-heavy.txt").read_text()
     assert heavy.count("\n") == 5 and heavy.startswith("heavy line 1, over a box of")
-    assert (to / "02-light.txt").read_text().count("\n") == 1
-    assert (to / "03-amounts.txt").read_text() == ""
+    assert words(to, "02-light.txt").read_text().count("\n") == 1
+    assert words(to, "03-amounts.txt").read_text() == ""
 
 
 def test_a_step_that_only_complains_keeps_its_complaint_and_is_flagged(tmp_path):
@@ -327,7 +336,7 @@ def test_a_step_that_only_complains_keeps_its_complaint_and_is_flagged(tmp_path)
     to.mkdir()
     got = run("--box", str(box), "--stack", str(a_stack(tmp_path, "## a\n- heavy -- --nope\n")), "--to", str(to))  # fmt: skip
     assert got.returncode == 42 and "refused: not a kernel box" in got.stdout
-    assert (to / "01-heavy.txt").read_text() == "refused: not a kernel box\n"
+    assert words(to, "01-heavy.txt").read_text() == "refused: not a kernel box\n"
     assert (to / "00-stack.txt").read_text() == (
         started("01", "heavy", ["--nope"])
         + "01 heavy: exit 2, 1 line, flagged\ndone: 1 of 1 steps flagged\n"
@@ -352,14 +361,14 @@ def test_a_step_is_written_as_it_prints_not_when_it_ends(tmp_path):
     seen_early = False
     for _ in range(30):  # three seconds; the step itself takes four
         time.sleep(0.1)
-        step = to / "01-slow.txt"
+        step = words(to, "01-slow.txt")
         if step.is_file() and step.read_text() == "first\n":
             seen_early = p.poll() is None
             break
     out, _ = p.communicate(timeout=30)
     assert seen_early, "the first line was there to follow while the step still ran"
     assert (to / "00-stack.txt").read_text().startswith("01 slow: started (")
-    assert (to / "01-slow.txt").read_text() == "first\nsecond\n" and "second" in out
+    assert words(to, "01-slow.txt").read_text() == "first\nsecond\n" and "second" in out
 
 
 def test_a_report_step_is_kept_as_its_report_not_its_json(tmp_path):
@@ -378,7 +387,7 @@ def test_a_report_step_is_kept_as_its_report_not_its_json(tmp_path):
     to.mkdir()
     got = run("--box", str(box), "--stack", str(a_stack(tmp_path, "## a\n- rep -- --box {box}\n")), "--to", str(to))  # fmt: skip
     assert got.returncode == 0, got.stdout + got.stderr
-    kept = (to / "01-rep.txt").read_text()
+    kept = words(to, "01-rep.txt").read_text()
     assert (
         kept.startswith("rep: populated, 1 thing\n")
         and "a.txt:1" in kept
@@ -510,9 +519,9 @@ def test_a_run_cut_off_goes_on_from_the_step_it_was_in(tmp_path):
     log = (to / "00-stack.txt").read_text()
     cut = log[: log.index("02 light: exit")]  # stopped while light was running
     (to / "00-stack.txt").write_text(cut)
-    (to / "02-light.txt").write_text("half a li")
-    (to / "03-amounts.txt").unlink()
-    (to / "04-rep.txt").unlink()
+    words(to, "02-light.txt").write_text("half a li")
+    words(to, "03-amounts.txt").unlink()
+    words(to, "04-rep.txt").unlink()
     got = again(box, stack, to)
     assert (got.returncode, got.stdout) == (first.returncode, first.stdout)
     assert (to / "00-stack.txt").read_text() == cut + (
@@ -525,7 +534,7 @@ def test_a_run_cut_off_goes_on_from_the_step_it_was_in(tmp_path):
         + "04 rep: exit 42, 4 lines, mass 3, populated, flagged\n"
         "done: 1 of 4 steps flagged\n"
     )
-    assert (to / "02-light.txt").read_text().startswith("light line 1")
+    assert words(to, "02-light.txt").read_text().startswith("light line 1")
 
 
 def test_a_step_asked_another_way_runs_and_so_does_every_step_after_it(tmp_path):
@@ -566,7 +575,7 @@ def test_a_step_added_at_the_end_is_the_only_one_run(tmp_path):
 
 def test_a_step_whose_output_is_gone_or_whose_add_on_changed_is_run(tmp_path):
     box, stack, to, first = a_run(tmp_path)
-    (to / "01-heavy.txt").unlink()
+    words(to, "01-heavy.txt").unlink()
     got = again(box, stack, to)
     assert got.stdout == first.stdout
     assert "kept from before" not in (to / "00-stack.txt").read_text()
@@ -653,17 +662,17 @@ def test_a_report_steps_report_is_kept_as_data_beside_its_words(tmp_path):
     doc = json.loads((to / "reports" / "04-rep.json").read_text())
     assert doc["addon"] == "rep" and doc["state"] == "populated"
     assert [r["what"] for g in doc["groups"] for r in g["rows"]] == ["one", "two"]
-    assert sorted(p.name for p in to.iterdir() if p.is_file()) == [
-        "00-stack.txt", "01-heavy.txt", "02-light.txt", "03-amounts.txt", "04-rep.txt",
+    assert sorted(p.name for p in words(to, "").iterdir()) == [
+        "01-heavy.txt", "02-light.txt", "03-amounts.txt", "04-rep.txt",
     ]  # fmt: skip
     # run again and printing no report this time, the old one is not left to be read
     (STACK.parents[1] / "rep" / "rep.py").write_text(
         "import sys\nif __name__ == '__main__':\n    print('not json')\n    sys.exit(0)\n"
     )
-    (to / "04-rep.txt").unlink()
+    words(to, "04-rep.txt").unlink()
     again(box, stack, to)
     assert not (to / "reports" / "04-rep.json").exists()
-    assert "not a report" in (to / "04-rep.txt").read_text()
+    assert "not a report" in words(to, "04-rep.txt").read_text()
 
 
 # ── a step takes what an earlier step kept ──────────────────────────────────
@@ -699,7 +708,7 @@ def test_a_step_takes_the_file_an_earlier_step_was_kept_in(tmp_path):
     to.mkdir()
     got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
     assert got.returncode == 0, got.stdout + got.stderr
-    said = (to / "02-show.txt").read_text()
+    said = words(to, "02-show.txt").read_text()
     assert said == "shown: light line 1, over a box of 1 rows\n"
     assert "shown: light line 1" in got.stdout  # and on the page
     # the step is marked by what was written, not by where the run was kept
@@ -717,7 +726,7 @@ def test_a_number_without_its_zero_names_the_same_step(tmp_path):
     to.mkdir()
     got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
     assert got.returncode == 0, got.stderr
-    assert "shown: light line 1" in (to / "02-show.txt").read_text()
+    assert "shown: light line 1" in words(to, "02-show.txt").read_text()
 
 
 def test_a_report_steps_report_is_handed_on_as_data(tmp_path):
@@ -736,7 +745,7 @@ def test_a_report_steps_report_is_handed_on_as_data(tmp_path):
     to.mkdir()
     got = run("--box", str(box), "--stack", str(stack), "--to", str(to))
     assert got.returncode == 0, got.stdout + got.stderr
-    shown = (to / "02-show.txt").read_text()
+    shown = words(to, "02-show.txt").read_text()
     assert json.loads(shown.removeprefix("shown: ")) == doc
 
 
@@ -779,10 +788,14 @@ def test_a_step_whose_earlier_step_kept_nothing_is_not_run(tmp_path):
     assert got.returncode == 42, got.stdout + got.stderr
     log = (to / "00-stack.txt").read_text()
     assert "02 show: not run: step 1 (quiet) kept nothing to hand on\n" in log
-    assert "02 show: started" not in log and not (to / "02-show.txt").exists()
+    assert "02 show: started" not in log and not words(to, "02-show.txt").exists()
     assert "not run: step 1 (quiet) kept nothing to hand on" in got.stdout
     assert "03 light: exit 0" in log, "the steps after it still run"
     assert "done: 1 of 3 steps flagged" in log
+    # its one line weighs it, peaks first: above the step that said nothing
+    assert got.stdout.index("- `show -- --of {01}`  (not run)") < got.stdout.index(
+        "- `quiet`"
+    )
 
 
 def test_hands_reads_each_earlier_step_a_steps_args_name():
@@ -860,7 +873,7 @@ def test_a_changed_file_is_asked_again_and_an_unchanged_one_is_kept(tmp_path):
     assert log.count("01 light: kept from before") == 2, "before it: still kept"
     assert log.count("02 show: started") == 2, "its file changed: asked again"
     assert log.count("03 heavy: started") == 2, "and so is every step after it"
-    assert (to / "02-show.txt").read_text() == "shown: two\n"
+    assert words(to, "02-show.txt").read_text() == "shown: two\n"
 
 
 def test_a_log_from_before_files_were_noted_is_taken_at_its_word(tmp_path):
@@ -880,7 +893,7 @@ def test_a_log_from_before_files_were_noted_is_taken_at_its_word(tmp_path):
     q.write_text("two\n")
     assert run(*argv, "--resume").returncode == 0
     assert "01 show: kept from before" in log.read_text()
-    assert (to / "01-show.txt").read_text() == "shown: one\n"
+    assert words(to, "01-show.txt").read_text() == "shown: one\n"
 
 
 def test_ended_reads_the_files_a_step_noted():
@@ -959,3 +972,127 @@ def test_a_step_that_writes_in_the_run_needs_the_run_kept(tmp_path):
     assert got.returncode == 2
     assert "step 1 (write) writes in {run}, the run's own folder" in got.stderr
     assert "add --to FOLDER" in got.stderr
+
+
+# ── a step's page: its report as markdown, headed, beside its words ──────────
+PAGED = (
+    "# the roof: what to know before the call\n"
+    "Prose a run skips.\n"
+    "## what was found\n"
+    "# Want: the roofer's numbers, side by side.\n"
+    "# Misreads: a sum with no sign.\n"
+    "- rep -- --box {box}\n"
+    "- light -- --box {box}\n"
+)
+HEAD = "- **for:** what was found\n- **in:** the roof: what to know before the call\n"
+
+
+def test_each_step_has_a_page_headed_by_what_the_stack_says_of_it(tmp_path):
+    folder = STACK.parents[1] / "rep"
+    folder.mkdir()
+    (folder / "README.md").write_text(
+        "<!-- willow-addon\nline: Things, one a line.\noutput: report\n-->\n"
+    )
+    (folder / "rep.py").write_text(REP)
+    box = a_box(tmp_path)
+    to = tmp_path / "run"
+    got = run("--box", str(box), "--stack", str(a_stack(tmp_path, PAGED)), "--to", str(to))  # fmt: skip
+    assert got.returncode == 42, got.stdout + got.stderr
+    # a report: its card's line, the pool, the stack's name, how it was asked
+    # (as the stack file has it), what it said, the lines above it, its rows
+    assert (to / "01-rep.md").read_text() == (
+        "# 01 rep\n\nThings, one a line.\n\n" + HEAD
+        + "- **asked:** `rep -- --box {box}`\n"
+        "- **said:** populated, 2 things (exit 42, flagged)\n\n"
+        "> Want: the roofer's numbers, side by side.\n"
+        "> Misreads: a sum with no sign.\n\n"
+        "## a group\n\n- `a.txt:1`: one\n- `b.txt:2`: two\n"
+    )  # fmt: skip
+    # anything else: what it printed, fenced; no card, no line; the lines
+    # above the step before are not its own
+    printed = words(to, "02-light.txt").read_text()
+    assert (to / "02-light.md").read_text() == (
+        "# 02 light\n\n" + HEAD + "- **asked:** `light -- --box {box}`\n"
+        "- **said:** 1 line (exit 0)\n\n```\n" + printed + "```\n"
+    )
+    # the words a step printed are as they were: what a later step is handed
+    assert words(to, "01-rep.txt").read_text().startswith("rep: populated, 2 things\n## a group\n")  # fmt: skip
+
+
+def test_a_resumed_run_writes_a_kept_steps_page_again_the_same(tmp_path):
+    box, stack, to, _ = a_run(tmp_path)
+    pages = {p.name: p.read_text() for p in to.glob("*.md")}
+    assert sorted(pages) == ["01-heavy.md", "02-light.md", "03-amounts.md", "04-rep.md"]
+    for p in to.glob("*.md"):
+        p.unlink()
+    again(box, stack, to)
+    assert {p.name: p.read_text() for p in to.glob("*.md")} == pages
+    assert "## a group\n\n- `a.txt:1`: one\n" in pages["04-rep.md"]
+
+
+def test_a_run_kept_before_it_had_a_words_folder_is_resumed_as_it_is(tmp_path):
+    box, stack, to, first = a_run(tmp_path)
+    pages = {p.name: p.read_text() for p in to.glob("*.md")}
+    # as such a run was kept: each step's words in the run's own folder, no pages
+    for p in sorted(words(to, "").iterdir()):
+        p.rename(to / p.name)
+    words(to, "").rmdir()
+    for p in to.glob("*.md"):
+        p.unlink()
+    got = again(box, stack, to)
+    assert (got.returncode, got.stdout) == (first.returncode, first.stdout)
+    assert (to / "00-stack.txt").read_text().count("kept from before") == 4
+    assert not words(to, "").exists(), "nothing was run, so nothing was moved or made"
+    assert {p.name: p.read_text() for p in to.glob("*.md")} == pages
+    # a step added to it is handed the earlier step's words from where they are
+    an_add_on("show", SHOW)
+    stack.write_text(FOUR + "- show -- --of {02}\n")
+    got = again(box, stack, to)
+    assert got.returncode == 42, got.stdout + got.stderr
+    assert "shown: light line 1" in words(to, "05-show.txt").read_text()
+    assert (to / "02-light.txt").is_file() and not words(to, "02-light.txt").exists()
+
+
+def test_a_page_fences_whatever_was_printed_and_says_when_there_was_nothing():
+    said = ("01", "x", [], "a pool", "", [], "")
+    page = st.step_page(*said, 0, False, "a ``` fence\nand ```` more", None)
+    assert page == (
+        "# 01 x\n\n- **for:** a pool\n- **asked:** `x`\n- **said:** 2 lines (exit 0)\n\n"
+        "`````\na ``` fence\nand ```` more\n`````\n"
+    )
+    assert st.step_page(*said, 42, False, "", None).endswith(
+        "- **said:** 0 lines (exit 42)\n\n```\n(nothing)\n```\n"
+    )
+    empty = {"addon": "r", "state": "empty", "said": "nothing dated", "groups": []}
+    assert st.step_page(*said, 42, False, "r: empty, nothing dated", empty).endswith(
+        "- **said:** empty, nothing dated (exit 42)\n\n(nothing)\n"
+    )
+    bare = {"addon": "r", "state": "populated", "said": "1", "groups": [
+        {"name": None, "rows": [{"where": "", "what": "no place"}, {"where": "a`b", "what": "c"}]}]}  # fmt: skip
+    assert st.step_page(*said, 0, False, "", bare).endswith(
+        "\n\n- no place\n- ``a`b``: c\n"
+    )
+    assert st.as_code("`a") == "`` `a ``"
+
+
+def test_notes_are_the_lines_above_a_step_and_the_stacks_own_name():
+    title, above = st.notes(
+        "# name\n# its second line\nprose\n## pool\n# one\n#\n# two\n- a\n- b\n"
+        "## next\n# said of no step\n## again\n- c\n# after the last\n"
+    )
+    assert title == "name" and above == {1: ["one", "two"]}
+    assert st.notes("## pool\n- a\n") == ("", {})
+    # a stack of wants is written as plain prose above each step: that is its too
+    title, above = st.notes(
+        "# the prep sheet\n\nRun before a session.\n\n## the threads\n\n"
+        'Want 1: "Where do the springs go?" The thread I promised.\n'
+        "timeline gives every line, each cited.\n"
+        "- timeline -- --box {box}\n\n"
+        'Want 2: "What does the prince want?"\n- timeline -- --box {box} prince\n'
+        "## what I owe\n\n- gaps -- --box {box}\n"
+    )
+    assert title == "the prep sheet" and above == {
+        1: ['Want 1: "Where do the springs go?" The thread I promised.',
+            "timeline gives every line, each cited."],
+        2: ['Want 2: "What does the prince want?"'],
+    }  # fmt: skip

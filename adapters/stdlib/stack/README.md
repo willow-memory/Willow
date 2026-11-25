@@ -3,7 +3,7 @@ section: Ways to use it
 line: One page made from several add-ons run in the order you list them, their results grouped so the biggest come first.
 source: new
 added: 2026-10-26
-version: 0.6.1
+version: 0.7.0
 writes: to
 network: none
 role: ways
@@ -60,27 +60,66 @@ run is one command; the folder it goes in must be there, so a mistyped path
 is refused rather than made:
 
     <FOLDER>/00-stack.txt     a line as each step starts, a line as it ends
-    <FOLDER>/01-todo.txt      the first step's output
-    <FOLDER>/02-scan.txt      the second's, and so on
+    <FOLDER>/01-todo.md       the first step's page: its report, to read
+    <FOLDER>/02-scan.md       the second's, and so on
+    <FOLDER>/words/           what each step printed, exactly, for what reads a run
     <FOLDER>/reports/         a report step's report as data, for a page
 
     01 todo: started (3f9a2c1b)
     01 todo: exit 0, 12 lines
     02 scan: started (a04e77d2)
 
-Each step's file is named for its place in the stack file, so the folder
-reads in the order things ran. A step that prints as it goes is written as
-it prints, so its file can be followed while it runs; a step asked for a
-report is written once, when its report is whole. A step that printed
-nothing and complained is kept as its complaint, and the line that ends it
-says `flagged`. The last line is `done: N of M steps flagged`.
+Each step's files are named for its place in the stack file, so the folder
+reads in the order things ran. What a step printed is kept in the `words`
+folder inside the run's, under the step's name ending in txt. A step that
+prints as it goes is written there as it prints, so its file can be followed
+while it runs; a step asked for a report is written once, when its report is
+whole. A step that printed nothing and complained is kept as its complaint,
+and the line that ends it says `flagged`. The last line is
+`done: N of M steps flagged`.
 
-A step that printed a report has it kept twice: as words, in its file, and
-as data, in a `reports` folder inside the run's, under the same name ending
-in json, so a page can draw
-it without running the step again ([browse](../browse/)'s `--run`). It is in
-a folder of its own so that what follows the run reads words only. A step
-run again that prints no report this time has its old data taken away.
+A step that printed a report has it kept twice: as words, in the `words`
+folder, and as data, in a `reports` folder inside the run's, under the same
+name ending in json, so a page can draw
+it without running the step again ([browse](../browse/)'s `--run`). Each is
+in a folder of its own so that the run's own folder holds what a person
+reads. A step run again that prints no report this time has its old data
+taken away.
+
+**Each step has a page of its own** in the run's folder, under the same name ending in md,
+written when the step ends: its report as markdown, to open and read. Nothing in it is typed in by
+hand, and nothing in it is new. Its headings are made from what the run
+already knows:
+
+    # 01 coming-up
+
+    Dates written in your files in the next N days: appointments, renewals, deadlines.
+
+    - **for:** what is due
+    - **in:** the roof: what to know before the call
+    - **asked:** `coming-up -- --box {box} --days 45`
+    - **said:** populated, 2 dated lines, the next on 2026-11-30 (exit 0)
+
+    > Want, 2026-11-21: "what is coming, before I pick up the phone".
+
+    ## 2026-11-30
+
+    - `notes.md:1`: 2026-11-30 The roofer's deposit is due.
+
+The title is the step's place and name; the line under it is its card's;
+`for` is the pool's heading; `in` is what the stack file calls itself, its
+first `#` line; the quoted lines are the `#` lines the stack file says above
+that step, where you wrote why it is there; `asked` is the step as the stack
+file has it. A report is then its groups as headings and its rows as a list,
+each with its place. A step that prints no report has what it printed,
+fenced. A page holds no date, so the same run gives the same page, and
+`--resume` writes a kept step's page again as it was.
+
+The `words` folder is not for reading: it holds the words each step printed,
+exactly, which is what `{01}` hands a later step, what `--resume` reads
+back, and what the add-ons that read a run take in. A run kept before there
+was a `words` folder has those files in the run's own folder; it is read,
+and resumed, as it is, and nothing in it is moved.
 
 FOLDER must be there and empty, and stack makes no folder but that one: a run is one
 folder, and a second run in it would read as part of the first. Follow it

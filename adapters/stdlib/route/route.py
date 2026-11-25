@@ -132,12 +132,15 @@ def renamed() -> dict[str, str]:
 def kept(run: Path | None) -> dict[str, list[str]]:
     """{an add-on: the files a run kept its output in}, in step order. A run
     kept before an add-on was renamed names its step the old way; it is read
-    as the add-on's name now."""
+    as the add-on's name now. A step's words are in the run's words folder,
+    or in the run's own folder in a run kept before it had one."""
     out: dict[str, list[str]] = {}
     if run is None:
         return out
     now = renamed()
-    for f in sorted(run.glob("[0-9]*-*.txt")):
+    files = {f.name: f for f in run.glob("[0-9]*-*.txt")}
+    files.update({f.name: f for f in run.joinpath("words").glob("[0-9]*-*.txt")})
+    for f in (files[name] for name in sorted(files)):
         num, _, name = f.stem.partition("-")
         if num.strip("0"):  # not the log itself
             out.setdefault(now.get(name, name), []).append(str(f))

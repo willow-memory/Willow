@@ -973,6 +973,16 @@ def test_only_your_folders_passages_and_the_runs_kept_files_are_opened(tmp_path)
         s.close()
 
 
+def test_a_steps_words_are_read_from_the_runs_words_folder_or_the_runs_own(tmp_path):
+    tmp_path.joinpath("03-debts.txt").write_text("a run kept before the folder\n")
+    assert br.run_words(tmp_path, "03-debts.txt") == tmp_path.joinpath("03-debts.txt")
+    there = tmp_path.joinpath("words")
+    there.mkdir()
+    assert br.run_words(tmp_path, "03-debts.txt") == tmp_path.joinpath("03-debts.txt")
+    there.joinpath("03-debts.txt").write_text("as a run keeps them now\n")
+    assert br.run_words(tmp_path, "03-debts.txt") == there.joinpath("03-debts.txt")
+
+
 def test_what_reads_as_a_place_is_a_link_and_what_doesnt_is_words():
     assert br.where_html("a b/c.txt:12") == (
         '<a data-place href="/place?at=a%20b%2Fc.txt%3A12">a b/c.txt:12</a>'
