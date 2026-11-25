@@ -3,7 +3,7 @@ section: Finding things
 line: Keeps scan's index between runs and rebuilds it only when a file in your folder actually changed.
 source: new
 added: 2026-10-26
-version: 0.1.1
+version: 0.2.0
 writes: to
 network: none
 role: makes
@@ -19,6 +19,7 @@ keeps a small manifest beside the index — each read file's path and the
 SHA-256 of its text — and rebuilds only when the folder actually changed.
 
     python adapters/stdlib/index-cache/index_cache.py --from FOLDER --to INDEX
+    python adapters/stdlib/index-cache/index_cache.py --from @LIST --to INDEX
 
 On each run it hashes the folder's files and compares them to the manifest:
 
@@ -33,6 +34,18 @@ The files it hashes are exactly the ones the kernel reads into an index — text
 UTF-8, not hidden, under the size cap — so a dotfile or a binary changing never
 forces a rebuild. An index made by another `kernel.py` is rebuilt, since its
 passages were the other kernel's.
+
+## a list of files, where they are kept
+
+`--from @LIST` keeps the index of the files a list names (one path a line,
+as `gather --point` writes it), read where they are kept, the way a box laid
+with `kernel.py init --from NAME=@LIST` reads them (CONST-VI-9). Each file is
+named by its path from the folder the listed files share, and its passages
+are the kernel's own (`list_chunks`), so the index answers with the same
+passages that box does. Only the listed files are hashed: a file beside them
+the list leaves out never forces a rebuild, and a listed file that is gone
+counts as removed. An index may sit beside the listed files; one that would
+hold the list, or a file it names, is refused.
 
 ## what it reads and writes
 

@@ -2,6 +2,7 @@
 the folder changed. Python 3.9+.
 
     python adapters/stdlib/index-cache/index_cache.py --from FOLDER --to INDEX
+    python adapters/stdlib/index-cache/index_cache.py --from @LIST --to INDEX
 
 `scan index` reads the whole folder to build an index; on a big folder that is
 the slow step. But a folder usually hasn't changed since last time, and then
@@ -20,17 +21,24 @@ unless the folder changed. The files it hashes are exactly the ones the kernel
 would read into the index (text, UTF-8, not hidden, under the size cap); a
 binary or a dotfile changing never forces a rebuild.
 
+`--from @LIST` keeps the index of a list's files where they are kept, as a
+box laid with `kernel.py init --from NAME=@LIST` reads them (CONST-VI-9):
+one path a line, each named by its path from the folder the files share,
+the kernel's own `list_chunks`. A listed file that is gone is read as
+nothing, as a deleted one is, and counts as removed.
+
 It reads the folder and writes only under `--to` (the index and its manifest);
 it writes no box, reads no key, and reaches no network. An index made by
 another kernel.py is rebuilt, since its passages were the other kernel's. Exit
 codes, the kernel's: 0 the index is current or was rebuilt; 42 the folder has
 nothing to read; 2 refused (a bad command line, or a `--from` that is not a
-folder).
+folder, or a `--from @LIST` that is not a list of files).
 """
 
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -55,6 +63,28 @@ def manifest(folder: Path) -> dict[str, str]:
             continue
         try:
             raw = p.read_bytes()
+            if len(raw) > kernel.MAX_FILE or b"\0" in raw[: kernel.SNIFF]:
+                continue
+            out[str(rel)] = kernel.h256(raw.decode("utf-8"))
+        except (OSError, UnicodeDecodeError):
+            continue
+    return out
+
+
+def listed_manifest(lst: Path) -> dict[str, str]:
+    """`manifest` for a list's files, named as the kernel's `list_chunks`
+    names them: by path from the folder the listed files share."""
+    files = kernel.listed(lst)
+    if not files:
+        return {}
+    root = Path(os.path.commonpath([str(f.parent) for f in files]))
+    out: dict[str, str] = {}
+    for f in files:
+        rel = f.relative_to(root)
+        if any(part.startswith(".") for part in rel.parts):
+            continue
+        try:
+            raw = f.read_bytes()
             if len(raw) > kernel.MAX_FILE or b"\0" in raw[: kernel.SNIFF]:
                 continue
             out[str(rel)] = kernel.h256(raw.decode("utf-8"))
@@ -99,12 +129,24 @@ def main(argv: list[str]) -> int:
     if opts.get("bad") or "--from" not in opts or "--to" not in opts:
         print(__doc__.split("\n\n")[1], file=sys.stderr)
         return kernel.REFUSED
-    folder, index = Path(opts["--from"]).resolve(), Path(opts["--to"]).resolve()
-    if not folder.is_dir():
-        print(f"refused: {opts['--from']} is not a folder", file=sys.stderr)
-        return kernel.REFUSED
-    if index.is_relative_to(folder) or folder.is_relative_to(index):
-        print("refused: the index and the folder can't hold each other",
+    given, index = opts["--from"], Path(opts["--to"]).resolve()
+    lst = Path(given[1:]).resolve() if given.startswith("@") else None
+    if lst is not None:
+        if not lst.is_file():
+            print(f"refused: {given[1:]} is not a list of files", file=sys.stderr)
+            return kernel.REFUSED
+        files = kernel.listed(lst)
+        # only the listed files are read, so an index beside them is fine;
+        # one that would hold the list, or a listed file, is not
+        held = any(p.is_relative_to(index) for p in [lst, *files])
+    else:
+        folder = Path(given).resolve()
+        if not folder.is_dir():
+            print(f"refused: {given} is not a folder", file=sys.stderr)
+            return kernel.REFUSED
+        held = index.is_relative_to(folder) or folder.is_relative_to(index)
+    if held:
+        print("refused: the index and what it reads can't hold each other",
               file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
     if not index.parent.is_dir():
@@ -112,14 +154,18 @@ def main(argv: list[str]) -> int:
               file=sys.stderr)  # fmt: skip
         return kernel.REFUSED
 
-    now = manifest(folder)
+    now = manifest(folder) if lst is None else listed_manifest(lst)
     before = cached(index)
     if before is not None and before == now:
         print(f"current: {len(now)} files unchanged; the index at {opts['--to']} "
               f"still answers. Ask it with scan.")  # fmt: skip
         return kernel.ALIVE
 
-    n = scan.build(folder, index)
+    n = (
+        scan.build(folder, index)
+        if lst is None
+        else scan.build_from(kernel.list_chunks(lst), index)
+    )
     (index / CACHE).write_text(
         kernel.canon({"format": FORMAT, "kernel": kernel.VERSION, "files": now}) + "\n",
         encoding="utf-8",

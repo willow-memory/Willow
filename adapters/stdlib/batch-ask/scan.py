@@ -73,7 +73,12 @@ FILES = ("chunks.jsonl", "words.tsv", "index.json")  # index.json last: it means
 
 def build(folder: Path, to: Path) -> int:
     """Write the index of `folder` to `to`; the number of passages."""
-    pile = kernel.chunks(folder)
+    return build_from(kernel.chunks(folder), to)
+
+
+def build_from(pile: list[dict], to: Path) -> int:
+    """Write the index of passages the kernel read (a folder's, or a list's
+    files where they are kept) to `to`; the number of passages."""
     days = kernel.dates(pile)
     post: dict[str, list[int]] = {}
     for i, c in enumerate(pile):

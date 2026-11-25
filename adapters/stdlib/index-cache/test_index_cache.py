@@ -1,5 +1,6 @@
 """index-cache: a folder's scan index kept between runs, rebuilt only when the
-folder changed. It builds the first time, reports "current" when every indexed
+folder changed, or of a list's files where they are kept (`--from @LIST`). It
+builds the first time, reports "current" when every indexed
 file's hash still matches, rebuilds on an edit, add or removal (and says which),
 ignores a change to a file the index never read, and refuses a bad command
 line. The cached index answers through scan."""
@@ -137,3 +138,72 @@ def test_an_edit_and_an_untouched_file_count_only_the_edit(tmp_path):
     (folder / "mould.md").write_text("2026-03-02 The mould spread to the hall.\n")
     got = cache(folder, index)
     assert "+0 new, ~1 changed, -0 removed" in got.stdout, got.stdout
+
+
+# ── --from @LIST: a list's files where they are kept (CONST-VI-9) ─────────────
+def a_list(tmp: Path) -> tuple[Path, Path, Path]:
+    """The two-file folder, a third file the list leaves out, and a list of the
+    two kept apart from them; (folder, list, index)."""
+    folder, index = a_folder(tmp)
+    (folder / "unlisted.md").write_text("The shed door sticks.\n")
+    lst = tmp / "lists" / "home.list"
+    lst.parent.mkdir()
+    lst.write_text(f"{folder / 'roof.md'}\n# a note\n\n{folder / 'mould.md'}\n")
+    return folder, lst, index
+
+
+def test_a_list_builds_then_reports_current(tmp_path):
+    folder, lst, index = a_list(tmp_path)
+    first = run("--from", f"@{lst}", "--to", str(index))
+    assert first.returncode == 0 and "+2 new" in first.stdout, (
+        first.stdout + first.stderr
+    )
+    again = run("--from", f"@{lst}", "--to", str(index))
+    assert again.returncode == 0 and "current: 2 files" in again.stdout, again.stdout
+
+
+def test_a_list_reads_what_the_kernel_reads_of_it(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "batch-ask"))
+    sys.path.insert(0, str(HERE.parents[2]))
+    import kernel
+    import scan
+
+    folder, lst, index = a_list(tmp_path)
+    run("--from", f"@{lst}", "--to", str(index))
+    kept = [(c["path"], c["id"]) for c in scan.passages(index)]
+    assert kept == [(c["path"], c["id"]) for c in kernel.list_chunks(lst)]
+    assert {p for p, _ in kept} == {"roof.md", "mould.md"}  # never unlisted.md
+
+
+def test_a_list_rebuilds_on_a_listed_file_and_not_an_unlisted_one(tmp_path):
+    folder, lst, index = a_list(tmp_path)
+    run("--from", f"@{lst}", "--to", str(index))
+    (folder / "unlisted.md").write_text("The shed door is fixed.\n")
+    quiet = run("--from", f"@{lst}", "--to", str(index))
+    assert "current" in quiet.stdout, quiet.stdout
+    (folder / "roof.md").write_text("2026-03-01 The roof estimate was 4500.\n")
+    moved = run("--from", f"@{lst}", "--to", str(index))
+    assert "+0 new, ~1 changed, -0 removed" in moved.stdout, moved.stdout
+
+
+def test_a_listed_file_gone_counts_as_removed(tmp_path):
+    folder, lst, index = a_list(tmp_path)
+    run("--from", f"@{lst}", "--to", str(index))
+    (folder / "mould.md").unlink()
+    got = run("--from", f"@{lst}", "--to", str(index))
+    assert got.returncode == 0 and "-1 removed" in got.stdout, got.stdout
+
+
+def test_an_index_beside_the_listed_files_is_fine_but_one_holding_them_is_not(
+    tmp_path,
+):
+    folder, lst, _ = a_list(tmp_path)
+    beside = run("--from", f"@{lst}", "--to", str(folder / "ix"))
+    assert beside.returncode == 0, beside.stderr
+    holds = run("--from", f"@{lst}", "--to", str(tmp_path / "lists"))
+    assert holds.returncode == 2 and "hold each other" in holds.stderr
+
+
+def test_a_list_that_is_not_there_is_refused(tmp_path):
+    got = run("--from", f"@{tmp_path / 'missing.list'}", "--to", str(tmp_path / "ix"))
+    assert got.returncode == 2 and "is not a list of files" in got.stderr

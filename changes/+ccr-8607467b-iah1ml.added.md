@@ -1,0 +1,1 @@
+index-cache keeps the index of a list's files where they are kept (`--from @LIST`), the passages a box laid with `init --from NAME=@LIST` reads, so a box laid from pointers can be asked from an index too; batch-ask's scan gains `build_from` for it.
