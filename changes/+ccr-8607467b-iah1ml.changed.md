@@ -1,0 +1,1 @@
+scan reads only the passages and words a question needs (`offsets.bin` and `copies.tsv` beside the index, each word found by a search of the sorted `words.tsv`), so a question of cpython's index no longer reads all 390 MB of it; index-cache makes an index again once when it lacks either file.

@@ -213,6 +213,8 @@ def cached(index: Path) -> dict[str, str] | None:
     head = head_of(index)
     if head is None:
         return None
+    if not all((index / f).is_file() for f in scan.FILES):
+        return None  # made before scan wrote all it writes now: made again once
     if head.get("built") is None or head["built"] != built(index):
         try:
             scan.passages(index)  # the scan index is present and this kernel's
