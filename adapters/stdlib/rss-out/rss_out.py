@@ -124,6 +124,24 @@ def feed(found: list[dict], title: str, link: str) -> str:
     )
 
 
+def inside(box: Path, to: Path) -> str:
+    """Why FILE may not be written where it is, or "": inside the box, or in
+    a folder the box reads, where the feed would be read back as a file of
+    the person's own (a list names only its files, so beside them is fine)."""
+    at = to.parent.resolve() / to.name
+    cfg = kernel.config(box)
+    folders = [("the box", box.resolve())]
+    if "pile" in cfg:
+        folders.append(("in the folder the box reads", Path(cfg["pile"]).resolve()))
+    for name, src in kernel.sources(cfg).items():
+        if not cfg["sources"][name].startswith("@"):
+            folders.append((f"in the box's source {name}", src.resolve()))
+    for what, f in folders:
+        if at.is_relative_to(f):
+            return "inside the box" if what == "the box" else what
+    return ""
+
+
 def main(argv: list[str]) -> int:
     opts, args, it = {}, [], iter(argv)
     for a in it:
@@ -147,6 +165,9 @@ def main(argv: list[str]) -> int:
     box, to = Path(opts["--box"]), Path(opts["--to"])
     if not (box / "kernel.json").exists():
         print("refused: not a kernel box; init first", file=sys.stderr)
+        return kernel.REFUSED
+    if why := inside(box, to):
+        print(f"refused: {to} is {why}; write the feed somewhere else", file=sys.stderr)
         return kernel.REFUSED
     rows, breaks = kernel.read(box / "record.jsonl")
     if breaks:

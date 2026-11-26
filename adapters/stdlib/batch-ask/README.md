@@ -3,7 +3,7 @@ section: Finding things
 line: Index a big folder once, then ask it a list of questions in seconds with the kernel's own answers, of everything or only what's changed.
 source: box
 added: 2026-10-24
-version: 0.1.0
+version: 0.2.0
 writes: to
 network: none
 role: makes
@@ -86,9 +86,18 @@ what changed (random passages from it land on the fix often), the kernel's
 rank lands on the fix's core above chance but short of the frozen margin,
 and BM25 lands more often.
 
-**What an index is:** three files in `--to`: chunks.jsonl (each passage
-and its date), words.tsv (each word and its passages) and index.json
-(how many, which kernel, and a hash of the passages), written last. It holds
+**What an index is:** five files in `--to`: chunks.jsonl (each passage
+and its date), words.tsv (each word and its passages, sorted by word),
+offsets.bin (where each passage's line starts), copies.tsv (each text held
+more than once, and where) and index.json (how many, which kernel, a hash
+of the passages, and the passages' size), written last. A question reads
+only what it needs: each of its words found by a search of words.tsv, and
+only the passages holding enough of them, each from where offsets.bin says
+it starts. On cpython's source (9,425 files) that is a question in under a
+second where reading the 390 MB index whole took four. An index made
+before offsets.bin and copies.tsv is read whole, as it always was; the
+check that its passages match their hash is made only when it is read
+whole. It holds
 your folder's text, so keep it where you keep the folder. It is the folder
 as it was read: index again after the folder changes. The same folder gives
 the same bytes. One made with another `kernel.py` is refused, since its

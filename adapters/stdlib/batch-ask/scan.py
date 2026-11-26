@@ -57,8 +57,10 @@ is never changed.
 
 from __future__ import annotations
 
+import array
 import json
 import math
+import mmap
 import sys
 from pathlib import Path
 
@@ -68,12 +70,22 @@ import kernel  # noqa: E402
 import todo  # noqa: E402
 
 FORMAT = "willow-scan/1"
-FILES = ("chunks.jsonl", "words.tsv", "index.json")  # index.json last: it means done
+#: index.json last: it means done. offsets.bin (where each passage's line
+#: starts, eight bytes each, little-endian) and copies.tsv (each text held
+#: more than once, by its id, and the passages holding it) let a question
+#: read only the passages and words it needs; an index without them is read
+#: whole, as before
+FILES = ("chunks.jsonl", "words.tsv", "offsets.bin", "copies.tsv", "index.json")
 
 
 def build(folder: Path, to: Path) -> int:
     """Write the index of `folder` to `to`; the number of passages."""
-    pile = kernel.chunks(folder)
+    return build_from(kernel.chunks(folder), to)
+
+
+def build_from(pile: list[dict], to: Path) -> int:
+    """Write the index of passages the kernel read (a folder's, or a list's
+    files where they are kept) to `to`; the number of passages."""
     days = kernel.dates(pile)
     post: dict[str, list[int]] = {}
     for i, c in enumerate(pile):
@@ -81,9 +93,23 @@ def build(folder: Path, to: Path) -> int:
             post.setdefault(t, []).append(i)
     to.mkdir(exist_ok=True)
     (to / "index.json").unlink(missing_ok=True)
-    with open(to / "chunks.jsonl", "w", encoding="utf-8", newline="\n") as f:
+    offsets = array.array("Q")
+    at = 0
+    with open(to / "chunks.jsonl", "wb") as f:
         for c, d in zip(pile, days):
-            f.write(kernel.canon({**c, "date": d}) + "\n")
+            line = (kernel.canon({**c, "date": d}) + "\n").encode("utf-8")
+            offsets.append(at)
+            f.write(line)
+            at += len(line)
+    if sys.byteorder != "little":
+        offsets.byteswap()
+    (to / "offsets.bin").write_bytes(offsets.tobytes())
+    copies: dict[str, list[int]] = {}
+    for i, c in enumerate(pile):
+        copies.setdefault(c["id"], []).append(i)
+    with open(to / "copies.tsv", "w", encoding="utf-8", newline="\n") as f:
+        for k in sorted(k for k, v in copies.items() if len(v) > 1):
+            f.write(k + "\t" + " ".join(map(str, copies[k])) + "\n")
     with open(to / "words.tsv", "w", encoding="utf-8", newline="\n") as f:
         for t in sorted(post):
             f.write(t + "\t" + " ".join(map(str, post[t])) + "\n")
@@ -93,6 +119,7 @@ def build(folder: Path, to: Path) -> int:
         "chunks": len(pile),
         "files": len({c["path"] for c in pile}),
         "ids": kernel.h256("\n".join(c["id"] for c in pile)),
+        "bytes": at,
     }
     (to / "index.json").write_text(kernel.canon(head) + "\n", encoding="utf-8")
     return len(pile)
@@ -117,26 +144,157 @@ def passages(at: Path) -> list[dict]:
     return pile
 
 
+def head_of(at: Path) -> dict:
+    """An index's index.json, once it says the index is whole and this
+    kernel.py's; ValueError otherwise."""
+    try:
+        head = json.loads((at / "index.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        raise ValueError(f"{at} is not an index; make one with index") from None
+    if head.get("format") != FORMAT:
+        raise ValueError(f"{at} is an index of another kind: {head.get('format')}")
+    if head.get("kernel") != kernel.VERSION:
+        raise ValueError(f"{at} was made with another kernel.py; index again")
+    return head
+
+
+class Lines:
+    """A file of lines sorted by their key (`key<TAB>rest`, keys compared as
+    UTF-8 bytes, which is the order of `sorted` on the words), a line found
+    by a binary search over the bytes of the file itself: only the few lines
+    the search lands on are read."""
+
+    def __init__(self, path: Path):
+        self.f = open(path, "rb")
+        size = path.stat().st_size
+        self.mm = (
+            mmap.mmap(self.f.fileno(), 0, access=mmap.ACCESS_READ) if size else b""
+        )
+
+    def _line(self, start: int) -> tuple[bytes, int]:
+        """The key of the line starting at start, and where the next starts."""
+        mm = self.mm
+        end = mm.find(b"\n", start)
+        end = len(mm) if end < 0 else end
+        tab = mm.find(b"\t", start, end)
+        return mm[start : end if tab < 0 else tab], end + 1
+
+    def get(self, key: str, default: str = "") -> str:
+        """The rest of key's line, or default when there is none, as a dict's
+        get would answer."""
+        want, mm = key.encode("utf-8"), self.mm
+        lo, hi = 0, len(mm)  # lo and hi each the start of a line, or the end
+        while lo < hi:
+            mid = (lo + hi) // 2
+            start = mm.rfind(b"\n", 0, mid) + 1 if mid > lo else lo
+            k, nxt = self._line(start)
+            if k < want:
+                lo = nxt
+            else:
+                hi = start
+        if lo < len(mm):
+            k, nxt = self._line(lo)
+            if k == want:
+                return mm[lo + len(k) + 1 : nxt - 1].decode("utf-8")
+        return default
+
+    def keys(self):
+        at = 0
+        while at < len(self.mm):
+            k, at = self._line(at)
+            yield k.decode("utf-8")
+
+
 class Index:
     """One index, read back: its passages in the kernel's order, their dates,
-    and each word's passages, parsed only when a question asks for it."""
+    and each word's passages, parsed only when a question asks for it. An
+    index with offsets.bin and copies.tsv is read a passage and a word at a
+    time, only those a question needs; one without them is read whole."""
 
     def __init__(self, at: Path):
-        self.name = at.name
-        self.pile, self.day = passages(at), {}
-        for c in self.pile:
-            self.day[id(c)] = c.pop("date")
+        self.name, self.at = at.name, at
+        self.day = {}
         self.lengths: dict[int, int] | None = None  # words a passage, for bm25
-        self.copies: dict[str, list[int]] = {}
-        self.files: dict[str, list[int]] = {}
-        for i, c in enumerate(self.pile):
-            self.copies.setdefault(c["id"], []).append(i)
-            self.files.setdefault(c["path"], []).append(i)
-        self.words = {}
-        with open(at / "words.tsv", encoding="utf-8") as f:
+        self._pile: list[dict] | None = None
+        self._files: dict[str, list[int]] | None = None
+        head = head_of(at)
+        lazy = (
+            (at / "offsets.bin").is_file()
+            and (at / "copies.tsv").is_file()
+            and head.get("bytes") == (at / "chunks.jsonl").stat().st_size
+        )
+        if not lazy:
+            self._pile = passages(at)
+            for c in self._pile:
+                self.day[id(c)] = c.pop("date")
+            self.copies: dict[str, list[int]] = {}
+            for i, c in enumerate(self._pile):
+                self.copies.setdefault(c["id"], []).append(i)
+            self.words = {}
+            with open(at / "words.tsv", encoding="utf-8") as f:
+                for line in f:
+                    t, _, ns = line.rstrip("\n").partition("\t")
+                    self.words[t] = ns
+            self.n = len(self._pile)
+            return
+        raw = array.array("Q")
+        raw.frombytes((at / "offsets.bin").read_bytes())
+        if sys.byteorder != "little":
+            raw.byteswap()
+        self.offsets, self.n = raw, len(raw)
+        if self.n != head.get("chunks"):
+            raise ValueError(f"{at}: its offsets don't match its index.json")
+        self._chunks = open(at / "chunks.jsonl", "rb")
+        size = head["bytes"]
+        self._mm = (
+            mmap.mmap(self._chunks.fileno(), 0, access=mmap.ACCESS_READ)
+            if size
+            else b""
+        )
+        self._read: dict[int, dict] = {}
+        self.copies = {}
+        with open(at / "copies.tsv", encoding="utf-8") as f:
             for line in f:
-                t, _, ns = line.rstrip("\n").partition("\t")
-                self.words[t] = ns
+                k, _, ns = line.rstrip("\n").partition("\t")
+                self.copies[k] = list(map(int, ns.split()))
+        self.words = Lines(at / "words.tsv")
+
+    def chunk(self, i: int) -> dict:
+        """Passage i, read from its line when it is first asked for."""
+        if self._pile is not None:
+            return self._pile[i]
+        got = self._read.get(i)
+        if got is None:
+            at = self.offsets[i]
+            end = self.offsets[i + 1] if i + 1 < self.n else len(self._mm)
+            got = json.loads(self._mm[at:end].decode("utf-8"))
+            self.day[id(got)] = got.pop("date")
+            self._read[i] = got
+        return got
+
+    @property
+    def pile(self) -> list[dict]:
+        """Every passage, read whole the first time it is wanted."""
+        if self._pile is None:
+            self._pile = [self.chunk(i) for i in range(self.n)]
+        return self._pile
+
+    @property
+    def files(self) -> dict[str, list[int]]:
+        if self._files is None:
+            self._files = {}
+            for i, c in enumerate(self.pile):
+                self._files.setdefault(c["path"], []).append(i)
+        return self._files
+
+    def copies_of(self, i: int) -> list[int]:
+        """Every passage holding passage i's text: i alone unless copies.tsv
+        names it (or, read whole, the copies counted then)."""
+        return self.copies.get(self.chunk(i)["id"], [i])
+
+    def terms(self):
+        """Every word the index holds."""
+        return iter(self.words) if isinstance(self.words, dict) else self.words.keys()
 
     def holding(self, t: str) -> set[int]:
         return set(map(int, self.words.get(t, "").split()))
@@ -156,16 +314,16 @@ class Index:
             for x in [w, *alias.get(w, [])]:
                 got |= self.holding(x) | self.holding(kernel.stem(x))
                 if len(x) >= 4 and any(ch.isdigit() for ch in x):
-                    for t in self.words:
+                    for t in self.terms():
                         if t.startswith(x) or t.endswith(x):
                             got |= self.holding(t)
             for i in got:
                 count[i] = count.get(i, 0) + 1
         kept = [i for i, n in count.items() if n >= kernel.HOLD * len(want)]
         if lacked_by is not None:
-            kept = [i for i in kept if self.pile[i]["id"] not in lacked_by]
-        every = {j for i in kept for j in self.copies[self.pile[i]["id"]]}
-        return [self.pile[i] for i in sorted(every)]
+            kept = [i for i in kept if self.chunk(i)["id"] not in lacked_by]
+        every = {j for i in kept for j in self.copies_of(i)}
+        return [self.chunk(i) for i in sorted(every)]
 
     def rank(
         self, question: str, alias: dict, top: int, lacked_by: set | None = None

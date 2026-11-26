@@ -1,5 +1,6 @@
 """index-cache: a folder's scan index kept between runs, rebuilt only when the
-folder changed. It builds the first time, reports "current" when every indexed
+folder changed, or of a list's files where they are kept (`--from @LIST`). It
+builds the first time, reports "current" when every indexed
 file's hash still matches, rebuilds on an edit, add or removal (and says which),
 ignores a change to a file the index never read, and refuses a bad command
 line. The cached index answers through scan."""
@@ -137,3 +138,255 @@ def test_an_edit_and_an_untouched_file_count_only_the_edit(tmp_path):
     (folder / "mould.md").write_text("2026-03-02 The mould spread to the hall.\n")
     got = cache(folder, index)
     assert "+0 new, ~1 changed, -0 removed" in got.stdout, got.stdout
+
+
+# ── --from @LIST: a list's files where they are kept (CONST-VI-9) ─────────────
+def a_list(tmp: Path) -> tuple[Path, Path, Path]:
+    """The two-file folder, a third file the list leaves out, and a list of the
+    two kept apart from them; (folder, list, index)."""
+    folder, index = a_folder(tmp)
+    (folder / "unlisted.md").write_text("The shed door sticks.\n")
+    lst = tmp / "lists" / "home.list"
+    lst.parent.mkdir()
+    lst.write_text(f"{folder / 'roof.md'}\n# a note\n\n{folder / 'mould.md'}\n")
+    return folder, lst, index
+
+
+def test_a_list_builds_then_reports_current(tmp_path):
+    folder, lst, index = a_list(tmp_path)
+    first = run("--from", f"@{lst}", "--to", str(index))
+    assert first.returncode == 0 and "+2 new" in first.stdout, (
+        first.stdout + first.stderr
+    )
+    again = run("--from", f"@{lst}", "--to", str(index))
+    assert again.returncode == 0 and "current: 2 files" in again.stdout, again.stdout
+
+
+def test_a_list_reads_what_the_kernel_reads_of_it(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "batch-ask"))
+    sys.path.insert(0, str(HERE.parents[2]))
+    import kernel
+    import scan
+
+    folder, lst, index = a_list(tmp_path)
+    run("--from", f"@{lst}", "--to", str(index))
+    kept = [(c["path"], c["id"]) for c in scan.passages(index)]
+    assert kept == [(c["path"], c["id"]) for c in kernel.list_chunks(lst)]
+    assert {p for p, _ in kept} == {"roof.md", "mould.md"}  # never unlisted.md
+
+
+def test_a_list_rebuilds_on_a_listed_file_and_not_an_unlisted_one(tmp_path):
+    folder, lst, index = a_list(tmp_path)
+    run("--from", f"@{lst}", "--to", str(index))
+    (folder / "unlisted.md").write_text("The shed door is fixed.\n")
+    quiet = run("--from", f"@{lst}", "--to", str(index))
+    assert "current" in quiet.stdout, quiet.stdout
+    (folder / "roof.md").write_text("2026-03-01 The roof estimate was 4500.\n")
+    moved = run("--from", f"@{lst}", "--to", str(index))
+    assert "+0 new, ~1 changed, -0 removed" in moved.stdout, moved.stdout
+
+
+def test_a_listed_file_gone_counts_as_removed(tmp_path):
+    folder, lst, index = a_list(tmp_path)
+    run("--from", f"@{lst}", "--to", str(index))
+    (folder / "mould.md").unlink()
+    got = run("--from", f"@{lst}", "--to", str(index))
+    assert got.returncode == 0 and "-1 removed" in got.stdout, got.stdout
+
+
+def test_an_index_beside_the_listed_files_is_fine_but_one_holding_them_is_not(
+    tmp_path,
+):
+    folder, lst, _ = a_list(tmp_path)
+    beside = run("--from", f"@{lst}", "--to", str(folder / "ix"))
+    assert beside.returncode == 0, beside.stderr
+    holds = run("--from", f"@{lst}", "--to", str(tmp_path / "lists"))
+    assert holds.returncode == 2 and "hold each other" in holds.stderr
+
+
+def test_a_list_that_is_not_there_is_refused(tmp_path):
+    got = run("--from", f"@{tmp_path / 'missing.list'}", "--to", str(tmp_path / "ix"))
+    assert got.returncode == 2 and "is not a list of files" in got.stderr
+
+
+# ── --box BOX: everything a box reads, as the kernel's pile_of_box names it ───
+KERNEL = HERE.parents[2] / "kernel.py"
+
+
+def a_box(tmp: Path, *froms: str, pile: Path | None = None) -> Path:
+    b = tmp / "box"
+    argv = [sys.executable, str(KERNEL), "init", "--box", str(b)]
+    argv += ["--pile", str(pile)] if pile else []
+    for f in froms:
+        argv += ["--from", f]
+    got = subprocess.run(
+        argv + ["--key", str(tmp / "k")], capture_output=True, text=True
+    )
+    assert got.returncode == 0, got.stderr
+    return b
+
+
+def test_a_box_from_several_places_is_indexed_as_the_kernel_reads_it(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "batch-ask"))
+    sys.path.insert(0, str(HERE.parents[2]))
+    import kernel
+    import scan
+
+    folder, lst, index = a_list(tmp_path)
+    other = tmp_path / "other"
+    other.mkdir()
+    (other / "garden.md").write_text("Tomatoes want sun.\n")
+    b = a_box(tmp_path, f"home=@{lst}", f"garden={other}")
+    first = run("--box", str(b), "--to", str(index))
+    assert first.returncode == 0 and "+3 new" in first.stdout, (
+        first.stdout + first.stderr
+    )
+    kept = [(c["path"], c["id"]) for c in scan.passages(index)]
+    read = kernel.pile_of_box(kernel.config(b))
+    assert kept == [(c["path"], c["id"]) for c in read]
+    assert "current: 3 files" in run("--box", str(b), "--to", str(index)).stdout
+    (folder / "unlisted.md").write_text("Still not listed.\n")
+    assert "current" in run("--box", str(b), "--to", str(index)).stdout
+    (other / "garden.md").write_text("Tomatoes want more sun.\n")
+    moved = run("--box", str(b), "--to", str(index))
+    assert "+0 new, ~1 changed, -0 removed" in moved.stdout, moved.stdout
+
+
+def test_a_pile_box_keeps_the_pile_folders_index(tmp_path):
+    folder, index = a_folder(tmp_path)
+    b = a_box(tmp_path, pile=folder)
+    cache(folder, index)  # made with --from PILE
+    again = run("--box", str(b), "--to", str(index))
+    assert again.returncode == 0 and "current" in again.stdout, again.stdout
+
+
+def test_a_box_index_is_refused_inside_the_box_or_what_it_reads(tmp_path):
+    folder, index = a_folder(tmp_path)
+    b = a_box(tmp_path, f"home={folder}")
+    for at in (b / "ix", folder / "ix"):
+        got = run("--box", str(b), "--to", str(at))
+        assert got.returncode == 2 and "hold each other" in got.stderr, at
+
+
+def test_a_box_that_is_not_one_or_both_kinds_of_from_is_refused(tmp_path):
+    folder, index = a_folder(tmp_path)
+    got = run("--box", str(tmp_path / "nobox"), "--to", str(index))
+    assert got.returncode == 2 and "is not a box" in got.stderr
+    both = run("--box", str(tmp_path), "--from", str(folder), "--to", str(index))
+    assert both.returncode == 2 and "index_cache.py" in both.stderr
+
+
+# ── a file is read again only when its details on disk moved ──────────────────
+def in_process(monkeypatch, racy_ns: int = 0):
+    """index_cache as a module, its racy window set (0: trust every file
+    whose details were last seen before the run began)."""
+    sys.path.insert(0, str(HERE))
+    sys.path.insert(0, str(HERE.parent / "batch-ask"))
+    import index_cache as ic
+
+    monkeypatch.setattr(ic, "RACY_NS", racy_ns)
+    main = ic.main
+
+    def as_run(args):  # the command line the guard reads --to from, as a run has it
+        monkeypatch.setattr(sys, "argv", ["index_cache.py", *args])
+        return main(args)
+
+    monkeypatch.setattr(ic, "main", as_run)
+    return ic
+
+
+def counting_reads(monkeypatch) -> list:
+    """The names of the files index_cache opens to read from now on."""
+    import index_cache as ic
+
+    reads: list = []
+
+    def counted(f, *a, **k):
+        reads.append(Path(f).name)
+        return open(f, *a, **k)
+
+    monkeypatch.setattr(ic, "open", counted, raising=False)
+    return reads
+
+
+def test_an_unchanged_file_is_not_read_again(tmp_path, monkeypatch, capsys):
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    assert ic.main(["--from", str(folder), "--to", str(index)]) == 0
+    reads = counting_reads(monkeypatch)
+    assert ic.main(["--from", str(folder), "--to", str(index)]) == 0
+    assert "current" in capsys.readouterr().out
+    assert [r for r in reads if r.endswith(".md")] == []
+
+
+def test_an_edit_that_keeps_the_size_and_the_time_is_still_seen(
+    tmp_path, monkeypatch, capsys
+):
+    import os
+
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    roof = folder / "roof.md"
+    was = roof.stat()
+    roof.write_text("2026-03-01 The roof estimate was 4900.\n")  # same length
+    os.utime(roof, ns=(was.st_atime_ns, was.st_mtime_ns))  # the time put back
+    capsys.readouterr()
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert "~1 changed" in capsys.readouterr().out
+
+
+def test_a_file_changed_as_the_last_run_began_is_read_again(tmp_path, monkeypatch):
+    ic = in_process(monkeypatch, racy_ns=10**18)  # every file is racy
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert ic.known(index) == {}
+    reads = counting_reads(monkeypatch)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert sorted(r for r in reads if r.endswith(".md")) == ["mould.md", "roof.md"]
+
+
+def test_a_whole_index_is_known_by_its_files_details(tmp_path, monkeypatch, capsys):
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+
+    def unread(at):
+        raise AssertionError("an index whose files are as written isn't read")
+
+    monkeypatch.setattr(ic.scan, "passages", unread)
+    assert ic.cached(index) is not None
+    monkeypatch.undo()
+    ic = in_process(monkeypatch)
+    (index / "chunks.jsonl").write_text("not an index\n")  # its details moved
+    assert ic.cached(index) is None  # so it is read, and it isn't whole
+    capsys.readouterr()
+    ic.main(["--from", str(folder), "--to", str(index)])
+    assert "rebuilt" in capsys.readouterr().out
+
+
+def test_a_list_is_read_as_the_kernel_reads_it(tmp_path, monkeypatch):
+    """index-cache's own reading of a list (by a set, so a list of thousands
+    is quick) names the files the kernel's `listed` names, in its order."""
+    ic = in_process(monkeypatch)
+    sys.path.insert(0, str(HERE.parents[2]))
+    import kernel
+
+    folder, lst, _ = a_list(tmp_path)
+    (tmp_path / "lists" / "near.md").write_text("Beside the list.\n")
+    lst.write_text(
+        lst.read_text() + f"{folder / 'roof.md'}\nnear.md\n  # spaced note\n"
+        f"../folder/unlisted.md\n{folder / 'gone.md'}\n"
+    )
+    assert ic.listed(lst) == kernel.listed(lst)
+    assert len(ic.listed(lst)) == 5  # roof.md once, near.md, gone.md kept
+
+
+def test_a_check_that_finds_nothing_moved_writes_nothing(tmp_path, monkeypatch):
+    ic = in_process(monkeypatch)
+    folder, index = a_folder(tmp_path)
+    ic.main(["--from", str(folder), "--to", str(index)])
+    ic.main(["--from", str(folder), "--to", str(index)])  # details settle
+    was = (index / "cache.json").read_bytes()
+    assert ic.main(["--from", str(folder), "--to", str(index)]) == 0
+    assert (index / "cache.json").read_bytes() == was

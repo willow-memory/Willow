@@ -472,3 +472,95 @@ def test_bm25_ranks_as_bm25_does_over_all_or_only_what_changed(tmp_path):
     for bad in (["--rank", "grep"], ["--rank", "bm25", "--words", str(tmp_path / "w")]):
         got = run(*ask, *bad)
         assert got.returncode == 2 and "scan.py" in got.stderr
+
+
+# ── a question reads only the passages and words it needs ──────────────────────
+def test_an_index_is_read_a_passage_and_a_word_at_a_time(tmp_path, monkeypatch):
+    """With offsets.bin and copies.tsv, Index reads no passage but those a
+    question holds and their copies, and the answer is the one an index read
+    whole gives; without them it is read whole, as before."""
+    import scan as sc
+
+    # the guard reads --to from the command line, as a run has it
+    monkeypatch.setattr(sys, "argv", ["scan.py", "--to", str(tmp_path / "ix")])
+
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text(
+        "The ferry leaves the square at noon.\n\nUnrelated text.\n"
+    )
+    (pile / "b.md").write_text("The ferry leaves the square at noon.\n")  # a copy
+    (pile / "c.md").write_text("Buses wait by the square 2026x7 until dusk.\n")
+    at = tmp_path / "ix"
+    sc.build(pile, at)
+    lazy = sc.Index(at)
+    assert lazy._pile is None
+    got = lazy.rank("when does the ferry leave the square", {}, None)
+    assert lazy._pile is None and len(lazy._read) == 2  # the two copies, only
+    for f in ("offsets.bin", "copies.tsv"):
+        (at / f).rename(tmp_path / f)
+    eager = sc.Index(at)
+    assert eager._pile is not None
+    assert [c["id"] for c in got] == [
+        c["id"] for c in eager.rank("when does the ferry leave the square", {}, None)
+    ]
+    for f in ("offsets.bin", "copies.tsv"):
+        (tmp_path / f).rename(at / f)
+    # a word with digits is matched within words too, as read whole
+    assert [c["path"] for c in sc.Index(at).near("2026x7 buses", {})] == ["c.md"]
+    assert sc.Index(at).pile == eager.pile  # read whole when wanted: the same
+
+
+def test_a_word_is_found_in_the_sorted_words_by_a_search_of_the_file(tmp_path):
+    import scan as sc
+
+    f = tmp_path / "w.tsv"
+    words = sorted(["a", "b", "ab", "zz", "é", "m1", "m10", "m2"])
+    f.write_text("".join(f"{w}\t{i}\n" for i, w in enumerate(words)))
+    lines = sc.Lines(f)
+    for i, w in enumerate(words):
+        assert lines.get(w) == str(i)
+    for missing in ("", "0", "aa", "m", "zzz", "ée"):
+        assert lines.get(missing, "none") == "none"
+    assert list(lines.keys()) == words
+    f.write_text("only\t7")  # no newline at the end
+    assert sc.Lines(f).get("only") == "7"
+    (tmp_path / "e.tsv").write_text("")
+    assert sc.Lines(tmp_path / "e.tsv").get("x") == ""
+
+
+def test_an_index_whose_offsets_dont_match_is_refused(tmp_path, monkeypatch):
+    import scan as sc
+
+    # the guard reads --to from the command line, as a run has it
+    monkeypatch.setattr(sys, "argv", ["scan.py", "--to", str(tmp_path / "ix")])
+
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "a.md").write_text("One.\n\nTwo.\n")
+    at = tmp_path / "ix"
+    sc.build(pile, at)
+    (at / "offsets.bin").write_bytes((at / "offsets.bin").read_bytes()[:8])
+    with pytest.raises(ValueError, match="offsets"):
+        sc.Index(at)
+
+
+def test_a_word_is_found_by_halving_not_by_reading_line_after_line(
+    tmp_path, monkeypatch
+):
+    """On 20,000 words, finding one reads about log2 of them, not a run of
+    them: the search is the speed, so a slip that still finds the word by
+    walking the file is a failure too."""
+    import scan as sc
+
+    f = tmp_path / "w.tsv"
+    words = sorted(f"w{i:05d}" for i in range(20000))
+    f.write_text("".join(f"{w}\t{i}\n" for i, w in enumerate(words)))
+    lines = sc.Lines(f)
+    read = []
+    real = lines._line
+    monkeypatch.setattr(lines, "_line", lambda at: read.append(at) or real(at))
+    for w in ("w00000", "w12345", "w19999", "w99999"):
+        read.clear()
+        lines.get(w)
+        assert len(read) <= 40, (w, len(read))

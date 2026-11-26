@@ -1,0 +1,1 @@
+claude-code's `bite` takes `--keep`: the index is brought current in the same program (index-cache's own check) before the bite answers from it, so a caller runs one program a question where it ran index-cache and then the bite.

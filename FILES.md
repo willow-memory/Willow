@@ -12,7 +12,7 @@ makes the cuts; they're never written by hand.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,490 lines)
+├── kernel.py                 the whole program (about 1,520 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -1018,6 +1018,10 @@ willow/
 │   │   ├── ref-check/
 │   │   │   ├── ref_check.py  every reference in your files, checked
 │   │   │   ├── test_ref_check.py
+│   │   │   └── README.md     its card
+│   │   ├── seals-waiting/
+│   │   │   ├── seals_waiting.py What waits on your seal, by subject, with no row added: what kernel.py out says, for a program that asks often
+│   │   │   ├── test_seals_waiting.py
 │   │   │   └── README.md     its card
 │   │   ├── stale-answers/
 │   │   │   ├── stale_answers.py approved answers whose cited passage has changed or gone
