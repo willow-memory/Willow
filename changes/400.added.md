@@ -1,0 +1,1 @@
+`play-dominoes`: All Fives dominoes for two seats on the record, the tiles shuffled by the record's tip, the first double a spinner on four arms, every multiple of five scored to 250, and a seat that can play itself by a fixed rule
