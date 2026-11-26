@@ -2061,6 +2061,9 @@ Each hands in suggestions through propose. None can approve: every suggestion wa
 - <a id="play-dice5e"></a>[**play-dice5e**](adapters/stdlib/play-dice5e/) \
   Full tabletop dice notation (4d6kh3, advantage), rolled on the record and checkable like dice. \
   Uses play-dice. *bot* `no-install` `offline` `dice` `roll` · near: play-dice, play-backgammon, play-liars-dice
+- <a id="play-dominoes"></a>[**play-dominoes**](adapters/stdlib/play-dominoes/) \
+  All Fives dominoes on the record, shuffled by the record's tip: the first double a spinner, every multiple of five scored, to 250. \
+  *new* `no-install` `offline` `tip` `draw` · near: play-hearts, play-crazy-eights, play-backgammon
 - <a id="play-fight"></a>[**play-fight**](adapters/deps/play-fight/) \
   A fight blow by blow on dice dropped in the tower, every blow a row, played again from the record to check it. \
   Needs dndwright, which brings pydantic and PyYAML; MIT. Uses dice-tower. From: dep of [sligara7/dndwright](https://github.com/sligara7/dndwright), MIT;

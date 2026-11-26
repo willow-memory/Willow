@@ -1698,6 +1698,10 @@ willow/
 │   │   │   ├── play_dice5e.py full tabletop dice notation rolled on the record, every roll
 │   │   │   ├── test_play_dice5e.py
 │   │   │   └── README.md     its card
+│   │   ├── play-dominoes/
+│   │   │   ├── play_dominoes.py All Fives dominoes on the record, the boneyard shuffled by the record's tip: the first double a spinner, every multiple of five scored, to 250
+│   │   │   ├── test_play_dominoes.py
+│   │   │   └── README.md     its card
 │   │   ├── play-hearts/
 │   │   │   ├── play_hearts.py Hearts played on the record, hands open, the deal seeded
 │   │   │   ├── test_play_hearts.py

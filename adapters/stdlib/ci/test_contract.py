@@ -832,6 +832,7 @@ COMMANDS: dict[str, tuple[str, list[str]]] = {
     "play-crazy-eights": ("play_crazy_eights.py", ["--box", "{box}", "new"]),
     "play-dice": ("play_dice.py", ["--box", "{box}", "roll", "2d6", *NOW]),
     "play-dice5e": ("play_dice5e.py", ["--box", "{box}", "roll", "4d6kh3", *NOW]),
+    "play-dominoes": ("play_dominoes.py", ["--box", "{box}", "new"]),
     "play-hearts": ("play_hearts.py", ["--box", "{box}", "new"]),
     "play-horoscope": ("play_horoscope.py", ["Ana", "--date", "2026-10-24"]),
     "play-liars-dice": ("play_liars_dice.py", ["--box", "{box}", "new"]),
