@@ -1020,7 +1020,7 @@ willow/
 │   │   │   ├── test_ref_check.py
 │   │   │   └── README.md     its card
 │   │   ├── seals-waiting/
-│   │   │   ├── seals_waiting.py What waits on your seal, each by its subject, read from the record with no row added: what kernel.py out says, for a program that asks often
+│   │   │   ├── seals_waiting.py What waits on your seal, by subject, with no row added: what kernel.py out says, for a program that asks often
 │   │   │   ├── test_seals_waiting.py
 │   │   │   └── README.md     its card
 │   │   ├── stale-answers/
