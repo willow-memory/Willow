@@ -67,7 +67,47 @@ RULES = {
 }
 WRITERS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 READERS = {"Read", "NotebookRead"}
-PATH_FIELDS = ("file_path", "notebook_path", "path")
+PATH_FIELDS = ("file_path", "notebook_path", "path", "target_file")
+#: Cursor's tool names for the same tools (its hooks reference, preToolUse's
+#: matcher): a shell, and a delete, which changes what it names as a write does
+CURSOR_TOOLS = {"Shell": "Bash", "Delete": "Write"}
+
+
+def as_one_shape(call: dict) -> dict:
+    """A call as the rules read it, whichever assistant sent it. Claude Code
+    and Cursor's preToolUse send tool_name and tool_input (Cursor names its
+    shell Shell and gives its folder as working_directory); Cursor's
+    beforeShellExecution sends the command alone, and beforeReadFile the
+    file alone."""
+    event = call.get("hook_event_name")
+    if "tool_name" not in call and (
+        event == "beforeShellExecution" or "command" in call
+    ):
+        return {
+            **call,
+            "tool_name": "Bash",
+            "tool_input": {"command": call.get("command")},
+        }
+    if "tool_name" not in call and (event == "beforeReadFile" or "file_path" in call):
+        return {
+            **call,
+            "tool_name": "Read",
+            "tool_input": {"file_path": call.get("file_path")},
+        }
+    tool = call.get("tool_name")
+    if tool in CURSOR_TOOLS:
+        given = (
+            call.get("tool_input") if isinstance(call.get("tool_input"), dict) else {}
+        )
+        out = {**call, "tool_name": CURSOR_TOOLS[tool]}
+        if not isinstance(call.get("cwd"), str) and isinstance(
+            given.get("working_directory"), str
+        ):
+            out["cwd"] = given["working_directory"]
+        return out
+    return call
+
+
 #: commands whose every argument is something they change
 CHANGES_ALL = {
     "rm",
@@ -397,6 +437,7 @@ def judge(
             2,
             "refused: the hook was sent something it can't read, so it can't say it is safe.",
         )
+    call = as_one_shape(call)
     tool, given = call.get("tool_name"), call.get("tool_input")
     given = given if isinstance(given, dict) else {}
     cwd = call.get("cwd") if isinstance(call.get("cwd"), str) else ""

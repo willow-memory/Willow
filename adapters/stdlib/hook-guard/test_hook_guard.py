@@ -534,3 +534,79 @@ def test_a_bad_also_is_a_bad_command_line(tmp_path):
         ["run", "--box", str(b), "--also", str(tmp_path), "--stray"],
     ):
         assert run(*argv).returncode == 2, argv
+
+
+def test_cursors_calls_are_held_to_the_same_rules(tmp_path):
+    """Cursor's preToolUse sends tool_name and tool_input with its own names
+    (Shell, Read, Write, Delete) and its shell's folder as
+    working_directory; beforeShellExecution sends the command alone, and
+    beforeReadFile the file alone (cursor.com/docs/agent/hooks)."""
+    b, key = box(tmp_path)
+
+    def judged(sent):
+        return hg.judge(json.dumps(sent), b, key)[0]
+
+    pre = {"hook_event_name": "preToolUse", "cursor_version": "2.0"}
+    assert judged({**pre, "tool_name": "Shell",
+                   "tool_input": {"command": "cat key", "working_directory": str(key.parent)}}) == 2  # fmt: skip
+    assert (
+        judged({**pre, "tool_name": "Read", "tool_input": {"file_path": str(key)}}) == 2
+    )
+    assert judged({**pre, "tool_name": "Write",
+                   "tool_input": {"file_path": str(b / "record.jsonl"), "content": "x"}}) == 2  # fmt: skip
+    assert (
+        judged(
+            {
+                **pre,
+                "tool_name": "Delete",
+                "tool_input": {"file_path": str(b / "record.jsonl")},
+            }
+        )
+        == 2
+    )
+    assert judged({**pre, "tool_name": "Shell",
+                   "tool_input": {"command": f"rm {b / 'record.jsonl'}", "working_directory": "/"}}) == 2  # fmt: skip
+    assert (
+        judged(
+            {
+                "hook_event_name": "beforeShellExecution",
+                "command": f"cat {key}",
+                "cwd": "/",
+            }
+        )
+        == 2
+    )
+    assert (
+        judged(
+            {"hook_event_name": "beforeReadFile", "file_path": str(key), "content": ""}
+        )
+        == 2
+    )
+    # and what touches neither is let by, in each shape
+    pile = tmp_path / "pile" / "garden.md"
+    assert (
+        judged(
+            {
+                **pre,
+                "tool_name": "Shell",
+                "tool_input": {"command": "ls", "working_directory": "/"},
+            }
+        )
+        == 0
+    )
+    assert (
+        judged({**pre, "tool_name": "Read", "tool_input": {"file_path": str(pile)}})
+        == 0
+    )
+    assert (
+        judged(
+            {"hook_event_name": "beforeShellExecution", "command": "ls -la", "cwd": "/"}
+        )
+        == 0
+    )
+    assert (
+        judged(
+            {"hook_event_name": "beforeReadFile", "file_path": str(pile), "content": ""}
+        )
+        == 0
+    )

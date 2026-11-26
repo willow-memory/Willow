@@ -166,3 +166,24 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
             [sys.executable, str(SCRIPT)], capture_output=True, text=True
         ).stderr
     )
+
+
+def test_cursors_shell_is_read_as_a_command():
+    """Cursor's preToolUse names its shell Shell; its beforeShellExecution
+    sends the command alone (cursor.com/docs/agent/hooks)."""
+    shell = {"hook_event_name": "preToolUse", "tool_name": "Shell",
+             "tool_input": {"command": f"curl -H 'x-api-key: {KEY}' api.example", "working_directory": "/w"}}  # fmt: skip
+    got = hook(json.dumps(shell))
+    assert got.returncode == 2 and "this Bash holds a key" in got.stderr
+    alone = {
+        "hook_event_name": "beforeShellExecution",
+        "command": f"echo {KEY}",
+        "cwd": "/w",
+    }
+    assert hook(json.dumps(alone)).returncode == 2
+    plain = {
+        "hook_event_name": "beforeShellExecution",
+        "command": "ls -la",
+        "cwd": "/w",
+    }
+    assert hook(json.dumps(plain)).returncode == 0
