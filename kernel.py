@@ -421,7 +421,7 @@ def html_text(text: str) -> str:
     return html.unescape(_TAG.sub(_lines_kept, _HIDDEN.sub(_lines_kept, text)))
 
 
-def stem(w: str) -> str:
+def _stem(w: str) -> str:
     """An English word's plain form, by a few suffix rules, so owe, owes, owed
     and owing are one word (Hollis's "who still owes me money", Teodora's "how
     much do I still owe dev"). Only words of ASCII letters: another language,
@@ -443,6 +443,24 @@ def stem(w: str) -> str:
     if len(s) > 2 and s.endswith("e"):
         s = s[:-1]
     return s
+
+
+#: `_stem` remembered: a folder of thousands of files says the same few
+#: hundred thousand words millions of times, and a word's plain form is the
+#: same every time it is asked. Bounded, so a long run can't grow it forever.
+_STEMS: dict[str, str] = {}
+_STEMS_MOST = 1 << 18
+
+
+def stem(w: str) -> str:
+    """`_stem`, each word's answer kept once it is worked out."""
+    got = _STEMS.get(w)
+    if got is None:
+        got = _stem(w)
+        if len(_STEMS) >= _STEMS_MOST:
+            _STEMS.clear()
+        _STEMS[w] = got
+    return got
 
 
 def forms(ws) -> set[str]:
@@ -526,12 +544,14 @@ def listed(lst: Path) -> list[Path]:
     """The files a list names, in its order, each once: one path a line, a
     blank line or a # line skipped, a relative path from the list's folder."""
     out: list[Path] = []
+    seen: set[Path] = set()  # each once, looked up in one step, not along the list
     for line in lst.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if line and not line.startswith("#"):
             f = Path(line)
             f = (f if f.is_absolute() else lst.parent / f).resolve()
-            if f not in out:
+            if f not in seen:
+                seen.add(f)
                 out.append(f)
     return out
 
@@ -643,15 +663,24 @@ def _web_address(text: str, i: int) -> int:
     return 0
 
 
+#: where a date or a web address could start: `newest` reads from each
+_LOOK = re.compile(r"[0-9]|https?://")
+
+
 def newest(text: str) -> str:
     """The latest date written in `text`, as YYYYMMDD, or "" for none: an ISO
     date (2026-10-14), a compact one (20261014, a calendar's), or a day and a
     month either way round with a four-digit year (21/10/2026, 10.21.2026),
     read only when one part is over 12. Each a whole run of ASCII digits, never
     part of a longer number, and not inside a web address. Read by hand, not
-    by a regex, so a port reads the same dates."""
+    by a regex, so a port reads the same dates; a regex only finds where to
+    look next (the next ASCII digit, or a web address starting), since every
+    character before it is passed over with nothing found."""
     best, i = "", 0
     while i < len(text):
+        if (nxt := _LOOK.search(text, i)) is None:
+            break
+        i = nxt.start()
         if url := _web_address(text, i):
             i += url
             continue

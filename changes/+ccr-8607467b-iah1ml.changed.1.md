@@ -1,0 +1,1 @@
+The kernel reads faster with the same answers: `newest` jumps to the next ASCII digit or web address instead of asking at every character (34.6 s to 3.8 s over cpython's 710,290 passages, every date the same), `stem` keeps each word's plain form once worked out, and `listed` drops a repeated file by a set instead of looking back along the list.

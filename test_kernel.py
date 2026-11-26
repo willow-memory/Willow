@@ -1179,3 +1179,84 @@ def test_a_source_is_named_only_when_the_box_is_made(tmp_path):
     cli("init", "--box", str(box), "--pile", str(pile), "--key", str(tmp_path / "k"))
     got = cli("bite", "--box", str(box), "--from", f"x={pile}", "a question")
     assert got.returncode == 2
+
+
+def _newest_by_hand(text: str) -> str:
+    """`newest` as it was read before it skipped ahead: one character at a
+    time, every one asked whether a web address or a digit starts there.
+    The reference the faster one must always agree with."""
+    best, i = "", 0
+    while i < len(text):
+        if url := k._web_address(text, i):
+            i += url
+            continue
+        n = k._digits(text, i)
+        if n == 0:
+            i += 1
+            continue
+        got = ""
+        if n == 8:
+            got = k._date(text[i : i + 4], text[i + 4 : i + 6], text[i + 6 : i + 8])
+        elif n == 4 and text[i + 4 : i + 5] == "-" and k._digits(text, i + 5) == 2:
+            if text[i + 7 : i + 8] == "-" and k._digits(text, i + 8) == 2:
+                got = k._date(
+                    text[i : i + 4], text[i + 5 : i + 7], text[i + 8 : i + 10]
+                )
+                if got:
+                    n = 10
+        elif n <= 2 and (sep := text[i + n : i + n + 1]) in ("/", "."):
+            m = k._digits(text, i + n + 1)
+            j = i + n + 1 + m
+            if 1 <= m <= 2 and text[j : j + 1] == sep and k._digits(text, j + 1) == 4:
+                got = k._day_month(
+                    text[i : i + n], text[i + n + 1 : j], text[j + 1 : j + 5]
+                )
+                if got:
+                    n = j + 5 - i
+        best = max(best, got)
+        i += n
+    return best
+
+
+def test_newest_skipping_ahead_reads_every_date_reading_by_hand_does():
+    """newest jumps to the next digit or web address; on 40,000 strings of
+    the characters dates and addresses are made of, it says what reading
+    every character says (checked on cpython's 710,290 passages too)."""
+    import random
+
+    rng = random.Random(20261126)
+    alpha = "0123456789-/. aZ:\n٣"  # an Arabic-Indic digit is no ASCII digit
+    for _ in range(40000):
+        s = "".join(rng.choice(alpha) for _ in range(rng.randint(0, 30)))
+        if rng.random() < 0.2:
+            at = rng.randint(0, len(s))
+            s = s[:at] + rng.choice(["http://", "https://", "http:/"]) + s[at:]
+        assert k.newest(s) == _newest_by_hand(s), repr(s)
+    for s in (
+        "see https://x.org/2026-10-14 then 2025-01-02",
+        "20261014",
+        "1/13/2026",
+        "no digits here at all",
+        "",
+        "http://",
+        "2026-10-14https://a 2027-01-01",
+    ):
+        assert k.newest(s) == _newest_by_hand(s), s
+
+
+def test_a_words_plain_form_is_the_same_kept_or_worked_out():
+    words = ["owes", "owing", "owed", "feed", "running", "planned", "flies",
+             "café", "A1B2", "is", "classes", "studied"]  # fmt: skip
+    k._STEMS.clear()
+    first = [k.stem(w) for w in words]
+    assert first == [k._stem(w) for w in words]
+    assert [k.stem(w) for w in words] == first  # now from what was kept
+    most = k._STEMS_MOST
+    try:
+        k._STEMS_MOST = 3
+        k._STEMS.clear()
+        for w in words:
+            k.stem(w)
+        assert len(k._STEMS) <= 3
+    finally:
+        k._STEMS_MOST = most
