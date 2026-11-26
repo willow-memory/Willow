@@ -269,19 +269,12 @@ def defaults(by_name: dict) -> tuple[list[tuple[str, str]], list[str]]:
 
 #: the fork for a sentence no name or alias line reaches, and its way out
 CLOSE, NONE = "close", "none"
-#: a fork's other way out: not deciding it yet, which is a decision of its own
-NOT_NOW = "not-now"
-NOT_NOW_PATH = "forge/not-now/{}.json"
+#: a fork's other way out, not deciding it yet, is a decision of its own:
+#: the Forge's (willow_record.NOT_NOW, its path and its question)
 NOT_NOW_TRADEOFF = (
     "leave this one undecided: sealed, that is on your record as a decision "
     "of its own; the fork stays open and nothing is scored"
 )
-
-
-def not_now_question(dt: str) -> str:
-    """The words a not-now is proposed and sealed under: never the decision's
-    own, so the decision's question stays unanswered for the pick to come."""
-    return f"forge not now {dt}"
 
 
 #: how many cards similar's search may put in that fork
@@ -373,12 +366,11 @@ def matcher() -> dict:
     return {"ranks": _SEARCH["ranks"]}
 
 
-#: one close fork in BLIND_EVERY is blind: its cards in an order that says
-#: nothing of the search's, with no recommendation and no confidence, so a
-#: pick there measures the search and not your trust in what it said
-BLIND_EVERY = 5
+#: one close fork in five is blind (the Forge's forks.is_blind): its cards in
+#: an order that says nothing of the search's, with no recommendation and no
+#: confidence, so a pick there measures the search and not your trust in it
 BLIND_SAID = (
-    f"blind (one close fork in {BLIND_EVERY}): in no order of the search's, "
+    "blind (one close fork in five): in no order of the search's, "
     "nothing recommended, so your pick measures the search"
 )
 #: what every row of a blind fork says of itself, the same on each: the
@@ -390,45 +382,45 @@ BLIND_ROW = "close to your words or named in them; the search's reasons kept bac
 def blind(sentence: str) -> bool:
     """Whether this sentence's close fork is blind: by the hash of its words,
     so suggest and propose agree, and nothing is kept to decide it."""
-    key = kernel.bite_key(sentence) or sentence
-    return int(kernel.h256(f"blind {key}")[:8], 16) % BLIND_EVERY == 0
+    from forge import forks
+
+    return forks.is_blind(kernel.bite_key(sentence) or sentence)
 
 
 def shuffled(sentence: str, names: list[str]) -> list[str]:
     """A blind fork's cards as shown: ordered by the hash of the sentence and
     each name, the same each time it is asked, and nothing of the search's."""
-    key = kernel.bite_key(sentence) or sentence
-    return sorted(names, key=lambda n: kernel.h256(f"shown {key} {n}"))
+    from forge import forks
 
-
-#: how many blind close picks you sealed on one matcher before its first
-#: card is given a confidence: fewer is no measurement, and none is said
-MEASURED = 5
+    return forks.shown_order(kernel.bite_key(sentence) or sentence, names)
 
 
 def confidence(every: list[dict], now: dict) -> tuple[float | None, str]:
     """The close fork's confidence and what to say of it, from your sealed
     blind picks alone: of the blind close forks you settled on this matcher
-    (the same ranks on PROBES), you took the search's first k of n, stated
-    as (k+1)/(n+2), so five of five is 0.86 and never a certainty. A pick
-    made with the recommendation in view counts not: it says how often you
-    went with it, which it would have lifted. None before MEASURED are
-    sealed, or when it falls under one half: the Forge states a confidence
-    only in the direction it believes."""
+    (the same ranks on PROBES), you took the search's first k of n, and the
+    Forge states it (forks.stated_confidence: (k+1)/(n+2), so five of five
+    is 0.86 and never a certainty). A pick made with the recommendation in
+    view counts not: it says how often you went with it, which it would have
+    lifted. None before the Forge has measured enough, or when it falls
+    under one half: the Forge states a confidence only in the direction it
+    believes."""
+    from forge import forks
+
     same = [o for o in every if o["kind"] == "close" and o.get("blind")
             and o["matcher"] == now]  # fmt: skip
     n, k = len(same), sum(o["rank"] == 1 for o in same)
-    if n < MEASURED:
+    c = forks.stated_confidence(k, n)
+    if n < forks.MEASURED:
         return (
             None,
-            f"no confidence yet: {n} of {MEASURED} blind close picks sealed on this matcher",
+            f"no confidence yet: {n} of {forks.MEASURED} blind close picks sealed on this matcher",
         )
-    if 2 * k < n:  # (k+1)/(n+2) < 1/2
+    if c is None:
         return (
             None,
             f"no confidence: its first taken {k} of {n} blind on this matcher, under half",
         )
-    c = min(round((k + 1) / (n + 2), 2), 0.99)
     return c, f"confidence {c:.2f}: its first taken {k} of {n} blind on this matcher"
 
 
@@ -608,8 +600,15 @@ def forge():
     forge-play is missing or too old to have them. Imported here, not at the
     top, so a bad command line is refused the same with or without it."""
     try:
-        from forge import card_box, card_table, plan_shape, willow_record
+        from forge import card_box, card_table, forks, plan_shape, willow_record
     except ImportError:
+        return None
+    # a fork left for later, and blind forks and their confidence, are the
+    # Forge's from 0.13.0: an older one is too old, as a missing piece is
+    if not (
+        hasattr(willow_record, "not_now_question")
+        and hasattr(forks, "stated_confidence")
+    ):
         return None
     return card_box, card_table, plan_shape, willow_record
 
@@ -675,21 +674,23 @@ def undecided(box: Path, rec) -> tuple[dict, dict]:
     later: dict = {}
     for subj, row in sorted(kernel.sealed(box, rows).items(), key=lambda x: x[1]["n"]):
         prop, asked, why = kernel.standing(box, rows, subj, row)
-        if why is not None or not prop["path"].startswith(NOT_NOW_PATH.split("{")[0]):
+        if why is not None or not prop["path"].startswith(
+            rec.NOT_NOW_PATH.split("{")[0]
+        ):
             continue
         try:
             data = json.loads(prop["data"])
             dt = data["decision_type"]
         except (ValueError, KeyError, TypeError):
             continue
-        if isinstance(dt, str) and asked == kernel.bite_key(not_now_question(dt)):
+        if isinstance(dt, str) and asked == kernel.bite_key(rec.not_now_question(dt)):
             later[dt] = {
                 "row": row["n"],
                 "subject": subj,
                 "why": str(data.get("why", "")),
             }
     waits: dict = {}
-    mine = (rec.DECISION_PATH.split("{")[0], NOT_NOW_PATH.split("{")[0])
+    mine = (rec.DECISION_PATH.split("{")[0], rec.NOT_NOW_PATH.split("{")[0])
     for subj, row in kernel.waiting(box, rows).items():
         try:
             prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
@@ -714,13 +715,13 @@ def held_back(out: dict, rec) -> list[tuple[str | None, list]]:
     quiet. A pick is scored only once it is sealed."""
     return [
         ("you said not now", [
-            (NOT_NOW_PATH.format(got["decision_type"]),
+            (rec.NOT_NOW_PATH.format(got["decision_type"]),
              f"“{w}” left undecided, by your seal (row {got['row']})"
              + (f": {got['why']}" if got["why"] else ""))
             for w, got in out.get("not_now", {}).items()]),
         ("picked, not sealed yet", [
-            ((NOT_NOW_PATH if g["chose"] == NOT_NOW else rec.DECISION_PATH).format(dt),
-             ("not now" if g["chose"] == NOT_NOW else g["chose"])
+            ((rec.NOT_NOW_PATH if g["chose"] == rec.NOT_NOW else rec.DECISION_PATH).format(dt),
+             ("not now" if g["chose"] == rec.NOT_NOW else g["chose"])
              + f" for “{w}”, proposed at row {g['row']}; it waits on your seal, and nothing is scored until then")
             for w, (dt, got) in out.get("unsealed", {}).items() for g in got]),
     ]  # fmt: skip
@@ -995,7 +996,7 @@ def to_report(out: dict, rec) -> tuple[dict, int]:
     for word, options in out["forks"].items():
         rows = [(o["where"], f"{o['name']}: {o['tradeoff']}") for o in options]
         rows.append(
-            (NOT_NOW, f"{NOT_NOW}: {NOT_NOW_TRADEOFF}")
+            (rec.NOT_NOW, f"{rec.NOT_NOW}: {NOT_NOW_TRADEOFF}")
         )  # the other way out, always last
         if word == CLOSE and out.get("close", {}).get("blind"):
             # blind: in no order of the search's, nothing recommended, said once
@@ -1426,15 +1427,15 @@ def propose(
         names = [o["name"] for o in options]
         if word not in choose:
             print(
-                f"refused: “{word}” is not settled: --choose {word}={'|'.join((*names, NOT_NOW))}",
+                f"refused: “{word}” is not settled: --choose {word}={'|'.join((*names, rec.NOT_NOW))}",
                 file=sys.stderr,
             )
             return None, kernel.REFUSED
         for name in choose[word]:
-            if name not in (*names, NOT_NOW):
-                print(f"refused: {name} is not an option for “{word}”: {', '.join((*names, NOT_NOW))}", file=sys.stderr)  # fmt: skip
+            if name not in (*names, rec.NOT_NOW):
+                print(f"refused: {name} is not an option for “{word}”: {', '.join((*names, rec.NOT_NOW))}", file=sys.stderr)  # fmt: skip
                 return None, kernel.REFUSED
-        alone = [n for n in choose[word] if n in (NONE, NOT_NOW)]
+        alone = [n for n in choose[word] if n in (NONE, rec.NOT_NOW)]
         if alone and len(choose[word]) > 1:  # a way out is taken alone, or not at all
             print(f"refused: {alone[0]} for “{word}” stands alone; take it, or the cards, not both", file=sys.stderr)  # fmt: skip
             return None, kernel.REFUSED
@@ -1473,23 +1474,23 @@ def propose(
             o["name"] for o in out["forks"][word] if o["name"] not in (*taken, NONE)
         ]
         dt = fork_type(rec, word, sentence)
-        if name == NOT_NOW:
+        if name == rec.NOT_NOW:
             # not deciding is a decision: its own proposal, under its own
             # question, so the fork's question stays open for the pick to come.
             # It keeps what you were shown, in the order you saw it, and when:
             # a second not-now for one fork is then a proposal of its own.
             later = {
-                "word": word, "decision_type": dt, "chose": NOT_NOW, "why": why.get(word, ""),
+                "word": word, "decision_type": dt, "chose": rec.NOT_NOW, "why": why.get(word, ""),
                 "shown": others, "sentence": sentence,
                 "asked_at": len(kernel.read(box / "record.jsonl")[0]),
             }  # fmt: skip
             prop = {
-                "path": NOT_NOW_PATH.format(dt),
+                "path": rec.NOT_NOW_PATH.format(dt),
                 "data": json.dumps(later, sort_keys=True, ensure_ascii=False),
                 "cites": [],
                 "claim": f"for “{word}”: not now; {why.get(word) or 'no reason given'}",
             }
-            code, said = quiet(kernel.bite, box, not_now_question(dt), ts)
+            code, said = quiet(kernel.bite, box, rec.not_now_question(dt), ts)
             if code == kernel.REFUSED:
                 print("refused:", said.strip(), file=sys.stderr)
                 return None, kernel.REFUSED
