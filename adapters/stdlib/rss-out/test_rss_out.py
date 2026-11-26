@@ -285,3 +285,16 @@ def test_a_bad_command_line_says_how_to_run_it(tmp_path):
                  ["--box", str(tmp_path), "--to", to]):  # fmt: skip
         assert run(*argv).returncode == 2, argv
     assert "rss_out.py" in run().stderr
+
+
+def test_a_feed_inside_the_box_or_the_folder_it_reads_is_refused(tmp_path):
+    """Written into the folder the box reads, the feed would be read back as
+    one of the person's own files; into the box, it would sit in the record."""
+    b, _ = box(tmp_path)
+    pile = Path(json.loads((b / "kernel.json").read_text())["pile"])
+    for to in (pile / "feed.xml", pile / "deep" / ".." / "feed.xml", b / "feed.xml"):
+        got = run("--box", str(b), "--to", str(to))
+        assert got.returncode == 2 and "somewhere else" in got.stderr, to
+        assert not to.exists()
+    beside = tmp_path / "feed.xml"
+    assert run("--box", str(b), "--to", str(beside)).returncode == 0

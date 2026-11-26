@@ -3,7 +3,7 @@ section: Ways to use it
 line: New approved answers as an RSS feed file, for any feed reader.
 source: new
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: to
 network: none
 role: makes
@@ -37,11 +37,13 @@ that doesn't is left out and said on standard error. The record keeps no
 question's words, and the feed has none.
 
 FILE is written once, readable only by you, never over a file that exists, and
-the same record gives the same bytes. Nothing is served or sent: put FILE where
+the same record gives the same bytes. It is refused inside the box, and inside
+a folder the box reads, where the feed would be read back as one of your own
+files. Nothing is served or sent: put FILE where
 your reader can fetch it.
 
 Exit codes, the kernel's: 0 written; 42 written, but an approval was left out
-and waits on you; 2 refused (a record that doesn't verify, a bad command line).
+and waits on you; 2 refused (a record that doesn't verify, a bad command line, a FILE inside the box or what it reads).
 
 **Uses:** the kernel's `read`, `sealed` and `standing`.
 
