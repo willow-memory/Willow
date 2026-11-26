@@ -72,14 +72,22 @@ def block(doc: dict) -> str:
     return f"{FRAME}\n{OPEN}\n{body}\n{CLOSE}\n"
 
 
+#: each sibling module once loaded, so a bite doesn't compile one again
+SIBLINGS: dict[tuple[str, str], object] = {}
+
+
 def sibling(folder: str, module: str):
-    """Another add-on's module from its source, or None when it isn't here."""
+    """Another add-on's module from its source, or None when it isn't here;
+    loaded once a program."""
+    if (folder, module) in SIBLINGS:
+        return SIBLINGS[(folder, module)]
     path = HERE.parents[1] / folder / f"{module}.py"
     if not path.is_file():
         return None
     mod = types.ModuleType(f"claude_code_{module}")
     mod.__file__ = str(path)
     exec(compile(path.read_text(encoding="utf-8"), str(path), "exec"), mod.__dict__)
+    SIBLINGS[(folder, module)] = mod
     return mod
 
 

@@ -417,5 +417,31 @@ def test_keep_brings_the_index_current_in_the_same_program(tmp_path, monkeypatch
     assert "at ten" in out  # made again, and answered from what it holds now
 
 
+@pytest.mark.skipif(
+    not BESIDE,
+    reason="scan and index-cache aren't beside it; the test above holds it alone",
+)
+def test_keep_checks_the_index_once_not_twice(tmp_path, monkeypatch):
+    """What --keep saves: the index just found current isn't checked again
+    against every file the box reads; without --keep, it is."""
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "bus.md").write_text("The bus leaves the square at nine.\n")
+    b = tmp_path / "box"
+    assert subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(b),
+                           "--pile", str(pile), "--key", str(tmp_path / "k"), *NOW],
+                          capture_output=True).returncode == 0  # fmt: skip
+    at = tmp_path / "index"
+    hk.bite(b, "when does the bus leave", at, keep=True)  # made
+    cache = hk.sibling("index-cache", "index_cache")
+    checked = []
+    real = cache.box_manifest
+    monkeypatch.setattr(cache, "box_manifest", lambda *a: checked.append(1) or real(*a))
+    _, out, _ = hk.bite(b, "when does the bus leave", at, keep=True)
+    assert checked == [] and "nine" in out
+    hk.bite(b, "when does the bus leave", at)
+    assert checked == [1]
+
+
 def test_keep_needs_an_index_to_keep():
     assert hk.main(["bite", "--box", "x", "--keep", "q"]) == 2
