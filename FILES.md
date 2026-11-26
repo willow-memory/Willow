@@ -2186,6 +2186,7 @@ willow/
 │   ├── design/
 │   │   ├── draft-0.16.md     proposal: four of willow's own promises made law, and four new beats
 │   │   ├── forge-and-pages.md Design note: the forge, and the pages a person approves on
+│   │   ├── key-pair.md       Design note: the seal by a key pair
 │   │   ├── lists.md          notes: FILES.md and ADDONS.md, what makes them hard to read and search, and the skim idea
 │   │   ├── my-installs.md    Design note: my-installs, what is already installed here
 │   │   ├── one-shape.md      proposal: one shape at every size: the pile apart from the record, an answer that says its source and kind, a gap kept
