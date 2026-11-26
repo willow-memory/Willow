@@ -12,7 +12,7 @@ makes the cuts; they're never written by hand.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,490 lines)
+├── kernel.py                 the whole program (about 1,520 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
