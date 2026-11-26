@@ -1157,6 +1157,9 @@ The blind tests' biggest gap: on day one, a person's words aren't their files' w
 - <a id="ref-check"></a>[**ref-check**](adapters/stdlib/ref-check/) \
   Every reference in your files checked: each link to another file, and each quoted line, still there and still saying it. \
   *bot* `no-install` `offline` `quote` `everyday` · near: quote-review, secrets-audit, quotes
+- <a id="seals-waiting"></a>[**seals-waiting**](adapters/stdlib/seals-waiting/) \
+  What waits on your seal, by subject, read from the record with no row added: what kernel.py out says, for a program that asks often. \
+  *new* `no-install` `offline` · near: session-seal, assistant-scores, forecast-ask
 - <a id="stale-answers"></a>[**stale-answers**](adapters/stdlib/stale-answers/) \
   Approved answers whose cited passage has changed or gone. Citations are content hashes, so it's exact. \
   *box* `no-install` `offline` · near: test-impact, asked-again, export-answers
