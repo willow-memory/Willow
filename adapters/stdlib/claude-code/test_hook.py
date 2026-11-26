@@ -381,3 +381,41 @@ def test_a_box_laid_from_several_places_is_answered_from_its_index(
     _, out, _ = hk.bite(b, question, at)
     assert reads, "a changed listed file must send the bite back to the kernel"
     assert "at one" in out
+
+
+@pytest.mark.skipif(
+    not BESIDE,
+    reason="scan and index-cache aren't beside it; the test above holds it alone",
+)
+def test_keep_brings_the_index_current_in_the_same_program(tmp_path, monkeypatch):
+    """bite --keep makes the index when there is none, answers from it as the
+    kernel would, and makes it again when a file moved: one program, where a
+    caller ran index-cache and then the bite."""
+    pile = tmp_path / "pile"
+    pile.mkdir()
+    (pile / "bus.md").write_text("The bus leaves the square at nine.\n")
+    b = tmp_path / "box"
+    assert subprocess.run([sys.executable, str(KERNEL), "init", "--box", str(b),
+                           "--pile", str(pile), "--key", str(tmp_path / "k"), *NOW],
+                          capture_output=True).returncode == 0  # fmt: skip
+    at = tmp_path / "index"
+    question = "when does the bus leave the square"
+    plain = subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(b), question],
+                           capture_output=True, text=True)  # fmt: skip
+    code, out, err = hk.bite(b, question, at, keep=True)
+    assert (at / "index.json").is_file() and err == ""
+    assert code == plain.returncode
+    assert json.loads(out)["served"] == json.loads(plain.stdout)["served"]
+    reads = []
+    real = hk.kernel.chunks
+    monkeypatch.setattr(hk.kernel, "chunks", lambda *a: reads.append(a) or real(*a))
+    hk.bite(b, question, at, keep=True)
+    assert reads == []  # current: neither the index nor the kernel read the folder
+    monkeypatch.undo()
+    (pile / "bus.md").write_text("The bus leaves the square at ten.\n")
+    _, out, _ = hk.bite(b, question, at, keep=True)
+    assert "at ten" in out  # made again, and answered from what it holds now
+
+
+def test_keep_needs_an_index_to_keep():
+    assert hk.main(["bite", "--box", "x", "--keep", "q"]) == 2

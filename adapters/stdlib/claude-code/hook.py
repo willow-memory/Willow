@@ -2,7 +2,7 @@
 
     python adapters/stdlib/claude-code/hook.py setup --box DIR [--index INDEX]
     python adapters/stdlib/claude-code/hook.py prompt --box DIR [--index INDEX]    (Claude Code runs this)
-    python adapters/stdlib/claude-code/hook.py bite --box DIR [--index INDEX] "question"
+    python adapters/stdlib/claude-code/hook.py bite --box DIR [--index INDEX [--keep]] "question"
 
 `setup` prints what to add to Claude Code's settings.json: a UserPromptSubmit
 hook that runs `prompt` at every prompt, and the `claude mcp add` line that
@@ -83,7 +83,9 @@ def sibling(folder: str, module: str):
     return mod
 
 
-def indexed(box: Path, text: str, at: Path, ts: str | None = None) -> dict | None:
+def indexed(
+    box: Path, text: str, at: Path, ts: str | None = None, current: bool = False
+) -> dict | None:
     """The kernel's bite, answered from scan's index at `at` instead of a
     fresh read of the whole folder: the same row on the record and the same
     passages, since scan only narrows which ones the kernel's own `rank`
@@ -102,7 +104,9 @@ def indexed(box: Path, text: str, at: Path, ts: str | None = None) -> dict | Non
             return None
         listed = {"words_sha256": sha}
     old = cache.cached(at)
-    if old is None or old != cache.box_manifest(cfg, cache.known(at)):
+    if old is None:
+        return None
+    if not current and old != cache.box_manifest(cfg, cache.known(at)):
         return None
     rows, breaks = kernel.read(box / "record.jsonl")
     k = kernel.bite_key(text)
@@ -122,7 +126,25 @@ def indexed(box: Path, text: str, at: Path, ts: str | None = None) -> dict | Non
             "served": [{**r, "text": c["text"]} for r, c in zip(refs, served)]}  # fmt: skip
 
 
-def bite(box: Path, text: str, index: Path | None = None) -> tuple[int, str, str]:
+def kept(box: Path, at: Path) -> bool:
+    """The index brought current by index-cache, here in this process rather
+    than a program of its own: made again only when a file the box reads
+    moved. What it says is kept out of the bite's own output. Whether the
+    index is now current for the box; False and the kernel reads the folder
+    when index-cache isn't here or refused."""
+    cache = sibling("index-cache", "index_cache")
+    if cache is None:
+        return False
+    with (
+        contextlib.redirect_stdout(io.StringIO()),
+        contextlib.redirect_stderr(io.StringIO()),
+    ):
+        return cache.main(["--box", str(box), "--to", str(at)]) == kernel.ALIVE
+
+
+def bite(
+    box: Path, text: str, index: Path | None = None, keep: bool = False
+) -> tuple[int, str, str]:
     """The kernel's bite as `kernel.py bite` gives it: (exit code, the JSON it
     prints, what it says on stderr). From the index when it is current, with
     the kernel's own states (an answer only echoing the question is `echo`),
@@ -130,7 +152,8 @@ def bite(box: Path, text: str, index: Path | None = None) -> tuple[int, str, str
     doc = None
     if index is not None and (box / "kernel.json").exists():
         try:
-            doc = indexed(box, text, index)
+            current = keep and kept(box, index)
+            doc = indexed(box, text, index, current=current)
         except (OSError, ValueError):
             doc = None  # an index half there: the kernel reads the folder
     if doc is not None and doc["state"] == "sealed":
@@ -213,13 +236,20 @@ def setup(box: Path, index: Path | None = None) -> str:
 
 def main(argv: list[str], stdin=None) -> int:
     if argv[:1] == ["bite"]:
-        rest, index = argv[1:-1], None
+        rest, index, keep = argv[1:-1], None, False
+        if len(rest) == 5 and rest[4] == "--keep":
+            rest, keep = rest[:4], True
         if len(rest) == 4 and rest[2] == "--index" and rest[3]:
             rest, index = rest[:2], Path(rest[3])
-        if len(argv) < 4 or rest[:1] != ["--box"] or len(rest) != 2:
+        if (
+            len(argv) < 4
+            or rest[:1] != ["--box"]
+            or len(rest) != 2
+            or (keep and not index)
+        ):
             print(__doc__.split("\n\n")[1], file=sys.stderr)
             return kernel.REFUSED
-        code, out, err = bite(Path(rest[1]), argv[-1], index)
+        code, out, err = bite(Path(rest[1]), argv[-1], index, keep)
         print(out, end="")
         print(err, end="", file=sys.stderr)
         return code
