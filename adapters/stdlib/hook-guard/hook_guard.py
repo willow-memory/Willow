@@ -160,7 +160,13 @@ def _globs_to(word: str, key: Path, cwd: str) -> bool:
     `secret/*` reaches secret/key and `*` beside it does not."""
     if not any(c in word for c in "*?["):
         return False
-    pattern = Path(cwd or ".").joinpath(Path(word).expanduser())
+    try:
+        word_path = Path(word).expanduser()
+    except RuntimeError:
+        # `~name` for no user here, or markdown's `~~`: the shell leaves such
+        # a word as it is written, and so is it read here
+        word_path = Path(word)
+    pattern = Path(cwd or ".").joinpath(word_path)
     want = [p for p in pattern.parts]
     for target in {key, key.resolve()}:
         have = list(target.parts)

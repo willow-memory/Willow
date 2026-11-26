@@ -3,7 +3,7 @@ section: Assistants
 line: A PreToolUse hook that blocks, by fixed rule, never judgment, a call that would read your key, seal with it, or write your record.
 source: box
 added: 2026-10-29
-version: 0.2.1
+version: 0.2.2
 writes: nothing
 network: none
 role: guards

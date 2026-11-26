@@ -343,6 +343,24 @@ def test_a_glob_or_a_recursive_read_that_cant_reach_the_key_is_let_by(tmp_path):
         assert hg.judge(sent, b, key) == (0, ""), command
 
 
+def test_a_tilde_that_names_no_user_is_read_as_written_not_a_crash(tmp_path):
+    """Markdown's strikethrough (`~~**done**~~`) and `~name` for no user here
+    reach the glob check as words: they are read as the shell leaves them,
+    and a guard that crashed on one would refuse the whole command."""
+    b, key = box(tmp_path)
+    for command in (
+        "printf '%s' '~~**Open:** where it lives~~' > notes.md",
+        "echo ~~**done**",
+        "ls ~nosuchuser-forge-test/*",
+    ):
+        sent = json.dumps({"tool_name": "Bash", "tool_input": {"command": command},
+                           "cwd": str(tmp_path)})  # fmt: skip
+        assert hg.judge(sent, b, key) == (0, ""), command
+    got = run("run", "--box", str(b), stdin=json.dumps(
+        {"tool_name": "Bash", "tool_input": {"command": "echo ~~**x**"}, "cwd": str(tmp_path)}))  # fmt: skip
+    assert got.returncode == 0 and "Traceback" not in got.stderr
+
+
 def test_a_search_that_leaves_the_key_out_is_let_by(tmp_path):
     b, key = box(tmp_path)
     elsewhere = tmp_path / "pile"
