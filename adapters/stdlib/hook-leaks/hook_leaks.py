@@ -90,9 +90,9 @@ def judge(raw: str) -> tuple[int, str]:
             "refused: the hook was sent something it can't read, so it can't say it is safe.",
         )
     tool, given = call.get("tool_name"), call.get("tool_input")
-    if tool is None and (
-        call.get("hook_event_name") == "beforeShellExecution" or "command" in call
-    ):  # Cursor's shell hook: the command alone
+    if (
+        tool is None and "command" in call
+    ):  # Cursor's beforeShellExecution: the command alone
         tool, given = "Bash", {"command": call.get("command")}
     tool = CURSOR_TOOLS.get(tool, tool)
     if tool not in WRITES:
