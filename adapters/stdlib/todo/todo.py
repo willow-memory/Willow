@@ -15,6 +15,15 @@ a sentence ("Sold the van. Need to call the insurer."), or after I or we;
 checkbox counts unless it opens with a template's blank (`- [ ] {item}`):
 a form not yet filled in is nothing to do.
 
+A mark inside quotation marks is someone's words quoted, not a thing to do:
+`- **The ask.** "I still need to sign the py stuff"` in a session's notes,
+or `"need to", "remember to"` in a page about this report. Inside is an odd
+number of quotation marks (" “ ”) before it on its line, or none before and
+an odd number after (a quote that opened on a line above). A line that
+opens with who said it and a colon, then the quote, still counts: `Mum:
+"don't forget the bins"` is a thing to do that someone told you. An open
+checkbox opens its line, so it is never inside a quote.
+
     todo: populated, 3 lines marked to do, the oldest from 2021-04-02
       memos/2021-04-02.txt:3       2021-04-02  Need to call Mesa Mutual and take it off the policy.
       notes/todo_2024-09-09.txt:2  2024-09-09  - Q3 estimate by 15th
@@ -64,17 +73,48 @@ MARK = re.compile(
 )
 
 
+#: a quotation mark, straight or curly
+QUOTE = re.compile(r'["“”]')
+#: a line that opens with who said it, a colon, then their words in quotes:
+#: one to three capitalized words, as who-said reads a speaker
+TOLD = re.compile(
+    r"^\s*(?:[-*>]\s+)?[A-Z][\w'’.-]*(?:\s+[A-Z][\w'’.-]*){0,2}\s*:\s*[\"“]"
+)
+
+
+def quoted(line: str, at: int) -> bool:
+    """Whether the mark at `at` is inside quotation marks on its line: an
+    odd number before it, or none before and an odd number after."""
+    before = len(QUOTE.findall(line, 0, at))
+    if before:
+        return before % 2 == 1
+    return len(QUOTE.findall(line, at)) % 2 == 1
+
+
+def counts(line: str) -> bool:
+    """Whether a line marks something to do: a mark outside quotation marks,
+    or any mark on a line that opens with who told you it. An open checkbox
+    opens its line, so it is never inside a quote, even when the words after
+    it open one that runs on to the next line."""
+    marks = list(MARK.finditer(line))
+    if not marks:
+        return False
+    return bool(TOLD.match(line)) or any(
+        "[ ]" in m.group(0) or not quoted(line, m.start()) for m in marks
+    )
+
+
 def todos(pile: list[dict]) -> list[tuple[str, str, str]]:
     out = []
     # a passage is dated by its own file alone (`kernel.dates`), so only the
     # files that hold a marked line are read for dates: the rest say nothing
     marked = {c["path"] for c in pile
-              if any(MARK.search(line) for line in c["text"].splitlines())}  # fmt: skip
+              if any(counts(line) for line in c["text"].splitlines())}  # fmt: skip
     pile = [c for c in pile if c["path"] in marked]
     for c, d in zip(pile, kernel.dates(pile)):
         when = f"{str(d)[:4]}-{str(d)[4:6]}-{str(d)[6:]}" if d else "undated"
         for i, line in enumerate(c["text"].splitlines()):
-            if MARK.search(line):
+            if counts(line):
                 out.append((when, f"{c['path']}:{c['line'] + i}", line.strip()))
     return sorted(out)  # "undated" sorts after every YYYY-MM-DD, so undated come last
 
