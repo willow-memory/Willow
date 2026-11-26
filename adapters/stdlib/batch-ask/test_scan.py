@@ -481,6 +481,9 @@ def test_an_index_is_read_a_passage_and_a_word_at_a_time(tmp_path, monkeypatch):
     whole gives; without them it is read whole, as before."""
     import scan as sc
 
+    # the guard reads --to from the command line, as a run has it
+    monkeypatch.setattr(sys, "argv", ["scan.py", "--to", str(tmp_path / "ix")])
+
     pile = tmp_path / "pile"
     pile.mkdir()
     (pile / "a.md").write_text(
@@ -526,8 +529,11 @@ def test_a_word_is_found_in_the_sorted_words_by_a_search_of_the_file(tmp_path):
     assert sc.Lines(tmp_path / "e.tsv").get("x") == ""
 
 
-def test_an_index_whose_offsets_dont_match_is_refused(tmp_path):
+def test_an_index_whose_offsets_dont_match_is_refused(tmp_path, monkeypatch):
     import scan as sc
+
+    # the guard reads --to from the command line, as a run has it
+    monkeypatch.setattr(sys, "argv", ["scan.py", "--to", str(tmp_path / "ix")])
 
     pile = tmp_path / "pile"
     pile.mkdir()

@@ -285,6 +285,13 @@ def in_process(monkeypatch, racy_ns: int = 0):
     import index_cache as ic
 
     monkeypatch.setattr(ic, "RACY_NS", racy_ns)
+    main = ic.main
+
+    def as_run(args):  # the command line the guard reads --to from, as a run has it
+        monkeypatch.setattr(sys, "argv", ["index_cache.py", *args])
+        return main(args)
+
+    monkeypatch.setattr(ic, "main", as_run)
     return ic
 
 

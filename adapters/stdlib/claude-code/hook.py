@@ -143,11 +143,18 @@ def kept(box: Path, at: Path) -> bool:
     cache = sibling("index-cache", "index_cache")
     if cache is None:
         return False
-    with (
-        contextlib.redirect_stdout(io.StringIO()),
-        contextlib.redirect_stderr(io.StringIO()),
-    ):
-        return cache.main(["--box", str(box), "--to", str(at)]) == kernel.ALIVE
+    args = ["--box", str(box), "--to", str(at)]
+    was = sys.argv
+    # its own command line while it runs, as runpy gives one
+    sys.argv = [cache.__file__, *args]
+    try:
+        with (
+            contextlib.redirect_stdout(io.StringIO()),
+            contextlib.redirect_stderr(io.StringIO()),
+        ):
+            return cache.main(args) == kernel.ALIVE
+    finally:
+        sys.argv = was
 
 
 def bite(

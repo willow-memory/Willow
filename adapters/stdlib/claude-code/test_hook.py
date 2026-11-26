@@ -402,8 +402,10 @@ def test_keep_brings_the_index_current_in_the_same_program(tmp_path, monkeypatch
     question = "when does the bus leave the square"
     plain = subprocess.run([sys.executable, str(KERNEL), "bite", "--box", str(b), question],
                            capture_output=True, text=True)  # fmt: skip
+    was = list(sys.argv)
     code, out, err = hk.bite(b, question, at, keep=True)
     assert (at / "index.json").is_file() and err == ""
+    assert sys.argv == was  # index-cache's command line only while it ran
     assert code == plain.returncode
     assert json.loads(out)["served"] == json.loads(plain.stdout)["served"]
     reads = []
