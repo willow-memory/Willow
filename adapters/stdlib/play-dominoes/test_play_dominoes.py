@@ -535,3 +535,46 @@ def test_a_command_line_that_isnt_one_is_refused(t, tmp_path):
     got = subprocess.run([sys.executable, str(HERE / "play_dominoes.py"), "--box", str(tmp_path / "none"), "new"],
                          capture_output=True, text=True, check=False)  # fmt: skip
     assert got.returncode == 2 and "not a kernel box" in got.stderr
+
+
+def test_an_arm_said_on_the_command_line_is_the_arm_played(t):
+    t.run("new")
+    for _ in range(200):
+        g = t.game()
+        if (
+            not g.ended
+            and len({a for x in g.can_play(g.turn) for a in g.layout.fits(x)}) > 1
+        ):
+            break
+        assert t.run("auto").returncode == 0
+    tile = next(x for x in g.can_play(g.turn) if len(g.layout.fits(x)) > 1)
+    arm = g.layout.fits(tile)[-1]
+    got = t.run("play", dom.name(tile), arm.upper())
+    assert got.returncode == 0, got.stderr
+    assert t.rows()[-1]["arm"] == arm and f"on the {arm}" in got.stdout
+
+
+def test_auto_says_how_many_tiles_it_drew(t):
+    t.run("new")
+    saw_none = saw_some = False
+    for _ in range(400):
+        g = t.game()
+        if g.over or (saw_none and saw_some):
+            break
+        before = len([r for r in t.rows() if r["kind"] == dom.DRAW])
+        got = t.run("auto")
+        drew = len([r for r in t.rows() if r["kind"] == dom.DRAW]) - before
+        if drew:
+            assert f"draws {drew} tile" in got.stdout
+            saw_some = True
+        else:
+            assert "draws" not in got.stdout
+            saw_none = True
+    assert saw_none and saw_some
+
+
+def test_another_add_ons_row_with_the_same_game_number_is_not_this_games(t):
+    t.run("new")
+    t.forge("crazy-eights-play", game=t.game_n(), seat="north", card="2C", result="on")
+    assert t.run("check").returncode == 0
+    assert t.run("auto").returncode == 0
