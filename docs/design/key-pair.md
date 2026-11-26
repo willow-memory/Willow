@@ -96,10 +96,16 @@ since a seal is made once, at the person's click.
    a nonce the seal page shows (design D in the Provider's docs/OPEN.md); and
    a passkey (design C), which signs with ECDSA P-256, a second algorithm.
 
+## Ruled
+
+- **A record with a key pair and HMAC seals not yet crossed: `seal` signs
+  beside them (the maintainer, 2026-11-26).** New seals and declines carry
+  `sig`; the old ones keep `proof` until the `rekey` row. Until then,
+  checking the old ones still needs the old secret, so the key leaves the
+  person's account only once they have crossed.
+
 ## Open
 
-- Whether `seal` refuses a record that still has HMAC seals and no `rekey`,
-  or signs beside them.
 - What the keyholder's private-half file is called and where it lives by
   default.
 - Whether a port that can't yet check signatures refuses a box with `pub`, or
