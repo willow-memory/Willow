@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.3
+version: 0.1.4
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -19,7 +19,7 @@ A job someone sent you, run over your own folder in
 once you seal it; what it found waits on your seal before it goes anywhere.
 
     pip install -r adapters/deps/kart/requirements.txt    # and: apt install bubblewrap
-    python adapters/deps/kart/kart.py policy --box DIR
+    python adapters/deps/kart/kart.py policy --box DIR [--project DIR] [--hide PATH[,...]] [--hold PATH[,...]]
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words"
     python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words"
     python adapters/deps/kart/kart.py try    --box DIR --file JOB --to FILE [--timeout SECONDS]
@@ -28,6 +28,7 @@ once you seal it; what it found waits on your seal before it goes anywhere.
     python adapters/deps/kart/kart.py status --box DIR --db QUEUE --id ID [--to FILE]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words"
+    python adapters/deps/kart/kart.py shell  --box DIR --project DIR --command TEXT [--cwd DIR] [--hide PATH[,...]] [--hold PATH[,...]] [--timeout SECONDS]
 
 `take`, `write`, `try`, `run` and `gather` take `--now TS` as the kernel does.
 
@@ -134,6 +135,39 @@ tools are still added, but `gather` says how many sets there were, and so
 does the totals' claim; read them before you seal. A job written to POSIX's
 flags alone counts alike on both.
 
+**A session's own shell.** `shell` is the other way round: one command of
+a session working in a project of yours, run in the sandbox in place of
+your own shell. Its policy, which `policy --project DIR` prints:
+
+- the project, writable, since the work is there, and the command starts
+  in it, or in the folder of it that `--cwd` names;
+- your home and the system's /usr and /etc, read-only; a private /tmp;
+- never the box or its key, nor any path you name with `--hide`. Kartikeya's
+  policy lists what to mount and has no word for leaving something out, so
+  home is mounted around them: a folder that holds one is taken apart and
+  what is beside it mounted piece by piece, down to it. A link in a folder
+  taken apart is left out, since Kartikeya mounts what a link points at;
+- what you name with `--hold`, read-only wherever it is, in the project
+  too: the code that judges a session's commands can sit in the project it
+  works in, read and never written. A project that is what is held, or
+  lies inside it, is refused;
+- no network, and PATH, LANG and HOME for its environment, as a job's, but
+  HOME is your own, read-only.
+
+A project that holds your home, or that holds or lies inside what is
+hidden, is refused, and so is hiding the system. The command is handed to
+Kartikeya as a file of its own, so it runs as written: Kartikeya reads a
+task's text for fenced blocks to run as steps, and a command may hold one.
+Its scan reads the command first, as it reads a job. There is no seal and
+nothing is proposed, since it is a shell and what it changed is in the
+project; nothing of it is on your record. What it printed comes back as
+one line of JSON on standard output: `returncode`, `stdout`, `stderr`,
+`status`, and `how` when it never ran or was ended. `test_kart.py` probes
+it from inside as it probes a job. What it does not hold: a command reads
+everything in your home that isn't hidden, a folder made in a folder taken
+apart after the command began isn't seen by it, and a Git worktree whose
+repository is outside the project can't commit.
+
 **What it can't do.** It can't tell you a job is harmless: the sandbox
 holds what it can reach, and your two seals hold what goes in and out. The
 output is what your files say through someone else's question, so read it
@@ -146,9 +180,9 @@ Resource limits are Kartikeya's (a delegated cgroup if you set one up,
 user namespace, which bubblewrap does; Ubuntu 24.04 keeps that behind
 AppArmor unless allowed.
 
-**Exit codes:** 0 the policy printed, a job tried and ended well, a job
+**Exit codes:** 0 the policy printed, a job tried or a command run that ended well, a job
 queued, the queue worked, or a status given; 42 a job taken or written, a result or a total
-proposed, waiting on your seal, or a job that failed or broke its shape; 2
+proposed, waiting on your seal, a job that failed or broke its shape, or a command that failed; 2
 refused (no Kartikeya or bubblewrap, named; a bubblewrap that can't make a
 sandbox on this machine, in its own words, before anything runs or is
 recorded; a resource group set up for Kartikeya that can't be readied,
@@ -156,7 +190,7 @@ likewise, naming the command to run. A reload of systemd empties the
 group's `cgroup.subtree_control`, which `kartikeya setup-cgroup` had
 written; `kart` writes that one line back when the group is there, and says
 so. It writes no unit and reloads nothing; a job not sealed; one asking for the network; a job file
-`write` can't take).
+`write` can't take; a project `shell` can't run in).
 
 **Uses:** [share](../../stdlib/share/) to read packages; the kernel's
 `read`, `append`, `sealed`, `standing`, `config`, `h256` and its command
@@ -164,5 +198,6 @@ line for the bite and the proposal.
 
 **Never:** seals anything; reads your key; runs a job someone sent that you
 didn't seal; proposes or shares what an unsealed job printed;
-gives a job the network, your environment, the box or the key; writes but
-FILE, the record through the kernel, and its own scratch.
+gives a job or a command the network, your environment, the box or the key;
+writes but FILE, the record through the kernel, and its own scratch. What a
+command of `shell` writes, it writes in the project and nowhere else.
