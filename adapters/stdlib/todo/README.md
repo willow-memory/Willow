@@ -3,7 +3,7 @@ section: Keeping track
 line: TODO, FIXME and "need to" lines across the folder, oldest first.
 source: box
 added: 2026-10-23
-version: 0.1.2
+version: 0.1.3
 writes: nothing
 network: none
 role: page
@@ -37,6 +37,7 @@ to", or is an open checkbox. A mark counts as it is written to mark something:
 | "need to" | opening a line or a sentence, or after I or we: "Sold the van. Need to call the insurer.", "I need to book the MOT" | "the file does not need to fit in memory", "you need to restart it" |
 | "don't forget", "remember to" | anywhere in a line, in any case | |
 | an open checkbox | `- [ ] buy strings` | a ticked one, and one that opens with a template's blank, `- [ ] {item}`: a form not yet filled in |
+| any of them, in quotation marks | on a line that opens with who told you it: `Mum: "don't forget the bins"` | someone's words quoted: `- **The ask.** "I still need to sign it"`, and `"need to"` in a page about this report. Inside is an odd number of quotation marks before the mark, or none before and an odd number after (a quote opened on a line above) |
 
 Each is dated by the kernel's own date for its
 passage (the latest date in it, its file's name, or the log heading above it);

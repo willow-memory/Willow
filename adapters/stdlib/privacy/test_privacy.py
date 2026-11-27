@@ -206,3 +206,55 @@ def test_a_bite_on_a_file_of_passwords_withholds_each_one(tmp_path):
     doc = json.loads(got.stdout)
     assert "Considine1911" not in got.stdout and doc["withheld"] == {"password": 1}
     assert doc["served"][0]["text"] == "ancestry login: [withheld: password]"
+
+
+def a_card(start: str, length: int = 16) -> str:
+    """A number of `length` digits beginning `start`, its last digit the one
+    the Luhn check needs: built here, so no card is written in this file."""
+    body = start + "0" * (length - len(start) - 1)
+    return next(body + d for d in "0123456789" if pv.luhn(body + d))
+
+
+def grouped(digits: str) -> str:
+    return " ".join(digits[i : i + 4] for i in range(0, len(digits), 4))
+
+
+def test_a_card_of_each_network_is_withheld_grouped_or_not():
+    starts = ["4", "51", "55", "2221", "2720", "34", "37", "6011", "644", "65",
+              "300", "36", "3528", "62", "50", "2200", "60", "81", "508"]  # fmt: skip
+    for start in starts:
+        number = a_card(start)
+        for written in (number, grouped(number)):
+            found = {}
+            assert pv.scrub(f"paid with {written}", found) == (
+                "paid with [withheld: card]"
+            ), start
+            assert found == {"card": 1}
+    amex = a_card("37", 15)  # fifteen digits, bare
+    assert pv.scrub(amex, {}) == "[withheld: card]"
+
+
+def test_four_years_ports_or_sizes_in_a_row_are_not_a_card():
+    def run(first, step=1, sep=" "):
+        return sep.join(str(first + i * step) for i in range(4))
+
+    rows = [run(y) for y in range(1900, 2200)] + [
+        run(y, sep="-") for y in range(1990, 2030)
+    ]
+    rows += [run(8080), run(9000, 10), " ".join(str(1024 * 2**i) for i in range(4))]
+    for row in rows:
+        assert pv.scrub(row, {}) == row, row
+
+
+def test_a_number_that_passes_the_check_but_starts_as_no_card_is_left():
+    for start in ("1", "7", "80", "9", "2100", "2721"):
+        number = a_card(start)
+        assert pv.luhn(number)
+        for written in (number, grouped(number)):
+            assert pv.scrub(written, {}) == written, start
+
+
+def test_a_card_that_fails_the_check_is_left_grouped_too():
+    number = a_card("4")
+    wrong = number[:-1] + str((int(number[-1]) + 1) % 10)
+    assert pv.scrub(grouped(wrong), {}) == grouped(wrong)

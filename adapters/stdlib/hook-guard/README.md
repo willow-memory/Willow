@@ -3,7 +3,7 @@ section: Assistants
 line: A PreToolUse hook that blocks, by fixed rule, never judgment, a call that would read your key, seal with it, or write your record.
 source: box
 added: 2026-10-29
-version: 0.2.1
+version: 0.2.2
 writes: nothing
 network: none
 role: guards
@@ -27,7 +27,11 @@ seal       the call runs a kernel's seal or decline, which read the key themselv
 `run` is a PreToolUse hook. It reads what the assistant is about to do (the
 JSON Claude Code, Gemini CLI and Cursor send on standard input) and holds it to
 its rules. A call that breaks one exits 2, and the reason on standard error
-names the rule:
+names the rule. Cursor's own shapes are read as the same calls: its
+`preToolUse` (its shell is `Shell`, its folder `working_directory`, and a
+`Delete` is held as a write), its `beforeShellExecution` (the command alone)
+and its `beforeReadFile` (the file alone); Cursor blocks on exit 2 as Claude
+Code does:
 
 ```
 refused: rule box-write: this Write is inside the box; only kernel.py writes there.

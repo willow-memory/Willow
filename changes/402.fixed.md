@@ -1,0 +1,1 @@
+`privacy`: a card is a card network's first digits and the Luhn check, grouped or not, so four years, ports or sizes in a row (`dddd dddd dddd dddd`) are no longer withheld, nor refused by `hook-leaks`, which reads the same shapes

@@ -10,7 +10,8 @@ kernel's) and withholds, in every passage and approved answer it prints:
                             or a national one from 0 in groups (0113 555 0122)
     account                 a bank number after its label: sort code, account
                             number, acct, a/c or routing; the label is kept
-    card                    13 to 19 digits that pass the Luhn check, or 4x4 groups
+    card                    13 to 19 digits, or 4x4 groups, that start as a card
+                            network's do and pass the Luhn check
     iban                    an IBAN whose mod-97 check holds
     ssn, itin               a US social security number, labelled or 3-2-4; an
                             ITIN, 9xx-7x-xxxx in its ranges
@@ -220,6 +221,25 @@ def password_list(path: str) -> bool:
     return bool(LIST_NAME.search(Path(path).stem))
 
 
+#: the first digits a card network's numbers start with: Visa (4), Mastercard
+#: (51-55, 2221-2720), American Express (34, 37), Discover (6011, 644-649, 65),
+#: Diners Club (300-305, 36, 38, 39), JCB (3528-3589), UnionPay (62), Maestro
+#: (50, 56-69), Mir (2200-2204) and RuPay (60, 65, 81, 82, 508). A run of
+#: years (1900-2199), ports or sizes starts with none of them
+NETWORKS = re.compile(
+    r"(?:3|4|5|6|220[0-4]|222[1-9]|22[3-9]\d|2[3-6]\d\d|27[01]\d|2720|81|82)"
+)
+
+
+def card(value: str) -> bool:
+    """Whether digits, grouped or not, are a card's: a network's first
+    digits and the Luhn check, both. Four four-digit numbers in a row are
+    often years, ports or sizes, and a number of a card's length passes the
+    check one time in ten."""
+    digits = re.sub(r"[-\s]", "", value)
+    return bool(NETWORKS.match(digits)) and luhn(digits)
+
+
 def luhn(digits: str) -> bool:
     total = 0
     for i, d in enumerate(int(c) for c in reversed(digits)):
@@ -282,8 +302,8 @@ def scrub(text: str, found: dict, listed: bool = False) -> str:
     text = DISCORD_USER.sub(hide("discord"), text)  # its digits before a card
     text = ITIN.sub(hide("itin"), text)
     text = SSN.sub(hide("ssn"), text)
-    text = CARD_GROUPS.sub(hide("card"), text)
-    text = CARD_BARE.sub(hide("card", lambda v: not luhn(v)), text)
+    text = CARD_GROUPS.sub(hide("card", lambda v: not card(v)), text)
+    text = CARD_BARE.sub(hide("card", lambda v: not card(v)), text)
     text = EIN.sub(hide("ein"), text)
     text = WALLET.sub(hide("wallet"), text)
     text = MAC.sub(hide("mac"), text)

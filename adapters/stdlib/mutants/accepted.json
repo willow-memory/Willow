@@ -47,9 +47,6 @@
   "three-two-one": {
     "1857a4e63913": "box_rows starts at 0 only to exist before the loop; the box is always the first copy parsed and sets it before any other copy is compared, so the starting number never reaches a comparison."
   },
-  "todo": {
-    "08807890b7cc": "The width a report's where column falls back to when it has no rows: with no rows nothing is padded to it, so any number there prints the same report."
-  },
   "transcript-redact": {
     "2f8474d895a6": "split(\"@\", 1)[1] takes the text after an email's one @; the email shape allows a single @, so any maxsplit of at least 1 gives the same domain."
   },

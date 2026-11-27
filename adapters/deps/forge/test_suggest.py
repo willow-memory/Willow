@@ -1829,3 +1829,16 @@ def test_next_writes_nothing_and_refuses_a_folder_that_isnt_there(box, tmp_path)
     got = run("next", "my email", "--box", str(box), "--stacks", str(tmp_path / "gone"))
     assert got.returncode == 2 and "isn't a folder of stacks" in got.stderr
     assert len(rows(box)) == before
+
+
+def test_a_forge_without_its_fork_rules_is_too_old(monkeypatch):
+    """Not now, several picks, blind forks and their confidence are the
+    Forge's from 0.13.0: an older one is refused as too old, never half-used."""
+    import types
+
+    import forge
+
+    old = types.ModuleType("forge.forks")
+    monkeypatch.setitem(sys.modules, "forge.forks", old)
+    monkeypatch.setattr(forge, "forks", old, raising=False)
+    assert suggest.forge() is None
