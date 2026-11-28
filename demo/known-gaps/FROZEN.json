@@ -56,7 +56,7 @@
   "questions/cpython/claude/CP7.txt": "248e86c17852995970075a0ba7da85698267eb18e95e18c6d9a0bdd13f4d47cc"
  },
  "tools_at_freeze": {
-  "kernel.py": "bca1d1b95c85c144fb26fda0108ec01ba74aad589c2996a7143dc5982ad3bafb",
+  "kernel.py": "340bd0456ac2d9e76fec4f9a52d1968f0a2876a676b2f95cc4dea4a5344826db",
   "adapters/stdlib/scan/scan.py": "13c48568011c7792fb9502b31333d32b43913d781a4cae20d41c5bc13ec0a176",
   "adapters/stdlib/todo/todo.py": "a873476219165f0921aade96b18c258d2a5a3e25a93cca4b9c0d120108d9949a",
   "adapters/stdlib/ci/whose.py": "0eceae102467c18d847be90cbcceae6f167af10ead5edcce4f3bd43fdb719abd",
