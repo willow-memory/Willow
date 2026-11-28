@@ -3,7 +3,7 @@ section: Ways to use it
 line: A job someone sent you, run in a sandbox over your own folder only once you seal it, its result yours to seal before it goes back.
 source: new
 added: 2026-11-03
-version: 0.1.4
+version: 0.1.5
 needs: kartikeya, and the bwrap program (bubblewrap), run not linked; Apache-2.0, LGPL-2.0-or-later
 programs: bwrap
 floor: kartikeya 0.0.1
@@ -142,6 +142,10 @@ your own shell. Its policy, which `policy --project DIR` prints:
 - the project, writable, since the work is there, and the command starts
   in it, or in the folder of it that `--cwd` names;
 - your home and the system's /usr and /etc, read-only; a private /tmp;
+- nowhere else to write: the folders the sandbox makes above what it
+  mounts (`/`, and your home's own folder when something in it is hidden)
+  are closed before the command starts, so a file written there is
+  refused, not kept until the command ends and then lost;
 - never the box or its key, nor any path you name with `--hide`. Kartikeya's
   policy lists what to mount and has no word for leaving something out, so
   home is mounted around them: a folder that holds one is taken apart and
