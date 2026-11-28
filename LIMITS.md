@@ -32,7 +32,11 @@ where it falls short today, and a fix is welcome.
   the kernel's `seal` or `decline`, but it judges words: code an assistant
   writes to get round it gets through. Where the key is readable by the
   account the assistant runs as, that code can seal. Keep the key where that
-  account can't read it.
+  account can't read it. With the first kind of key that stops every
+  question too, since an HMAC is checked with the secret that made it; a
+  box given a key pair (`pair`, then `rekey`) checks with its public half,
+  and only signing needs the private one. The ports don't check a signed
+  seal yet: until they do, a box with a key pair is `kernel.py`'s alone.
 
 - **It matches words, not meanings.** Ask "who owes me money" when your
   files say "invoice outstanding" and it finds nothing until a words list

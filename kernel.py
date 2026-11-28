@@ -8,6 +8,8 @@
     python kernel.py verify  --box DIR
     python kernel.py out     --box DIR
     python kernel.py words   --box DIR --words FILE
+    python kernel.py pair    --box DIR --key FILE
+    python kernel.py rekey   --box DIR
     python kernel.py test
 
 The pile (--pile) is your own folder, and it is only ever read. Your files
@@ -40,6 +42,13 @@ is what approves an answer.
     verify   re-checks every row of the record and every approval and No: a
              forged one is never accepted, whatever it claims
     out      what is waiting for your approval (exit 42 while anything is)
+    pair     gives the box a key pair: a private half made in the new file
+             you name, which signs your approvals from then on, and a public
+             half kept in the box, which checks them with no secret. The key
+             can then live where nothing that asks questions can read it
+    rekey    after pair, once: checks every approval and No made with the
+             old key a last time and signs for them all in one row. From
+             then on the old key is not read, and can be put away
     test     runs every step once in a temporary folder and checks eight
              properties
 
@@ -197,12 +206,154 @@ def lock(f) -> None:
 
 
 # ── the seal and the bite key ───────────────────────────────────────────────
-def proof(key: bytes, subject: str, act: str = "seal", asked: str | None = None) -> str:
-    """HMAC-SHA-256 under their key, over the act ("seal", or "decline" for a
-    No), a unit separator, the subject; and, for a seal that names the
-    question it answers, another separator and that question's key."""
+def said(subject: str, act: str = "seal", asked: str | None = None) -> bytes:
+    """What a seal or a No is made over: the act ("seal", or "decline"), a
+    unit separator, the subject; and, for a seal that names the question it
+    answers, another separator and that question's key."""
     parts = (act, subject) if asked is None else (act, subject, asked)
-    return hmac.new(key, "\x1f".join(parts).encode(), hashlib.sha256).hexdigest()
+    return "\x1f".join(parts).encode()
+
+
+def proof(key: bytes, subject: str, act: str = "seal", asked: str | None = None) -> str:
+    """HMAC-SHA-256 under their key, over what is said (`said`)."""
+    return hmac.new(key, said(subject, act, asked), hashlib.sha256).hexdigest()
+
+
+# ── the key pair: Ed25519 (RFC 8032), checked by one rule ───────────────────
+# A seal by a key pair is signed with the private half and checked with the
+# public one, which is no secret: whoever reads the record can check it, and
+# only the holder of the private half can make it (docs/design/key-pair.md).
+# Plain Python: correct, not constant-time; it signs at a person's click.
+ED_P = 2**255 - 19
+ED_L = 2**252 + 27742317777372353535851937790883648493
+ED_D = -121665 * pow(121666, ED_P - 2, ED_P) % ED_P
+ED_I = pow(2, (ED_P - 1) // 4, ED_P)
+ED_ZERO = (0, 1, 1, 0)  # the neutral point, as (X, Y, Z, T)
+
+
+def ed_add(a: tuple, b: tuple) -> tuple:
+    x = (a[1] - a[0]) * (b[1] - b[0]) % ED_P
+    y = (a[1] + a[0]) * (b[1] + b[0]) % ED_P
+    c = 2 * a[3] * b[3] * ED_D % ED_P
+    d = 2 * a[2] * b[2] % ED_P
+    e, f, g, h = y - x, d - c, d + c, y + x
+    return (e * f % ED_P, g * h % ED_P, f * g % ED_P, e * h % ED_P)
+
+
+def ed_times(n: int, p: tuple) -> tuple:
+    q = ED_ZERO
+    while n > 0:
+        if n & 1:
+            q = ed_add(q, p)
+        p = ed_add(p, p)
+        n >>= 1
+    return q
+
+
+def ed_same(a: tuple, b: tuple) -> bool:
+    return (a[0] * b[2] - b[0] * a[2]) % ED_P == 0 and (
+        a[1] * b[2] - b[1] * a[2]
+    ) % ED_P == 0
+
+
+def ed_point(s: bytes) -> tuple | None:
+    """The point 32 bytes name, or None: a y of p or more, an x that is no
+    square root, a zero x written as negative, or one of the eight points of
+    small order (the rule's second and third lines)."""
+    if len(s) != 32:
+        return None
+    y = int.from_bytes(s, "little")
+    sign, y = y >> 255, y & ((1 << 255) - 1)
+    if y >= ED_P:
+        return None
+    x2 = (y * y - 1) * pow(ED_D * y * y + 1, ED_P - 2, ED_P) % ED_P
+    x = pow(x2, (ED_P + 3) // 8, ED_P)
+    if (x * x - x2) % ED_P:
+        x = x * ED_I % ED_P
+    if (x * x - x2) % ED_P or (x == 0 and sign):
+        return None
+    if (x & 1) != sign:
+        x = ED_P - x
+    pt = (x, y, 1, x * y % ED_P)
+    return None if ed_same(ed_times(8, pt), ED_ZERO) else pt
+
+
+ED_BASE = ed_point((4 * pow(5, ED_P - 2, ED_P) % ED_P).to_bytes(32, "little"))
+
+
+def ed_packed(p: tuple) -> bytes:
+    zi = pow(p[2], ED_P - 2, ED_P)
+    x, y = p[0] * zi % ED_P, p[1] * zi % ED_P
+    return (y | ((x & 1) << 255)).to_bytes(32, "little")
+
+
+def ed_h(data: bytes) -> int:
+    return int.from_bytes(hashlib.sha512(data).digest(), "little")
+
+
+def ed_half(seed: bytes) -> tuple[int, bytes]:
+    h = hashlib.sha512(seed).digest()
+    return (int.from_bytes(h[:32], "little") & ((1 << 254) - 8)) | (1 << 254), h[32:]
+
+
+def ed_public(seed: bytes) -> bytes:
+    """The public half of a 32-byte private half."""
+    return ed_packed(ed_times(ed_half(seed)[0], ED_BASE))
+
+
+def ed_sign(seed: bytes, message: bytes) -> bytes:
+    a, prefix = ed_half(seed)
+    pub = ed_packed(ed_times(a, ED_BASE))
+    r = ed_h(prefix + message) % ED_L
+    big_r = ed_packed(ed_times(r, ED_BASE))
+    k = ed_h(big_r + pub + message) % ED_L
+    return big_r + ((r + k * a) % ED_L).to_bytes(32, "little")
+
+
+def ed_check(pub: bytes, message: bytes, sig: bytes) -> bool:
+    """True only for a signature the rule takes: S below L, A and R each a
+    point by `ed_point`, and [S]B = R + [k]A with no cofactor. Every port
+    checks by this rule and no other, so no port takes what another refuses."""
+    if len(pub) != 32 or len(sig) != 64:
+        return False
+    a, r = ed_point(pub), ed_point(sig[:32])
+    s = int.from_bytes(sig[32:], "little")
+    if a is None or r is None or s >= ED_L:
+        return False
+    k = ed_h(sig[:32] + pub + message) % ED_L
+    return ed_same(ed_times(s, ED_BASE), ed_add(r, ed_times(k, a)))
+
+
+#: what was checked in this run, by the public half and what it was asked:
+#: a check is 2.5 ms, and a question reads the record's seals each time.
+#: Never kept on disk: a file of checked rows is one a forgery could be
+#: written into
+ED_CHECKED: dict[tuple, bool] = {}
+
+
+def ed_holds(pub: bytes, message: bytes, sig_hex: object) -> bool:
+    try:
+        sig = bytes.fromhex(sig_hex) if isinstance(sig_hex, str) else b""
+    except ValueError:
+        return False
+    at = (pub, message, sig)
+    if at not in ED_CHECKED:
+        ED_CHECKED[at] = ed_check(pub, message, sig)
+    return ED_CHECKED[at]
+
+
+def pub_of(cfg: dict) -> bytes | None:
+    """The box's public half, or None when it has none or it is no key: 32
+    bytes that name a point of prime order (the rule's last line)."""
+    try:
+        pub = bytes.fromhex(cfg.get("pub") or "")
+    except (ValueError, TypeError):
+        return None
+    at = ("pub", pub)
+    if at not in ED_CHECKED:
+        pt = ed_point(pub) if len(pub) == 32 else None
+        ED_CHECKED[at] = pt is not None and ed_same(ed_times(ED_L, pt), ED_ZERO)
+    return pub if ED_CHECKED[at] else None
 
 
 def words(text: str) -> list[str]:
@@ -882,25 +1033,97 @@ def look(
 
 
 # ── the loop ────────────────────────────────────────────────────────────────
-def sealed(box: Path, rows: list[dict], act: str = "seal") -> dict[str, dict]:
+def proved(
+    box: Path, rows: list[dict], act: str = "seal", only: str | None = None
+) -> list[dict]:
+    """The seal rows (or, with act "decline", the rows of a No) that hold, in
+    the record's order: an HMAC under the person's secret, a signature under
+    the box's public half, or a row the crossing vouches for. With `only`, a
+    question's key, a seal that names another question is passed over
+    unchecked: it could not answer this one, and a check takes time."""
+    cfg = config(box)
+    pub = pub_of(cfg) if "pub" in cfg else None
+    at, held = crossing(pub, rows) if pub else (None, {})
+    # the secret an HMAC is checked with: the box's key, or with a key pair
+    # the one from before it, for as long as the box still names it
+    where = Path(cfg.get("old_key") or cfg["key"])  # a box always names a key
+    secret, read = None, "pub" not in cfg or "old_key" in cfg
+    out = []
+    for r in rows:
+        if r["kind"] != act:
+            continue
+        asked = r.get("bite_key") if act == "seal" and "bite_key" in r else None
+        if "bite_key" in r and act == "seal" and not isinstance(asked, str):
+            continue
+        if only is not None and asked is not None and asked != only:
+            continue
+        subj = r.get("subject", "")
+        if "sig" in r:  # signed: checked with the public half, and no secret
+            good = pub is not None and "proof" not in r
+            good = good and ed_holds(pub, said(subj, act, asked), r["sig"])
+        elif at is not None and r["n"] < at:  # crossed: the rekey row vouches
+            good = r["n"] in held.get(act, ())
+        else:
+            if read:
+                read = False
+                secret, _ = read_key(where, box)
+            good = secret is not None and hmac.compare_digest(
+                proof(secret, subj, act, asked), str(r.get("proof"))
+            )
+        if good:
+            out.append(r)
+    return out
+
+
+def sealed(
+    box: Path, rows: list[dict], act: str = "seal", only: str | None = None
+) -> dict[str, dict]:
     """Each proposal a seal row holds, by subject, only while its proof holds
     under the person's key. A forged seal is in neither: it is reported by
     `verify`, and never served (CONST-0-2, CONST-0-4). A seal row that names
     a question (`bite_key`) is proved over it too, so the question is the
     person's to name; one from before that has no such field and is proved
     the old way. With act "decline", the same for the person's No."""
-    key, _ = read_key(Path(config(box)["key"]), box)
-    out = {}
-    for r in rows:
-        if r["kind"] == act and key is not None:
-            asked = r.get("bite_key") if act == "seal" and "bite_key" in r else None
-            if "bite_key" in r and act == "seal" and not isinstance(asked, str):
-                continue
-            if hmac.compare_digest(
-                proof(key, r.get("subject", ""), act, asked), str(r.get("proof"))
-            ):
-                out[r["subject"]] = r
-    return out
+    return {r["subject"]: r for r in proved(box, rows, act, only)}
+
+
+def vouch(tip: str, seals: list, declines: list) -> bytes:
+    """What a rekey row signs: the chain as it stood, and the rows it found
+    proved under the old secret, by number."""
+    return (
+        b"rekey\x1f" + canon({"tip": tip, "seal": seals, "decline": declines}).encode()
+    )
+
+
+def crossing(pub: bytes, rows: list[dict]) -> tuple[int | None, dict]:
+    """(the row where the record crossed to the key pair, the seal and decline
+    rows before it that it vouches for), from the last rekey row that names
+    the row before it and whose signature holds. The chain's hashes fix what
+    those rows say, so they need no secret after it."""
+    for i in range(len(rows) - 1, 0, -1):
+        r = rows[i]
+        if r["kind"] != "rekey" or r.get("tip") != rows[i - 1]["hash"]:
+            continue
+        seals, nos = r.get("seal"), r.get("decline")
+        if not isinstance(seals, list) or not isinstance(nos, list):
+            continue
+        if ed_holds(pub, vouch(r["tip"], seals, nos), r.get("sig")):
+            return r["n"], {"seal": set(seals), "decline": set(nos)}
+    return None, {}
+
+
+def proves(box: Path, subj: str, act: str, asked: str | None = None):
+    """(the field that proves this seal or No, why not): `sig`, signed with
+    the private half, where the box has a key pair; else `proof`, the HMAC."""
+    cfg = config(box)
+    key, why = read_key(Path(cfg["key"]), box)
+    if key is None:
+        return None, why
+    if "pub" not in cfg:
+        return {"proof": proof(key, subj, act, asked)}, None
+    if len(key) != 32 or ed_public(key).hex() != cfg["pub"]:
+        return None, "the key is not the private half of this box's public key"
+    return {"sig": ed_sign(key, said(subj, act, asked)).hex()}, None
 
 
 def proposed_under(
@@ -991,9 +1214,9 @@ def bite(box: Path, text: str, ts: str) -> int:
     if k is None:
         print("refused: a bite with no words", file=sys.stderr)
         return REFUSED
-    for subj, row in sealed(
-        box, rows
-    ).items():  # a sealed answer for these words, first
+    # a sealed answer for these words, first; of the seals that name a
+    # question, only those naming this one are checked
+    for subj, row in sealed(box, rows, only=k).items():
         prop, asked, why = standing(box, rows, subj, row)
         if why is None and asked == k:
             append(box, ts, "bite", bite_key=k, answered_by=subj, served=[])
@@ -1101,8 +1324,7 @@ def seal(box: Path, subj: str, ts: str) -> int:
     if subj in (no := declined(box, rows)):  # a no is final (CONST-V-10)
         print(f"refused: you declined {subj} at row {no[subj]['n']}", file=sys.stderr)
         return REFUSED
-    key, why = read_key(Path(config(box)["key"]), box)
-    if key is None:
+    if (why := proves(box, subj, "seal")[1]) is not None:
         print(f"refused: {why}", file=sys.stderr)
         return REFUSED
     prop = json.loads((box / "proposals" / f"{subj[9:]}.json").read_text())
@@ -1119,10 +1341,8 @@ def seal(box: Path, subj: str, ts: str) -> int:
             file=sys.stderr,
         )
         return REFUSED
-    append(
-        box, ts, "seal", who="human", subject=subj, bite_key=asked,
-        proof=proof(key, subj, "seal", asked),
-    )  # fmt: skip
+    how, _ = proves(box, subj, "seal", asked)
+    append(box, ts, "seal", who="human", subject=subj, bite_key=asked, **how)
     out = box / "written" / prop["path"]
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(prop["data"], encoding="utf-8")
@@ -1147,14 +1367,87 @@ def decline(box: Path, subj: str, ts: str) -> int:
                 f"refused: you {said} {subj} at row {done[subj]['n']}", file=sys.stderr
             )
             return REFUSED
-    key, why = read_key(Path(config(box)["key"]), box)
-    if key is None:
+    how, why = proves(box, subj, "decline")
+    if how is None:
         print(f"refused: {why}", file=sys.stderr)
         return REFUSED
-    append(
-        box, ts, "decline", who="human", subject=subj, proof=proof(key, subj, "decline")
-    )
+    append(box, ts, "decline", who="human", subject=subj, **how)
     print(f"declined {subj}; it won't be offered again")
+    return ALIVE
+
+
+def pair(box: Path, key: Path, ts: str) -> int:
+    """A key pair for a box that has none: the private half made in a new
+    file, readable by its owner alone; the public half in the box. From here
+    `seal` and `decline` sign. The seals from before keep their HMAC, checked
+    with the old secret the box still names, until `rekey`."""
+    rows, breaks = read(box / "record.jsonl")
+    if breaks:
+        print("refused:", *breaks, sep="\n  ", file=sys.stderr)
+        return REFUSED
+    cfg = config(box)
+    if "pub" in cfg:
+        print("refused: this box already has a key pair", file=sys.stderr)
+        return REFUSED
+    if key.resolve().is_relative_to(box.resolve()):
+        print("refused: the key can't live inside the box", file=sys.stderr)
+        return REFUSED
+    if key.exists():
+        print(f"refused: {key} is already there; a private half is made new", file=sys.stderr)  # fmt: skip
+        return REFUSED
+    seed = secrets.token_bytes(32)
+    key.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(key, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w") as f:
+        f.write(seed.hex() + "\n")
+    pub = ed_public(seed).hex()
+    cfg.update(pub=pub, key=str(key.resolve()), old_key=cfg["key"])
+    (box / "kernel.json").write_text(json.dumps(cfg, sort_keys=True) + "\n")
+    append(box, ts, "pair", who="human", pub=pub)
+    print(f"paired: seals are signed from here; the public half is {pub[:16]}…")
+    print("the seals before this keep the old key until you run: rekey")
+    return ALIVE
+
+
+def rekey(box: Path, ts: str) -> int:
+    """The crossing: every seal and No proved under the old secret is checked
+    one last time and vouched for by one signed row, and the box forgets the
+    old secret. After it nothing that reads the record needs a secret."""
+    rows, breaks = read(box / "record.jsonl")
+    if breaks:
+        print("refused:", *breaks, sep="\n  ", file=sys.stderr)
+        return REFUSED
+    cfg = config(box)
+    if "pub" not in cfg or "old_key" not in cfg:
+        print("refused: a box crosses once, after `pair` and before any rekey", file=sys.stderr)  # fmt: skip
+        return REFUSED
+    seed, why = read_key(Path(cfg["key"]), box)
+    if seed is not None and (len(seed) != 32 or ed_public(seed).hex() != cfg["pub"]):
+        why = "the key is not the private half of this box's public key"
+    if why is None:
+        why = read_key(Path(cfg["old_key"]), box)[1]
+    if why is not None:
+        print(f"refused: {why}", file=sys.stderr)
+        return REFUSED
+    held = {}
+    for act in ("seal", "decline"):
+        good = {r["n"] for r in proved(box, rows, act)}
+        mine = [r for r in rows if r["kind"] == act and "sig" not in r]
+        held[act] = sorted(r["n"] for r in mine if r["n"] in good)
+        if len(held[act]) != len(mine):  # a forgery is never vouched for
+            lost = [r["n"] for r in mine if r["n"] not in good]
+            print(f"refused: {act} rows {lost} don't prove under your old key, "
+                  "or were replaced; see verify", file=sys.stderr)  # fmt: skip
+            return REFUSED
+    tip = rows[-1]["hash"]
+    sig = ed_sign(seed, vouch(tip, held["seal"], held["decline"])).hex()
+    append(box, ts, "rekey", who="human", tip=tip, seal=held["seal"],
+           decline=held["decline"], sig=sig)  # fmt: skip
+    old = cfg.pop("old_key")
+    (box / "kernel.json").write_text(json.dumps(cfg, sort_keys=True) + "\n")
+    print(f"crossed: {len(held['seal'])} seals and {len(held['decline'])} declines "
+          "stand on this row's signature")  # fmt: skip
+    print(f"the old key is no longer read: {old} can be put away")
     return ALIVE
 
 
@@ -1510,6 +1803,10 @@ def main(argv: list[str]) -> int:
         return decline(box, args[0], ts)
     if verb == "verify" and not args:
         return verify(box)
+    if verb == "pair" and opts.get("--key") and not args:
+        return pair(box, Path(opts["--key"]), ts)
+    if verb == "rekey" and not args:
+        return rekey(box, ts)
     if verb == "out" and not args:
         return out(box, ts)
     print(__doc__.split("\n\n")[0], file=sys.stderr)

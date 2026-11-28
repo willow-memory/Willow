@@ -92,6 +92,15 @@ suggested answer and the question it answers, made with that key.
   being given as answers, and `verify` reports them as unproven. Back it up
   like any private key.
 
+A key of that kind is checked with the secret that made it, so whatever
+asks a question must be able to read it. `pair` gives the box a key pair
+in its place: a private half in a new file, which signs each approval
+(Ed25519), and a public half in the record folder, which checks them and
+is no secret. `rekey` then signs once for every approval made with the old
+key, and the old key is no longer read. After that the private half can be
+kept where only you can reach it, and questions still answer. Lose the
+private half and what is approved stays approved; nothing new can be.
+
 ## The record folder
 
 `--box` names the folder where `kernel.py` keeps its record. `init` creates
