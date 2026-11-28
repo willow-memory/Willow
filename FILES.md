@@ -2493,6 +2493,45 @@ willow/
 │   │   │   └── null/
 │   │   │       └── null.txt  fifty questions with nothing to do with security, written with no input
 │   │   └── test_known_gaps.py  holds the frozen files to their hashes, and the tools to their word
+│   ├── marisol/
+│   │   ├── CHARACTER.md      Marisol Ortiz Beltrán
+│   │   ├── FROZEN.json
+│   │   ├── handoff/
+│   │   │   ├── FOR-FELIPE.md For Felipe
+│   │   │   ├── make_handoff.py the handoff zip, built the same way every time
+│   │   │   ├── marisol-handoff.zip
+│   │   │   ├── pile/
+│   │   │   │   └── hurricane-maria-landfall.txt
+│   │   │   ├── suggestions.jsonl
+│   │   │   ├── test_handoff.py
+│   │   │   └── README.md     Check a translation, and seal it from your own box
+│   │   ├── make_life.py      Marisol Ortiz Beltran's folder, as the files her work leaves: python3 make_life.py [--check]
+│   │   ├── make_life_3.py    More of Marisol's life, for freeze 3: python3 make_life_3.py [--check]
+│   │   ├── names.txt
+│   │   ├── PLANTED.md        What the author planted: the answer key (notes, written before the generator)
+│   │   ├── questions-3.json
+│   │   ├── questions.json
+│   │   ├── results/
+│   │   │   ├── dry-run.json
+│   │   │   ├── dry-run-2.json
+│   │   │   ├── run-1.json
+│   │   │   ├── run-2.json
+│   │   │   ├── dry-run-3.json
+│   │   │   ├── run-3.json
+│   │   │   ├── dry-run-4.json
+│   │   │   └── run-4.json
+│   │   ├── run.py            Marisol's folder asked its questions, every pass rule judged, and
+│   │   ├── run3.py           freeze 3's three strands, each on a box of its own, each judged
+│   │   ├── sources.json
+│   │   ├── sources.py        the real sources of this demo, fetched again and checked by hash
+│   │   ├── test_marisol.py
+│   │   ├── test_marisol3.py
+│   │   └── README.md         Marisol's island
+```
+
+#### demo/, from markets-2026-11-05/
+
+```
 │   ├── markets-2026-11-05/   a broad equities and macro pile from public sources: SEC EDGAR, FRED, Treasury, the Fed, CBOE and more
 │   │   ├── README.md         what's in the pile, what isn't and why, and how it's kept honest
 │   │   ├── fetch.py          saves 944 sources into a pile once (SEC EDGAR only with --contact), sets error bodies aside, and checks them offline

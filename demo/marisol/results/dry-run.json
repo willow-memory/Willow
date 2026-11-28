@@ -1,0 +1,115 @@
+{
+ "nonsense": true,
+ "asked": [
+  {
+   "id": "Q1",
+   "kind": "claim",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+  },
+  {
+   "id": "Q2",
+   "kind": "claim",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+  },
+  {
+   "id": "Q3",
+   "kind": "words-es",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+  },
+  {
+   "id": "Q4",
+   "kind": "words-es",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+  },
+  {
+   "id": "Q5",
+   "kind": "bite",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+  },
+  {
+   "id": "Q6",
+   "kind": "claim",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+  },
+  {
+   "id": "Q7",
+   "kind": "claim",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "no file has  qqqq, zzzz\nNothing in your folder holds any part of it.\n"
+  },
+  {
+   "id": "Q8",
+   "kind": "words-es",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+  },
+  {
+   "id": "Q9",
+   "kind": "words-es",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "{\"state\": \"empty\", \"bite_key\": \"ab60f587b08e0fd153da18d619ed606a82bc16c2bd3f9e59e22a8a59b8740637\", \"served\": [], \"look\": [{\"why\": \"no file in your folder has qqqq, zzzz\", \"where\": \"it may be called something else there\", \"next\": \"add it to your words list, or use a search that matches by meaning\"}]}\n"
+  },
+  {
+   "id": "Q10",
+   "kind": "amounts",
+   "asked": "qqqq zzzz",
+   "exit": 0,
+   "served": [],
+   "stdout": "1941-05-02  $238 million         sources/wikipedia-prepa.html.txt:286   As a result of the 2019–20 Puerto Rico earthquakes the Costa Sur Power Plant in Guayanilla was knocked out of service. A  (date from line 234)\n1941-05-02  $300 million         sources/wikipedia-prepa.html.txt:298   The initial $300 million contract for power restoration was given to Whitefish Energy , a Montana company which had only  (date from line 234)\n1941-05-02  $3.8B                sources/wikipedia-prepa.html.txt:310   With June 1 the official start of the 2018 hurricane season, an estimated 11,000+ customers remained without power, poss  (date from line 234)\n1941-05-02  $500M                sources/wikipedia-prepa.html.txt:310   With June 1 the official start of the 2018 hurricane season, an estimated 11,000+ customers remained without power, poss  (date from line 234)\n1941-05-02  $251 million         sources/wikipedia-prepa.html.txt:344   Over the years the budget for maintenance, which includes such activities as clearing trees near power lines, has dimini  (date from line 234)\n1941-05-02  $202 million         sources/wikipedia-prepa.html.txt:344   Over the years the budget for maintenance, which includes such activities as clearing trees near power lines, has dimini  (date from line 234)\n1941-05-02  $1.5 billion         sources/wikipedia-prepa.html.txt:352   Controversial $1.5 billion fossil fuels project  (date from line 234)\n1941-05-02  $191.4 million       sources/wikipedia-prepa.html.txt:362   An audit in 2020 from Puerto Rico's Office of the Comptroller examined PREPA capital improvement projects from 2010-2018  (date from line 234)\n1941-05-02  $69.2 million        sources/wikipedia-prepa.html.txt:362   An audit in 2020 from Puerto Rico's Office of the Comptroller examined PREPA capital improvement projects from 2010-2018  (date from line 234)\n1941-05-02  $31.9 million        sources/wikipedia-prepa.html.txt:362   An audit in 2020 from Puerto Rico's Office of the Comptroller examined PREPA capital improvement projects from 2010-2018  (date from line 234)\n1941-05-02  $62.8 million        sources/wikipedia-prepa.html.txt:366   For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $342,500             sources/wikipedia-prepa.html.txt:366   For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $3.2 million         sources/wikipedia-prepa.html.txt:366   For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $6.7 million         sources/wikipedia-prepa.html.txt:366   For example, during the Gasoducto del Sur project, PREPA entered into complex arrangements with government entities that  (date from line 234)\n1941-05-02  $700 million         sources/wikipedia-prepa.html.txt:372   A financial dispute involving PREPA has led to operational challenges for LUMA Energy and Genera PR. PREPA has reportedl  (date from line 234)\n1941-05-02  $190 million         sources/wikipedia-prepa.html.txt:372   A financial dispute involving PREPA has led to operational challenges for LUMA Energy and Genera PR. PREPA has reportedl  (date from line 234)\n1941-05-02  $350 million         sources/wikipedia-prepa.html.txt:372   A financial dispute involving PREPA has led to operational challenges for LUMA Energy and Genera PR. PREPA has reportedl  (date from line 234)\n1941-05-02  $500 million         sources/wikipedia-prepa.html.txt:390   To address a generation shortfall and recurring rolling blackouts, PREPA awarded an emergency power contract, valued bet  (date from line 234)\n1941-05-02  $1 billion           sources/wikipedia-prepa.html.txt:390   To address a generation shortfall and recurring rolling blackouts, PREPA awarded an emergency power contract, valued bet  (date from line 234)\n1941-05-02  US$10.1 billion      sources/wikipedia-prepa.html.txt:688   As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $6 billion           sources/wikipedia-prepa.html.txt:688   As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $354 million         sources/wikipedia-prepa.html.txt:688   As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $4.8 billion         sources/wikipedia-prepa.html.txt:688   As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $2.6 billion         sources/wikipedia-prepa.html.txt:688   As of 2014 the authority carries liabilities of US$10.1 billion against assets of $6 billion. [ 82 ] It also operates wi  (date from line 234)\n1941-05-02  $100 million         sources/wikipedia-prepa.html.txt:690   On May 23, 2014, Citigroup severely curtailed PREPA's line of credit for fuel purchase, forcing PREPA to run out of cash  (date from line 234)\n1941-05-02  $290 million         sources/wikipedia-prepa.html.txt:690   On May 23, 2014, Citigroup severely curtailed PREPA's line of credit for fuel purchase, forcing PREPA to run out of cash  (date from line 234)\n1941-05-02  $9 billion           sources/wikipedia-prepa.html.txt:696   As of 2021 the payment of PREPA's debt remains in an indefinite \"limbo\" due to a lack of agreement between the governmen  (date from line 234)\n1941-05-02  $192 million         sources/wikipedia-prepa.html.txt:698   Investigations by the office of the Comptroller revealed from 2010 to 2018 the AEE had mismanaged $192 million on projec  (date from line 234)\n1941-05-02  $12                  sources/wikipedia-prepa.html.txt:700   In March 2021 the AEE announced increase in electric bills for the next three months equivalent to an average of $12 mor  (date from line 234)\n1941-05-02  $128 million         sources/wikipedia-prepa.html.txt:700   In March 2021 the AEE announced increase in electric bills for the next three months equivalent to an average of $12 mor  (date from line 234)\n1941-05-02  $9 billion           sources/wikipedia-prepa.html.txt:702   PREPA has accumulated over $9 billion in debt. In the agency’s ongoing bankruptcy proceedings, a federal oversight board  (date from line 234)\n1941-05-02  $8.5 billion         sources/wikipedia-prepa.html.txt:702   PREPA has accumulated over $9 billion in debt. In the agency’s ongoing bankruptcy proceedings, a federal oversight board  (date from line 234)\n1941-05-02  $575 million         sources/wikipedia-prepa.html.txt:704   In April 2025, the Puerto Rico Oversight Board announced that bondholders of the Puerto Rico Electric Power Authority ha  (date from line 234)\n1941-05-02  $10 billion          sources/wikipedia-prepa.html.txt:706   In 2025, PREPA announced a new debt restructuring plan that reduces its debt from $10 billion to approximately $2.6 bill  (date from line 234)\n1941-05-02  $2.6 billion         sources/wikipedia-prepa.html.txt:706   In 2025, PREPA announced a new debt restructuring plan that reduces its debt from $10 billion to approximately $2.6 bill  (date from line 234)\n1941-05-02  $3.7 billion         sources/wikipedia-prepa.html.txt:744   ↑ \"PREPA bondholders at odds over $3.7 billion expense claim litigation\" . The San Juan Daily Star . October 24, 2025 .   (date from line 234)\n1941-05-02  $500M                sources/wikipedia-prepa.html.txt:796   ↑ Lievonen, John. \"MasTec snags $500M contract with utility in Puerto Rico\" . Biz Journals . Retrieved June 14, 2018 .  (date from line 234)\n1941-05-02  $500M                sources/wikipedia-prepa.html.txt:798   ↑ Walton, Robert. \"Puerto Rico's utility signs $500M recovery contract with MasTec\" . Utility Dive . Archived from the o  (date from line 234)\n1941-05-02  $1.5 Billion         sources/wikipedia-prepa.html.txt:830   ↑ \"No Oversight of $1.5 Billion Electric Project Raises Alarm over Privatization of Puerto Rico's Power\" . Democracy Now  (date from line 234)\n2014-10-19  $1                   sources/wikipedia-prepa.html.txt:900   ↑ \"Subsidios por $1 millón al día\" . El Nuevo Dia . Archived from the original on May 31, 2014 . Retrieved May 31, 2014   (date from line 878)\n2014-10-19  $192                 sources/wikipedia-prepa.html.txt:920   ↑ \"Auditoría del Contralor revela desembolso de $192 millones en proyectos \"sin utilidad\" en la AEE\" . Primera Hora (in   (date from line 878)\n2014-10-19  $128                 sources/wikipedia-prepa.html.txt:924   ↑ \"La AEE ha desembolsado $128 millones a LUMA Energy hasta abril de 2021\" . El Nuevo Día (in Spanish). August 19, 2021   (date from line 878)\n2016-09-19  $88M                 sources/wikipedia-prepa.html.txt:872   ↑ Kantrow, Michelle (March 12, 2013). \"Punta Lima wind farm sold to Sovereign Bank for $88M\" . News Is My Business . Arc  (date from line 870)\n2017-10-04  $282.51              life/receipts/outage-costs.csv.txt:7   [4] 2017-10-04; Diésel para el generador; Gasolinera El Mirador; $282.51; combustible\n2017-10-04  $202.13              life/receipts/outage-costs.csv.txt:9   [5] 2017-10-04; Diésel para el generador; Combustibles del Sur; $202.13; combustible\n2017-10-10  $329.16              life/receipts/outage-costs.csv.txt:11  [6] 2017-10-10; Diésel para el generador; Estación Las Palmas; $329.16; combustible\n2017-10-14  $275.16              life/receipts/outage-costs.csv.txt:13  [7] 2017-10-14; Diésel para el generador; Combustibles del Sur; $275.16; combustible\n2017-10-15  $297.82              life/receipts/outage-costs.csv.txt:15  [8] 2017-10-15; Diésel para el generador; Estación Las Palmas; $297.82; combustible\n2017-10-22  $287.54              life/receipts/outage-costs.csv.txt:17  [9] 2017-10-22; Diésel para el generador; Estación Las Palmas; $287.54; combustible\n2017-10-22  $331.79              life/receipts/outage-costs.csv.txt:19  [10] 2017-10-22; Diésel para el generador; Combustibles del Sur; $331.79; combustible\n2017-11-07  $323.13              life/receipts/outage-costs.csv.txt:21  [11] 2017-11-07; Diésel para el generador; Gasolinera El Mirador; $323.13; combustible\n2017-11-08  $257.36              life/receipts/outage-costs.csv.txt:23  [12] 2017-11-08; Diésel para el generador; Combustibles del Sur; $257.36; combustible\n2017-11-09  $250.46              life/receipts/outage-costs.csv.txt:25  [13] 2017-11-09; Diésel para el generador; Gasolinera El Mirador; $250.46; combustible\n2017-11-20  $248.25              life/receipts/outage-costs.csv.txt:27  [14] 2017-11-20; Diésel para el generador; Gasolinera El Mirador; $248.25; combustible\n2017-11-25  $261.57              life/receipts/outage-costs.csv.txt:29  [15] 2017-11-25; Diésel para el generador; Gasolinera El Mirador; $261.57; combustible\n2017-11-25  $232.47              life/receipts/outage-costs.csv.txt:31  [16] 2017-11-25; Diésel para el generador; Combustibles del Sur; $232.47; combustible\n2017-11-25  $200.93              life/receipts/outage-costs.csv.txt:33  [17] 2017-11-25; Diésel para el generador; Estación Las Palmas; $200.93; combustible\n2017-12-05  $211.19              life/receipts/outage-costs.csv.txt:35  [18] 2017-12-05; Diésel para el generador; Combustibles del Sur; $211.19; combustible\n2017-12-10  $275.90              life/receipts/outage-costs.csv.txt:37  [19] 2017-12-10; Diésel para el generador; Gasolinera El Mirador; $275.90; combustible\n2018-01-16  $355.61              life/receipts/outage-costs.csv.txt:39  [20] 2018-01-16; Diésel para el generador; Combustibles del Sur; $355.61; combustible\n2018-01-17  $199.40              life/receipts/outage-costs.csv.txt:41  [21] 2018-01-17; Diésel para el generador; Gasolinera El Mirador; $199.40; combustible\n2018-02-09  $6,000               life/mail/2018-02-09-tomas.eml.txt:10  Te mandé $6,000 por transferencia para el banco de baterías de la escuela. Es lo que pudimos juntar aquí. Dime cuando ll  (date from line 3)\n2018-03-14  $6,240.00            life/receipts/outage-costs.csv.txt:43  [22] 2018-03-14; Banco de baterías, 4 de 12 V ciclo profundo; Energía Hogar PR; $6,240.00; baterías\n2018-03-14  $1,385.00            life/receipts/outage-costs.csv.txt:45  [23] 2018-03-14; Inversor 3000 W; Energía Hogar PR; $1,385.00; baterías\n2018-03-20  $412.75              life/receipts/outage-costs.csv.txt:47  [24] 2018-03-20; Cables, interruptores y soportes; Ferretería Central; $412.75; baterías\n2018-06-02  $1,120.00            life/receipts/outage-costs.csv.txt:49  [25] 2018-06-02; Computadoras reacondicionadas, 4; Reciclaje Digital Ponce; $1,120.00; equipos\n2019-08-15  $236.03              life/receipts/outage-costs.csv.txt:51  [26] 2019-08-15; Diésel para el generador; Gasolinera El Mirador; $236.03; combustible\n2021-06-03  $199.89              life/receipts/outage-costs.csv.txt:53  [27] 2021-06-03; Diésel para el generador; Combustibles del Sur; $199.89; combustible\n2022-09-18  $226.64              life/receipts/outage-costs.csv.txt:55  [28] 2022-09-18; Diésel para el generador; Combustibles del Sur; $226.64; combustible\n2024-01-11  $230.81              life/receipts/outage-costs.csv.txt:57  [29] 2024-01-11; Diésel para el generador; Combustibles del Sur; $230.81; combustible\n2025-04-30  $999,903.00          sources/nsf-award-2305699.json.txt:62  fundsObligated[0]: FY 2023 = $999,903.00  (date from line 59)\nundated     $2,703,933 thousand  sources/crs-rs20695.html.txt:502       using the credit employed 113,444 workers and paid $2,703,933 thousand in employee\nundated     $3,561,800 thousand  sources/crs-rs20695.html.txt:510       manufacturing of $3,561,800 thousand. (Puerto Rico Planning Board. Economic Report of the\nundated     $9 billion           sources/nbc-luma-2021.html.txt:253     Officials are betting the private operator can do better than the island’s Electric Power Authority, which has struggled\nundated     $3.85 billion        sources/nbc-luma-2021.html.txt:349     Puerto Rico’s power generation units average 45 years old, twice those of the U.S. mainland, and a fiscal plan approved \nundated     $72 billion          sources/nber-w23681.html.txt:259       Puerto Rico, the Commonwealth Island and unincorporated territory of the United States, was placed under a fiscal Oversi\nundated     $1.5 billion         sources/wikipedia-prepa.html.txt:98    Controversial $1.5 billion fossil fuels project\n77 sums: 71 dated, 6 undated\n"
+  },
+  {
+   "id": "Q11",
+   "kind": "quotes",
+   "asked": "qqqq zzzz",
+   "exit": 42,
+   "served": [],
+   "stdout": "almost       life/lessons/03-open-lesson-who-keeps-the-log.md:9 \"Whoever keeps the log decides what counts as evidence.\"  (9 of 9 words)\n  dropped    alone\n\n1 quotes: 0 as written, 1 almost, 0 not there.\n"
+  },
+  {
+   "id": "Q12",
+   "kind": "contradictions",
+   "asked": "qqqq zzzz",
+   "exit": 0,
+   "served": [],
+   "stdout": "AMOUNT  inversor, energía, hogar, pr, baterías\n        life/receipts/outage-costs.csv.txt:43  $6,240.00  [22] 2018-03-14; Banco de baterías, 4 de 12 V ciclo profundo; Energía Hogar PR; $6,240.00; baterías\n        life/receipts/outage-costs.csv.txt:45  $1,385.00  [23] 2018-03-14; Inversor 3000 W; Energía Hogar PR; $1,385.00; baterías\nAMOUNT  income, possession, least, required\n        sources/crs-rs20695.html.txt:100  80%  possessions. To qualify for the credit, a corporation was required to earn at least 80% of\n        sources/crs-rs20695.html.txt:102  75%  its income in a possession and at least 75% of its income was required to be from the\nAMOUNT  possessions, corporations, wages, paid, qualified\n        sources/crs-rs20695.html.txt:100  80%  possessions. To qualify for the credit, a corporation was required to earn at least 80% of\n        sources/crs-rs20695.html.txt:240  60%  was 60% of a possessions corporations’ wages paid in the possessions; qualified wages,\nAMOUNT  income, possession, least, required\n        sources/crs-rs20695.html.txt:102  75%   its income in a possession and at least 75% of its income was required to be from the\n        sources/crs-rs20695.html.txt:418  150%  does not exceed 150% of mainland unemployment; the possession’s per capita income is\nAMOUNT  income, possession, least, required\n        sources/crs-rs20695.html.txt:102  75%  its income in a possession and at least 75% of its income was required to be from the\n        sources/crs-rs20695.html.txt:420  60%  at least 60% of that of the mainland; and the possession’s poverty level does not exceed\nAMOUNT  least, mainland, possession, poverty, level, exceed\n        sources/crs-rs20695.html.txt:418  150%  does not exceed 150% of mainland unemployment; the possession’s per capita income is\n        sources/crs-rs20695.html.txt:420  60%   at least 60% of that of the mainland; and the possession’s poverty level does not exceed\nAMOUNT  six, after, hurricane, maria, customers, restored, two, almost, half\n        sources/wikipedia-prepa.html.txt:296  10 percent  At the beginning of September 2017, the eye of Hurricane Irma passed north of the island. The strong\n        sources/wikipedia-prepa.html.txt:300  30 percent  Six weeks after Hurricane Maria, 30 percent of customers had been restored. [ 29 ] After two months,\nDATE    archived, wayback, machine, eia, profile, analysis\n        sources/wikipedia-prepa.html.txt:846  2019-08-17  ↑ Archived 2019-08-17 at the Wayback Machine , EIA Profile Analysis\n        sources/wikipedia-prepa.html.txt:870  2016-09-19  ↑ Oriana and Yarotek connect Caribbean's largest solar project to grid Archived 2016-09-19 at the Wa\nDATE    archived, wayback, machine, eia, profile, analysis\n        sources/wikipedia-prepa.html.txt:846  2019-08-17  ↑ Archived 2019-08-17 at the Wayback Machine , EIA Profile Analysis\n        sources/wikipedia-prepa.html.txt:878  2014-10-19  ↑ PUERTO RICO Puerto Rico Profile, Territory Profile and Energy Estimates Archived 2014-10-19 at the\n9 disagreements, 70 lines with a date or an amount read, 34 pairs in records of one kind left alone; neither side is picked.\n"
+  }
+ ],
+ "rules": {
+  "served": {
+   "ok": true,
+   "why": []
+  },
+  "unsealed": {
+   "ok": true,
+   "why": []
+  },
+  "verify": {
+   "ok": true,
+   "why": []
+  }
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "about": "demo/marisol's freeze 3: three strands, each asked on a box of its own and judged into a verdict box of its own, frozen before any of these questions was asked. 'life' is more of her life: the freeze-2 box plus four new kinds of file (a school calendar, her texts, a budget sheet, the lab's battery sensors), read from life-more/ by the calendar, sms, office and home-sensors readers, against the new paragraph of her draft (grants/draft-3.md, never boxed). 'claims' is more of the draft's claims on the same folder, the freeze-2 box unchanged. 'misses' follows the two questions runs 1 and 2 failed (Q5, the repeal; Q8, the brother) with two tools that point at where to look: all-passages (the kernel's own rank, past its first three) and pile-rank (BM25F with phrases). The kernel's rank is not changed for either. No model is asked: the kernel serves, the tools find where to read, and a person decides. An 'expect' of miss is a predicted gap, frozen as one; every expectation was written from what each tool's README says it does, not from asking it.",
+ "hit_rule": "A question that serves hits when one of its first 3 served passages (a bite, words-es or pile-rank) or first 3 rows (claim-check) holds its phrase, compared with case and spacing squeezed. 'hit' must hit, 'miss' must not, 'silent' must serve nothing. An all-passages question hits 'within' N when a passage holding its phrase is ranked N or better.",
+ "strands": {
+  "life": {
+   "box": "the freeze-2 box's sources, and the calendar, sms, office and home-sensors mirrors of life-more/, each a source of its own",
+   "questions": [
+    {"id": "L1", "claim": "C7", "kind": "claim", "ask": "Outages closed the school for 9 class days in 2022-23", "holds": "Cierre por apagón", "expect": "miss"},
+    {"id": "L2", "claim": "C7", "kind": "words-es", "ask": "¿Cuántos días cerró la escuela por apagón en 2022-2023?", "holds": "Cierre por apagón", "expect": "hit"},
+    {"id": "L3", "claim": "C7", "kind": "count", "ask": null, "holds": "Cierre por apagón", "expect": "count", "n": 7, "claimed": 9},
+    {"id": "L4", "claim": "C8", "kind": "words-es", "ask": "¿Cuándo llegaron los $6,000 de Tomás?", "holds": "Ya llegaron los $6,000", "expect": "hit"},
+    {"id": "L5", "claim": "C8", "kind": "claim", "ask": "Tomás's $6,000 for the battery bank arrived in February 2018", "holds": "Ya llegaron los $6,000", "expect": "hit"},
+    {"id": "L6", "claim": "C9", "kind": "amounts", "ask": null, "holds": null, "expect": "budget"},
+    {"id": "L7", "claim": "C9", "kind": "claim", "ask": "We need 30 laptops at $600 each", "holds": "Chromebooks para el laboratorio", "expect": "miss"},
+    {"id": "L8", "claim": "C10", "kind": "claim", "ask": "The lab's battery bank runs the lab through a full school day", "holds": "Lab battery bank charge", "expect": "hit"}
+   ],
+   "budget": {"lines_cents": [346800, 404000], "claimed": "$18,000"},
+   "pass_rules": {
+    "served": "Each 'hit' question hits (L2, L4, L5, L8).",
+    "gap": "Each 'miss' question does not hit: an English claim about a Spanish calendar (L1) and about a Spanish budget that says Chromebooks, not laptops (L7).",
+    "count": "The box holds exactly 7 passages with 'Cierre por apagón', not the draft's 9 (L3).",
+    "budget": "amounts reads the budget sheet's Chromebook line, $3,468.00, and its total, $4,040.00, and no line of the box says the draft's $18,000 (L6).",
+    "unsealed": "No seal or decline row on the box: code never approves.",
+    "verify": "kernel.py verify holds on the evidence box and on the verdict box."
+   }
+  },
+  "claims": {
+   "box": "the freeze-2 box, built as run.py builds it",
+   "questions": [
+    {"id": "K1", "claim": "C11", "kind": "claim", "ask": "The principal asked me to keep track of what I spend on diesel", "holds": "lo que gasta en diésel", "expect": "miss"},
+    {"id": "K2", "claim": "C11", "kind": "words-es", "ask": "¿Qué le pidió el director sobre el diésel?", "holds": "lo que gasta en diésel", "expect": "hit"},
+    {"id": "K3", "claim": "C12", "kind": "claim", "ask": "My father worked 28 years in the plant's laboratory", "holds": "veintiocho en el laboratorio", "expect": "miss"},
+    {"id": "K4", "claim": "C12", "kind": "words-es", "ask": "¿Cuántos años llevaba Ernesto en el laboratorio?", "holds": "veintiocho en el laboratorio", "expect": "hit"},
+    {"id": "K5", "claim": "C13", "kind": "words-es", "ask": "¿En qué año cerró la planta?", "holds": "Cerró en el verano de 2004", "expect": "hit"},
+    {"id": "K6", "claim": "C14", "kind": "claim", "ask": "Puente Digital asked for a source for every claim", "holds": "que cada afirmación lleve su fuente", "expect": "miss"},
+    {"id": "K7", "claim": "C14", "kind": "words-es", "ask": "¿Qué pide Inés para cada afirmación?", "holds": "que cada afirmación lleve su fuente", "expect": "hit"},
+    {"id": "K8", "claim": "C15", "kind": "words-es", "ask": "¿Ganó el club de robótica un campeonato estatal?", "holds": null, "expect": "silent"}
+   ],
+   "pass_rules": {
+    "served": "Each 'hit' question hits (K2, K4, K5, K7) and the 'silent' one serves nothing (K8).",
+    "gap": "Each 'miss' question does not hit: an English claim about a Spanish email (K1, K6) or tape that writes the number out (K3).",
+    "unsealed": "No seal or decline row on the box: code never approves.",
+    "verify": "kernel.py verify holds on the evidence box and on the verdict box."
+   }
+  },
+  "misses": {
+   "box": "the freeze-2 box, built as run.py builds it; pile-rank reads one of its mirrors as a folder",
+   "kernel_at_freeze_2": "b5cd7e931429a859035b02be8e70bd8c4c9356f90ccb23e9529f8186ce6da746",
+   "questions": [
+    {"id": "M1", "claim": "C5", "follows": "Q5", "kind": "all-passages", "ask": "When was the Section 936 credit repealed", "holds": "repeal in 2005", "expect": "within", "within": 10},
+    {"id": "M2", "claim": "T2", "follows": "Q8", "kind": "all-passages", "ask": "¿Cuánto mandó Tomás para las baterías?", "holds": "$6,000", "expect": "within", "within": 10},
+    {"id": "M3", "claim": "C5", "follows": "Q5", "kind": "pile-rank", "from": "web-pages", "ask": "When was the Section 936 credit repealed", "holds": "repeal in 2005", "expect": "hit"},
+    {"id": "M4", "claim": "T2", "follows": "Q8", "kind": "pile-rank", "from": "mail", "ask": "¿Cuánto mandó Tomás para las baterías?", "holds": "$6,000", "expect": "hit"}
+   ],
+   "pass_rules": {
+    "reach": "all-passages ranks a passage holding each phrase 10th or better (M1, M2), and its first three are exactly what kernel.py bite serves for the same words.",
+    "phrases": "pile-rank's first three hold each phrase (M3 over the web pages' mirror, M4 over the mail mirror).",
+    "rank": "kernel.py is the file freeze 2 ran: its rank was not loosened to reach either.",
+    "unsealed": "No seal or decline row on the box: code never approves.",
+    "verify": "kernel.py verify holds on the evidence box and on the verdict box."
+   }
+  }
+ }
+}
