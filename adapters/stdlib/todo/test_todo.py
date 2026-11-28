@@ -116,6 +116,31 @@ def test_need_to_counts_where_a_thing_to_do_is_said(tmp_path):
     }
 
 
+def test_a_mark_inside_quotation_marks_is_words_quoted_not_a_thing_to_do(tmp_path):
+    assert marked(
+        tmp_path,
+        '- **The ask.** "I still need to sign the py stuff on github"',
+        "- **Local first.** \u201cBack to the local, where I need to be working first.\u201d",
+        '**Asked:** the operator, that morning: "we need to get that into rat?"',
+        'We need to focus on the 0, and yes there is a demo for that too."',
+        '| `todo` | every line marked "need to", "remember to", an open checkbox |',
+        '"target_text": "Correct the status. TODO: keep them in lockstep"',
+        'Mum: "don\'t forget the bins on Tuesday"',
+        "- Walt: \u201cremember to bring the ladder\u201d",
+        'need to buy "milk" today',
+        '- [ ] reply to the "need to renew" email',
+        'Wrote "done" on it, but I need to post it.',
+        '- [ ] **the demos of sharing** (the owner: "a few demos in Willow as',
+    ) == {
+        '- [ ] **the demos of sharing** (the owner: "a few demos in Willow as',
+        'Mum: "don\'t forget the bins on Tuesday"',
+        "- Walt: \u201cremember to bring the ladder\u201d",
+        'need to buy "milk" today',
+        '- [ ] reply to the "need to renew" email',
+        'Wrote "done" on it, but I need to post it.',
+    }
+
+
 def test_the_other_marks_count_anywhere_in_a_line_in_any_case(tmp_path):
     assert marked(
         tmp_path,

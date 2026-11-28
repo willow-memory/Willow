@@ -1,0 +1,1 @@
+`kart` 0.1.4: `shell` runs one command of a session in the sandbox in place of your own shell, the project writable, home and the system read-only, no network, and the box, its key and what `--hide` names never mounted (home is mounted around them); `--hold` keeps a path read-only inside the project too; `policy --project` prints it. No seal, no proposal, no row

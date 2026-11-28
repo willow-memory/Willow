@@ -42,6 +42,8 @@ import privacy  # noqa: E402
 
 #: the tools whose input becomes text on disk or a command
 WRITES = {"Write", "Edit", "MultiEdit", "NotebookEdit", "Bash"}
+#: Cursor's name for its shell (its hooks reference, preToolUse's matcher)
+CURSOR_TOOLS = {"Shell": "Bash"}
 #: the kinds refused; an email or a phone number is not a secret
 KINDS = {"key": "a key", "password": "a password", "card": "a card number"}
 #: text a call takes out, which may be a secret on its way out
@@ -87,10 +89,15 @@ def judge(raw: str) -> tuple[int, str]:
             2,
             "refused: the hook was sent something it can't read, so it can't say it is safe.",
         )
-    tool = call.get("tool_name")
+    tool, given = call.get("tool_name"), call.get("tool_input")
+    if (
+        tool is None and "command" in call
+    ):  # Cursor's beforeShellExecution: the command alone
+        tool, given = "Bash", {"command": call.get("command")}
+    tool = CURSOR_TOOLS.get(tool, tool)
     if tool not in WRITES:
         return 0, ""
-    found = leaks(strings(call.get("tool_input")))
+    found = leaks(strings(given))
     if not found:
         return 0, ""
     return 2, (f"refused: this {tool} holds {said(found)}; the value is not shown.\n"

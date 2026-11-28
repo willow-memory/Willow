@@ -1,6 +1,6 @@
 """kart.py: a job someone sent you, run over your own folder in Kartikeya's sandbox.
 
-    python adapters/deps/kart/kart.py policy --box DIR
+    python adapters/deps/kart/kart.py policy --box DIR [--project DIR] [--hide PATH[,...]] [--hold PATH[,...]]
     python adapters/deps/kart/kart.py take   --box DIR --package FILE --words "your words" [--now TS]
     python adapters/deps/kart/kart.py write  --box DIR --file JOB --words "your words" [--now TS]
     python adapters/deps/kart/kart.py try    --box DIR --file JOB --to FILE [--timeout SECONDS] [--now TS]
@@ -9,6 +9,7 @@
     python adapters/deps/kart/kart.py status --box DIR --db QUEUE --id ID [--to FILE]
     python adapters/deps/kart/kart.py run    --box DIR --job proposal:<sha256> --to FILE [--shape numbers] [--timeout SECONDS] [--now TS]
     python adapters/deps/kart/kart.py gather --box DIR --package FILE[,...] --words "your words" [--now TS]
+    python adapters/deps/kart/kart.py shell  --box DIR --project DIR --command TEXT [--cwd DIR] [--hide PATH[,...]] [--hold PATH[,...]] [--timeout SECONDS]
 
 A job is a shell task, as Kartikeya runs them, that came to you in a share
 package, or that you wrote yourself. It never runs because it arrived, or
@@ -53,12 +54,31 @@ that held and that your record received, of numbers, all naming the same
 job text by its SHA-256 and each from its own chain, adds them line by
 line, and proposes the totals as your answer, waiting on your seal.
 
-Exit codes, the kernel's: 0 the policy printed, or a job tried and ended well; 42 a job taken, a result or
-a total proposed, waiting on your seal, or a job that failed or broke its
+`shell` is the other way round: not a job over your folder, but one command
+of a session working in a project of yours, run in the sandbox in place of
+your own shell. The project is writable, since the work is there. Your home
+and the system's /usr and /etc are read-only, /tmp is private, there is no
+network, and the environment is PATH, LANG and HOME. The box and its key
+are never in it, nor anything you name with --hide: home is mounted around
+them, piece by piece, so they are not there to be read by any path a command
+builds. A project that holds one of them, or lies inside one, is refused.
+What you name with --hold is read-only wherever it is, in the project too:
+the code that judges a session's commands, say. It
+takes no seal and proposes nothing, and nothing of it is on your record:
+it is a shell, and what it changed is in the project for you to read. What
+the command printed comes back as one line of JSON (`returncode`, `stdout`,
+`stderr`, `status`, and `how` when it never ran or was ended), on standard
+output.
+
+Exit codes, the kernel's: 0 the policy printed, or a job tried or a command
+run that ended well; 42 a job taken, a result or
+a total proposed, waiting on your seal, or a job or a command that failed, or
+a job that broke its
 shape; 2 refused (no
 bubblewrap or Kartikeya, a bubblewrap that can't make a sandbox here, a job
 not sealed, one asking for the network, a job file that can't be read as
-text, is empty or too long, or is inside the box).
+text, is empty or too long, or is inside the box; a project that isn't a
+folder, that holds your home, or that holds or lies inside what is hidden).
 """
 
 from __future__ import annotations
@@ -88,7 +108,11 @@ import share  # noqa: E402
 NETWORK = ("# allow_net", "# allow_db", "# allow_localhost")
 OUTPUT = 20_000  # characters of a job's output proposed as an answer
 FLAGS = {
-    "policy": ({"--box"}, set()),
+    "policy": ({"--box"}, {"--project", "--hide", "--hold"}),
+    "shell": (
+        {"--box", "--project", "--command"},
+        {"--cwd", "--hide", "--hold", "--timeout"},
+    ),
     "take": ({"--box", "--package", "--words"}, {"--now"}),
     "write": ({"--box", "--file", "--words"}, {"--now"}),
     "try": ({"--box", "--file", "--to"}, {"--timeout", "--now"}),
@@ -285,6 +309,17 @@ def do_policy(opts: dict) -> int:
     _, why = box_rows(box)
     if why:
         return refuse(why)
+    if opts.keys() & {"--project", "--hide", "--hold"}:
+        if "--project" not in opts:
+            return refuse(
+                "--hide and --hold go with --project: it is the shell's policy"
+            )
+        project, hidden, held, why = shell_place(box, opts)
+        if why:
+            return refuse(why)
+        run = Path("<the command, made new for each run>")
+        print(json.dumps(shell_policy(project, Path.home().resolve(), hidden, held, run), indent=1))  # fmt: skip
+        return kernel.ALIVE
     pile = kernel.folder(kernel.config(box)).resolve()
     print(json.dumps(policy(pile, Path("<scratch, made new for each run>")), indent=1))
     return kernel.ALIVE
@@ -704,11 +739,177 @@ def do_gather(opts: dict) -> int:
     return kernel.ESCALATE
 
 
+# ── shell: a session's own command, in the sandbox ──────────────────────────
+#: the system a command sees, read-only, beside your home
+SYSTEM = ("/usr", "/etc")
+
+
+def around(root: Path, hidden: list[Path]) -> list[Path]:
+    """What of root to mount so that nothing hidden is in the sandbox: root
+    whole when it holds nothing hidden, nothing when it is hidden, and else
+    the folders and files in it, each the same way. A link in a folder taken
+    apart is left out: Kartikeya mounts what a link points at, which could be
+    what is hidden."""
+    if root in hidden:
+        return []
+    if not any(h.is_relative_to(root) for h in hidden):
+        return [root]
+    try:
+        inside = sorted(root.iterdir())
+    except OSError:
+        return []
+    found: list[Path] = []
+    for p in inside:
+        if not p.is_symlink() and (p.is_dir() or p.is_file()):
+            found += around(p, hidden)
+    return found
+
+
+def scaffold(mounted: list[Path]) -> list[Path]:
+    """The folders the sandbox makes only to hang its mounts on: every folder
+    above something mounted that is not itself inside a mount. They belong to
+    no one outside: a file written there is gone when the command ends.
+    /tmp is the command's own, and stays."""
+    made: set[Path] = set()
+    for m in mounted:
+        made.update(m.parents)
+    tmp = Path("/tmp")
+    return sorted(
+        d for d in made
+        if not any(d.is_relative_to(m) for m in mounted) and d != tmp
+    )  # fmt: skip
+
+
+def shell_policy(
+    project: Path, home: Path, hidden: list[Path], held: list[Path], run: Path
+) -> dict:
+    """The mount policy for a session's shell: the project writable; home,
+    the system, what is held and the command's own file read-only; nothing
+    hidden; and nothing of the person's environment. What is held is mounted
+    after the project that holds it, so it is read-only there too."""
+    return {
+        "version": 1,
+        "description": "willow kart shell: the project writable, home and the system "
+                       "read-only, the box and what is hidden never mounted",
+        "env_prefixes": [], "db_env_prefixes": [], "credential_env_prefixes": [],
+        "env_deny": [],
+        "bind_read_only": [*SYSTEM, *map(str, around(home, hidden)),
+                           *map(str, held), str(run)],
+        "bind_read_write": [str(project)],
+        "bind_try": [], "bind_try_read_only": ["/lib32", "/opt"],
+        "worktree_scan_roots": [],
+    }  # fmt: skip
+
+
+def shell_place(
+    box: Path, opts: dict
+) -> tuple[Path, list[Path], list[Path], str | None]:
+    """(the project, what is never mounted, what is held read-only, why not).
+    Hidden are the box, its key and each path of --hide. The project is a
+    folder that neither holds your home or anything hidden, nor lies inside
+    what is hidden or held. What is held is there to hold, and not hidden."""
+    project = Path(opts["--project"]).resolve()
+    hidden = [box.resolve(), Path(kernel.config(box)["key"]).resolve()]
+    hidden += [Path(x).resolve() for x in opts.get("--hide", "").split(",") if x]
+    held = [Path(x).resolve() for x in opts.get("--hold", "").split(",") if x]
+    held = [
+        k for k in held if k.exists() and not any(k.is_relative_to(h) for h in hidden)
+    ]
+    if not project.is_dir():
+        return project, hidden, held, f"{project} isn't a folder"
+    if Path.home().resolve().is_relative_to(project):
+        return project, hidden, held, (f"{project} holds your home; a project is a "
+                                       "folder in it")  # fmt: skip
+    for h in hidden:
+        if h.is_relative_to(project) or project.is_relative_to(h):
+            return project, hidden, held, (f"{h} is never mounted, and the project holds it or "
+                                     "lies inside it; nothing ran")  # fmt: skip
+        if any(h.is_relative_to(s) or Path(s).is_relative_to(h) for s in SYSTEM):
+            return project, hidden, held, f"{h} is the system's; it can't be hidden"
+    for k in held:
+        if project.is_relative_to(k):
+            return project, hidden, held, (f"{k} is held read-only, and the project is it or "
+                                           "lies inside it; nothing could be written")  # fmt: skip
+    return project, hidden, held, None
+
+
+def do_shell(opts: dict) -> int:
+    """One command of a session, run in the sandbox in the project. No seal,
+    no proposal, no row: what it printed goes back as one line of JSON."""
+    box = Path(opts["--box"])
+    _, why = box_rows(box)
+    if why:
+        return refuse(why)
+    project, hidden, held, why = shell_place(box, opts)
+    if why:
+        return refuse(why)
+    cwd = Path(opts.get("--cwd", project)).resolve()
+    if not cwd.is_dir() or not cwd.is_relative_to(project):
+        return refuse(f"{cwd} isn't a folder in the project")
+    command = opts["--command"]
+    if not command.strip():
+        return refuse("there is no command")
+    why = asks_network(command) or missing()
+    if why:
+        return refuse(why)
+    try:
+        timeout = int(opts.get("--timeout", "120"))
+    except ValueError:
+        return refuse("--timeout is whole seconds")
+    status, result = shelled(command, project, cwd, hidden, held, timeout)
+    said = {"returncode": result.get("returncode"), "status": status,
+            "stdout": str(result.get("stdout") or ""),
+            "stderr": str(result.get("stderr") or "")}  # fmt: skip
+    if result.get("returncode") is None:  # it never ran, or was ended
+        said["how"] = why_failed(result)
+    print(json.dumps(said, sort_keys=True))
+    return kernel.ALIVE if status == "completed" else kernel.ESCALATE
+
+
+def shelled(
+    command: str,
+    project: Path,
+    cwd: Path,
+    hidden: list[Path],
+    held: list[Path],
+    timeout: int,
+) -> tuple[str, dict]:
+    """The command through Kartikeya under the shell's policy. It is handed
+    over as a file of its own, read-only in the sandbox: Kartikeya reads a
+    task's text for fenced blocks and network lines, and a command's text is
+    not a task's. Its scan reads the command first, as it reads a job."""
+    try:
+        from kartikeya.task_scan import check_kart_task  # noqa: PLC0415
+    except ImportError:  # a Kartikeya from before it scanned
+        check_kart_task = None
+    blocked = check_kart_task(command) if check_kart_task else None
+    if blocked:
+        return "failed", blocked
+    home = Path.home().resolve()
+    with tempfile.TemporaryDirectory() as tmp:
+        run, fleet = Path(tmp) / "run", Path(tmp) / "home"
+        run.mkdir()
+        fleet.mkdir()
+        (run / "command.sh").write_text(command, encoding="utf-8")
+        conf = Path(tmp) / "policy.json"
+        policy_ = shell_policy(project, home, hidden, held, run)
+        conf.write_text(json.dumps(policy_), encoding="utf-8")
+        # Kartikeya's policy lists what to mount and no more, so the folders
+        # it makes above the mounts are writable and kept nowhere. Closed
+        # before the command starts, a write there is refused, not lost.
+        mounted = [
+            Path(m) for m in policy_["bind_read_only"] + policy_["bind_read_write"]
+        ]
+        closed = " ".join(shlex.quote(str(d)) for d in scaffold(mounted))
+        task = (f"chmod a-w {closed} 2>/dev/null; "
+                f"cd {shlex.quote(str(cwd))} && exec env -i PATH={PATH} LANG={LOCALE} "
+                f"HOME={shlex.quote(str(home))} bash {shlex.quote(str(run / 'command.sh'))}")  # fmt: skip
+        return kartikeya_runs(task, conf, fleet, timeout)
+
+
 def sandboxed(job: str, pile: Path, timeout: int) -> tuple[str, dict]:
     """The job through Kartikeya, under willow's policy, with its home,
     logs and scratch in a folder made for this run and removed after."""
-    from kartikeya.execute import run_shell_task  # noqa: PLC0415
-
     with tempfile.TemporaryDirectory() as tmp:
         scratch, home = Path(tmp) / "scratch", Path(tmp) / "home"
         scratch.mkdir()
@@ -722,28 +923,36 @@ def sandboxed(job: str, pile: Path, timeout: int) -> tuple[str, dict]:
         # The job starts again with an empty environment and these three.
         task = (f"cd {shlex.quote(str(home))} && exec env -i PATH={PATH} LANG={LOCALE} "
                 f"HOME={shlex.quote(str(home))} bash -c {shlex.quote(task)}")  # fmt: skip
-        # bwrap itself is looked up on PATH too: its folder goes last, where
-        # the job can't see it (only /usr is mounted)
-        bwrap = os.path.dirname(shutil.which("bwrap") or "/usr/bin/bwrap")
-        path = PATH if bwrap in PATH.split(":") else f"{PATH}:{bwrap}"
-        swap = {"KART_SANDBOX_CONFIG": str(conf), "WILLOW_HOME": str(home),
-                "HOME": str(home), "PATH": path, "LANG": LOCALE}  # fmt: skip
-        # Kartikeya reads its own settings from the environment, and a
-        # person's may carry a fleet's: WILLOW_ROOT puts that fleet's venv on
-        # the job's PATH. It sees what is set here and none of theirs.
-        theirs = [k for k in os.environ if k.startswith(SETTINGS) and k not in KEPT]
-        keep = {k: os.environ.get(k) for k in [*swap, *theirs]}
-        for k in theirs:
-            del os.environ[k]
-        os.environ.update(swap)
-        try:
-            return run_shell_task(task, timeout=timeout)
-        finally:
-            for k, v in keep.items():
-                if v is None:
-                    os.environ.pop(k, None)
-                else:
-                    os.environ[k] = v
+        return kartikeya_runs(task, conf, home, timeout)
+
+
+def kartikeya_runs(task: str, conf: Path, home: Path, timeout: int) -> tuple[str, dict]:
+    """One task through Kartikeya under the policy in conf, its own home and
+    logs in `home`, and none of the person's settings in its environment."""
+    from kartikeya.execute import run_shell_task  # noqa: PLC0415
+
+    # bwrap itself is looked up on PATH too: its folder goes last, where
+    # the job can't see it (only /usr is mounted)
+    bwrap = os.path.dirname(shutil.which("bwrap") or "/usr/bin/bwrap")
+    path = PATH if bwrap in PATH.split(":") else f"{PATH}:{bwrap}"
+    swap = {"KART_SANDBOX_CONFIG": str(conf), "WILLOW_HOME": str(home),
+            "HOME": str(home), "PATH": path, "LANG": LOCALE}  # fmt: skip
+    # Kartikeya reads its own settings from the environment, and a
+    # person's may carry a fleet's: WILLOW_ROOT puts that fleet's venv on
+    # the job's PATH. It sees what is set here and none of theirs.
+    theirs = [k for k in os.environ if k.startswith(SETTINGS) and k not in KEPT]
+    keep = {k: os.environ.get(k) for k in [*swap, *theirs]}
+    for k in theirs:
+        del os.environ[k]
+    os.environ.update(swap)
+    try:
+        return run_shell_task(task, timeout=timeout)
+    finally:
+        for k, v in keep.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
 
 
 def main(argv: list[str]) -> int:
@@ -773,6 +982,8 @@ def main(argv: list[str]) -> int:
         return do_status(opts)
     if cmd == "gather":
         return do_gather(opts)
+    if cmd == "shell":
+        return do_shell(opts)
     return do_run(opts, opts.get("--now") or kernel.now())
 
 

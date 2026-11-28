@@ -3,7 +3,7 @@ section: Assistants
 line: A PreToolUse hook that refuses a write or command holding a key, password or card number, by the privacy add-on's shapes, naming the kind.
 source: box
 added: 2026-10-29
-version: 0.1.0
+version: 0.1.1
 writes: nothing
 network: none
 role: guards
@@ -31,7 +31,8 @@ can't leak what it stopped:
 
 To use it, put that command where the assistant's settings name a PreToolUse
 hook (for Claude Code, a hook entry in its settings file, matching Write,
-Edit, MultiEdit, NotebookEdit and Bash).
+Edit, MultiEdit, NotebookEdit and Bash; for Cursor, `preToolUse`, whose shell
+is `Shell`, or `beforeShellExecution`, which sends the command alone).
 
 | What it looks at | What it leaves alone |
 |---|---|

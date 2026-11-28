@@ -3,7 +3,7 @@ section: Privacy and safety
 line: Hides phone numbers, emails, card, bank and ID numbers, and API keys in what a question prints, and says what it hid.
 source: bot
 added: 2026-10-23
-version: 0.1.1
+version: 0.1.2
 writes: record
 network: none
 role: guards
@@ -20,7 +20,7 @@ What a question prints, with personal data and keys withheld.
 | phone | a number with an area code, or +country, or a national number from its 0 in groups (`0113 555 0122`, `07700 900123`), 10 or 11 digits |
 | account | a bank number after its label: sort code, account (number, no.), acct, a/c or routing; six digits or more, never a date. The label stays, so `sort code [withheld: account]` still reads |
 | email | an address |
-| card | 4x4 groups, or 13 to 19 digits that pass the Luhn check |
+| card | 4x4 groups, or 13 to 19 digits, that start as a card network's numbers do (Visa, Mastercard, American Express, Discover, Diners Club, JCB, UnionPay, Maestro, Mir, RuPay) and pass the Luhn check: four years, ports or sizes in a row are left |
 | iban | an IBAN whose mod-97 check holds |
 | ssn | a US social security number, labelled or 3-2-4 |
 | itin | a US taxpayer number, 9xx-7x-xxxx in its ranges |

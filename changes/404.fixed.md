@@ -1,0 +1,1 @@
+`kart` 0.1.5: a command run by `shell` that writes outside the project and /tmp is refused. The folders the sandbox makes above its mounts (`/`, and home's own folder when something in it is hidden) were writable and kept nowhere, so `touch ~/x` succeeded and the file was gone when the command ended

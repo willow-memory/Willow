@@ -446,6 +446,182 @@ def test_the_policy_is_willows_and_says_so(walt):
         assert pol[k] == [], k
 
 
+# ── shell: a session's own command ──────────────────────────────────────────
+class Desk:
+    """Walt's home, with his box and key in it, a project, and what else he
+    keeps there: what a session's shell is run among."""
+
+    def __init__(self, walt: Person):
+        self.walt, self.home = walt, walt.dir
+        self.project = self.home / "work"
+        (self.project / "src").mkdir(parents=True)
+        (self.home / "notes.txt").write_text("milk\n")
+        (self.home / "vault" / "live").mkdir(parents=True)
+        (self.home / "vault" / "live" / "secret.txt").write_text("hunter2\n")
+        (self.home / "vault" / "beside.txt").write_text("beside\n")
+        os.symlink(self.home / "vault" / "live", self.home / "vault" / "door")
+
+    def shell(self, command: str, *more, project=None) -> tuple[int, dict | None, str]:
+        got = self.walt.kart("shell", "--project", project or self.project,
+                             "--command", command, *more,
+                             env={**os.environ, "HOME": str(self.home)})  # fmt: skip
+        said = json.loads(got.stdout) if got.stdout.startswith("{") else None
+        return got.returncode, said, got.stderr
+
+
+@pytest.fixture
+def desk(walt):
+    return Desk(walt)
+
+
+def test_a_sessions_command_works_in_the_project_and_sees_no_key_box_or_network(desk):
+    """What a session's shell would try: writing the project, writing home,
+    the key, the box, the network, the person's environment."""
+    w = desk.walt
+    before = w.rows()
+    code, said, err = desk.shell(f"""
+pwd
+echo made > new.txt && echo "project write: $(cat new.txt)"
+echo "home read: $(cat ~/notes.txt)"
+(echo x > ~/notes.txt) 2>/dev/null && echo "home write: yes" || echo "home write: no"
+(echo x > ~/new.txt) 2>/dev/null && echo "home new: yes" || echo "home new: no"
+(echo x > /new.txt) 2>/dev/null && echo "root new: yes" || echo "root new: no"
+(echo x > /tmp/new.txt) 2>/dev/null && echo "tmp new: yes" || echo "tmp new: no"
+echo "key: $(cat {w.key} 2>/dev/null | wc -c)"
+echo "box: $(ls {w.box} 2>/dev/null | wc -l)"
+getent hosts example.com >/dev/null 2>&1 && echo "dns: yes" || echo "dns: no"
+(echo x > /usr/kart-probe) 2>/dev/null && echo "system write: yes" || echo "system write: no"
+env | cut -d= -f1 | grep -v -x -e PWD -e SHLVL -e _ | sort | tr '\\n' ' '
+""", "--timeout", "60")  # fmt: skip
+    assert code == 0, err
+    assert said["stdout"].splitlines() == [
+        str(desk.project), "project write: made", "home read: milk", "home write: no",
+        "home new: no", "root new: no", "tmp new: yes",
+        "key: 0", "box: 0", "dns: no", "system write: no", "HOME LANG PATH",
+    ]  # fmt: skip
+    assert said["returncode"] == 0 and said["status"] == "completed"
+    assert (desk.project / "new.txt").read_text() == "made\n"
+    assert (desk.home / "notes.txt").read_text() == "milk\n"
+    assert w.rows() == before  # no row, no proposal: it is a shell
+
+
+def test_what_is_hidden_is_not_there_and_what_is_beside_it_is(desk):
+    """Home is mounted around what is hidden: a folder beside it is read, it
+    is not, and a link beside it that points at it leads nowhere."""
+    live = desk.home / "vault" / "live"
+    probe = ("cat ~/vault/beside.txt; ls ~/vault | tr '\\n' ' '; echo; "
+             "cat ~/vault/live/secret.txt ~/vault/door/secret.txt 2>/dev/null | wc -c")  # fmt: skip
+    code, said, err = desk.shell(probe, "--hide", live)
+    assert code == 0, err
+    assert said["stdout"].splitlines() == ["beside", "beside.txt ", "0"]
+    code, said, _ = desk.shell(probe)  # not hidden, it is there, by the link too
+    assert said["stdout"].splitlines() == ["beside", "beside.txt door live ", "16"]
+
+
+def test_what_is_held_is_read_only_in_the_project_too(desk):
+    """The code that judges a session can sit in its project: read, never
+    written, while the rest of the project is."""
+    judge = desk.project / "src"
+    (judge / "rule.py").write_text("rule\n")
+    probe = ("cat src/rule.py; (echo x > src/rule.py) 2>/dev/null; (echo x > src/new) 2>/dev/null; "
+             "echo y > beside.txt; cat src/rule.py beside.txt; ls src")  # fmt: skip
+    code, said, err = desk.shell(probe, "--hold", f"{judge},{desk.home / 'nowhere'}")
+    assert code == 0, err
+    assert said["stdout"].splitlines() == ["rule", "rule", "y", "rule.py"]
+    assert (judge / "rule.py").read_text() == "rule\n" and not (judge / "new").exists()
+    code, said, err = desk.shell("echo x > src/new; ls src | tr '\\n' ' '")
+    assert said["stdout"] == "new rule.py"  # not held, it is the project's
+    for project in (judge, desk.project):
+        code, said, err = desk.shell("echo hi", "--hold", desk.project, project=project)
+        assert (code, said) == (2, None) and "is held read-only" in err
+
+
+def test_a_command_that_fails_says_how_it_ended_and_what_it_printed(desk):
+    code, said, _ = desk.shell("echo out; echo oops >&2; exit 3")
+    assert code == 42
+    assert (said["returncode"], said["stdout"], said["stderr"]) == (3, "out", "oops")
+    assert said["status"] == "failed" and "how" not in said
+
+
+def test_a_command_is_run_as_written_fences_and_all(desk):
+    """Kartikeya reads a task's fenced blocks as steps of their own; a
+    command's text is not a task's."""
+    code, said, err = desk.shell("cat <<'END'\n```\necho not run\n```\nEND\necho after")
+    assert code == 0, err
+    assert said["stdout"].splitlines() == ["```", "echo not run", "```", "after"]
+
+
+def test_a_command_starts_in_the_folder_named_and_only_in_the_project(desk):
+    code, said, err = desk.shell("pwd", "--cwd", desk.project / "src")
+    assert code == 0 and said["stdout"] == str(desk.project / "src"), err
+    for out in (desk.home, desk.project / "nowhere", desk.project / "new.txt"):
+        (desk.project / "new.txt").write_text("a file")
+        code, said, err = desk.shell("pwd", "--cwd", out)
+        assert (code, said) == (2, None) and "isn't a folder in the project" in err
+
+
+def test_a_shell_is_refused_where_it_would_hold_what_is_hidden(desk, tmp_path):
+    w, home = desk.walt, desk.home
+    inside = w.box / "deep"
+    inside.mkdir()
+    for project, more, why in (
+        (home, (), "holds your home"),
+        (tmp_path, (), "holds your home"),
+        (home / "nowhere", (), "isn't a folder"),
+        (home / "notes.txt", (), "isn't a folder"),
+        (w.box, (), "is never mounted"),
+        (inside, (), "is never mounted"),
+        (home / "vault", ("--hide", home / "vault" / "live"), "is never mounted"),
+        (home / "vault" / "live", ("--hide", f"{home / 'nowhere'},{home / 'vault'}"),
+         "is never mounted"),
+        (desk.project, ("--hide", "/usr/bin"), "is the system's"),
+        (desk.project, ("--hide", "/"), "is never mounted"),
+        (desk.project, ("--timeout", "soon"), "--timeout is whole seconds"),
+    ):  # fmt: skip
+        code, said, err = desk.shell("echo ran > ran.txt", *more, project=project)
+        assert (code, said) == (2, None) and why in err, (project, err)
+    for command, why in (("  \n", "there is no command"),
+                         ("echo hi\n# allow_net\ncurl example.com", "asks for the network")):  # fmt: skip
+        code, said, err = desk.shell(command)
+        assert (code, said) == (2, None) and why in err
+    assert not list(home.rglob("ran.txt"))
+
+
+def test_a_shell_without_bubblewrap_refuses_and_names_it(desk, tmp_path):
+    env = {**os.environ, "HOME": str(desk.home), "PATH": str(tmp_path)}
+    got = desk.walt.kart("shell", "--project", desk.project, "--command", "echo hi",
+                         env=env)  # fmt: skip
+    assert got.returncode == 2 and "bubblewrap isn't installed" in got.stderr
+
+
+def test_the_shells_policy_is_printed_for_a_project(desk):
+    w, home = desk.walt, desk.home.resolve()
+    env = {**os.environ, "HOME": str(home)}
+    got = w.kart("policy", "--project", desk.project, "--hide", home / "vault" / "live",
+                 env=env)  # fmt: skip
+    assert got.returncode == 0, got.stderr
+    pol = json.loads(got.stdout)
+    assert pol["bind_read_write"] == [str(desk.project.resolve())]
+    assert pol["bind_read_only"] == [
+        "/usr", "/etc", str(home / "id"), str(home / "notes.txt"), str(home / "pile"),
+        str(home / "vault" / "beside.txt"), str(home / "work"),
+        "<the command, made new for each run>",
+    ]  # fmt: skip
+    for k in ("env_prefixes", "credential_env_prefixes", "db_env_prefixes", "bind_try"):
+        assert pol[k] == [], k
+    for flag in ("--hide", "--hold"):
+        got = w.kart("policy", flag, home / "vault", env=env)
+        assert got.returncode == 2 and "go with --project" in got.stderr
+    got = w.kart("policy", "--project", desk.project, "--hold", desk.project / "src",
+                 "--hide", home / "vault", env=env)  # fmt: skip
+    held = json.loads(got.stdout)["bind_read_only"]
+    assert held[-2:] == [str(desk.project.resolve() / "src"),
+                         "<the command, made new for each run>"]  # fmt: skip
+    assert str(home / "vault") not in held
+    got = w.kart("policy", "--project", w.box, env=env)
+    assert got.returncode == 2 and "is never mounted" in got.stderr
+
+
 # ── take: a job that came in a package ──────────────────────────────────────
 @pytest.fixture
 def sent(tmp_path, walt):
