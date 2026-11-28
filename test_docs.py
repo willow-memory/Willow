@@ -171,6 +171,10 @@ ELSEWHERE = {
         "STACK.json": "in the person's stack, made by assemble.py outside this repo",
         "batches.json": "beside the person's stack, written by canvas.py",
     },
+    "docs/design/key-pair.md": {
+        "kernel.json": "in a person's box, written by the kernel's init",
+        "crypto/ed25519": "a package of Go's standard library",
+    },
     "docs/how-it-works.md": {
         "dad/": "in Odile's generated files (test_odiles_files_are_what_the_docs_say)",
     },

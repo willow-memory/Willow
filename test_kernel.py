@@ -1260,3 +1260,293 @@ def test_a_words_plain_form_is_the_same_kept_or_worked_out():
         assert len(k._STEMS) <= 3
     finally:
         k._STEMS_MOST = most
+
+
+# ── the key pair (docs/design/key-pair.md) ──────────────────────────────────
+#: RFC 8032, section 7.1: the private half, the public half, the message, the signature
+RFC8032 = [
+    ("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+     "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", "",
+     "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e06522490155"
+     "5fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b"),
+    ("4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb",
+     "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72",
+     "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da"
+     "085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00"),
+    ("c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7",
+     "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025", "af82",
+     "6291d657deec24024827e69c3abe01a30ce548a284743a445e3680d7db5ac3ac"
+     "18ff9b538d16f290ae67f760984dc6594a7c15e9716ed28dc027beceea1ec40a"),
+]  # fmt: skip
+#: the eight points of small order, as their canonical 32 bytes
+SMALL = [
+    "0100000000000000000000000000000000000000000000000000000000000000",
+    "ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "0000000000000000000000000000000000000000000000000000000000000080",
+    "26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05",
+    "26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85",
+    "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a",
+    "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa",
+]
+
+
+def test_the_key_pair_signs_and_checks_as_rfc_8032_says():
+    for seed, pub, msg, sig in RFC8032:
+        seed, pub, msg, sig = (bytes.fromhex(x) for x in (seed, pub, msg, sig))
+        assert k.ed_public(seed) == pub and k.ed_sign(seed, msg) == sig
+        assert k.ed_check(pub, msg, sig)
+        assert not k.ed_check(pub, msg + b"x", sig)
+        assert not k.ed_check(pub, msg, sig[:63] + bytes([sig[63] ^ 1]))
+
+
+def test_the_rule_refuses_what_libraries_disagree_on():
+    """One rule in every port, so none takes what another refuses: S of L or
+    more, a y of p or more, a point of small order for A or R, and a public
+    half that is no point of prime order."""
+    seed, pub, msg, sig = (bytes.fromhex(x) for x in RFC8032[1])
+    s = int.from_bytes(sig[32:], "little")
+    assert not k.ed_check(pub, msg, sig[:32] + (s + k.ED_L).to_bytes(32, "little"))
+    for small in SMALL:
+        small = bytes.fromhex(small)
+        assert k.ed_point(small) is None
+        assert not k.ed_check(small, msg, sig)  # as A
+        assert not k.ed_check(pub, msg, small + sig[32:])  # as R
+        assert k.pub_of({"pub": small.hex()}) is None
+    # y = p + 1 names the point y = 1 again, written another way
+    assert k.ed_point((k.ED_P + 1).to_bytes(32, "little")) is None
+    assert k.pub_of({"pub": pub.hex()}) == pub
+    for junk in ("", "zz", pub.hex()[:-2], None, 7):
+        assert k.pub_of({"pub": junk}) is None
+    assert k.pub_of({}) is None
+
+
+class Paired:
+    """A box with an answer sealed and one declined under the HMAC key, as
+    every box has been until now."""
+
+    def __init__(self, tmp_path: Path):
+        self.tmp = tmp_path
+        pile, self.box = tmp_path / "pile", tmp_path / "box"
+        self.key, self.new = tmp_path / "keys" / "me.key", tmp_path / "keys" / "me.pair"
+        pile.mkdir()
+        (pile / "notes.md").write_text("The bus leaves at seven from the square.\n")
+        self.b = ["--box", str(self.box), "--now", "2026-11-27T00:00:00Z"]
+        cli("init", *self.b, "--pile", str(pile), "--key", str(self.key))
+        got = cli("bite", *self.b, "when does the bus leave the square")
+        self.cite = json.loads(got.stdout)["served"][0]["id"]
+        self.old, no = self.offer("bus.md", "Seven."), self.offer("ferry.md", "Noon.")
+        assert cli("seal", *self.b, self.old).returncode == 0
+        assert cli("decline", *self.b, no).returncode == 0
+        self.no = no
+
+    def offer(self, path: str, data: str) -> str:
+        prop = {"path": path, "data": data, "cites": [self.cite], "claim": "notes.md"}
+        f = self.tmp / "rows.jsonl"
+        f.write_text(json.dumps(prop) + "\n")
+        cli("propose", *self.b, "--file", str(f))
+        return k.subject_of(prop)
+
+    def rows(self) -> list[dict]:
+        return [
+            json.loads(x) for x in (self.box / "record.jsonl").read_text().splitlines()
+        ]
+
+    def cfg(self) -> dict:
+        return json.loads((self.box / "kernel.json").read_text())
+
+    def verify(self) -> tuple[int, str]:
+        got = cli("verify", "--box", str(self.box))
+        return got.returncode, got.stdout.strip()
+
+
+def test_a_box_given_a_key_pair_signs_beside_its_old_seals(tmp_path):
+    """pair: a private half in a new file of the person's, the public half in
+    the box. A seal from here is signed (`sig`) and one from before keeps its
+    HMAC (`proof`), each row one or the other, and both hold."""
+    p = Paired(tmp_path)
+    got = cli("pair", *p.b, "--key", str(p.new))
+    assert got.returncode == 0 and "paired" in got.stdout, got.stderr
+    cfg = p.cfg()
+    seed = bytes.fromhex(p.new.read_text().strip())
+    assert cfg["pub"] == k.ed_public(seed).hex() and len(seed) == 32
+    assert cfg["key"] == str(p.new) and cfg["old_key"] == str(p.key)
+    assert p.new.stat().st_mode & 0o777 == 0o600
+    assert p.rows()[-1]["kind"] == "pair" and p.rows()[-1]["pub"] == cfg["pub"]
+    new, no = p.offer("tram.md", "Eight."), p.offer("boat.md", "Nine.")
+    assert cli("seal", *p.b, new).returncode == 0
+    assert cli("decline", *p.b, no).returncode == 0
+    by = {r.get("subject"): r for r in p.rows() if r["kind"] in ("seal", "decline")}
+    assert "sig" in by[new] and "proof" not in by[new] and "sig" in by[no]
+    assert "proof" in by[p.old] and "sig" not in by[p.old]
+    assert k.ed_check(bytes.fromhex(cfg["pub"]),
+                      k.said(new, "seal", by[new]["bite_key"]),
+                      bytes.fromhex(by[new]["sig"]))  # fmt: skip
+    assert p.verify() == (0, f"the chain holds: {len(p.rows())} rows, 2 sealed")
+    # a second pair, a key already there, a key in the box: each refused
+    for key, why in ((tmp_path / "keys" / "x", "already has a key pair"),):
+        got = cli("pair", *p.b, "--key", str(key))
+        assert got.returncode == 2 and why in got.stderr and not key.exists()
+
+
+def test_pair_makes_its_own_key_and_never_takes_one(tmp_path):
+    p = Paired(tmp_path)
+    for key, why in ((p.key, "is already there"), (p.box / "k", "inside the box")):
+        got = cli("pair", *p.b, "--key", str(key))
+        assert got.returncode == 2 and why in got.stderr
+    assert "pub" not in p.cfg() and p.rows()[-1]["kind"] != "pair"
+
+
+def test_a_signed_seal_is_checked_without_any_secret(tmp_path):
+    """What the pair is for: the private half can be where the one who asks
+    can't read it. Checking a signed seal reads no key at all."""
+    p = Paired(tmp_path)
+    cli("pair", *p.b, "--key", str(p.new))
+    new = p.offer("tram.md", "Eight.")
+    assert cli("seal", *p.b, new).returncode == 0
+    assert cli("rekey", *p.b).returncode == 0
+    more = p.offer("boat.md", "Nine.")
+    p.new.unlink()
+    p.key.unlink()
+    assert p.verify() == (0, f"the chain holds: {len(p.rows())} rows, 2 sealed")
+    got = cli("bite", *p.b, "when does the bus leave the square")
+    assert got.returncode == 0 and "Seven." in got.stdout
+    # and nothing is sealed without it
+    got = cli("seal", *p.b, more)
+    assert got.returncode == 2 and "the key could not be read" in got.stderr
+
+
+def test_a_forged_signature_or_another_key_never_seals(tmp_path):
+    p = Paired(tmp_path)
+    cli("pair", *p.b, "--key", str(p.new))
+    new = p.offer("tram.md", "Eight.")
+    # the old secret is no private half: it signs nothing here
+    cfg = p.cfg()
+    (p.box / "kernel.json").write_text(json.dumps({**cfg, "key": cfg["old_key"]}))
+    got = cli("seal", *p.b, new)
+    assert got.returncode == 2 and "not the private half" in got.stderr
+    (p.box / "kernel.json").write_text(json.dumps(cfg))
+    assert cli("seal", *p.b, new).returncode == 0
+    rows = p.rows()
+    seal = rows[-1]
+    good = k.sealed(p.box, rows)
+    assert new in good
+    for change in (
+        {"sig": seal["sig"][:-2] + ("00" if seal["sig"][-2:] != "00" else "01")},
+        {"sig": "zz"}, {"sig": None}, {"sig": ""},
+        {"proof": "0" * 64},  # a row has one or the other
+        {"bite_key": "0" * 64},  # the question is signed too
+        {"subject": p.no},
+    ):  # fmt: skip
+        forged = [*rows[:-1], {**seal, **change}]
+        assert seal["subject"] not in k.sealed(p.box, forged) or change.get("subject")
+        assert {**seal, **change}["subject"] not in k.sealed(p.box, forged)
+    # an HMAC row after the pair still needs the old secret, and a signature
+    # made with another pair's private half is not this box's
+    other = k.ed_sign(b"\x07" * 32, k.said(new, "seal", seal["bite_key"])).hex()
+    assert new not in k.sealed(p.box, [*rows[:-1], {**seal, "sig": other}])
+
+
+def test_the_crossing_vouches_for_old_seals_and_retires_the_old_key(tmp_path):
+    """rekey: one row, signed with the new private half over the chain's tip
+    and the numbers of the rows it found proved under the old secret. After
+    it they stand on that row, and the box no longer names the old key."""
+    p = Paired(tmp_path)
+    got = cli("rekey", *p.b)
+    assert got.returncode == 2 and "crosses once, after `pair`" in got.stderr
+    cli("pair", *p.b, "--key", str(p.new))
+    before = p.rows()
+    got = cli("rekey", *p.b)
+    assert got.returncode == 0, got.stderr
+    assert "crossed: 1 seals and 1 declines" in got.stdout and str(p.key) in got.stdout
+    row = p.rows()[-1]
+    seal_n = next(r["n"] for r in before if r["kind"] == "seal")
+    no_n = next(r["n"] for r in before if r["kind"] == "decline")
+    assert (row["kind"], row["seal"], row["decline"]) == ("rekey", [seal_n], [no_n])
+    assert row["tip"] == before[-1]["hash"] and "old_key" not in p.cfg()
+    assert cli("rekey", *p.b).returncode == 2  # once
+    rows = p.rows()
+    assert p.old in k.sealed(p.box, rows) and p.no in k.declined(p.box, rows)
+    # the row vouches by number for what the chain held: change what it
+    # names, or sign less than it says, and the old seals fall with it
+    for change in ({"seal": []}, {"decline": []}, {"tip": "0" * 64},
+                   {"seal": [seal_n, no_n]}, {"sig": "00" * 64}):  # fmt: skip
+        forged = [*rows[:-1], {**row, **change}]
+        assert p.old not in k.sealed(p.box, forged), change
+    # an HMAC seal written after the crossing proves nothing, old secret or not
+    secret = bytes.fromhex(p.key.read_text().strip())
+    was = next(r for r in before if r["n"] == seal_n)
+    late = {**was, "n": row["n"] + 1,
+            "proof": k.proof(secret, p.old, "seal", was["bite_key"])}  # fmt: skip
+    assert k.proved(p.box, [*rows, late]) == [was]
+
+
+def test_a_crossing_refuses_to_vouch_for_a_forgery(tmp_path):
+    p = Paired(tmp_path)
+    cli("pair", *p.b, "--key", str(p.new))
+    p.key.write_text("00" * 32 + "\n")  # not the secret the old seals were made with
+    p.key.chmod(0o600)
+    got = cli("rekey", *p.b)
+    assert got.returncode == 2 and "don't prove under your old key" in got.stderr
+    assert p.rows()[-1]["kind"] == "pair" and "old_key" in p.cfg()
+
+
+def test_a_check_is_remembered_within_a_run_and_never_on_disk(tmp_path, monkeypatch):
+    p = Paired(tmp_path)
+    cli("pair", *p.b, "--key", str(p.new))
+    new = p.offer("tram.md", "Eight.")
+    cli("seal", *p.b, new)
+    files = sorted(x.name for x in p.box.rglob("*"))
+    calls = []
+    real = k.ed_check
+    monkeypatch.setattr(k, "ed_check", lambda *a: calls.append(a) or real(*a))
+    k.ED_CHECKED.clear()
+    rows = p.rows()
+    assert new in k.sealed(p.box, rows) and new in k.sealed(p.box, rows)
+    assert len(calls) == 1
+    assert sorted(x.name for x in p.box.rglob("*")) == files
+
+
+def test_a_question_checks_only_the_seals_that_could_answer_it(tmp_path, monkeypatch):
+    """A signature check is slow beside an HMAC, and a record gathers seals.
+    bite checks the ones that name its question, one or none, whatever the
+    record's size; verify still checks every one."""
+    p = Paired(tmp_path)
+    (tmp_path / "pile" / "more.md").write_text(
+        "The ferry sails at noon from the quay.\nThe tram runs at eight to the park.\n")  # fmt: skip
+    cli("pair", *p.b, "--key", str(p.new))
+    for ask, path, data in (("when does the ferry sail from the quay", "f.md", "Noon."),
+                            ("when does the tram run to the park", "t.md", "Eight.")):  # fmt: skip
+        got = cli("bite", *p.b, ask)
+        p.cite = json.loads(got.stdout)["served"][0]["id"]
+        assert cli("seal", *p.b, p.offer(path, data)).returncode == 0
+    rows, calls, real = p.rows(), [], k.ed_check
+    monkeypatch.setattr(k, "ed_check", lambda *a: calls.append(a) or real(*a))
+    k.ED_CHECKED.clear()
+    ferry = k.bite_key("when does the ferry sail from the quay")
+    assert len(k.sealed(p.box, rows, only=ferry)) == 1 and len(calls) == 1
+    assert k.sealed(p.box, rows, only=k.bite_key("no such question")) == {}
+    assert len(calls) == 1
+    assert len(k.sealed(p.box, rows)) == 3 and len(calls) == 2
+    got = cli("bite", *p.b, "When does the ferry sail from the quay?")
+    assert json.loads(got.stdout)["answer"] == "Noon."
+    got = cli("bite", *p.b, "when does the tram run to the park")
+    assert json.loads(got.stdout)["answer"] == "Eight."
+
+
+def test_the_rule_answers_its_vectors():
+    """vectors/ed25519.json: what the rule says of each signature a library
+    might take and another refuse, for every port to answer the same."""
+    doc = json.loads((HERE.parent / "vectors" / "ed25519.json").read_text())
+    cases = doc["cases"]["rule"]
+    assert len(cases) > 100 and {c["why"] for c in cases} >= {
+        "rfc 8032", "S plus L", "a key of small order", "an R of small order",
+        "a key of mixed order", "an R of mixed order", "a key written another way"}  # fmt: skip
+    for c in cases:
+        pub, msg, sig = (bytes.fromhex(c[x]) for x in ("pub", "msg", "sig"))
+        assert k.ed_check(pub, msg, sig) is c["takes"], c["why"]
+        assert (k.pub_of({"pub": c["pub"]}) is not None) is c["key"], c["why"]
+    # a signature is a seal only when both hold: nothing of mixed order is
+    assert all(
+        c["why"] in ("rfc 8032", "signed") for c in cases if c["takes"] and c["key"]
+    )

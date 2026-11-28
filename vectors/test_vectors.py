@@ -53,6 +53,11 @@ def test_the_vectors_are_kernel_pys_as_it_is_now(tmp_path):
     )
     made, here = (
         json.loads(f.read_text())
+        for f in (tmp_path / "ed25519.json", VEC / "ed25519.json")
+    )
+    assert made == here, "ed25519.json isn't what gen.py makes: regenerate it"
+    made, here = (
+        json.loads(f.read_text())
         for f in (tmp_path / "kernel_tables.json", VEC / "kernel_tables.json")
     )
     if made["unicode"] == here["unicode"]:

@@ -1255,6 +1255,181 @@ def subject_cases() -> list[dict]:
     return out
 
 
+# ── the key pair's rule (docs/design/key-pair.md) ──────────────────────────
+#: RFC 8032, section 7.1: private half, public half, message, signature
+RFC8032 = [
+    ("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+     "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", "",
+     "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e06522490155"
+     "5fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b"),
+    ("4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb",
+     "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", "72",
+     "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da"
+     "085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00"),
+    ("c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7",
+     "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025", "af82",
+     "6291d657deec24024827e69c3abe01a30ce548a284743a445e3680d7db5ac3ac"
+     "18ff9b538d16f290ae67f760984dc6594a7c15e9716ed28dc027beceea1ec40a"),
+]  # fmt: skip
+#: the eight points of small order, as their canonical 32 bytes
+ED_SMALL = [
+    "0100000000000000000000000000000000000000000000000000000000000000",
+    "ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+    "0000000000000000000000000000000000000000000000000000000000000000",
+    "0000000000000000000000000000000000000000000000000000000000000080",
+    "26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc05",
+    "26e8958fc2b227b045c3f489f2ef98f0d5dfac05d3c63339b13802886d53fc85",
+    "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a",
+    "c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac03fa",
+]
+#: the same points written another way, which the rule refuses: a y of p or
+#: more, and a zero x called negative
+ED_ODD = [
+    "0100000000000000000000000000000000000000000000000000000000000080",
+    "ecffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+    "eeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f",
+    "edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+]
+
+
+def _any_point(s: bytes):
+    """The point 32 bytes name by RFC 8032's own decoding, small order and
+    all: what the rule refuses has to be made before it can be refused."""
+    y = int.from_bytes(s, "little")
+    sign, y = y >> 255, y & ((1 << 255) - 1)
+    x2 = (y * y - 1) * pow(k.ED_D * y * y + 1, k.ED_P - 2, k.ED_P) % k.ED_P
+    x = pow(x2, (k.ED_P + 3) // 8, k.ED_P)
+    if (x * x - x2) % k.ED_P:
+        x = x * k.ED_I % k.ED_P
+    assert (x * x - x2) % k.ED_P == 0
+    if (x & 1) != sign:
+        x = k.ED_P - x
+    return (x, y, 1, x * y % k.ED_P)
+
+
+def _lax(pub: bytes, msg: bytes, sig: bytes) -> bool:
+    """A check as loose as libraries get: any point that decodes, and the
+    equation with the cofactor. A case the rule refuses and this takes is
+    one a port could get wrong."""
+    try:
+        a, r = _any_point(pub), _any_point(sig[:32])
+    except AssertionError:
+        return False
+    s = int.from_bytes(sig[32:], "little") % k.ED_L
+    n = k.ed_h(sig[:32] + pub + msg) % k.ED_L
+    left = k.ed_times(8, k.ed_times(s, k.ED_BASE))
+    return k.ed_same(left, k.ed_times(8, k.ed_add(r, k.ed_times(n, a))))
+
+
+def ed25519_cases() -> dict:
+    """What the kernel's rule says of signatures that libraries disagree on:
+    `takes`, whether `ed_check` takes the signature, and `key`, whether the
+    public half may be a box's at all (`pub_of`). Made from fixed seeds, and
+    from none of the random stream the other parts draw on."""
+
+    def seed(i: int) -> bytes:
+        return hashlib.sha256(b"willow ed25519 vectors %d" % i).digest()
+
+    def case(why, pub, msg, sig, takes, key=None, lax=None):
+        got = k.ed_check(pub, msg, sig)
+        assert got is takes, why
+        if lax is not None:
+            assert _lax(pub, msg, sig) is lax, why
+        ok = k.pub_of({"pub": pub.hex()}) is not None
+        assert key is None or ok is key, why
+        return {"why": why, "pub": pub.hex(), "msg": msg.hex(), "sig": sig.hex(),
+                "takes": got, "key": ok}  # fmt: skip
+
+    def scalar(sd: bytes):
+        a, prefix = k.ed_half(sd)
+        return a, prefix, k.ed_packed(k.ed_times(a, k.ED_BASE))
+
+    out = []
+    for sd, pub, msg, sig in RFC8032:
+        sd, pub, msg, sig = (bytes.fromhex(x) for x in (sd, pub, msg, sig))
+        assert k.ed_public(sd) == pub and k.ed_sign(sd, msg) == sig
+        out.append(case("rfc 8032", pub, msg, sig, True, True))
+    for i in range(8):
+        sd, msg = seed(i), seed(100 + i)[: i * 5]
+        pub, sig = k.ed_public(sd), k.ed_sign(sd, msg)
+        out.append(case("signed", pub, msg, sig, True, True))
+        out.append(case("another message", pub, msg + b"\x00", sig, False, True))
+        s = int.from_bytes(sig[32:], "little")
+        more = sig[:32] + (s + k.ED_L).to_bytes(32, "little")
+        out.append(case("S plus L", pub, msg, more, False, True, lax=True))
+        for at in (0, 31, 32, 63):
+            bent = bytearray(sig)
+            bent[at] ^= 1 << (i % 7)
+            out.append(
+                case(f"a bit of the signature, byte {at}", pub, msg, bytes(bent), False)
+            )
+        out.append(
+            case("another key", k.ed_public(seed(50 + i)), msg, sig, False, True)
+        )
+    sd, msg = seed(0), b"lengths"
+    pub, sig = k.ed_public(sd), k.ed_sign(sd, msg)
+    for why, a, g in (("a short key", pub[:31], sig), ("a long key", pub + b"\x00", sig),
+                      ("a short signature", pub, sig[:63]), ("a long signature", pub, sig + b"\x00"),
+                      ("no signature", pub, b""), ("no key", b"", sig)):  # fmt: skip
+        assert k.ed_check(a, msg, g) is False, why
+        ok = k.pub_of({"pub": a.hex()}) is not None
+        out.append({"why": why, "pub": a.hex(), "msg": msg.hex(), "sig": g.hex(),
+                    "takes": False, "key": ok})  # fmt: skip
+    a, prefix, pub = scalar(seed(1))
+    for i, small in enumerate(ED_SMALL):
+        small = bytes.fromhex(small)
+        t = _any_point(small)
+        # as the key: [S]B = R + [k]A holds for any message once [8][k]A is
+        # nothing, which for a point of small order it always is
+        r = k.ed_h(seed(200 + i)) % k.ED_L
+        big_r = k.ed_packed(k.ed_times(r, k.ED_BASE))
+        sig = big_r + r.to_bytes(32, "little")
+        out.append(
+            case("a key of small order", small, b"any", sig, False, False, lax=True)
+        )
+        # as R: S made for the honest half, so only the cofactor hides R
+        n = k.ed_h(small + pub + b"small R") % k.ED_L
+        sig = small + (n * a % k.ED_L).to_bytes(32, "little")
+        out.append(
+            case("an R of small order", pub, b"small R", sig, False, True, lax=True)
+        )
+        if i == 0:  # the neutral point adds nothing to a key or an R
+            continue
+        # a key of mixed order: an honest key with a small point added
+        mixed = k.ed_packed(k.ed_add(k.ed_times(a, k.ED_BASE), t))
+        for j in range(400):  # a message whose k is a multiple of 8: no cofactor needed
+            msg = b"mixed %d %d" % (i, j)
+            n = k.ed_h(big_r + mixed + msg) % k.ED_L
+            if n % 8 == 0:
+                break
+        sig = big_r + ((r + n * a) % k.ED_L).to_bytes(32, "little")
+        out.append(case("a key of mixed order, k a multiple of 8", mixed, msg, sig, True, False, lax=True))  # fmt: skip
+        msg = b"mixed, any k %d" % i
+        for j in range(400):
+            n = k.ed_h(big_r + mixed + msg + bytes([j])) % k.ED_L
+            if n % 8:
+                break
+        sig = big_r + ((r + n * a) % k.ED_L).to_bytes(32, "little")
+        out.append(case("a key of mixed order", mixed, msg + bytes([j]), sig, False, False, lax=True))  # fmt: skip
+        # an R of mixed order under an honest key
+        odd_r = k.ed_packed(k.ed_add(k.ed_times(r, k.ED_BASE), t))
+        n = k.ed_h(odd_r + pub + b"mixed R") % k.ED_L
+        sig = odd_r + ((r + n * a) % k.ED_L).to_bytes(32, "little")
+        out.append(
+            case("an R of mixed order", pub, b"mixed R", sig, False, True, lax=True)
+        )
+    for odd in ED_ODD:
+        odd = bytes.fromhex(odd)
+        sig = k.ed_sign(seed(1), b"odd")
+        out.append(case("a key written another way", odd, b"odd", sig, False, False))
+        out.append(
+            case("an R written another way", pub, b"odd", odd + sig[32:], False, True)
+        )
+    return {"rule": out}
+
+
 def _write(path: Path, doc: dict) -> str:
     data = json.dumps(doc, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
     path.write_text(data + "\n", encoding="ascii")
@@ -1289,6 +1464,11 @@ def main(argv: list[str]) -> int:
         "cases": cases,
     }
     data = _write(out / "cases.json", doc)
+    ed = ed25519_cases()
+    _write(out / "ed25519.json", {
+        "about": "kernel.py's rule for a key pair's signatures; see gen.py. "
+                 "Regenerate, never edit. Not yet a part the ports answer.",
+        "cases": ed})  # fmt: skip
     n = sum(
         len(v) if isinstance(v, list) else sum(len(x) for x in v.values())
         for v in cases.values()
@@ -1297,6 +1477,8 @@ def main(argv: list[str]) -> int:
         f"cases.json: {n} cases, {len(data):,} bytes; kernel_tables.json:"
         f" {len(tdata):,} bytes; kernel {tab['kernel_sha256'][:12]}"
     )
+    took = sum(c["takes"] for c in ed["rule"])
+    print(f"ed25519.json: {len(ed['rule'])} cases, {took} taken")
     return 0
 
 

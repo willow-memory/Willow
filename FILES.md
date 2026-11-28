@@ -12,7 +12,7 @@ makes the cuts; they're never written by hand.
 
 ```
 willow/
-├── kernel.py                 the whole program (about 1,520 lines)
+├── kernel.py                 the whole program (about 1,820 lines)
 ├── test_kernel.py            its tests
 ├── test_docs.py              holds every doc to the files that exist, and the trees to the repo
 ├── test_docs_fires.py        plants a violation for each docs check and makes sure it fails
@@ -2170,6 +2170,7 @@ willow/
 ├── vectors/                  what keeps the six implementations identical
 │   ├── gen.py                reads the test cases out of kernel.py
 │   ├── cases.json            4,694 cases, with the answers kernel.py gives
+│   ├── ed25519.json          122 signatures libraries disagree on, with what the kernel's rule says of each
 │   ├── kernel_tables.json    Python's Unicode and HTML rules, so ports don't use their own
 │   ├── compare.py            runs every port against the cases and each other's logs
 │   ├── test_vectors.py       fails if the cases are stale or a port disagrees
