@@ -765,6 +765,21 @@ def around(root: Path, hidden: list[Path]) -> list[Path]:
     return found
 
 
+def scaffold(mounted: list[Path]) -> list[Path]:
+    """The folders the sandbox makes only to hang its mounts on: every folder
+    above something mounted that is not itself inside a mount. They belong to
+    no one outside: a file written there is gone when the command ends.
+    /tmp is the command's own, and stays."""
+    made: set[Path] = set()
+    for m in mounted:
+        made.update(m.parents)
+    tmp = Path("/tmp")
+    return sorted(
+        d for d in made
+        if not any(d.is_relative_to(m) for m in mounted) and d != tmp
+    )  # fmt: skip
+
+
 def shell_policy(
     project: Path, home: Path, hidden: list[Path], held: list[Path], run: Path
 ) -> dict:
@@ -877,9 +892,17 @@ def shelled(
         fleet.mkdir()
         (run / "command.sh").write_text(command, encoding="utf-8")
         conf = Path(tmp) / "policy.json"
-        conf.write_text(json.dumps(shell_policy(project, home, hidden, held, run)),
-                        encoding="utf-8")  # fmt: skip
-        task = (f"cd {shlex.quote(str(cwd))} && exec env -i PATH={PATH} LANG={LOCALE} "
+        policy_ = shell_policy(project, home, hidden, held, run)
+        conf.write_text(json.dumps(policy_), encoding="utf-8")
+        # Kartikeya's policy lists what to mount and no more, so the folders
+        # it makes above the mounts are writable and kept nowhere. Closed
+        # before the command starts, a write there is refused, not lost.
+        mounted = [
+            Path(m) for m in policy_["bind_read_only"] + policy_["bind_read_write"]
+        ]
+        closed = " ".join(shlex.quote(str(d)) for d in scaffold(mounted))
+        task = (f"chmod a-w {closed} 2>/dev/null; "
+                f"cd {shlex.quote(str(cwd))} && exec env -i PATH={PATH} LANG={LOCALE} "
                 f"HOME={shlex.quote(str(home))} bash {shlex.quote(str(run / 'command.sh'))}")  # fmt: skip
         return kartikeya_runs(task, conf, fleet, timeout)
 

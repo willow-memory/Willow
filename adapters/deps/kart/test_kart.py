@@ -484,6 +484,9 @@ pwd
 echo made > new.txt && echo "project write: $(cat new.txt)"
 echo "home read: $(cat ~/notes.txt)"
 (echo x > ~/notes.txt) 2>/dev/null && echo "home write: yes" || echo "home write: no"
+(echo x > ~/new.txt) 2>/dev/null && echo "home new: yes" || echo "home new: no"
+(echo x > /new.txt) 2>/dev/null && echo "root new: yes" || echo "root new: no"
+(echo x > /tmp/new.txt) 2>/dev/null && echo "tmp new: yes" || echo "tmp new: no"
 echo "key: $(cat {w.key} 2>/dev/null | wc -c)"
 echo "box: $(ls {w.box} 2>/dev/null | wc -l)"
 getent hosts example.com >/dev/null 2>&1 && echo "dns: yes" || echo "dns: no"
@@ -493,6 +496,7 @@ env | cut -d= -f1 | grep -v -x -e PWD -e SHLVL -e _ | sort | tr '\\n' ' '
     assert code == 0, err
     assert said["stdout"].splitlines() == [
         str(desk.project), "project write: made", "home read: milk", "home write: no",
+        "home new: no", "root new: no", "tmp new: yes",
         "key: 0", "box: 0", "dns: no", "system write: no", "HOME LANG PATH",
     ]  # fmt: skip
     assert said["returncode"] == 0 and said["status"] == "completed"
