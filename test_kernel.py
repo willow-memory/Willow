@@ -1550,3 +1550,11 @@ def test_the_rule_answers_its_vectors():
     assert all(
         c["why"] in ("rfc 8032", "signed") for c in cases if c["takes"] and c["key"]
     )
+
+
+def test_a_box_that_names_no_key_is_no_box_to_read_seals_from(tmp_path):
+    """As before the pair: settings with no key raise, whatever the record
+    holds, so what lists boxes says such a one can't be read (boxes-here)."""
+    (tmp_path / "kernel.json").write_text("{}")
+    with pytest.raises(KeyError):
+        k.sealed(tmp_path, [])

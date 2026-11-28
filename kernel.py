@@ -1046,6 +1046,7 @@ def proved(
     at, held = crossing(pub, rows) if pub else (None, {})
     # the secret an HMAC is checked with: the box's key, or with a key pair
     # the one from before it, for as long as the box still names it
+    where = Path(cfg.get("old_key") or cfg["key"])  # a box always names a key
     secret, read = None, "pub" not in cfg or "old_key" in cfg
     out = []
     for r in rows:
@@ -1065,7 +1066,7 @@ def proved(
         else:
             if read:
                 read = False
-                secret, _ = read_key(Path(cfg.get("old_key", cfg["key"])), box)
+                secret, _ = read_key(where, box)
             good = secret is not None and hmac.compare_digest(
                 proof(secret, subj, act, asked), str(r.get("proof"))
             )
